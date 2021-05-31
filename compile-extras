@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+## load defaults
+. ./common.sh
+
+## install mandatory packages
+for PKG in libfftw3-dev texlive-latex-base texlive-latex-recommended texlive-latex-extra; do
+    dpkg-query -s $PKG &> /dev/null || sudo apt-get install --yes $PKG
+done
+
+## collect modules list
+MODULES="fftw"
+
+## architecture i686/x86_64
+if [ "$BARCH" == "i686" ]; then
+    MODULES+=""
+fi
+
+## platform linux
+if [ -z "$WINDIR" ]; then
+    ## vxi hpib
+    MODULES+=" tclvisa"
+fi
+
+## start to compile
+for MODULE in $MODULES; do
+    bash -e ./compile-${MODULE}.sh "$@"
+    echo ""
+done
+
+## fini
+if [ -z "$SW_DEBUG" ]; then
+    echo "** Finished compile-extras release."
+else
+    echo "** Finished compile-extras debug."
+fi
+
