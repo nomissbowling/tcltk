@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_Init manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> Tk_Init</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> Tk_Init</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Tk_Init.htm#M2" NAME="L603">NAME</A>
-<DL><DD>Tk_Init, Tk_SafeInit &mdash; add Tk to an interpreter and make a new Tk application.</DD></DL>
-<DD><A HREF="Tk_Init.htm#M3" NAME="L604">SYNOPSIS</A>
+<DD><A HREF="Tk_Init.htm#M2" NAME="L601">NAME</A>
+<DL><DD>Tk_Init, Tk_SafeInit - add Tk to an interpreter and make a new Tk application.</DD></DL>
+<DD><A HREF="Tk_Init.htm#M3" NAME="L602">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>int
@@ -16,26 +16,26 @@
 <DD>int
 <DD><B>Tk_SafeInit</B>(<I>interp</I>)
 </DL>
-<DD><A HREF="Tk_Init.htm#M4" NAME="L605">ARGUMENTS</A>
+<DD><A HREF="Tk_Init.htm#M4" NAME="L603">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Tk_Init.htm#M5" NAME="L606">DESCRIPTION</A>
+<DD><A HREF="Tk_Init.htm#M5" NAME="L604">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="Tk_Init.htm#M6" NAME="L607"><B>bell</B></A>
-<DD><A HREF="Tk_Init.htm#M7" NAME="L608"><B>clipboard</B></A>
-<DD><A HREF="Tk_Init.htm#M8" NAME="L609"><B>grab</B></A>
-<DD><A HREF="Tk_Init.htm#M9" NAME="L610"><B>menu</B></A>
-<DD><A HREF="Tk_Init.htm#M10" NAME="L611"><B>selection</B></A>
-<DD><A HREF="Tk_Init.htm#M11" NAME="L612"><B>send</B></A>
-<DD><A HREF="Tk_Init.htm#M12" NAME="L613"><B>tk</B></A>
-<DD><A HREF="Tk_Init.htm#M13" NAME="L614"><B>tkwait</B></A>
-<DD><A HREF="Tk_Init.htm#M14" NAME="L615"><B>toplevel</B></A>
-<DD><A HREF="Tk_Init.htm#M15" NAME="L616"><B>wm</B></A>
+<DD><A HREF="Tk_Init.htm#M6" NAME="L605"><B>bell</B></A>
+<DD><A HREF="Tk_Init.htm#M7" NAME="L606"><B>clipboard</B></A>
+<DD><A HREF="Tk_Init.htm#M8" NAME="L607"><B>grab</B></A>
+<DD><A HREF="Tk_Init.htm#M9" NAME="L608"><B>menu</B></A>
+<DD><A HREF="Tk_Init.htm#M10" NAME="L609"><B>selection</B></A>
+<DD><A HREF="Tk_Init.htm#M11" NAME="L610"><B>send</B></A>
+<DD><A HREF="Tk_Init.htm#M12" NAME="L611"><B>tk</B></A>
+<DD><A HREF="Tk_Init.htm#M13" NAME="L612"><B>tkwait</B></A>
+<DD><A HREF="Tk_Init.htm#M14" NAME="L613"><B>toplevel</B></A>
+<DD><A HREF="Tk_Init.htm#M15" NAME="L614"><B>wm</B></A>
 </DL>
-<DD><A HREF="Tk_Init.htm#M16" NAME="L617">KEYWORDS</A>
+<DD><A HREF="Tk_Init.htm#M16" NAME="L615">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_Init, Tk_SafeInit &mdash; add Tk to an interpreter and make a new Tk application.
+Tk_Init, Tk_SafeInit - add Tk to an interpreter and make a new Tk application.
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 int<BR>
@@ -55,11 +55,11 @@ for an application or by the <B><A HREF="../TclCmd/load.htm">load</A></B> comman
 <B>Tk_Init</B> adds all of Tk's commands to <I>interp</I>
 and creates a new Tk application, including its main window.
 If the initialization is successful <B>Tk_Init</B> returns
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>;  if there is an error it returns <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>.
+<B>TCL_OK</B>;  if there is an error it returns <B>TCL_ERROR</B>.
 <B>Tk_Init</B> also leaves a result or error message
-in interpreter <I>interp</I>'s result.
+in <I>interp-&gt;result</I>.
 <P>
-If there is a variable <B><A HREF="../TclCmd/tclvars.htm">argv</A></B> in <I>interp</I>, <B>Tk_Init</B>
+If there is a variable <B>argv</B> in <I>interp</I>, <B>Tk_Init</B>
 treats the contents of this variable as a list of options for the
 new Tk application.
 The options may have any of the forms documented for the
@@ -97,9 +97,11 @@ from the user.
 <P><DT><A NAME="M15"><B>wm</B></A><DD>
 If toplevels are ever allowed, wm can be used to remove decorations,
 move windows around, etc.
+
 <P></DL>
 <H3><A NAME="M16">KEYWORDS</A></H3>
 <A href="../Keywords/S.htm#safe">safe</A>, <A href="../Keywords/A.htm#application">application</A>, <A href="../Keywords/I.htm#initialization">initialization</A>, <A href="../Keywords/L.htm#load">load</A>, <A href="../Keywords/M.htm#main window">main window</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -18,7 +18,7 @@
  * object, used for quickly finding a mapping in a TkStateMap.
  */
 
-const Tcl_ObjType tkStateKeyObjType = {
+Tcl_ObjType tkStateKeyObjType = {
     "statekey",			/* name */
     NULL,			/* freeIntRepProc */
     NULL,			/* dupIntRepProc */
@@ -56,10 +56,10 @@ TkStateParseProc(
     int c;
     int flags = PTR2INT(clientData);
     size_t length;
-    Tcl_Obj *msgObj;
-    Tk_State *statePtr = (Tk_State *) (widgRec + offset);
 
-    if (value == NULL || *value == 0) {
+    register Tk_State *statePtr = (Tk_State *) (widgRec + offset);
+
+    if(value == NULL || *value == 0) {
 	*statePtr = TK_STATE_NULL;
 	return TCL_OK;
     }
@@ -84,20 +84,18 @@ TkStateParseProc(
 	return TCL_OK;
     }
 
-    msgObj = Tcl_ObjPrintf("bad %s value \"%s\": must be normal",
-	    ((flags & 4) ? "-default" : "state"), value);
-    if (flags & 1) {
-	Tcl_AppendToObj(msgObj, ", active", -1);
+    Tcl_AppendResult(interp, "bad ", (flags&4)?"-default" : "state",
+	    " value \"", value, "\": must be normal", NULL);
+    if (flags&1) {
+	Tcl_AppendResult(interp, ", active", NULL);
     }
-    if (flags & 2) {
-	Tcl_AppendToObj(msgObj, ", hidden", -1);
+    if (flags&2) {
+	Tcl_AppendResult(interp, ", hidden", NULL);
     }
-    if (flags & 3) {
-	Tcl_AppendToObj(msgObj, ",", -1);
+    if (flags&3) {
+	Tcl_AppendResult(interp, ",", NULL);
     }
-    Tcl_AppendToObj(msgObj, " or disabled", -1);
-    Tcl_SetObjResult(interp, msgObj);
-    Tcl_SetErrorCode(interp, "TK", "VALUE", "STATE", NULL);
+    Tcl_AppendResult(interp, " or disabled", NULL);
     *statePtr = TK_STATE_NORMAL;
     return TCL_ERROR;
 }
@@ -123,7 +121,7 @@ TkStateParseProc(
  *--------------------------------------------------------------
  */
 
-const char *
+char *
 TkStatePrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -133,7 +131,7 @@ TkStatePrintProc(
 				 * information about how to reclaim storage
 				 * for return string. */
 {
-    Tk_State *statePtr = (Tk_State *) (widgRec + offset);
+    register Tk_State *statePtr = (Tk_State *) (widgRec + offset);
 
     switch (*statePtr) {
     case TK_STATE_NORMAL:
@@ -178,9 +176,10 @@ TkOrientParseProc(
 {
     int c;
     size_t length;
-    int *orientPtr = (int *) (widgRec + offset);
 
-    if (value == NULL || *value == 0) {
+    register int *orientPtr = (int *) (widgRec + offset);
+
+    if(value == NULL || *value == 0) {
 	*orientPtr = 0;
 	return TCL_OK;
     }
@@ -196,10 +195,8 @@ TkOrientParseProc(
 	*orientPtr = 1;
 	return TCL_OK;
     }
-    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-	    "bad orientation \"%s\": must be vertical or horizontal",
-	    value));
-    Tcl_SetErrorCode(interp, "TK", "VALUE", "ORIENTATION", NULL);
+    Tcl_AppendResult(interp, "bad orientation \"", value,
+	    "\": must be vertical or horizontal", NULL);
     *orientPtr = 0;
     return TCL_ERROR;
 }
@@ -225,7 +222,7 @@ TkOrientParseProc(
  *--------------------------------------------------------------
  */
 
-const char *
+char *
 TkOrientPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -235,7 +232,7 @@ TkOrientPrintProc(
 				 * information about how to reclaim storage
 				 * for return string. */
 {
-    int *statePtr = (int *) (widgRec + offset);
+    register int *statePtr = (int *) (widgRec + offset);
 
     if (*statePtr) {
 	return "vertical";
@@ -268,7 +265,6 @@ TkOffsetParseProc(
     Tk_TSOffset tsoffset;
     const char *q, *p;
     int result;
-    Tcl_Obj *msgObj;
 
     if ((value == NULL) || (*value == 0)) {
 	tsoffset.flags = TK_OFFSET_CENTER|TK_OFFSET_MIDDLE;
@@ -277,7 +273,7 @@ TkOffsetParseProc(
     tsoffset.flags = 0;
     p = value;
 
-    switch (value[0]) {
+    switch(value[0]) {
     case '#':
 	if (PTR2INT(clientData) & TK_OFFSET_RELATIVE) {
 	    tsoffset.flags = TK_OFFSET_RELATIVE;
@@ -341,13 +337,7 @@ TkOffsetParseProc(
 	tsoffset.flags = TK_OFFSET_CENTER|TK_OFFSET_MIDDLE;
 	goto goodTSOffset;
     }
-
-    /*
-     * Check for an extra offset.
-     */
-
-    q = strchr(p, ',');
-    if (q == NULL) {
+    if ((q = strchr(p,',')) == NULL) {
 	if (PTR2INT(clientData) & TK_OFFSET_INDEX) {
 	    if (Tcl_GetInt(interp, (char *) p, &tsoffset.flags) != TCL_OK) {
 		Tcl_ResetResult(interp);
@@ -358,7 +348,6 @@ TkOffsetParseProc(
 	}
 	goto badTSOffset;
     }
-
     *((char *) q) = 0;
     result = Tk_GetPixels(interp, tkwin, (char *) p, &tsoffset.xoffset);
     *((char *) q) = ',';
@@ -369,28 +358,27 @@ TkOffsetParseProc(
 	return TCL_ERROR;
     }
 
+  goodTSOffset:
     /*
      * Below is a hack to allow the stipple/tile offset to be stored in the
      * internal tile structure. Most of the times, offsetPtr is a pointer to
      * an already existing tile structure. However if this structure is not
-     * already created, we must do it with Tk_GetTile()!!!!
+     * already created, we must do it with Tk_GetTile()!!!!;
      */
 
-  goodTSOffset:
     memcpy(offsetPtr, &tsoffset, sizeof(Tk_TSOffset));
     return TCL_OK;
 
   badTSOffset:
-    msgObj = Tcl_ObjPrintf("bad offset \"%s\": expected \"x,y\"", value);
+    Tcl_AppendResult(interp, "bad offset \"", value,
+	    "\": expected \"x,y\"", NULL);
     if (PTR2INT(clientData) & TK_OFFSET_RELATIVE) {
-	Tcl_AppendToObj(msgObj, ", \"#x,y\"", -1);
+	Tcl_AppendResult(interp, ", \"#x,y\"", NULL);
     }
     if (PTR2INT(clientData) & TK_OFFSET_INDEX) {
-	Tcl_AppendToObj(msgObj, ", <index>", -1);
+	Tcl_AppendResult(interp, ", <index>", NULL);
     }
-    Tcl_AppendToObj(msgObj, ", n, ne, e, se, s, sw, w, nw, or center", -1);
-    Tcl_SetObjResult(interp, msgObj);
-    Tcl_SetErrorCode(interp, "TK", "VALUE", "OFFSET", NULL);
+    Tcl_AppendResult(interp, ", n, ne, e, se, s, sw, w, nw, or center", NULL);
     return TCL_ERROR;
 }
 
@@ -407,7 +395,7 @@ TkOffsetParseProc(
  *----------------------------------------------------------------------
  */
 
-const char *
+char *
 TkOffsetPrintProc(
     ClientData clientData,	/* not used */
     Tk_Window tkwin,		/* not used */
@@ -422,7 +410,7 @@ TkOffsetPrintProc(
 	if (offsetPtr->flags >= INT_MAX) {
 	    return "end";
 	}
-	p = (char *)ckalloc(32);
+	p = (char *) ckalloc(32);
 	sprintf(p, "%d", offsetPtr->flags & ~TK_OFFSET_INDEX);
 	*freeProcPtr = TCL_DYNAMIC;
 	return p;
@@ -452,7 +440,7 @@ TkOffsetPrintProc(
 	    return "se";
 	}
     }
-    q = p = (char *)ckalloc(32);
+    q = p = (char *) ckalloc(32);
     if (offsetPtr->flags & TK_OFFSET_RELATIVE) {
 	*q++ = '#';
     }
@@ -474,7 +462,7 @@ TkOffsetPrintProc(
 int
 TkPixelParseProc(
     ClientData clientData,	/* If non-NULL, negative values are allowed as
-				 * well. */
+				 * well */
     Tcl_Interp *interp,		/* Interpreter to send results back to */
     Tk_Window tkwin,		/* Window on same display as tile */
     const char *value,		/* Name of image */
@@ -487,9 +475,7 @@ TkPixelParseProc(
     result = TkGetDoublePixels(interp, tkwin, value, doublePtr);
 
     if ((result == TCL_OK) && (clientData == NULL) && (*doublePtr < 0.0)) {
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"bad screen distance \"%s\"", value));
-	Tcl_SetErrorCode(interp, "TK", "VALUE", "PIXELS", NULL);
+	Tcl_AppendResult(interp, "bad screen distance \"", value, "\"", NULL);
 	return TCL_ERROR;
     }
     return result;
@@ -508,7 +494,7 @@ TkPixelParseProc(
  *----------------------------------------------------------------------
  */
 
-const char *
+char *
 TkPixelPrintProc(
     ClientData clientData,	/* not used */
     Tk_Window tkwin,		/* not used */
@@ -517,7 +503,7 @@ TkPixelPrintProc(
     Tcl_FreeProc **freeProcPtr)	/* not used */
 {
     double *doublePtr = (double *) (widgRec + offset);
-    char *p = (char *)ckalloc(24);
+    char *p = (char *) ckalloc(24);
 
     Tcl_PrintDouble(NULL, *doublePtr, p);
     *freeProcPtr = TCL_DYNAMIC;
@@ -652,10 +638,8 @@ Tk_GetScrollInfo(
 
     if ((c == 'm') && (strncmp(argv[2], "moveto", length) == 0)) {
 	if (argc != 4) {
-	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "wrong # args: should be \"%s %s %s\"",
-		    argv[0], argv[1], "moveto fraction"));
-	    Tcl_SetErrorCode(interp, "TCL", "WRONGARGS", NULL);
+	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
+		    " ", argv[1], " moveto fraction\"", NULL);
 	    return TK_SCROLL_ERROR;
 	}
 	if (Tcl_GetDouble(interp, argv[3], dblPtr) != TCL_OK) {
@@ -665,10 +649,8 @@ Tk_GetScrollInfo(
     } else if ((c == 's')
 	    && (strncmp(argv[2], "scroll", length) == 0)) {
 	if (argc != 5) {
-	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "wrong # args: should be \"%s %s %s\"",
-		    argv[0], argv[1], "scroll number units|pages"));
-	    Tcl_SetErrorCode(interp, "TCL", "WRONGARGS", NULL);
+	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
+		    " ", argv[1], " scroll number units|pages\"", NULL);
 	    return TK_SCROLL_ERROR;
 	}
 	if (Tcl_GetInt(interp, argv[3], intPtr) != TCL_OK) {
@@ -682,15 +664,12 @@ Tk_GetScrollInfo(
 	    return TK_SCROLL_UNITS;
 	}
 
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"bad argument \"%s\": must be units or pages", argv[4]));
-	Tcl_SetErrorCode(interp, "TK", "VALUE", "SCROLL_UNITS", NULL);
+	Tcl_AppendResult(interp, "bad argument \"", argv[4],
+		"\": must be units or pages", NULL);
 	return TK_SCROLL_ERROR;
     }
-    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-	    "unknown option \"%s\": must be moveto or scroll", argv[2]));
-    Tcl_SetErrorCode(interp, "TCL", "LOOKUP", "INDEX", "option", argv[2],
-	    NULL);
+    Tcl_AppendResult(interp, "unknown option \"", argv[2],
+	    "\": must be moveto or scroll", NULL);
     return TK_SCROLL_ERROR;
 }
 
@@ -728,11 +707,12 @@ Tk_GetScrollInfoObj(
     int *intPtr)		/* Filled in with number of pages or lines to
 				 * scroll, if any. */
 {
-    const char *arg = Tcl_GetString(objv[2]);
-    size_t length = objv[2]->length;
+    int length;
+    const char *arg;
 
-#define ArgPfxEq(str) \
-	((arg[0] == str[0]) && !strncmp(arg, str, length))
+    arg = Tcl_GetStringFromObj(objv[2], &length);
+
+#define ArgPfxEq(str) ((arg[0]==str[0])&&!strncmp(arg,str,(unsigned)length))
 
     if (ArgPfxEq("moveto")) {
 	if (objc != 4) {
@@ -752,22 +732,19 @@ Tk_GetScrollInfoObj(
 	    return TK_SCROLL_ERROR;
 	}
 
-	arg = Tcl_GetString(objv[4]);
-	length = objv[4]->length;
+	arg = Tcl_GetStringFromObj(objv[4], &length);
 	if (ArgPfxEq("pages")) {
 	    return TK_SCROLL_PAGES;
 	} else if (ArgPfxEq("units")) {
 	    return TK_SCROLL_UNITS;
 	}
 
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"bad argument \"%s\": must be units or pages", arg));
-	Tcl_SetErrorCode(interp, "TK", "VALUE", "SCROLL_UNITS", NULL);
+	Tcl_AppendResult(interp, "bad argument \"", arg,
+		"\": must be units or pages", NULL);
 	return TK_SCROLL_ERROR;
     }
-    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-	    "unknown option \"%s\": must be moveto or scroll", arg));
-    Tcl_SetErrorCode(interp, "TCL", "LOOKUP", "INDEX", "option", arg, NULL);
+    Tcl_AppendResult(interp, "unknown option \"", arg,
+	    "\": must be moveto or scroll", NULL);
     return TK_SCROLL_ERROR;
 }
 
@@ -872,14 +849,14 @@ TkComputeAnchor(
  *---------------------------------------------------------------------------
  */
 
-const char *
+char *
 TkFindStateString(
     const TkStateMap *mapPtr,	/* The state table. */
     int numKey)			/* The key to try to find in the table. */
 {
     for (; mapPtr->strKey!=NULL ; mapPtr++) {
 	if (numKey == mapPtr->numKey) {
-	    return mapPtr->strKey;
+	    return (char *) mapPtr->strKey;
 	}
     }
     return NULL;
@@ -931,17 +908,14 @@ TkFindStateNum(
      */
 
     if (interp != NULL) {
-	Tcl_Obj *msgObj;
-
 	mPtr = mapPtr;
-	msgObj = Tcl_ObjPrintf("bad %s value \"%s\": must be %s",
-		option, strKey, mPtr->strKey);
+	Tcl_AppendResult(interp, "bad ", option, " value \"", strKey,
+		"\": must be ", mPtr->strKey, NULL);
 	for (mPtr++; mPtr->strKey != NULL; mPtr++) {
-	    Tcl_AppendPrintfToObj(msgObj, ",%s %s",
-		    ((mPtr[1].strKey != NULL) ? "" : "or "), mPtr->strKey);
+	    Tcl_AppendResult(interp,
+		    ((mPtr[1].strKey != NULL) ? ", " : ", or "),
+		    mPtr->strKey, NULL);
 	}
-	Tcl_SetObjResult(interp, msgObj);
-	Tcl_SetErrorCode(interp, "TK", "LOOKUP", option, strKey, NULL);
     }
     return mPtr->numKey;
 }
@@ -970,12 +944,12 @@ TkFindStateNumObj(
      * Not there. Look in the state map.
      */
 
-    key = Tcl_GetString(keyPtr);
+    key = Tcl_GetStringFromObj(keyPtr, NULL);
     for (mPtr = mapPtr; mPtr->strKey != NULL; mPtr++) {
 	if (strcmp(key, mPtr->strKey) == 0) {
 	    typePtr = keyPtr->typePtr;
 	    if ((typePtr != NULL) && (typePtr->freeIntRepProc != NULL)) {
-		typePtr->freeIntRepProc(keyPtr);
+		(*typePtr->freeIntRepProc)(keyPtr);
 	    }
 	    keyPtr->internalRep.twoPtrValue.ptr1 = (void *) mapPtr;
 	    keyPtr->internalRep.twoPtrValue.ptr2 = INT2PTR(mPtr->numKey);
@@ -990,348 +964,18 @@ TkFindStateNumObj(
      */
 
     if (interp != NULL) {
-	Tcl_Obj *msgObj;
-
 	mPtr = mapPtr;
-	msgObj = Tcl_ObjPrintf(
-		"bad %s value \"%s\": must be %s",
-		Tcl_GetString(optionPtr), key, mPtr->strKey);
+	Tcl_AppendResult(interp, "bad ", Tcl_GetString(optionPtr),
+		" value \"", key, "\": must be ", mPtr->strKey, NULL);
 	for (mPtr++; mPtr->strKey != NULL; mPtr++) {
-	    Tcl_AppendPrintfToObj(msgObj, ",%s %s",
-		    ((mPtr[1].strKey != NULL) ? "" : " or"), mPtr->strKey);
+	    Tcl_AppendResult(interp,
+		((mPtr[1].strKey != NULL) ? ", " : ", or "),
+		mPtr->strKey, NULL);
 	}
-	Tcl_SetObjResult(interp, msgObj);
-	Tcl_SetErrorCode(interp, "TK", "LOOKUP", Tcl_GetString(optionPtr),
-		key, NULL);
     }
     return mPtr->numKey;
 }
 
-/*
- * ----------------------------------------------------------------------
- *
- * TkBackgroundEvalObjv --
- *
- *	Evaluate a command while ensuring that we do not affect the
- *	interpreters state. This is important when evaluating script
- *	during background tasks.
- *
- * Results:
- *	A standard Tcl result code.
- *
- * Side Effects:
- *	The interpreters variables and code may be modified by the script
- *	but the result will not be modified.
- *
- * ----------------------------------------------------------------------
- */
-
-int
-TkBackgroundEvalObjv(
-    Tcl_Interp *interp,
-    int objc,
-    Tcl_Obj *const *objv,
-    int flags)
-{
-    Tcl_InterpState state;
-    int n, r = TCL_OK;
-
-    /*
-     * Record the state of the interpreter.
-     */
-
-    Tcl_Preserve(interp);
-    state = Tcl_SaveInterpState(interp, TCL_OK);
-
-    /*
-     * Evaluate the command and handle any error.
-     */
-
-    for (n = 0; n < objc; ++n) {
-	Tcl_IncrRefCount(objv[n]);
-    }
-    r = Tcl_EvalObjv(interp, objc, objv, flags);
-    for (n = 0; n < objc; ++n) {
-	Tcl_DecrRefCount(objv[n]);
-    }
-    if (r == TCL_ERROR) {
-	Tcl_AddErrorInfo(interp, "\n    (background event handler)");
-	Tcl_BackgroundException(interp, r);
-    }
-
-    /*
-     * Restore the state of the interpreter.
-     */
-
-    (void) Tcl_RestoreInterpState(interp, state);
-    Tcl_Release(interp);
-
-    return r;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMakeEnsemble --
- *
- *	Create an ensemble from a table of implementation commands. This may
- *	be called recursively to create sub-ensembles.
- *
- * Results:
- *	Handle for the ensemble, or NULL if creation of it fails.
- *
- *----------------------------------------------------------------------
- */
-
-Tcl_Command
-TkMakeEnsemble(
-    Tcl_Interp *interp,
-    const char *namesp,
-    const char *name,
-    ClientData clientData,
-    const TkEnsemble map[])
-{
-    Tcl_Namespace *namespacePtr = NULL;
-    Tcl_Command ensemble = NULL;
-    Tcl_Obj *dictObj = NULL, *nameObj;
-    Tcl_DString ds;
-    int i;
-
-    if (map == NULL) {
-	return NULL;
-    }
-
-    Tcl_DStringInit(&ds);
-
-    namespacePtr = Tcl_FindNamespace(interp, namesp, NULL, 0);
-    if (namespacePtr == NULL) {
-	namespacePtr = Tcl_CreateNamespace(interp, namesp, NULL, NULL);
-	if (namespacePtr == NULL) {
-	    Tcl_Panic("failed to create namespace \"%s\"", namesp);
-	}
-    }
-
-    nameObj = Tcl_NewStringObj(name, -1);
-    ensemble = Tcl_FindEnsemble(interp, nameObj, 0);
-    Tcl_DecrRefCount(nameObj);
-    if (ensemble == NULL) {
-	ensemble = Tcl_CreateEnsemble(interp, name, namespacePtr,
-		TCL_ENSEMBLE_PREFIX);
-	if (ensemble == NULL) {
-	    Tcl_Panic("failed to create ensemble \"%s\"", name);
-	}
-    }
-
-    Tcl_DStringSetLength(&ds, 0);
-    Tcl_DStringAppend(&ds, namesp, -1);
-    if (!(strlen(namesp) == 2 && namesp[1] == ':')) {
-	Tcl_DStringAppend(&ds, "::", -1);
-    }
-    Tcl_DStringAppend(&ds, name, -1);
-
-    dictObj = Tcl_NewObj();
-    for (i = 0; map[i].name != NULL ; ++i) {
-	Tcl_Obj *fqdnObj;
-
-	nameObj = Tcl_NewStringObj(map[i].name, -1);
-	fqdnObj = Tcl_NewStringObj(Tcl_DStringValue(&ds),
-		Tcl_DStringLength(&ds));
-	Tcl_AppendStringsToObj(fqdnObj, "::", map[i].name, NULL);
-	Tcl_DictObjPut(NULL, dictObj, nameObj, fqdnObj);
-	if (map[i].proc) {
-	    Tcl_CreateObjCommand(interp, Tcl_GetString(fqdnObj),
-		    map[i].proc, clientData, NULL);
-	} else if (map[i].subensemble) {
-	    TkMakeEnsemble(interp, Tcl_DStringValue(&ds),
-		    map[i].name, clientData, map[i].subensemble);
-	}
-    }
-
-    if (ensemble) {
-	Tcl_SetEnsembleMappingDict(interp, ensemble, dictObj);
-    }
-
-    Tcl_DStringFree(&ds);
-    return ensemble;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkSendVirtualEvent --
- *
- * 	Send a virtual event notification to the specified target window.
- * 	Equivalent to:
- * 	    "event generate $target <<$eventName>> -data $detail"
- *
- * 	Note that we use Tk_QueueWindowEvent, not Tk_HandleEvent, so this
- * 	routine does not reenter the interpreter.
- *
- *----------------------------------------------------------------------
- */
-
-void
-TkSendVirtualEvent(
-    Tk_Window target,
-    const char *eventName,
-    Tcl_Obj *detail)
-{
-    union {XEvent general; XVirtualEvent virt;} event;
-
-    memset(&event, 0, sizeof(event));
-    event.general.xany.type = VirtualEvent;
-    event.general.xany.serial = NextRequest(Tk_Display(target));
-    event.general.xany.send_event = False;
-    event.general.xany.window = Tk_WindowId(target);
-    event.general.xany.display = Tk_Display(target);
-    event.virt.name = Tk_GetUid(eventName);
-    event.virt.user_data = detail;
-
-    Tk_QueueWindowEvent(&event.general, TCL_QUEUE_TAIL);
-}
-
-/* Tcl 8.6 has a different definition of Tcl_UniChar than other Tcl versions for TCL_UTF_MAX > 3 */
-#if TCL_UTF_MAX <= (3 + (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION == 6))
-/*
- *---------------------------------------------------------------------------
- *
- * TkUtfToUniChar --
- *
- *	Almost the same as Tcl_UtfToUniChar but using int instead of Tcl_UniChar.
- *	This function is capable of collapsing a upper/lower surrogate pair to a
- *	single unicode character. So, up to 6 bytes might be consumed.
- *
- * Results:
- *	*chPtr is filled with the Tcl_UniChar, and the return value is the
- *	number of bytes from the UTF-8 string that were consumed.
- *
- * Side effects:
- *	None.
- *
- *---------------------------------------------------------------------------
- */
-
-int
-TkUtfToUniChar(
-    const char *src,	/* The UTF-8 string. */
-    int *chPtr)		/* Filled with the Unicode value represented by
-			 * the UTF-8 string. */
-{
-    Tcl_UniChar uniChar = 0;
-
-    int len = Tcl_UtfToUniChar(src, &uniChar);
-    if ((uniChar & 0xFC00) == 0xD800) {
-	Tcl_UniChar low = uniChar;
-	/* This can only happen if sizeof(Tcl_UniChar)== 2 and src points
-	 * to a character > U+FFFF  */
-	size_t len2 = Tcl_UtfToUniChar(src+len, &low);
-	if ((low & 0xFC00) == 0xDC00) {
-	    *chPtr = (((uniChar & 0x3FF) << 10) | (low & 0x3FF)) + 0x10000;
-	    return len + len2;
-	}
-    }
-    *chPtr = uniChar;
-    return len;
-}
-
-/*
- *---------------------------------------------------------------------------
- *
- * TkUniCharToUtf --
- *
- *	Almost the same as Tcl_UniCharToUtf but producing 2 x 3-byte UTF-8
- *	sequences for out-of-bmp characters when TCL_UTF_MAX==3.
- *	So, up to 6 bytes might be produced.
- *
- * Results:
- *	*buf is filled with the UTF-8 string, and the return value is the
- *	number of bytes produced.
- *
- * Side effects:
- *	None.
- *
- *---------------------------------------------------------------------------
- */
-
-int TkUniCharToUtf(int ch, char *buf)
-{
-    if ((unsigned)(ch - 0x10000) <= 0xFFFFF) {
-	/* Spit out a 4-byte UTF-8 character or 2 x 3-byte UTF-8 characters, depending on Tcl
-	 * version and/or TCL_UTF_MAX build value */
-	int len = Tcl_UniCharToUtf(0xD800 | ((ch - 0x10000) >> 10), buf);
-	return len + Tcl_UniCharToUtf(0xDC00 | (ch & 0x7FF), buf + len);
-    }
-    return Tcl_UniCharToUtf(ch, buf);
-}
-/*
- *---------------------------------------------------------------------------
- *
- * TkUtfPrev --
- *
- *	Almost the same as Tcl_UtfPrev.
- *	This function is capable of jumping over a upper/lower surrogate pair.
- *	So, might jump back up to 6 bytes.
- *
- * Results:
- *	pointer to the first byte of the current UTF-8 character. A surrogate
- *	pair is also handled as being a single entity.
- *
- * Side effects:
- *	None.
- *
- *---------------------------------------------------------------------------
- */
-
-const char *
-TkUtfPrev(
-    const char *src,	/* The UTF-8 string. */
-    const char *start)		/* Start position of string */
-{
-    const char *p = Tcl_UtfPrev(src, start);
-    const char *first = Tcl_UtfPrev(p, start);
-    int ch;
-
-#if TCL_UTF_MAX == 3
-    if ((src - start > 3) && ((src[-1] & 0xC0) == 0x80) && ((src[-2] & 0xC0) == 0x80)
-	    && ((src[-3] & 0xC0) == 0x80) && (UCHAR(src[-4]) >= 0xF0)) {
-	return src - 4;
-    }
-#endif
-
-    return (first + TkUtfToUniChar(first, &ch) >= src) ? first : p ;
-}
-
-/*
- *---------------------------------------------------------------------------
- *
- * TkUtfAtIndex --
- *
- *	Returns a pointer to the specified character (not byte) position in
- *	a CESU-8 string.  This will never point at a low surrogate.
- *
- * Results:
- *	As above.
- *
- * Side effects:
- *	None.
- *
- *---------------------------------------------------------------------------
- */
-
-const char *
-TkUtfAtIndex(
-    const char *src,	/* The UTF-8 string. */
-    int index)		/* The position of the desired character. */
-{
-    int ch;
-    const char *p = Tcl_UtfAtIndex(src, index);
-    if ((p > src) && (UCHAR(p[-1]) >= 0xF0)) {
-	--p;
-	return p + TkUtfToUniChar(p, &ch);
-    }
-    return p;
-}
-#endif
 /*
  * Local Variables:
  * mode: c

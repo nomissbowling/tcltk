@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_Namespace manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Namespace</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Namespace</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Namespace.htm#M2" NAME="L488">NAME</A>
-<DL><DD>Tcl_AppendExportList, Tcl_CreateNamespace, Tcl_DeleteNamespace, Tcl_Export, Tcl_FindCommand, Tcl_FindNamespace, Tcl_ForgetImport, Tcl_GetCurrentNamespace, Tcl_GetGlobalNamespace, Tcl_GetNamespaceUnknownHandler, Tcl_Import, Tcl_SetNamespaceUnknownHandler &mdash; manipulate namespaces</DD></DL>
-<DD><A HREF="Namespace.htm#M3" NAME="L489">SYNOPSIS</A>
+<DD><A HREF="Namespace.htm#M2" NAME="L440">NAME</A>
+<DL><DD>Tcl_AppendExportList, Tcl_CreateNamespace, Tcl_DeleteNamespace, Tcl_Export, Tcl_FindCommand, Tcl_FindNamespace, Tcl_ForgetImport, Tcl_GetCurrentNamespace, Tcl_GetGlobalNamespace, Tcl_GetNamespaceUnknownHandler, Tcl_Import, Tcl_SetNamespaceUnknownHandler - manipulate namespaces</DD></DL>
+<DD><A HREF="Namespace.htm#M3" NAME="L441">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>Tcl_Namespace *
@@ -35,15 +35,15 @@
 <DD>int
 <DD><B>Tcl_SetNamespaceUnknownHandler(</B><I>interp, nsPtr, handlerPtr</I>)
 </DL>
-<DD><A HREF="Namespace.htm#M4" NAME="L490">ARGUMENTS</A>
+<DD><A HREF="Namespace.htm#M4" NAME="L442">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Namespace.htm#M5" NAME="L491">DESCRIPTION</A>
-<DD><A HREF="Namespace.htm#M6" NAME="L492">SEE ALSO</A>
-<DD><A HREF="Namespace.htm#M7" NAME="L493">KEYWORDS</A>
+<DD><A HREF="Namespace.htm#M5" NAME="L443">DESCRIPTION</A>
+<DD><A HREF="Namespace.htm#M6" NAME="L444">SEE ALSO</A>
+<DD><A HREF="Namespace.htm#M7" NAME="L445">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_AppendExportList, Tcl_CreateNamespace, Tcl_DeleteNamespace, Tcl_Export, Tcl_FindCommand, Tcl_FindNamespace, Tcl_ForgetImport, Tcl_GetCurrentNamespace, Tcl_GetGlobalNamespace, Tcl_GetNamespaceUnknownHandler, Tcl_Import, Tcl_SetNamespaceUnknownHandler &mdash; manipulate namespaces
+Tcl_AppendExportList, Tcl_CreateNamespace, Tcl_DeleteNamespace, Tcl_Export, Tcl_FindCommand, Tcl_FindNamespace, Tcl_ForgetImport, Tcl_GetCurrentNamespace, Tcl_GetGlobalNamespace, Tcl_GetNamespaceUnknownHandler, Tcl_Import, Tcl_SetNamespaceUnknownHandler - manipulate namespaces
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 Tcl_Namespace *<BR>
@@ -63,9 +63,9 @@ Tcl_Namespace *<BR>
 <B>Tcl_GetGlobalNamespace</B>(<I>interp</I>)<BR>
 Tcl_Namespace *<BR>
 <B>Tcl_FindNamespace</B>(<I>interp, name, contextNsPtr, flags</I>)<BR>
-<A HREF="../TclLib/CrtObjCmd.htm">Tcl_Command</A><BR>
+Tcl_Command<BR>
 <B>Tcl_FindCommand</B>(<I>interp, name, contextNsPtr, flags</I>)<BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tcl_GetNamespaceUnknownHandler(</B><I>interp, nsPtr</I>)<BR>
 int<BR>
 <B>Tcl_SetNamespaceUnknownHandler(</B><I>interp, nsPtr, handlerPtr</I>)<BR>
@@ -85,8 +85,8 @@ if no such callback is to be performed.
 <P><DT>Tcl_Namespace <B>*nsPtr</B> (in)<DD>
 The namespace to be manipulated, or NULL (for other than
 <B>Tcl_DeleteNamespace</B>) to manipulate the current namespace.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*objPtr</B> (out)<DD>
-A reference to an unshared value to which the function output will be
+<P><DT>Tcl_Obj <B>*objPtr</B> (out)<DD>
+A reference to an unshared object to which the function output will be
 written.
 <P><DT>const char <B>*pattern</B> (in)<DD>
 The glob-style pattern (see <B><A HREF="../TclLib/StrMatch.htm">Tcl_StringMatch</A></B>) that describes the
@@ -110,7 +110,7 @@ global namespace), <B>TCL_NAMESPACE_ONLY</B> (just for <B>Tcl_FindCommand</B>;
 indicates that the search is always to be conducted relative to the
 context namespace), and <B>TCL_LEAVE_ERR_MSG</B> (indicates that an error
 message should be left in the interpreter if the search fails.)
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*handlerPtr</B> (in)<DD>
+<P><DT>Tcl_Obj <B>*handlerPtr</B> (in)<DD>
 A script fragment to be installed as the unknown command handler for the
 namespace, or NULL to reset the handler to its default.
 <P></DL>
@@ -132,12 +132,9 @@ the global namespace.)
 <P>
 <B>Tcl_CreateNamespace</B> creates a new namespace.  The
 <I>deleteProc</I> will have the following type signature:
+<PRE>typedef void (Tcl_NamespaceDeleteProc) (ClientData clientData);</PRE>
 <P>
-<PRE>typedef void <B>Tcl_NamespaceDeleteProc</B>(
-        ClientData <I>clientData</I>);</PRE>
-<P>
-<B>Tcl_DeleteNamespace</B> deletes a namespace, calling the
-<I>deleteProc</I> defined for the namespace (if any).
+<B>Tcl_DeleteNamespace</B> deletes a namespace.
 <P>
 <B>Tcl_AppendExportList</B> retrieves the export patterns for a
 namespace given namespace and appends them (as list items) to
@@ -175,10 +172,12 @@ for the namespace, or NULL if none is set.
 <B>Tcl_SetNamespaceUnknownHandler</B> sets the unknown command handler for
 the namespace. If <I>handlerPtr</I> is NULL, then the handler is reset to
 its default.
+
 <H3><A NAME="M6">SEE ALSO</A></H3>
-<B><A HREF="../TclLib/CrtCommand.htm">Tcl_CreateCommand</A></B>, <B><A HREF="../TclLib/ListObj.htm">Tcl_ListObjAppendList</A></B>, <B><A HREF="../TclLib/SetVar.htm">Tcl_SetVar</A></B>
+<B><A HREF="../TclLib/CrtCommand.htm">Tcl_CreateCommand</A></B>, <B>Tcl_ListObjAppendElements</B>, <B><A HREF="../TclLib/SetVar.htm">Tcl_SetVar</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/N.htm#namespace">namespace</A>, <A href="../Keywords/C.htm#command">command</A>
-<div class="copy">Copyright &copy; 2003 Donal K. Fellows
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2003 Donal K. Fellows
 </div>
 </BODY></HTML>

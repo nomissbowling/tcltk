@@ -3,49 +3,49 @@
 <HEAD><TITLE>Safe manual page - Tcl Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> safe</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> safe</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="safe.htm#M2" NAME="L1632">NAME</A>
-<DL><DD>safe &mdash; Creating and manipulating safe interpreters</DD></DL>
-<DD><A HREF="safe.htm#M3" NAME="L1633">SYNOPSIS</A>
+<DD><A HREF="safe.htm#M2" NAME="L1436">NAME</A>
+<DL><DD>Safe&nbsp;Base - A mechanism for creating and manipulating safe interpreters</DD></DL>
+<DD><A HREF="safe.htm#M3" NAME="L1437">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="safe.htm#M4" NAME="L1634">OPTIONS</A>
-<DD><A HREF="safe.htm#M5" NAME="L1635">DESCRIPTION</A>
-<DD><A HREF="safe.htm#M6" NAME="L1636">COMMANDS</A>
+<DD><A HREF="safe.htm#M4" NAME="L1438">OPTIONS</A>
+<DD><A HREF="safe.htm#M5" NAME="L1439">DESCRIPTION</A>
+<DD><A HREF="safe.htm#M6" NAME="L1440">COMMANDS</A>
 <DL class="commands">
-<DD><A HREF="safe.htm#M7" NAME="L1637"><B>::safe::interpCreate</B> ?<I>slave</I>? ?<I>options...</I>?</A>
-<DD><A HREF="safe.htm#M8" NAME="L1638"><B>::safe::interpInit</B> <I>slave</I> ?<I>options...</I>?</A>
-<DD><A HREF="safe.htm#M9" NAME="L1639"><B>::safe::interpConfigure</B> <I>slave</I> ?<I>options...</I>?</A>
-<DD><A HREF="safe.htm#M10" NAME="L1640"><B>::safe::interpDelete</B> <I>slave</I></A>
-<DD><A HREF="safe.htm#M11" NAME="L1641"><B>::safe::interpFindInAccessPath</B> <I>slave</I> <I>directory</I></A>
-<DD><A HREF="safe.htm#M12" NAME="L1642"><B>::safe::interpAddToAccessPath</B> <I>slave</I> <I>directory</I></A>
-<DD><A HREF="safe.htm#M13" NAME="L1643"><B>::safe::setLogCmd</B> ?<I>cmd arg...</I>?</A>
+<DD><A HREF="safe.htm#M7" NAME="L1441"><B>::safe::interpCreate</B> ?<I>slave</I>? ?<I>options...</I>?</A>
+<DD><A HREF="safe.htm#M8" NAME="L1442"><B>::safe::interpInit</B> <I>slave</I> ?<I>options...</I>?</A>
+<DD><A HREF="safe.htm#M9" NAME="L1443"><B>::safe::interpConfigure</B> <I>slave</I> ?<I>options...</I>?</A>
+<DD><A HREF="safe.htm#M10" NAME="L1444"><B>::safe::interpDelete</B> <I>slave</I></A>
+<DD><A HREF="safe.htm#M11" NAME="L1445"><B>::safe::interpFindInAccessPath</B> <I>slave</I> <I>directory</I></A>
+<DD><A HREF="safe.htm#M12" NAME="L1446"><B>::safe::interpAddToAccessPath</B> <I>slave</I> <I>directory</I></A>
+<DD><A HREF="safe.htm#M13" NAME="L1447"><B>::safe::setLogCmd</B> ?<I>cmd arg...</I>?</A>
 </DL>
-<DD><A HREF="safe.htm#M14" NAME="L1644">OPTIONS</A>
+<DD><A HREF="safe.htm#M14" NAME="L1448">OPTIONS</A>
 <DL class="options">
-<DD><A HREF="safe.htm#M15" NAME="L1645"><B>-accessPath</B> <I>directoryList</I></A>
-<DD><A HREF="safe.htm#M16" NAME="L1646"><B>-statics</B> <I>boolean</I></A>
-<DD><A HREF="safe.htm#M17" NAME="L1647"><B>-noStatics</B></A>
-<DD><A HREF="safe.htm#M18" NAME="L1648"><B>-nested</B> <I>boolean</I></A>
-<DD><A HREF="safe.htm#M19" NAME="L1649"><B>-nestedLoadOk</B></A>
-<DD><A HREF="safe.htm#M20" NAME="L1650"><B>-deleteHook</B> <I>script</I></A>
+<DD><A HREF="safe.htm#M15" NAME="L1449"><B>-accessPath</B> <I>directoryList</I></A>
+<DD><A HREF="safe.htm#M16" NAME="L1450"><B>-statics</B> <I>boolean</I></A>
+<DD><A HREF="safe.htm#M17" NAME="L1451"><B>-noStatics</B></A>
+<DD><A HREF="safe.htm#M18" NAME="L1452"><B>-nested</B> <I>boolean</I></A>
+<DD><A HREF="safe.htm#M19" NAME="L1453"><B>-nestedLoadOk</B></A>
+<DD><A HREF="safe.htm#M20" NAME="L1454"><B>-deleteHook</B> <I>script</I></A>
 </DL>
-<DD><A HREF="safe.htm#M21" NAME="L1651">ALIASES</A>
+<DD><A HREF="safe.htm#M21" NAME="L1455">ALIASES</A>
 <DL class="aliases">
-<DD><A HREF="safe.htm#M22" NAME="L1652"><B>source</B> <I>fileName</I></A>
-<DD><A HREF="safe.htm#M23" NAME="L1653"><B>load</B> <I>fileName</I></A>
-<DD><A HREF="safe.htm#M24" NAME="L1654"><B>file</B> ?<I>subCmd args...</I>?</A>
-<DD><A HREF="safe.htm#M25" NAME="L1655"><B>encoding</B> ?<I>subCmd args...</I>?</A>
-<DD><A HREF="safe.htm#M26" NAME="L1656"><B>exit</B></A>
+<DD><A HREF="safe.htm#M22" NAME="L1456"><B>source</B> <I>fileName</I></A>
+<DD><A HREF="safe.htm#M23" NAME="L1457"><B>load</B> <I>fileName</I></A>
+<DD><A HREF="safe.htm#M24" NAME="L1458"><B>file</B> ?<I>subCmd args...</I>?</A>
+<DD><A HREF="safe.htm#M25" NAME="L1459"><B>encoding</B> ?<I>subCmd args...</I>?</A>
+<DD><A HREF="safe.htm#M26" NAME="L1460"><B>exit</B></A>
 </DL>
-<DD><A HREF="safe.htm#M27" NAME="L1657">SECURITY</A>
-<DD><A HREF="safe.htm#M28" NAME="L1658">SEE ALSO</A>
-<DD><A HREF="safe.htm#M29" NAME="L1659">KEYWORDS</A>
+<DD><A HREF="safe.htm#M27" NAME="L1461">SECURITY</A>
+<DD><A HREF="safe.htm#M28" NAME="L1462">SEE ALSO</A>
+<DD><A HREF="safe.htm#M29" NAME="L1463">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-safe &mdash; Creating and manipulating safe interpreters
+Safe&nbsp;Base - A mechanism for creating and manipulating safe interpreters
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>::safe::interpCreate</B> ?<I>slave</I>? ?<I>options...</I>?<BR>
 <B>::safe::interpInit</B> <I>slave</I> ?<I>options...</I>?<BR>
@@ -64,15 +64,15 @@ Safe Tcl is a mechanism for executing untrusted Tcl scripts
 safely and for providing mediated access by such scripts to
 potentially dangerous functionality.
 <P>
-Safe Tcl ensures that untrusted Tcl scripts cannot harm the
+The Safe Base ensures that untrusted Tcl scripts cannot harm the
 hosting application.
-It prevents integrity and privacy attacks. Untrusted Tcl
+The Safe Base prevents integrity and privacy attacks. Untrusted Tcl
 scripts are prevented from corrupting the state of the hosting
 application or computer. Untrusted scripts are also prevented from
 disclosing information stored on the hosting computer or in the
 hosting application to any party.
 <P>
-Safe Tcl allows a master interpreter to create safe, restricted
+The Safe Base allows a master interpreter to create safe, restricted
 interpreters that contain a set of predefined aliases for the <B><A HREF="../TclCmd/source.htm">source</A></B>,
 <B><A HREF="../TclCmd/load.htm">load</A></B>, <B><A HREF="../TclCmd/file.htm">file</A></B>, <B><A HREF="../TclCmd/encoding.htm">encoding</A></B>, and <B><A HREF="../TclCmd/exit.htm">exit</A></B> commands and
 are able to use the auto-loading and package mechanisms.
@@ -83,11 +83,11 @@ containing tokens. When the safe interpreter requests to source a file, it
 uses the token in the virtual path as part of the file name to source; the
 master interpreter transparently 
 translates the token into a real directory name and executes the 
-requested operation (see the section <B><A HREF="#M27">SECURITY</A></B> below for details).
+requested operation (see the section <B>SECURITY</B> below for details).
 Different levels of security can be selected by using the optional flags
 of the commands described below.
 <P>
-All commands provided in the master interpreter by Safe Tcl reside in
+All commands provided in the master interpreter by the Safe Base reside in
 the <B>safe</B> namespace.
 <H3><A NAME="M6">COMMANDS</A></H3>
 The following commands are provided in the master interpreter:
@@ -95,16 +95,16 @@ The following commands are provided in the master interpreter:
 <DL class="commands">
 <DT><A NAME="M7"><B>::safe::interpCreate</B> ?<I>slave</I>? ?<I>options...</I>?</A><DD>
 Creates a safe interpreter, installs the aliases described in the section
-<B><A HREF="#M21">ALIASES</A></B> and initializes the auto-loading and package mechanism as
+<B>ALIASES</B> and initializes the auto-loading and package mechanism as
 specified by the supplied <I>options</I>.
-See the <B><A HREF="#M14">OPTIONS</A></B> section below for a description of the
+See the <B>OPTIONS</B> section below for a description of the
 optional arguments.
 If the <I>slave</I> argument is omitted, a name will be generated.
 <B>::safe::interpCreate</B> always returns the interpreter name.
 <P><DT><A NAME="M8"><B>::safe::interpInit</B> <I>slave</I> ?<I>options...</I>?</A><DD>
 This command is similar to <B>interpCreate</B> except it that does not
 create the safe interpreter. <I>slave</I> must have been created by some
-other means, like <B><A HREF="../TclCmd/interp.htm">interp create</A></B> <B>-safe</B>.
+other means, like <B>interp create -safe</B>.
 <P><DT><A NAME="M9"><B>::safe::interpConfigure</B> <I>slave</I> ?<I>options...</I>?</A><DD>
 If no <I>options</I> are given, returns the settings for all options for the
 named safe interpreter as a list of options and their current values
@@ -115,7 +115,7 @@ it will return a list of 2 elements <I>name</I> and <I>value</I> where
 for that option and the <I>slave</I>.
 If more than two additional arguments are provided, it will reconfigure the
 safe interpreter and change each and only the provided options.
-See the section on <B><A HREF="#M14">OPTIONS</A></B> below for options description.
+See the section on <B>OPTIONS</B> below for options description.
 Example of use:
 <P>
 <PRE># Create new interp with the same configuration as &quot;$i0&quot;:
@@ -195,7 +195,7 @@ can <B><A HREF="../TclCmd/source.htm">source</A></B> and <B><A HREF="../TclCmd/l
 If this option is not specified, or if it is given as the
 empty list, the safe interpreter will use the same directories as its
 master for auto-loading.
-See the section <B><A HREF="#M27">SECURITY</A></B> below for more detail about virtual paths, 
+See the section <B>SECURITY</B> below for more detail about virtual paths, 
 tokens and access control.
 <P><DT><A NAME="M16"><B>-statics</B> <I>boolean</I></A><DD>
 This option specifies if the safe interpreter will be allowed
@@ -237,7 +237,7 @@ the virtual path for the safe interpreter. The <B><A HREF="../TclCmd/source.htm"
 the safe interpreter to
 use one of the token names in its virtual path to denote the directory in
 which the file to be sourced can be found.
-See the section on <B><A HREF="#M27">SECURITY</A></B> for more discussion of restrictions on
+See the section on <B>SECURITY</B> for more discussion of restrictions on
 valid filenames.
 <P><DT><A NAME="M23"><B>load</B> <I>fileName</I></A><DD>
 The requested file, a shared object file, is dynamically loaded into the
@@ -248,8 +248,8 @@ Additionally, the shared object file must contain a safe entry point; see
 the manual page for the <B><A HREF="../TclCmd/load.htm">load</A></B> command for more details.
 <P><DT><A NAME="M24"><B>file</B> ?<I>subCmd args...</I>?</A><DD>
 The <B><A HREF="../TclCmd/file.htm">file</A></B> alias provides access to a safe subset of the subcommands of
-the <B><A HREF="../TclCmd/file.htm">file</A></B> command; it allows only <B>dirname</B>, <B>join</B>,
-<B>extension</B>, <B>root</B>, <B>tail</B>, <B>pathname</B> and <B>split</B>
+the <B><A HREF="../TclCmd/file.htm">file</A></B> command; it allows only <B>dirname</B>, <B><A HREF="../TclCmd/join.htm">join</A></B>,
+<B>extension</B>, <B>root</B>, <B>tail</B>, <B>pathname</B> and <B><A HREF="../TclCmd/split.htm">split</A></B>
 subcommands. For more details on what these subcommands do see the manual
 page for the <B><A HREF="../TclCmd/file.htm">file</A></B> command.
 <P><DT><A NAME="M25"><B>encoding</B> ?<I>subCmd args...</I>?</A><DD>
@@ -262,13 +262,13 @@ The calling interpreter is deleted and its computation is stopped, but the
 Tcl process in which this interpreter exists is not terminated.
 <P></DL>
 <H3><A NAME="M27">SECURITY</A></H3>
-Safe Tcl does not attempt to completely prevent annoyance and
+The Safe Base does not attempt to completely prevent annoyance and
 denial of service attacks. These forms of attack prevent the
 application or user from temporarily using the computer to perform
 useful work, for example by consuming all available CPU time or
 all available screen real estate.
 These attacks, while aggravating, are deemed to be of lesser importance
-in general than integrity and privacy attacks that Safe Tcl
+in general than integrity and privacy attacks that the Safe Base
 is to prevent.
 <P>
 The commands available in a safe interpreter, in addition to
@@ -321,8 +321,8 @@ or be called
 <P>
 Each element of the initial access path
 list will be assigned a token that will be set in
-the slave <B><A HREF="../TclCmd/tclvars.htm">auto_path</A></B> and the first element of that list will be set as
-the <B><A HREF="../TclCmd/tclvars.htm">tcl_library</A></B> for that slave.
+the slave <B>auto_path</B> and the first element of that list will be set as
+the <B>tcl_library</B> for that slave.
 <P>
 If the access path argument is not given or is the empty list, 
 the default behavior is to let the slave access the same packages
@@ -330,16 +330,16 @@ as the master has access to (Or to be more precise:
 only packages written in Tcl (which by definition cannot be dangerous
 as they run in the slave interpreter) and C extensions that
 provides a _SafeInit entry point). For that purpose, the master's 
-<B><A HREF="../TclCmd/tclvars.htm">auto_path</A></B> will be used to construct the slave access path. 
+<B>auto_path</B> will be used to construct the slave access path. 
 In order that the slave successfully loads the Tcl library files
-(which includes the auto-loading mechanism itself) the <B><A HREF="../TclCmd/tclvars.htm">tcl_library</A></B> will be
+(which includes the auto-loading mechanism itself) the <B>tcl_library</B> will be
 added or moved to the first position if necessary, in the 
 slave access path, so the slave
-<B><A HREF="../TclCmd/tclvars.htm">tcl_library</A></B> will be the same as the master's (its real
+<B>tcl_library</B> will be the same as the master's (its real
 path will still be invisible to the slave though). 
 In order that auto-loading works the same for the slave and
 the master in this by default case, the first-level
-sub directories of each directory in the master <B><A HREF="../TclCmd/tclvars.htm">auto_path</A></B> will
+sub directories of each directory in the master <B>auto_path</B> will
 also be added (if not already included) to the slave access path.
 You can always specify a more
 restrictive path for which sub directories will never be searched by 
@@ -351,11 +351,12 @@ initialization (i.e. through <B>interpConfigure -accessPath </B><I>list</I>),
 an <B><A HREF="../TclCmd/library.htm">auto_reset</A></B> is automatically evaluated in the safe interpreter
 to synchronize its <B>auto_index</B> with the new token list.
 <H3><A NAME="M28">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/interp.htm">interp</A></B>, <B><A HREF="../TclCmd/library.htm">library</A></B>, <B><A HREF="../TclCmd/load.htm">load</A></B>, <B><A HREF="../TclCmd/package.htm">package</A></B>, <B><A HREF="../TclCmd/source.htm">source</A></B>, <B><A HREF="../TclCmd/unknown.htm">unknown</A></B>
+<B><A HREF="../TclCmd/interp.htm">interp</A></B>, <B>library</B>, <B><A HREF="../TclCmd/load.htm">load</A></B>, <B><A HREF="../TclCmd/package.htm">package</A></B>, <B><A HREF="../TclCmd/source.htm">source</A></B>, <B><A HREF="../TclCmd/unknown.htm">unknown</A></B>
 <H3><A NAME="M29">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#alias">alias</A>, <A href="../Keywords/A.htm#auto-loading">auto-loading</A>, <A href="../Keywords/A.htm#auto_mkindex">auto_mkindex</A>, <A href="../Keywords/L.htm#load">load</A>, <A href="../Keywords/M.htm#master interpreter">master interpreter</A>, <A href="../Keywords/S.htm#safe
 interpreter">safe
 interpreter</A>, <A href="../Keywords/S.htm#slave interpreter">slave interpreter</A>, <A href="../Keywords/S.htm#source">source</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

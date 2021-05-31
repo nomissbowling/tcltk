@@ -13,6 +13,17 @@
 #include "tkInt.h"
 #include "tkMenubutton.h"
 
+/*
+ * The structure below defines menubutton class behavior by means of functions
+ * that can be invoked from generic window code.
+ */
+
+Tk_ClassProcs tkpMenubuttonClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    TkMenuButtonWorldChanged,	/* worldChangedProc */
+    NULL,
+    NULL
+};
 
 /*
  *----------------------------------------------------------------------
@@ -25,14 +36,14 @@
  *	Returns a newly allocated TkMenuButton structure.
  *
  * Side effects:
- *	None
+ *	Registers an event handler for the widget.
  *
  *----------------------------------------------------------------------
  */
 
 TkMenuButton *
 TkpCreateMenuButton(
-    TCL_UNUSED(Tk_Window))
+    Tk_Window tkwin)
 {
     return (TkMenuButton *)ckalloc(sizeof(TkMenuButton));
 }
@@ -58,14 +69,14 @@ void
 TkpDisplayMenuButton(
     ClientData clientData)	/* Information about widget. */
 {
-    TkMenuButton *mbPtr = (TkMenuButton *)clientData;
+    register TkMenuButton *mbPtr = (TkMenuButton *) clientData;
     GC gc;
     Tk_3DBorder border;
     Pixmap pixmap;
     int x = 0;			/* Initialization needed only to stop compiler
 				 * warning. */
     int y = 0;
-    Tk_Window tkwin = mbPtr->tkwin;
+    register Tk_Window tkwin = mbPtr->tkwin;
     int fullWidth, fullHeight;
     int textXOffset, textYOffset;
     int imageWidth, imageHeight;
@@ -280,6 +291,8 @@ TkpDisplayMenuButton(
 		mbPtr->borderWidth, mbPtr->relief);
     }
     if (mbPtr->highlightWidth != 0) {
+	GC gc;
+
 	if (mbPtr->flags & GOT_FOCUS) {
 	    gc = Tk_GCForColor(mbPtr->highlightColorPtr, pixmap);
 	} else {

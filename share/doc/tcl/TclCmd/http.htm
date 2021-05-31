@@ -3,98 +3,98 @@
 <HEAD><TITLE>http manual page - Tcl Bundled Packages</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> http</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> http</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="http.htm#M2" NAME="L700">NAME</A>
-<DL><DD>http &mdash; Client-side implementation of the HTTP/1.1 protocol</DD></DL>
-<DD><A HREF="http.htm#M3" NAME="L701">SYNOPSIS</A>
+<DD><A HREF="http.htm#M2" NAME="L602">NAME</A>
+<DL><DD>http - Client-side implementation of the HTTP/1.1 protocol</DD></DL>
+<DD><A HREF="http.htm#M3" NAME="L603">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="http.htm#M4" NAME="L702">DESCRIPTION</A>
-<DD><A HREF="http.htm#M5" NAME="L703">COMMANDS</A>
+<DD><A HREF="http.htm#M4" NAME="L604">DESCRIPTION</A>
+<DD><A HREF="http.htm#M5" NAME="L605">COMMANDS</A>
 <DL class="commands">
-<DD><A HREF="http.htm#M6" NAME="L704"><B>::http::config</B> ?<I>options</I>?</A>
+<DD><A HREF="http.htm#M6" NAME="L606"><B>::http::config</B> ?<I>options</I>?</A>
 <DL class="commands">
-<DD><A HREF="http.htm#M7" NAME="L705"><B>-accept</B> <I>mimetypes</I></A>
-<DD><A HREF="http.htm#M8" NAME="L706"><B>-proxyhost</B> <I>hostname</I></A>
-<DD><A HREF="http.htm#M9" NAME="L707"><B>-proxyport</B> <I>number</I></A>
-<DD><A HREF="http.htm#M10" NAME="L708"><B>-proxyfilter</B> <I>command</I></A>
-<DD><A HREF="http.htm#M11" NAME="L709"><B>-urlencoding</B> <I>encoding</I></A>
-<DD><A HREF="http.htm#M12" NAME="L710"><B>-useragent</B> <I>string</I></A>
+<DD><A HREF="http.htm#M7" NAME="L607"><B>-accept</B> <I>mimetypes</I></A>
+<DD><A HREF="http.htm#M8" NAME="L608"><B>-proxyhost</B> <I>hostname</I></A>
+<DD><A HREF="http.htm#M9" NAME="L609"><B>-proxyport</B> <I>number</I></A>
+<DD><A HREF="http.htm#M10" NAME="L610"><B>-proxyfilter</B> <I>command</I></A>
+<DD><A HREF="http.htm#M11" NAME="L611"><B>-urlencoding</B> <I>encoding</I></A>
+<DD><A HREF="http.htm#M12" NAME="L612"><B>-useragent</B> <I>string</I></A>
 </DL>
-<DD><A HREF="http.htm#M13" NAME="L711"><B>::http::geturl</B> <I>url</I> ?<I>options</I>?</A>
+<DD><A HREF="http.htm#M13" NAME="L613"><B>::http::geturl</B> <I>url</I> ?<I>options</I>?</A>
 <DL class="commands">
-<DD><A HREF="http.htm#M14" NAME="L712"><B>-binary</B> <I>boolean</I></A>
-<DD><A HREF="http.htm#M15" NAME="L713"><B>-blocksize</B> <I>size</I></A>
-<DD><A HREF="http.htm#M16" NAME="L714"><B>-channel</B> <I>name</I></A>
-<DD><A HREF="http.htm#M17" NAME="L715"><B>-command</B> <I>callback</I></A>
-<DD><A HREF="http.htm#M18" NAME="L716"><B>-handler</B> <I>callback</I></A>
-<DD><A HREF="http.htm#M19" NAME="L717"><B>-headers</B> <I>keyvaluelist</I></A>
-<DD><A HREF="http.htm#M20" NAME="L718"><B>-keepalive</B> <I>boolean</I></A>
-<DD><A HREF="http.htm#M21" NAME="L719"><B>-method</B> <I>type</I></A>
-<DD><A HREF="http.htm#M22" NAME="L720"><B>-myaddr</B> <I>address</I></A>
-<DD><A HREF="http.htm#M23" NAME="L721"><B>-progress</B> <I>callback</I></A>
-<DD><A HREF="http.htm#M24" NAME="L722"><B>-protocol</B> <I>version</I></A>
-<DD><A HREF="http.htm#M25" NAME="L723"><B>-query</B> <I>query</I></A>
-<DD><A HREF="http.htm#M26" NAME="L724"><B>-queryblocksize</B> <I>size</I></A>
-<DD><A HREF="http.htm#M27" NAME="L725"><B>-querychannel</B> <I>channelID</I></A>
-<DD><A HREF="http.htm#M28" NAME="L726"><B>-queryprogress</B> <I>callback</I></A>
-<DD><A HREF="http.htm#M29" NAME="L727"><B>-strict</B> <I>boolean</I></A>
-<DD><A HREF="http.htm#M30" NAME="L728"><B>-timeout</B> <I>milliseconds</I></A>
-<DD><A HREF="http.htm#M31" NAME="L729"><B>-type</B> <I>mime-type</I></A>
-<DD><A HREF="http.htm#M32" NAME="L730"><B>-validate</B> <I>boolean</I></A>
+<DD><A HREF="http.htm#M14" NAME="L614"><B>-binary</B> <I>boolean</I></A>
+<DD><A HREF="http.htm#M15" NAME="L615"><B>-blocksize</B> <I>size</I></A>
+<DD><A HREF="http.htm#M16" NAME="L616"><B>-channel</B> <I>name</I></A>
+<DD><A HREF="http.htm#M17" NAME="L617"><B>-command</B> <I>callback</I></A>
+<DD><A HREF="http.htm#M18" NAME="L618"><B>-handler</B> <I>callback</I></A>
+<DD><A HREF="http.htm#M19" NAME="L619"><B>-headers</B> <I>keyvaluelist</I></A>
+<DD><A HREF="http.htm#M20" NAME="L620"><B>-keepalive</B> <I>boolean</I></A>
+<DD><A HREF="http.htm#M21" NAME="L621"><B>-method</B> <I>type</I></A>
+<DD><A HREF="http.htm#M22" NAME="L622"><B>-myaddr</B> <I>address</I></A>
+<DD><A HREF="http.htm#M23" NAME="L623"><B>-progress</B> <I>callback</I></A>
+<DD><A HREF="http.htm#M24" NAME="L624"><B>-protocol</B> <I>version</I></A>
+<DD><A HREF="http.htm#M25" NAME="L625"><B>-query</B> <I>query</I></A>
+<DD><A HREF="http.htm#M26" NAME="L626"><B>-queryblocksize</B> <I>size</I></A>
+<DD><A HREF="http.htm#M27" NAME="L627"><B>-querychannel</B> <I>channelID</I></A>
+<DD><A HREF="http.htm#M28" NAME="L628"><B>-queryprogress</B> <I>callback</I></A>
+<DD><A HREF="http.htm#M29" NAME="L629"><B>-strict</B> <I>boolean</I></A>
+<DD><A HREF="http.htm#M30" NAME="L630"><B>-timeout</B> <I>milliseconds</I></A>
+<DD><A HREF="http.htm#M31" NAME="L631"><B>-type</B> <I>mime-type</I></A>
+<DD><A HREF="http.htm#M32" NAME="L632"><B>-validate</B> <I>boolean</I></A>
 </DL>
-<DD><A HREF="http.htm#M33" NAME="L731"><B>::http::formatQuery</B> <I>key value</I> ?<I>key value</I> ...?</A>
-<DD><A HREF="http.htm#M34" NAME="L732"><B>::http::reset</B> <I>token</I> ?<I>why</I>?</A>
-<DD><A HREF="http.htm#M35" NAME="L733"><B>::http::wait</B> <I>token</I></A>
-<DD><A HREF="http.htm#M36" NAME="L734"><B>::http::data</B> <I>token</I></A>
-<DD><A HREF="http.htm#M37" NAME="L735"><B>::http::error</B> <I>token</I></A>
-<DD><A HREF="http.htm#M38" NAME="L736"><B>::http::status</B> <I>token</I></A>
-<DD><A HREF="http.htm#M39" NAME="L737"><B>::http::code</B> <I>token</I></A>
-<DD><A HREF="http.htm#M40" NAME="L738"><B>::http::ncode</B> <I>token</I></A>
-<DD><A HREF="http.htm#M41" NAME="L739"><B>::http::size</B> <I>token</I></A>
-<DD><A HREF="http.htm#M42" NAME="L740"><B>::http::meta</B> <I>token</I></A>
-<DD><A HREF="http.htm#M43" NAME="L741"><B>::http::cleanup</B> <I>token</I></A>
-<DD><A HREF="http.htm#M44" NAME="L742"><B>::http::register</B> <I>proto port command</I></A>
-<DD><A HREF="http.htm#M45" NAME="L743"><B>::http::unregister</B> <I>proto</I></A>
+<DD><A HREF="http.htm#M33" NAME="L633"><B>::http::formatQuery</B> <I>key value</I> ?<I>key value</I> ...?</A>
+<DD><A HREF="http.htm#M34" NAME="L634"><B>::http::reset</B> <I>token</I> ?<I>why</I>?</A>
+<DD><A HREF="http.htm#M35" NAME="L635"><B>::http::wait</B> <I>token</I></A>
+<DD><A HREF="http.htm#M36" NAME="L636"><B>::http::data</B> <I>token</I></A>
+<DD><A HREF="http.htm#M37" NAME="L637"><B>::http::error</B> <I>token</I></A>
+<DD><A HREF="http.htm#M38" NAME="L638"><B>::http::status</B> <I>token</I></A>
+<DD><A HREF="http.htm#M39" NAME="L639"><B>::http::code</B> <I>token</I></A>
+<DD><A HREF="http.htm#M40" NAME="L640"><B>::http::ncode</B> <I>token</I></A>
+<DD><A HREF="http.htm#M41" NAME="L641"><B>::http::size</B> <I>token</I></A>
+<DD><A HREF="http.htm#M42" NAME="L642"><B>::http::meta</B> <I>token</I></A>
+<DD><A HREF="http.htm#M43" NAME="L643"><B>::http::cleanup</B> <I>token</I></A>
+<DD><A HREF="http.htm#M44" NAME="L644"><B>::http::register</B> <I>proto port command</I></A>
+<DD><A HREF="http.htm#M45" NAME="L645"><B>::http::unregister</B> <I>proto</I></A>
 </DL>
-<DD><A HREF="http.htm#M46" NAME="L744">ERRORS</A>
+<DD><A HREF="http.htm#M46" NAME="L646">ERRORS</A>
 <DL class="errors">
-<DD><A HREF="http.htm#M47" NAME="L745"><B>ok</B></A>
-<DD><A HREF="http.htm#M48" NAME="L746"><B>eof</B></A>
-<DD><A HREF="http.htm#M49" NAME="L747"><B>error</B></A>
+<DD><A HREF="http.htm#M47" NAME="L647">ok</A>
+<DD><A HREF="http.htm#M48" NAME="L648">eof</A>
+<DD><A HREF="http.htm#M49" NAME="L649">error</A>
 </DL>
-<DD><A HREF="http.htm#M50" NAME="L748">STATE ARRAY</A>
+<DD><A HREF="http.htm#M50" NAME="L650">STATE ARRAY</A>
 <DL class="state array">
-<DD><A HREF="http.htm#M51" NAME="L749"><B>body</B></A>
-<DD><A HREF="http.htm#M52" NAME="L750"><B>charset</B></A>
-<DD><A HREF="http.htm#M53" NAME="L751"><B>coding</B></A>
-<DD><A HREF="http.htm#M54" NAME="L752"><B>currentsize</B></A>
-<DD><A HREF="http.htm#M55" NAME="L753"><B>error</B></A>
-<DD><A HREF="http.htm#M56" NAME="L754"><B>http</B></A>
-<DD><A HREF="http.htm#M57" NAME="L755"><B>meta</B></A>
+<DD><A HREF="http.htm#M51" NAME="L651"><B>body</B></A>
+<DD><A HREF="http.htm#M52" NAME="L652"><B>charset</B></A>
+<DD><A HREF="http.htm#M53" NAME="L653"><B>coding</B></A>
+<DD><A HREF="http.htm#M54" NAME="L654"><B>currentsize</B></A>
+<DD><A HREF="http.htm#M55" NAME="L655"><B>error</B></A>
+<DD><A HREF="http.htm#M56" NAME="L656"><B>http</B></A>
+<DD><A HREF="http.htm#M57" NAME="L657"><B>meta</B></A>
 <DL class="state array">
-<DD><A HREF="http.htm#M58" NAME="L756"><B>Content-Type</B></A>
-<DD><A HREF="http.htm#M59" NAME="L757"><B>Content-Length</B></A>
-<DD><A HREF="http.htm#M60" NAME="L758"><B>Location</B></A>
+<DD><A HREF="http.htm#M58" NAME="L658"><B>Content-Type</B></A>
+<DD><A HREF="http.htm#M59" NAME="L659"><B>Content-Length</B></A>
+<DD><A HREF="http.htm#M60" NAME="L660"><B>Location</B></A>
 </DL>
-<DD><A HREF="http.htm#M61" NAME="L759"><B>posterror</B></A>
-<DD><A HREF="http.htm#M62" NAME="L760"><B>status</B></A>
-<DD><A HREF="http.htm#M63" NAME="L761"><B>totalsize</B></A>
-<DD><A HREF="http.htm#M64" NAME="L762"><B>type</B></A>
-<DD><A HREF="http.htm#M65" NAME="L763"><B>url</B></A>
+<DD><A HREF="http.htm#M61" NAME="L661"><B>posterror</B></A>
+<DD><A HREF="http.htm#M62" NAME="L662"><B>status</B></A>
+<DD><A HREF="http.htm#M63" NAME="L663"><B>totalsize</B></A>
+<DD><A HREF="http.htm#M64" NAME="L664"><B>type</B></A>
+<DD><A HREF="http.htm#M65" NAME="L665"><B>url</B></A>
 </DL>
-<DD><A HREF="http.htm#M66" NAME="L764">EXAMPLE</A>
-<DD><A HREF="http.htm#M67" NAME="L765">SEE ALSO</A>
-<DD><A HREF="http.htm#M68" NAME="L766">KEYWORDS</A>
+<DD><A HREF="http.htm#M66" NAME="L666">EXAMPLE</A>
+<DD><A HREF="http.htm#M67" NAME="L667">SEE ALSO</A>
+<DD><A HREF="http.htm#M68" NAME="L668">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-http &mdash; Client-side implementation of the HTTP/1.1 protocol
+http - Client-side implementation of the HTTP/1.1 protocol
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>package require http ?2.7?</B><BR>
-<B>::http::config ?</B><I>-option value</I> ...?<BR>
-<B>::http::geturl </B><I>url</I> ?<I>-option value</I> ...?<BR>
+<B>::http::config </B><I>?options?</I><BR>
+<B>::http::geturl </B><I>url ?options?</I><BR>
 <B>::http::formatQuery</B> <I>key value</I> ?<I>key value</I> ...?<BR>
 <B>::http::reset</B> <I>token</I> ?<I>why</I>?<BR>
 <B>::http::wait </B><I>token</I><BR>
@@ -125,7 +125,7 @@ is performed.
 The return value of <B>::http::geturl</B> is a token for the transaction.
 The value is also the name of an array in the ::http namespace
 that contains state information about the transaction.  The elements
-of this array are described in the <B><A HREF="#M50">STATE ARRAY</A></B> section.
+of this array are described in the <B>STATE ARRAY</B> section.
 <P>
 If the <B>-command</B> option is specified, then
 the HTTP operation is done in the background.
@@ -186,8 +186,8 @@ The <B>-query</B> option causes a POST operation and
 the <B>-validate</B> option causes a HEAD operation;
 otherwise, a GET operation is performed.  The <B>::http::geturl</B> command
 returns a <I>token</I> value that can be used to get
-information about the transaction.  See the <B><A HREF="#M50">STATE ARRAY</A></B> and
-<B><A HREF="#M46">ERRORS</A></B> section for
+information about the transaction.  See the <B>STATE ARRAY</B> and
+<B>ERRORS</B> section for
 details.  The <B>::http::geturl</B> command blocks until the operation
 completes, unless the <B>-command</B> option specifies a callback
 that is invoked when the HTTP transaction completes.
@@ -211,9 +211,8 @@ Invoke <I>callback</I> after the HTTP transaction completes.
 This option causes <B>::http::geturl</B> to return immediately.
 The <I>callback</I> gets an additional argument that is the <I>token</I> returned
 from <B>::http::geturl</B>. This token is the name of an array that is
-described in the <B><A HREF="#M50">STATE ARRAY</A></B> section.  Here is a template for the
+described in the <B>STATE ARRAY</B> section.  Here is a template for the
 callback:
-<P>
 <PRE>proc httpCallback {token} {
     upvar #0 $token state
     # Access state as a Tcl array
@@ -223,10 +222,9 @@ Invoke <I>callback</I> whenever HTTP data is available; if present, nothing
 else will be done with the HTTP data.  This procedure gets two additional
 arguments: the socket for the HTTP data and the <I>token</I> returned from
 <B>::http::geturl</B>.  The token is the name of a global array that is
-described in the <B><A HREF="#M50">STATE ARRAY</A></B> section.  The procedure is expected
+described in the <B>STATE ARRAY</B> section.  The procedure is expected
 to return the number of bytes read from the socket.  Here is a
 template for the callback:
-<P>
 <PRE>proc httpHandlerCallback {socket token} {
     upvar #0 $token state
     # Access socket, and state as a Tcl array
@@ -245,7 +243,6 @@ header field names.  Newlines are stripped from the values so the
 header cannot be corrupted.  For example, if <I>keyvaluelist</I> is
 <B>Pragma no-cache</B> then the following header is included in the
 HTTP request:
-<P>
 <PRE>Pragma: no-cache</PRE>
 <P><DT><A NAME="M20"><B>-keepalive</B> <I>boolean</I></A><DD>
 If true, attempt to keep the connection open for servicing
@@ -265,7 +262,6 @@ The callback gets three additional arguments: the <I>token</I> from
 transferred so far.  The expected total size may be unknown, in which
 case zero is passed to the callback.  Here is a template for the
 progress callback:
-<P>
 <PRE>proc httpProgress {token total current} {
     upvar #0 $token state
 }</PRE>
@@ -316,7 +312,7 @@ If <I>boolean</I> is non-zero, then <B>::http::geturl</B> does an HTTP HEAD
 request.  This request returns meta information about the URL, but the
 contents are not returned.  The meta information is available in the
 <B>state(meta) </B> variable after the transaction.  See the
-<B><A HREF="#M50">STATE ARRAY</A></B> section for details.
+<B>STATE ARRAY</B> section for details.
 <P></DL>
 <P><DT><A NAME="M33"><B>::http::formatQuery</B> <I>key value</I> ?<I>key value</I> ...?</A><DD>
 This procedure does x-url-encoding of query data.  It takes an even
@@ -325,9 +321,8 @@ encodes the keys and values, and generates one string that has the
 proper &amp; and = separators.  The result is suitable for the
 <B>-query</B> value passed to <B>::http::geturl</B>.
 <P><DT><A NAME="M34"><B>::http::reset</B> <I>token</I> ?<I>why</I>?</A><DD>
-This command resets the HTTP transaction identified by <I>token</I>, if any.
-This sets the <B>state(status)</B> value to <I>why</I>, which defaults to
-<B>reset</B>, and then calls the registered <B>-command</B> callback.
+This command resets the HTTP transaction identified by <I>token</I>, if
+any.  This sets the <B>state(status)</B> value to <I>why</I>, which defaults to <B>reset</B>, and then calls the registered <B>-command</B> callback.
 <P><DT><A NAME="M35"><B>::http::wait</B> <I>token</I></A><DD>
 This is a convenience procedure that blocks and waits for the
 transaction to complete.  This only works in trusted code because it
@@ -372,7 +367,6 @@ performance hit...or worse.
 This procedure allows one to provide custom HTTP transport types
 such as HTTPS, by registering a prefix, the default port, and the
 command to execute to create the Tcl <B>channel</B>. E.g.:
-<P>
 <PRE>package require http
 package require tls
 
@@ -422,17 +416,17 @@ determined by examining the status from <B>::http::status</B>.
 These are described below.
 <P>
 <DL class="errors">
-<DT><A NAME="M47"><B>ok</B></A><DD>
+<DT><A NAME="M47">ok</A><DD>
 If the HTTP transaction completes entirely, then status will be <B>ok</B>.
 However, you should still check the <B>::http::code</B> value to get
 the HTTP status.  The <B>::http::ncode</B> procedure provides just
 the numeric error (e.g., 200, 404 or 500) while the <B>::http::code</B>
 procedure returns a value like
 &#8220;HTTP 404 File not found&#8221;.
-<P><DT><A NAME="M48"><B>eof</B></A><DD>
+<P><DT><A NAME="M48">eof</A><DD>
 If the server closes the socket without replying, then no error
 is raised, but the status of the transaction will be <B><A HREF="../TclCmd/eof.htm">eof</A></B>.
-<P><DT><A NAME="M49"><B>error</B></A><DD>
+<P><DT><A NAME="M49">error</A><DD>
 The error message will also be stored in the <B><A HREF="../TclCmd/error.htm">error</A></B> status
 array element, accessible via <B>::http::error</B>.
 <P></DL>
@@ -450,9 +444,7 @@ an <B><A HREF="../TclCmd/eof.htm">eof</A></B> status.
 The <B>::http::geturl</B> procedure returns a <I>token</I> that can be used to
 get to the state of the HTTP transaction in the form of a Tcl array.
 Use this construct to create an easy-to-use array variable:
-<P>
 <PRE>upvar #0 $token state</PRE>
-<P>
 Once the data associated with the URL is no longer needed, the state
 array should be unset to free up storage.
 The <B>::http::cleanup</B> procedure is provided for that purpose.
@@ -479,9 +471,8 @@ was aborted.
 <P><DT><A NAME="M56"><B>http</B></A><DD>
 The HTTP status reply from the server.  This value
 is returned by the <B>::http::code</B> command.  The format of this value is:
-<P>
 <PRE><I>HTTP/1.1 code string</I></PRE>
-<P>The <I>code</I> is a three-digit number defined in the HTTP standard.
+The <I>code</I> is a three-digit number defined in the HTTP standard.
 A code of 200 is OK.  Codes beginning with 4 or 5 indicate errors.
 Codes beginning with 3 are redirection errors.  In this case the
 <B>Location</B> meta-data specifies a new URL that contains the
@@ -491,9 +482,7 @@ The HTTP protocol returns meta-data that describes the URL contents.
 The <B>meta</B> element of the state array is a list of the keys and
 values of the meta-data.  This is in a format useful for initializing
 an array that just contains the meta-data:
-<P>
 <PRE>array set meta $state(meta)</PRE>
-<P>
 Some of the meta-data keys are listed below, but the HTTP standard defines
 more, and servers are free to add their own.
 <P>
@@ -504,7 +493,7 @@ The type of the URL contents.  Examples include <B>text/html</B>,
 <B>application/x-tcl</B>.
 <P><DT><A NAME="M59"><B>Content-Length</B></A><DD>
 The advertised size of the contents.  The actual size obtained by
-<B>::http::geturl</B> is available as <B>state(currentsize)</B>.
+<B>::http::geturl</B> is available as <B>state(size)</B>.
 <P><DT><A NAME="M60"><B>Location</B></A><DD>
 An alternate URL that contains the requested data.
 <P></DL>
@@ -524,46 +513,45 @@ A copy of the <B>Content-Type</B> meta-data value.
 The requested URL.
 <P></DL>
 <H3><A NAME="M66">EXAMPLE</A></H3>
-This example creates a procedure to copy a URL to a file while printing a
-progress meter, and prints the meta-data associated with the URL.
-<P>
-<PRE>proc httpcopy { url file {chunk 4096} } {
-    set out [open $file w]
-    set token [<B>::http::geturl</B> $url -channel $out &#92;
-            -progress httpCopyProgress -blocksize $chunk]
-    close $out
+<PRE># Copy a URL to a file and print meta-data
+proc httpcopy { url file {chunk 4096} } {
+   set out [open $file w]
+   set token [<B>::http::geturl</B> $url -channel $out &#92;
+          -progress httpCopyProgress -blocksize $chunk]
+   close $out
 
-    # This ends the line started by httpCopyProgress
-    puts stderr &quot;&quot;
+   # This ends the line started by httpCopyProgress
+   puts stderr &quot;&quot;
 
-    upvar #0 $token state
-    set max 0
-    foreach {name value} $state(meta) {
-        if {[string length $name] &gt; $max} {
-            set max [string length $name]
-        }
-        if {[regexp -nocase ^location$ $name]} {
-            # Handle URL redirects
-            puts stderr &quot;Location:$value&quot;
-            return [httpcopy [string trim $value] $file $chunk]
-        }
-    }
-    incr max
-    foreach {name value} $state(meta) {
-        puts [format &quot;%-*s %s&quot; $max $name: $value]
-    }
+   upvar #0 $token state
+   set max 0
+   foreach {name value} $state(meta) {
+      if {[string length $name] &gt; $max} {
+         set max [string length $name]
+      }
+      if {[regexp -nocase ^location$ $name]} {
+         # Handle URL redirects
+         puts stderr &quot;Location:$value&quot;
+         return [httpcopy [string trim $value] $file $chunk]
+      }
+   }
+   incr max
+   foreach {name value} $state(meta) {
+      puts [format &quot;%-*s %s&quot; $max $name: $value]
+   }
 
-    return $token
+   return $token
 }
 proc httpCopyProgress {args} {
-    puts -nonewline stderr .
-    flush stderr
+   puts -nonewline stderr .
+   flush stderr
 }</PRE>
 <H3><A NAME="M67">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/safe.htm">safe</A></B>, <B><A HREF="../TclCmd/socket.htm">socket</A></B>, <B>safesock</B>
+<B>safe</B>, <B><A HREF="../TclCmd/socket.htm">socket</A></B>, <B>safesock</B>
 <H3><A NAME="M68">KEYWORDS</A></H3>
-<A href="../Keywords/I.htm#internet">internet</A>, <A href="../Keywords/S.htm#security policy">security policy</A>, <A href="../Keywords/S.htm#socket">socket</A>, <A href="../Keywords/W.htm#www">www</A>
-<div class="copy">Copyright &copy; 1995-1997 Sun Microsystems, Inc.
+<A href="../Keywords/S.htm#security policy">security policy</A>, <A href="../Keywords/S.htm#socket">socket</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1997 Sun Microsystems, Inc.
 Copyright &copy; 1998-2000 by Ajuba Solutions.
 Copyright &copy; 2004 ActiveState Corporation.
 </div>

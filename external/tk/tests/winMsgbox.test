@@ -3,8 +3,7 @@
 # Copyright (c) 2007 Pat Thoyts <patthoyts@users.sourceforge.net>
 
 package require tcltest 2.2
-namespace import ::tcltest::*
-tcltest::configure {*}$argv
+eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
 testConstraint getwindowinfo [expr {[llength [info command ::testgetwindowinfo]] > 0}]
@@ -39,7 +38,7 @@ proc GetWindowInfo {title button} {
 
 # -------------------------------------------------------------------------
 
-test winMsgbox-1.1 {tk_messageBox ok} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.0 {tk_messageBox ok} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -50,7 +49,7 @@ test winMsgbox-1.1 {tk_messageBox ok} -constraints {win getwindowinfo} -setup {
     wm deiconify .
 } -result {ok}
 
-test winMsgbox-1.2 {tk_messageBox okcancel} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.1 {tk_messageBox okcancel} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -61,7 +60,7 @@ test winMsgbox-1.2 {tk_messageBox okcancel} -constraints {win getwindowinfo} -se
     wm deiconify .
 } -result {ok}
 
-test winMsgbox-1.3 {tk_messageBox okcancel} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.2 {tk_messageBox okcancel} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -72,7 +71,7 @@ test winMsgbox-1.3 {tk_messageBox okcancel} -constraints {win getwindowinfo} -se
     wm deiconify .
 } -result {cancel}
 
-test winMsgbox-1.4 {tk_messageBox yesno} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.3 {tk_messageBox yesno} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -83,7 +82,7 @@ test winMsgbox-1.4 {tk_messageBox yesno} -constraints {win getwindowinfo} -setup
     wm deiconify .
 } -result {yes}
 
-test winMsgbox-1.5 {tk_messageBox yesno} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.4 {tk_messageBox yesno} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -94,7 +93,7 @@ test winMsgbox-1.5 {tk_messageBox yesno} -constraints {win getwindowinfo} -setup
     wm deiconify .
 } -result {no}
 
-test winMsgbox-1.6 {tk_messageBox abortretryignore} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.5 {tk_messageBox abortretryignore} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -105,7 +104,7 @@ test winMsgbox-1.6 {tk_messageBox abortretryignore} -constraints {win getwindowi
     wm deiconify .
 } -result {abort}
 
-test winMsgbox-1.7 {tk_messageBox abortretryignore} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.6 {tk_messageBox abortretryignore} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -116,7 +115,7 @@ test winMsgbox-1.7 {tk_messageBox abortretryignore} -constraints {win getwindowi
     wm deiconify .
 } -result {retry}
 
-test winMsgbox-1.8 {tk_messageBox abortretryignore} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.7 {tk_messageBox abortretryignore} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -127,7 +126,7 @@ test winMsgbox-1.8 {tk_messageBox abortretryignore} -constraints {win getwindowi
     wm deiconify .
 } -result {ignore}
 
-test winMsgbox-1.9 {tk_messageBox retrycancel} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.8 {tk_messageBox retrycancel} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -138,7 +137,7 @@ test winMsgbox-1.9 {tk_messageBox retrycancel} -constraints {win getwindowinfo} 
     wm deiconify .
 } -result {retry}
 
-test winMsgbox-1.10 {tk_messageBox retrycancel} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.9 {tk_messageBox retrycancel} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -149,7 +148,7 @@ test winMsgbox-1.10 {tk_messageBox retrycancel} -constraints {win getwindowinfo}
     wm deiconify .
 } -result {cancel}
 
-test winMsgbox-1.11 {tk_messageBox yesnocancel} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.10 {tk_messageBox yesnocancel} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -160,7 +159,7 @@ test winMsgbox-1.11 {tk_messageBox yesnocancel} -constraints {win getwindowinfo}
     wm deiconify .
 } -result {yes}
 
-test winMsgbox-1.12 {tk_messageBox yesnocancel} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.11 {tk_messageBox yesnocancel} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -171,7 +170,7 @@ test winMsgbox-1.12 {tk_messageBox yesnocancel} -constraints {win getwindowinfo}
     wm deiconify .
 } -result {no}
 
-test winMsgbox-1.13 {tk_messageBox yesnocancel} -constraints {win getwindowinfo} -setup {
+test winMsgbox-1.12 {tk_messageBox yesnocancel} -constraints {win getwindowinfo} -setup {
     wm iconify .
 } -body {
     global windowInfo
@@ -184,7 +183,7 @@ test winMsgbox-1.13 {tk_messageBox yesnocancel} -constraints {win getwindowinfo}
 
 # -------------------------------------------------------------------------
 
-test winMsgbox-2.1 {tk_messageBox message} -constraints {win getwindowinfo} -setup {
+test winMsgbox-2.0 {tk_messageBox message} -constraints {win getwindowinfo} -setup {
     wm iconify .
     unset -nocomplain info
 } -body {
@@ -199,7 +198,7 @@ test winMsgbox-2.1 {tk_messageBox message} -constraints {win getwindowinfo} -set
     wm deiconify .
 } -result [list ok "message"]
 
-test winMsgbox-2.2 {tk_messageBox message (long)} -constraints {
+test winMsgbox-2.1 {tk_messageBox message (long)} -constraints {
     win getwindowinfo
 } -setup {
     wm iconify .
@@ -216,7 +215,7 @@ test winMsgbox-2.2 {tk_messageBox message (long)} -constraints {
     wm deiconify .
 } -result [list ok [string repeat Ab 80]]
 
-test winMsgbox-2.3 {tk_messageBox message (unicode)} -constraints {
+test winMsgbox-2.2 {tk_messageBox message (unicode)} -constraints {
     win getwindowinfo
 } -setup {
     wm iconify .
@@ -233,7 +232,7 @@ test winMsgbox-2.3 {tk_messageBox message (unicode)} -constraints {
     wm deiconify .
 } -result [list ok "\u041f\u043e\u0438\u0441\u043a\u0020\u0441\u0442\u0440\u0430\u043d\u0438\u0446"]
 
-test winMsgbox-2.4 {tk_messageBox message (empty)} -constraints {
+test winMsgbox-2.3 {tk_messageBox message (empty)} -constraints {
     win getwindowinfo
 } -setup {
     wm iconify .
@@ -249,9 +248,7 @@ test winMsgbox-2.4 {tk_messageBox message (empty)} -constraints {
     wm deiconify .
 } -result [list ok ""]
 
-# -------------------------------------------------------------------------
-
-test winMsgbox-3.1 {tk_messageBox detail (sourceforge bug #1692927)} -constraints {
+test winMsgbox-3.0 {tk_messageBox detail (sourceforge bug #1692927)} -constraints {
     win getwindowinfo
 } -setup {
     wm iconify .
@@ -268,7 +265,7 @@ test winMsgbox-3.1 {tk_messageBox detail (sourceforge bug #1692927)} -constraint
     wm deiconify .
 } -result [list ok "Hello\n\nPleased to meet you"]
 
-test winMsgbox-3.2 {tk_messageBox detail (unicode)} -constraints {
+test winMsgbox-3.1 {tk_messageBox detail (unicode)} -constraints {
     win getwindowinfo
 } -setup {
     wm iconify .

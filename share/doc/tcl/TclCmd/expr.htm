@@ -3,47 +3,47 @@
 <HEAD><TITLE>expr manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> expr</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> expr</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="expr.htm#M2" NAME="L469">NAME</A>
-<DL><DD>expr &mdash; Evaluate an expression</DD></DL>
-<DD><A HREF="expr.htm#M3" NAME="L470">SYNOPSIS</A>
+<DD><A HREF="expr.htm#M2" NAME="L381">NAME</A>
+<DL><DD>expr - Evaluate an expression</DD></DL>
+<DD><A HREF="expr.htm#M3" NAME="L382">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="expr.htm#M4" NAME="L471">DESCRIPTION</A>
-<DD><A HREF="expr.htm#M5" NAME="L472">OPERANDS</A>
-<OL class="operands">
-</OL>
-<DD><A HREF="expr.htm#M6" NAME="L473">OPERATORS</A>
+<DD><A HREF="expr.htm#M4" NAME="L383">DESCRIPTION</A>
+<DD><A HREF="expr.htm#M5" NAME="L384">OPERANDS</A>
+<DL class="operands">
+</DL>
+<DD><A HREF="expr.htm#M6" NAME="L385">OPERATORS</A>
 <DL class="operators">
-<DD><A HREF="expr.htm#M7" NAME="L474"><B>-  +  ~  !</B></A>
-<DD><A HREF="expr.htm#M8" NAME="L475"><B>**</B></A>
-<DD><A HREF="expr.htm#M9" NAME="L476"><B>*  /  %</B></A>
-<DD><A HREF="expr.htm#M10" NAME="L477"><B>+  -</B></A>
-<DD><A HREF="expr.htm#M11" NAME="L478"><B>&lt;&lt;  &gt;&gt;</B></A>
-<DD><A HREF="expr.htm#M12" NAME="L479"><B>&lt;  &gt;  &lt;=  &gt;=</B></A>
-<DD><A HREF="expr.htm#M13" NAME="L480"><B>==  !=</B></A>
-<DD><A HREF="expr.htm#M14" NAME="L481"><B>eq  ne</B></A>
-<DD><A HREF="expr.htm#M15" NAME="L482"><B>in  ni</B></A>
-<DD><A HREF="expr.htm#M16" NAME="L483"><B>&amp;</B></A>
-<DD><A HREF="expr.htm#M17" NAME="L484"><B>^</B></A>
-<DD><A HREF="expr.htm#M18" NAME="L485"><B>|</B></A>
-<DD><A HREF="expr.htm#M19" NAME="L486"><B>&amp;&amp;</B></A>
-<DD><A HREF="expr.htm#M20" NAME="L487"><B>||</B></A>
-<DD><A HREF="expr.htm#M21" NAME="L488"><I>x</I><B>?</B><I>y</I><B>:</B><I>z</I></A>
+<DD><A HREF="expr.htm#M7" NAME="L386"><B>-  +  ~  !</B></A>
+<DD><A HREF="expr.htm#M8" NAME="L387"><B>**</B></A>
+<DD><A HREF="expr.htm#M9" NAME="L388"><B>*  /  %</B></A>
+<DD><A HREF="expr.htm#M10" NAME="L389"><B>+  -</B></A>
+<DD><A HREF="expr.htm#M11" NAME="L390"><B>&lt;&lt;  &gt;&gt;</B></A>
+<DD><A HREF="expr.htm#M12" NAME="L391"><B>&lt;  &gt;  &lt;=  &gt;=</B></A>
+<DD><A HREF="expr.htm#M13" NAME="L392"><B>==  !=</B></A>
+<DD><A HREF="expr.htm#M14" NAME="L393"><B>eq  ne</B></A>
+<DD><A HREF="expr.htm#M15" NAME="L394"><B>in  ni</B></A>
+<DD><A HREF="expr.htm#M16" NAME="L395"><B>&amp;</B></A>
+<DD><A HREF="expr.htm#M17" NAME="L396"><B>^</B></A>
+<DD><A HREF="expr.htm#M18" NAME="L397"><B>|</B></A>
+<DD><A HREF="expr.htm#M19" NAME="L398"><B>&amp;&amp;</B></A>
+<DD><A HREF="expr.htm#M20" NAME="L399"><B>||</B></A>
+<DD><A HREF="expr.htm#M21" NAME="L400"><I>x</I><B>?</B><I>y</I><B>:</B><I>z</I></A>
 </DL>
-<DD><A HREF="expr.htm#M22" NAME="L489">MATH FUNCTIONS</A>
-<DD><A HREF="expr.htm#M23" NAME="L490">TYPES, OVERFLOW, AND PRECISION</A>
-<DD><A HREF="expr.htm#M24" NAME="L491">STRING OPERATIONS</A>
-<DD><A HREF="expr.htm#M25" NAME="L492">PERFORMANCE CONSIDERATIONS</A>
-<DD><A HREF="expr.htm#M26" NAME="L493">EXAMPLES</A>
-<DD><A HREF="expr.htm#M27" NAME="L494">SEE ALSO</A>
-<DD><A HREF="expr.htm#M28" NAME="L495">KEYWORDS</A>
-<DD><A HREF="expr.htm#M29" NAME="L496">COPYRIGHT</A>
+<DD><A HREF="expr.htm#M22" NAME="L401">MATH FUNCTIONS</A>
+<DD><A HREF="expr.htm#M23" NAME="L402">TYPES, OVERFLOW, AND PRECISION</A>
+<DD><A HREF="expr.htm#M24" NAME="L403">STRING OPERATIONS</A>
+<DD><A HREF="expr.htm#M25" NAME="L404">PERFORMANCE CONSIDERATIONS</A>
+<DD><A HREF="expr.htm#M26" NAME="L405">EXAMPLES</A>
+<DD><A HREF="expr.htm#M27" NAME="L406">SEE ALSO</A>
+<DD><A HREF="expr.htm#M28" NAME="L407">KEYWORDS</A>
+<DD><A HREF="expr.htm#M29" NAME="L408">COPYRIGHT</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-expr &mdash; Evaluate an expression
+expr - Evaluate an expression
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>expr </B><I>arg </I>?<I>arg arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -56,9 +56,7 @@ as the corresponding C operators.
 Expressions almost always yield numeric results
 (integer or floating-point values).
 For example, the expression
-<P>
-<PRE><B>expr</B> 8.2 + 6</PRE>
-<P>
+<PRE><B>expr 8.2 + 6</B></PRE>
 evaluates to 14.2.
 Tcl expressions differ from C expressions in the way that
 operands are specified.  Also, Tcl expressions support
@@ -66,9 +64,9 @@ non-numeric operands and string comparisons, as well as some
 additional operators not found in C.
 <H4><A NAME="M5">OPERANDS</A></H4>
 A Tcl expression consists of a combination of operands, operators,
-parentheses and commas.
+and parentheses.
 White space may be used between the operands and operators and
-parentheses (or commas); it is ignored by the expression's instructions.
+parentheses; it is ignored by the expression's instructions.
 Where possible, operands are interpreted as integer values.
 Integer values may be specified in decimal (the normal case), in binary
 (if the first two characters of the operand are <B>0b</B>), in octal
@@ -93,33 +91,32 @@ braces or with double quotes), then an operand is left as a string
 <P>
 Operands may be specified in any of the following ways:
 <P>
-<OL class="operands">
-<LI value="1">
+<DL class="operands">
+<DT>[1]<DD>
 As a numeric value, either integer or floating-point.
-<P><LI value="2">
-As a boolean value, using any form understood by <B><A HREF="../TclCmd/string.htm">string is</A></B>
-<B>boolean</B>.
-<P><LI value="3">
+<P><DT>[2]<DD>
+As a boolean value, using any form understood by <B>string is boolean</B>.
+<P><DT>[3]<DD>
 As a Tcl variable, using standard <B>$</B> notation.
 The variable's value will be used as the operand.
-<P><LI value="4">
+<P><DT>[4]<DD>
 As a string enclosed in double-quotes.
 The expression parser will perform backslash, variable, and
 command substitutions on the information between the quotes,
 and use the resulting value as the operand
-<P><LI value="5">
+<P><DT>[5]<DD>
 As a string enclosed in braces.
 The characters between the open brace and matching close brace
 will be used as the operand without any substitutions.
-<P><LI value="6">
+<P><DT>[6]<DD>
 As a Tcl command enclosed in brackets.
 The command will be executed and its result will be used as
 the operand.
-<P><LI value="7">
+<P><DT>[7]<DD>
 As a mathematical function whose arguments have any of the above
-forms for operands, such as <B>sin($x)</B>.  See <B><A HREF="#M22">MATH FUNCTIONS</A></B> below for
+forms for operands, such as <B>sin($x)</B>.  See <B>MATH FUNCTIONS</B> below for
 a discussion of how mathematical functions are handled.
-<P></OL>
+<P></DL>
 <P>
 Where the above substitutions occur (e.g. inside quoted strings), they
 are performed by the expression's instructions.
@@ -134,7 +131,6 @@ For some examples of simple expressions, suppose the variable
 the variable <B>b</B> has the value 6.
 Then the command on the left side of each of the lines below
 will produce the value on the right side of the line:
-<P>
 <PRE><B>expr</B> 3.1 + $a	<I>6.1</I>
 <B>expr</B> 2 + &quot;$a.$b&quot;	<I>5.6</I>
 <B>expr</B> 4*[llength &quot;6 2&quot;]	<I>8</I>
@@ -215,24 +211,16 @@ produced by each operator.
 The exponentiation operator promotes types like the multiply and
 divide operators, and produces a result that is the same as the output
 of the <B>pow</B> function (after any type conversions.)
-All of the binary operators but exponentiation group left-to-right
-within the same precedence level; exponentiation groups right-to-left.  For example, the command
-<P>
+All of the binary operators group left-to-right within the same
+precedence level.  For example, the command
 <PRE><B>expr</B> {4*2 &lt; 7}</PRE>
-<P>
-returns 0, while
-<P>
-<PRE><B>expr</B> {2**3**2}</PRE>
-<P>
-returns 512.
+returns 0.
 <P>
 The <B>&amp;&amp;</B>, <B>||</B>, and <B>?:</B> operators have
 &#8220;lazy evaluation&#8221;,
 just as in C, which means that operands are not evaluated if they are
 not needed to determine the outcome.  For example, in the command
-<P>
-<PRE><B>expr</B> {$v ? [a] : [b]}</PRE>
-<P>
+<PRE><B>expr {$v ? [a] : [b]}</B></PRE>
 only one of
 &#8220;<B>[a]</B>&#8221;
 or
@@ -250,30 +238,17 @@ When the expression parser encounters a mathematical function
 such as <B>sin($x)</B>, it replaces it with a call to an ordinary
 Tcl function in the <B>tcl::mathfunc</B> namespace.  The processing
 of an expression such as:
-<P>
-<PRE><B>expr</B> {sin($x+$y)}</PRE>
-<P>
+<PRE><B>expr {sin($x+$y)}</B></PRE>
 is the same in every way as the processing of:
-<P>
-<PRE><B>expr</B> {[tcl::mathfunc::sin [<B>expr</B> {$x+$y}]]}</PRE>
-<P>
+<PRE><B>expr {[tcl::mathfunc::sin [expr {$x+$y}]]}</B></PRE>
 which in turn is the same as the processing of:
-<P>
-<PRE>tcl::mathfunc::sin [<B>expr</B> {$x+$y}]</PRE>
+<PRE><B>tcl::mathfunc::sin [expr {$x+$y}]</B></PRE>
 <P>
 The executor will search for <B>tcl::mathfunc::sin</B> using the usual
 rules for resolving functions in namespaces. Either
 <B>::tcl::mathfunc::sin</B> or <B>[namespace
 current]::tcl::mathfunc::sin</B> will satisfy the request, and others
-may as well (depending on the current <B><A HREF="../TclCmd/namespace.htm">namespace path</A></B> setting).
-<P>
-Some mathematical functions have several arguments, separated by commas like in C. Thus:
-<P>
-<PRE><B>expr</B> {hypot($x,$y)}</PRE>
-<P>
-ends up as
-<P>
-<PRE>tcl::mathfunc::hypot $x $y</PRE>
+may as well (depending on the current <B>namespace path</B> setting).
 <P>
 See the <B><A HREF="../TclCmd/mathfunc.htm">mathfunc</A></B>(n) manual page for the math functions that are
 available by default.
@@ -282,10 +257,10 @@ All internal computations involving integers are done calling on the
 LibTomMath multiple precision integer library as required so that all
 integer calculations are performed exactly.  Note that in Tcl releases
 prior to 8.5, integer calculations were performed with one of the C types
-<I>long int</I> or <I><A HREF="../TclLib/IntObj.htm">Tcl_WideInt</A></I>, causing implicit range truncation
+<I>long int</I> or <I>Tcl_WideInt</I>, causing implicit range truncation
 in those calculations where values overflowed the range of those types.
 Any code that relied on these implicit truncations will need to explicitly
-add <B><A HREF="../TclCmd/mathfunc.htm">int()</A></B> or <B><A HREF="../TclCmd/mathfunc.htm">wide()</A></B> function calls to expressions at the points
+add <B>int()</B> or <B>wide()</B> function calls to expressions at the points
 where such truncation is required to take place.
 <P>
 All internal computations involving floating-point are
@@ -301,23 +276,17 @@ and string operands is done automatically as needed.
 For arithmetic computations, integers are used until some
 floating-point number is introduced, after which floating-point is used.
 For example,
-<P>
 <PRE><B>expr</B> {5 / 4}</PRE>
-<P>
 returns 1, while
-<P>
 <PRE><B>expr</B> {5 / 4.0}
 <B>expr</B> {5 / ( [string length &quot;abcd&quot;] + 0.0 )}</PRE>
-<P>
 both return 1.25.
 Floating-point values are always returned with a
 &#8220;<B>.</B>&#8221;
 or an
 &#8220;<B>e</B>&#8221;
 so that they will not look like integer values.  For example,
-<P>
 <PRE><B>expr</B> {20.0/5.0}</PRE>
-<P>
 returns <B>4.0</B>, not <B>4</B>.
 <H4><A NAME="M24">STRING OPERATIONS</A></H4>
 String values may be used as operands of the comparison operators,
@@ -332,10 +301,8 @@ Canonical string representation for integer values is a decimal string
 format.  Canonical string representation for floating-point values
 is that produced by the <B>%g</B> format specifier of Tcl's
 <B><A HREF="../TclCmd/format.htm">format</A></B> command.  For example, the commands
-<P>
-<PRE><B>expr</B> {&quot;0x03&quot; &gt; &quot;2&quot;}
-<B>expr</B> {&quot;0y&quot; &gt; &quot;0x12&quot;}</PRE>
-<P>
+<PRE><B>expr {&quot;0x03&quot; &gt; &quot;2&quot;}</B>
+<B>expr {&quot;0y&quot; &gt; &quot;0x12&quot;}</B></PRE>
 both return 1.  The first comparison is done using integer
 comparison, and the second is done using string comparison.
 Because of Tcl's tendency to treat values as numbers whenever
@@ -351,11 +318,9 @@ This allows the Tcl bytecode compiler to generate the best code.
 As mentioned above, expressions are substituted twice:
 once by the Tcl parser and once by the <B>expr</B> command.
 For example, the commands
-<P>
-<PRE>set a 3
-set b {$a + 2}
-<B>expr</B> $b*4</PRE>
-<P>
+<PRE><B>set a 3</B>
+<B>set b {$a + 2}</B>
+<B>expr $b*4</B></PRE>
 return 11, not a multiple of 4.
 This is because the Tcl parser will first substitute <B>$a + 2</B> for
 the variable <B>b</B>,
@@ -380,38 +345,32 @@ operator, consider using the commands documented in the <B><A HREF="../TclCmd/ma
 Define a procedure that computes an
 &#8220;interesting&#8221;
 mathematical function:
-<P>
 <PRE>proc tcl::mathfunc::calc {x y} {
     <B>expr</B> { ($x**2 - $y**2) / exp($x**2 + $y**2) }
 }</PRE>
 <P>
 Convert polar coordinates into cartesian coordinates:
-<P>
 <PRE># convert from ($radius,$angle)
 set x [<B>expr</B> { $radius * cos($angle) }]
 set y [<B>expr</B> { $radius * sin($angle) }]</PRE>
 <P>
 Convert cartesian coordinates into polar coordinates:
-<P>
 <PRE># convert from ($x,$y)
 set radius [<B>expr</B> { hypot($y, $x) }]
 set angle  [<B>expr</B> { atan2($y, $x) }]</PRE>
 <P>
 Print a message describing the relationship of two string values to
 each other:
-<P>
 <PRE>puts &quot;a and b are [<B>expr</B> {$a eq $b ? {equal} : {different}}]&quot;</PRE>
 <P>
 Set a variable to whether an environment variable is both defined at
 all and also set to a true boolean value:
-<P>
 <PRE>set isTrue [<B>expr</B> {
     [info exists ::env(SOME_ENV_VAR)] &amp;&amp;
     [string is true -strict $::env(SOME_ENV_VAR)]
 }]</PRE>
 <P>
 Generate a random integer in the range 0..99 inclusive:
-<P>
 <PRE>set randNum [<B>expr</B> { int(100 * rand()) }]</PRE>
 <H3><A NAME="M27">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/array.htm">array</A></B>, <B><A HREF="../TclCmd/for.htm">for</A></B>, <B><A HREF="../TclCmd/if.htm">if</A></B>, <B><A HREF="../TclCmd/mathfunc.htm">mathfunc</A></B>, <B><A HREF="../TclCmd/mathop.htm">mathop</A></B>, <B><A HREF="../TclCmd/namespace.htm">namespace</A></B>, <B><A HREF="../TclCmd/proc.htm">proc</A></B>, <B><A HREF="../TclCmd/string.htm">string</A></B>, <B><A HREF="../TclCmd/Tcl.htm">Tcl</A></B>, <B><A HREF="../TclCmd/while.htm">while</A></B>
@@ -421,7 +380,8 @@ Generate a random integer in the range 0..99 inclusive:
 Copyright (c) 1993 The Regents of the University of California.<BR>
 Copyright (c) 1994-2000 Sun Microsystems Incorporated.<BR>
 Copyright (c) 2005 by Kevin B. Kenny &lt;kennykb@acm.org&gt;. All rights reserved.<BR>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-2000 Sun Microsystems, Inc.
 Copyright &copy; 2005 by Kevin B. Kenny &lt;kennykb(at)acm.org&gt;. All rights reserved
 </div>

@@ -3,56 +3,56 @@
 <HEAD><TITLE>mathop manual page - Tcl Mathematical Operator Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> mathop</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> mathop</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="mathop.htm#M2" NAME="L1119">NAME</A>
-<DL><DD>mathop &mdash; Mathematical operators as Tcl commands</DD></DL>
-<DD><A HREF="mathop.htm#M3" NAME="L1120">SYNOPSIS</A>
+<DD><A HREF="mathop.htm#M2" NAME="L969">NAME</A>
+<DL><DD>mathop - Mathematical operators as Tcl commands</DD></DL>
+<DD><A HREF="mathop.htm#M3" NAME="L970">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="mathop.htm#M4" NAME="L1121">DESCRIPTION</A>
-<DD><A HREF="mathop.htm#M5" NAME="L1122">MATHEMATICAL OPERATORS</A>
+<DD><A HREF="mathop.htm#M4" NAME="L971">DESCRIPTION</A>
+<DD><A HREF="mathop.htm#M5" NAME="L972">MATHEMATICAL OPERATORS</A>
 <DL class="mathematical operators">
-<DD><A HREF="mathop.htm#M6" NAME="L1123"><B>!</B> <I>boolean</I></A>
-<DD><A HREF="mathop.htm#M7" NAME="L1124"><B>+</B> ?<I>number</I> ...?</A>
-<DD><A HREF="mathop.htm#M8" NAME="L1125"><B>-</B> <I>number</I> ?<I>number</I> ...?</A>
-<DD><A HREF="mathop.htm#M9" NAME="L1126"><B>*</B> ?<I>number</I> ...?</A>
-<DD><A HREF="mathop.htm#M10" NAME="L1127"><B>/</B> <I>number</I> ?<I>number</I> ...?</A>
-<DD><A HREF="mathop.htm#M11" NAME="L1128"><B>%</B> <I>number number</I></A>
-<DD><A HREF="mathop.htm#M12" NAME="L1129"><B>**</B> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M6" NAME="L973"><B>!</B> <I>boolean</I></A>
+<DD><A HREF="mathop.htm#M7" NAME="L974"><B>+</B> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M8" NAME="L975"><B>-</B> <I>number</I> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M9" NAME="L976"><B>*</B> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M10" NAME="L977"><B>/</B> <I>number</I> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M11" NAME="L978"><B>%</B> <I>number number</I></A>
+<DD><A HREF="mathop.htm#M12" NAME="L979"><B>**</B> ?<I>number</I> ...?</A>
 </DL>
-<DD><A HREF="mathop.htm#M13" NAME="L1130">COMPARISON OPERATORS</A>
+<DD><A HREF="mathop.htm#M13" NAME="L980">COMPARISON OPERATORS</A>
 <DL class="comparison operators">
-<DD><A HREF="mathop.htm#M14" NAME="L1131"><B>==</B> ?<I>arg</I> ...?</A>
-<DD><A HREF="mathop.htm#M15" NAME="L1132"><B>eq</B> ?<I>arg</I> ...?</A>
-<DD><A HREF="mathop.htm#M16" NAME="L1133"><B>!=</B> <I>arg arg</I></A>
-<DD><A HREF="mathop.htm#M17" NAME="L1134"><B>ne</B> <I>arg arg</I></A>
-<DD><A HREF="mathop.htm#M18" NAME="L1135"><B>&lt;</B> ?<I>arg</I> ...?</A>
-<DD><A HREF="mathop.htm#M19" NAME="L1136"><B>&lt;=</B> ?<I>arg</I> ...?</A>
-<DD><A HREF="mathop.htm#M20" NAME="L1137"><B>&gt;</B> ?<I>arg</I> ...?</A>
-<DD><A HREF="mathop.htm#M21" NAME="L1138"><B>&gt;=</B> ?<I>arg</I> ...?</A>
+<DD><A HREF="mathop.htm#M14" NAME="L981"><B>==</B> ?<I>arg</I> ...?</A>
+<DD><A HREF="mathop.htm#M15" NAME="L982"><B>eq</B> ?<I>arg</I> ...?</A>
+<DD><A HREF="mathop.htm#M16" NAME="L983"><B>!=</B> <I>arg arg</I></A>
+<DD><A HREF="mathop.htm#M17" NAME="L984"><B>ne</B> <I>arg arg</I></A>
+<DD><A HREF="mathop.htm#M18" NAME="L985"><B>&lt;</B> ?<I>arg</I> ...?</A>
+<DD><A HREF="mathop.htm#M19" NAME="L986"><B>&lt;=</B> ?<I>arg</I> ...?</A>
+<DD><A HREF="mathop.htm#M20" NAME="L987"><B>&gt;</B> ?<I>arg</I> ...?</A>
+<DD><A HREF="mathop.htm#M21" NAME="L988"><B>&gt;=</B> ?<I>arg</I> ...?</A>
 </DL>
-<DD><A HREF="mathop.htm#M22" NAME="L1139">BIT-WISE OPERATORS</A>
+<DD><A HREF="mathop.htm#M22" NAME="L989">BIT-WISE OPERATORS</A>
 <DL class="bit-wise operators">
-<DD><A HREF="mathop.htm#M23" NAME="L1140"><B>~</B> <I>number</I></A>
-<DD><A HREF="mathop.htm#M24" NAME="L1141"><B>&amp;</B> ?<I>number</I> ...?</A>
-<DD><A HREF="mathop.htm#M25" NAME="L1142"><B>|</B> ?<I>number</I> ...?</A>
-<DD><A HREF="mathop.htm#M26" NAME="L1143"><B>^</B> ?<I>number</I> ...?</A>
-<DD><A HREF="mathop.htm#M27" NAME="L1144"><B>&lt;&lt;</B> <I>number number</I></A>
-<DD><A HREF="mathop.htm#M28" NAME="L1145"><B>&gt;&gt;</B> <I>number number</I></A>
+<DD><A HREF="mathop.htm#M23" NAME="L990"><B>~</B> <I>number</I></A>
+<DD><A HREF="mathop.htm#M24" NAME="L991"><B>&amp;</B> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M25" NAME="L992"><B>|</B> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M26" NAME="L993"><B>^</B> ?<I>number</I> ...?</A>
+<DD><A HREF="mathop.htm#M27" NAME="L994"><B>&lt;&lt;</B> <I>number number</I></A>
+<DD><A HREF="mathop.htm#M28" NAME="L995"><B>&gt;&gt;</B> <I>number number</I></A>
 </DL>
-<DD><A HREF="mathop.htm#M29" NAME="L1146">LIST OPERATORS</A>
+<DD><A HREF="mathop.htm#M29" NAME="L996">LIST OPERATORS</A>
 <DL class="list operators">
-<DD><A HREF="mathop.htm#M30" NAME="L1147"><B>in</B> <I>arg list</I></A>
-<DD><A HREF="mathop.htm#M31" NAME="L1148"><B>ni</B> <I>arg list</I></A>
+<DD><A HREF="mathop.htm#M30" NAME="L997"><B>in</B> <I>arg list</I></A>
+<DD><A HREF="mathop.htm#M31" NAME="L998"><B>ni</B> <I>arg list</I></A>
 </DL>
-<DD><A HREF="mathop.htm#M32" NAME="L1149">EXAMPLES</A>
-<DD><A HREF="mathop.htm#M33" NAME="L1150">SEE ALSO</A>
-<DD><A HREF="mathop.htm#M34" NAME="L1151">KEYWORDS</A>
+<DD><A HREF="mathop.htm#M32" NAME="L999">EXAMPLES</A>
+<DD><A HREF="mathop.htm#M33" NAME="L1000">SEE ALSO</A>
+<DD><A HREF="mathop.htm#M34" NAME="L1001">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-mathop &mdash; Mathematical operators as Tcl commands
+mathop - Mathematical operators as Tcl commands
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 package require <B>Tcl 8.5</B><BR>
 <B>::tcl::mathop::!</B> <I>number</I><BR>
@@ -87,7 +87,7 @@ renaming, reimplementing or deleting any of the commands in the namespace does
 defining any new commands in the <B>::tcl::mathop</B> namespace.
 <P>
 The following operator commands are supported:
-<dl><dd><table border="0"><tr><td><p class="tablecell"><B>~</B><td><p class="tablecell"><B>!</B><td><p class="tablecell"><B>+</B><td><p class="tablecell"><B>-</B><td><p class="tablecell"><B>*</B><tr><td><p class="tablecell"><B>/</B><td><p class="tablecell"><B>%</B><td><p class="tablecell"><B>**</B><td><p class="tablecell"><B>&amp;</B><td><p class="tablecell"><B>|</B><tr><td><p class="tablecell"><B>^</B><td><p class="tablecell"><B>&gt;&gt;</B><td><p class="tablecell"><B>&lt;&lt;</B><td><p class="tablecell"><B>==</B><td><p class="tablecell"><B>eq</B><tr><td><p class="tablecell"><B>!=</B><td><p class="tablecell"><B>ne</B><td><p class="tablecell"><B>&lt;</B><td><p class="tablecell"><B>&lt;=</B><td><p class="tablecell"><B>&gt;</B><tr><td><p class="tablecell"><B>&gt;=</B><td><p class="tablecell"><B>in</B><td><p class="tablecell"><B>ni</B></table></dl>
+<dl><dd><table border="0"><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>~</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>!</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>+</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>-</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>*</B><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>/</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>%</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>**</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>&amp;</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>|</B><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>^</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>&gt;&gt;</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>&lt;&lt;</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>==</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>eq</B><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>!=</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>ne</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>&lt;</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>&lt;=</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>&gt;</B><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>&gt;=</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>in</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>ni</B></table></dl>
 <H4><A NAME="M5">MATHEMATICAL OPERATORS</A></H4>
 The behaviors of the mathematical operator commands are as follows:
 <P>
@@ -243,10 +243,9 @@ Returns whether the value <I>arg</I> is not present in the list <I>list</I>
 (according to exact string comparison of elements).
 <P></DL>
 <H3><A NAME="M32">EXAMPLES</A></H3>
-The simplest way to use the operators is often by using <B><A HREF="../TclCmd/namespace.htm">namespace path</A></B>
+The simplest way to use the operators is often by using <B>namespace path</B>
 to make the commands available. This has the advantage of not affecting the
 set of commands defined by the current namespace.
-<P>
 <PRE>namespace path {<B>::tcl::mathop</B> ::tcl::mathfunc}
 
 <I># Compute the sum of some numbers</I>
@@ -268,5 +267,6 @@ set sorted [<B>&lt;=</B> {*}$list]</PRE>
 <B><A HREF="../TclCmd/expr.htm">expr</A></B>, <B><A HREF="../TclCmd/mathfunc.htm">mathfunc</A></B>, <B><A HREF="../TclCmd/namespace.htm">namespace</A></B>
 <H3><A NAME="M34">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#command">command</A>, <A href="../Keywords/E.htm#expression">expression</A>, <A href="../Keywords/O.htm#operator">operator</A>
-<div class="copy"></div>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+</div>
 </BODY></HTML>

@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_CreateTrace manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> CrtTrace</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> CrtTrace</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="CrtTrace.htm#M2" NAME="L192">NAME</A>
-<DL><DD>Tcl_CreateTrace, Tcl_CreateObjTrace, Tcl_DeleteTrace &mdash; arrange for command execution to be traced</DD></DL>
-<DD><A HREF="CrtTrace.htm#M3" NAME="L193">SYNOPSIS</A>
+<DD><A HREF="CrtTrace.htm#M2" NAME="L164">NAME</A>
+<DL><DD>Tcl_CreateTrace, Tcl_CreateObjTrace, Tcl_DeleteTrace - arrange for command execution to be traced</DD></DL>
+<DD><A HREF="CrtTrace.htm#M3" NAME="L165">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>Tcl_Trace
@@ -17,14 +17,14 @@
 <DD><B>Tcl_CreateObjTrace</B>(<I>interp, level, flags, objProc, clientData, deleteProc</I>)
 <DD><B>Tcl_DeleteTrace</B>(<I>interp, trace</I>)
 </DL>
-<DD><A HREF="CrtTrace.htm#M4" NAME="L194">ARGUMENTS</A>
+<DD><A HREF="CrtTrace.htm#M4" NAME="L166">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="CrtTrace.htm#M5" NAME="L195">DESCRIPTION</A>
-<DD><A HREF="CrtTrace.htm#M6" NAME="L196">KEYWORDS</A>
+<DD><A HREF="CrtTrace.htm#M5" NAME="L167">DESCRIPTION</A>
+<DD><A HREF="CrtTrace.htm#M6" NAME="L168">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_CreateTrace, Tcl_CreateObjTrace, Tcl_DeleteTrace &mdash; arrange for command execution to be traced
+Tcl_CreateTrace, Tcl_CreateObjTrace, Tcl_DeleteTrace - arrange for command execution to be traced
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 Tcl_Trace<BR>
@@ -72,16 +72,14 @@ interpreter.
 <P>
 <I>objProc</I> should have arguments and result that match the type,
 <B>Tcl_CmdObjTraceProc</B>:
-<P>
 <PRE>typedef int <B>Tcl_CmdObjTraceProc</B>( 
         <B>ClientData</B> <I>clientData</I>,
         <B><A HREF="../TclLib/Interp.htm">Tcl_Interp</A></B>* <I>interp</I>,
         int <I>level</I>,
         const char *<I>command</I>,
-        <B><A HREF="../TclLib/CrtObjCmd.htm">Tcl_Command</A></B> <I>commandToken</I>,
+        <B>Tcl_Command</B> <I>commandToken</I>,
         int <I>objc</I>,
-        <B><A HREF="../TclLib/Object.htm">Tcl_Obj</A></B> *const <I>objv</I>[]);</PRE>
-<P>
+        <B>Tcl_Obj</B> *const <I>objv</I>[] );</PRE>
 The <I>clientData</I> and <I>interp</I> parameters are copies of the
 corresponding arguments given to <B>Tcl_CreateTrace</B>.
 <I>ClientData</I> typically points to an application-specific data
@@ -101,7 +99,7 @@ that will be passed to the command, and have had all substitutions
 performed.
 <P>
 The <I>objProc</I> callback is expected to return a standard Tcl status
-return code.  If this code is <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> (the normal case), then
+return code.  If this code is <B>TCL_OK</B> (the normal case), then
 the Tcl interpreter will invoke the command.  Any other return code
 is treated as if the command returned that status, and the command is
 <I>not</I> invoked.
@@ -148,10 +146,8 @@ When <B>Tcl_DeleteTrace</B> is called, the interpreter invokes the
 <I>deleteProc</I> that was passed as a parameter to
 <B>Tcl_CreateObjTrace</B>.  The <I>deleteProc</I> must match the type,
 <B>Tcl_CmdObjTraceDeleteProc</B>:
-<P>
 <PRE>typedef void <B>Tcl_CmdObjTraceDeleteProc</B>( 
         <B>ClientData</B> <I>clientData</I>);</PRE>
-<P>
 The <I>clientData</I> parameter will be the same as the
 <I>clientData</I> parameter that was originally passed to
 <B>Tcl_CreateObjTrace</B>.
@@ -162,17 +158,15 @@ compatibility with code that was developed for older versions of the
 Tcl interpreter.  It is similar to <B>Tcl_CreateObjTrace</B>, except
 that its <I>proc</I> parameter should have arguments and result that
 match the type <B>Tcl_CmdTraceProc</B>:
-<P>
-<PRE>typedef void <B>Tcl_CmdTraceProc</B>(
+<PRE>typedef void Tcl_CmdTraceProc(
         ClientData <I>clientData</I>,
         <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
         int <I>level</I>,
         char *<I>command</I>,
-        <A HREF="../TclLib/CrtObjCmd.htm">Tcl_CmdProc</A> *<I>cmdProc</I>,
+        Tcl_CmdProc *<I>cmdProc</I>,
         ClientData <I>cmdClientData</I>,
         int <I>argc</I>,
         const char *<I>argv</I>[]);</PRE>
-<P>
 The parameters to the <I>proc</I> callback are similar to those of the
 <I>objProc</I> callback above. The <I>commandToken</I> is
 replaced with <I>cmdProc</I>, a pointer to the (string-based) command
@@ -192,7 +186,8 @@ associated with a call to <B>Tcl_CreateTrace</B> to abort execution of
 <I>command</I>.
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#command">command</A>, <A href="../Keywords/C.htm#create">create</A>, <A href="../Keywords/D.htm#delete">delete</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/T.htm#trace">trace</A>
-<div class="copy">Copyright &copy; 1989-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1989-1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 Copyright &copy; 2002 by Kevin B. Kenny &lt;kennykb(at)acm.org&gt;. All rights reserved.
 </div>

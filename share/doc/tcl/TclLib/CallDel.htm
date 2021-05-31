@@ -3,10 +3,10 @@
 <HEAD><TITLE>Tcl_CallWhenDeleted manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> CallDel</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> CallDel</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_CallWhenDeleted, Tcl_DontCallWhenDeleted &mdash; Arrange for callback when interpreter is deleted
+Tcl_CallWhenDeleted, Tcl_DontCallWhenDeleted - Arrange for callback when interpreter is deleted
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 <B>Tcl_CallWhenDeleted</B>(<I>interp</I>, <I>proc</I>, <I>clientData</I>)<BR>
@@ -28,11 +28,9 @@ is deleted, but the interpreter will still be valid at the
 time of the call.
 <I>Proc</I> should have arguments and result that match the
 type <B>Tcl_InterpDeleteProc</B>:
-<P>
-<PRE>typedef void <B>Tcl_InterpDeleteProc</B>(
+<PRE>typedef void Tcl_InterpDeleteProc(
         ClientData <I>clientData</I>,
         <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>);</PRE>
-<P>
 The <I>clientData</I> and <I>interp</I> parameters are
 copies of the <I>clientData</I> and <I>interp</I> arguments given
 to <B>Tcl_CallWhenDeleted</B>.
@@ -48,15 +46,11 @@ deleted.
 If there is no deletion callback that matches <I>interp</I>,
 <I>proc</I>, and <I>clientData</I> then the call to
 <B>Tcl_DontCallWhenDeleted</B> has no effect.
-<P>
-Note that if the callback is being used to delete a resource that <I>must</I>
-be released on exit, <B><A HREF="../TclLib/Exit.htm">Tcl_CreateExitHandler</A></B> should be used to ensure that
-a callback is received even if the application terminates without deleting the interpreter.
-<H3><A NAME="M6">SEE ALSO</A></H3>
-<B><A HREF="../TclLib/Exit.htm">Tcl_CreateExitHandler</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_CreateThreadExitHandler</A></B>
-<H3><A NAME="M7">KEYWORDS</A></H3>
-<A href="../Keywords/C.htm#callback">callback</A>, <A href="../Keywords/C.htm#cleanup">cleanup</A>, <A href="../Keywords/D.htm#delete">delete</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+
+<H3><A NAME="M6">KEYWORDS</A></H3>
+<A href="../Keywords/C.htm#callback">callback</A>, <A href="../Keywords/D.htm#delete">delete</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

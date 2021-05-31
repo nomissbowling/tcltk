@@ -1,0 +1,262 @@
+This is the Change Log for the Pgtcl Reference Manual for Pgtclng and Pgintcl.
+
+The changes recorded here are mostly changes visible to readers of the manual,
+although there are also references to changes within the manual source.
+-----------------------------------------------------------------------------
+
+* 2017-11-13
+  Reference manual version: 20171113, for release with pgtclng-2.1.1 and
+  pgintcl-3.5.1.
+  + reference.xml: Rewrote description of pg_server_version to include
+    information about new 2-part version numbers starting in PostgreSQL-10.0.
+
+* 2014-09-12
+  + building.xml: Update version numbers for pgtclng-2.1.1 release.
+  + Makefile: Version 20140912
+  + pgtcl.xml: Latest version of pgtclng is 2.1.1
+  + legalinfo.xml: Copyright years extended.
+  Note: Reference Manual 20140912 corresponds to pgtclng-2.1.1 but there
+  are no changes to the manual other than version numbers.
+
+* 2013-10-07
+  Reference manual version: 20131007a, for release with pgtclng-2.1.0 and
+  pgintcl-3.5.0 (Note: Replaces 20131007 released earlier today.)
+  + building.xml: Fix configure instructions - missing --with-tclinclude
+    option turned out to be needed, else it can use the wrong Tcl header
+    files.
+  + Makefile: Version 20131007a; fix to allow version suffix.
+
+* 2013-10-07
+  Reference manual version: 20131007
+  + building.xml: Update versions of Tcl, PostgreSQL. Rewrite configure
+    steps. Update building instructions for MinGW.
+  + loading.xml: Update version numbers.
+  + reference.xml: minor changes to description of new pg_connect features.
+
+* 2013-10-04
+  Feature Request #8 "Support 2 new libpq escape functions":
+  + overview.xml: Link to 2 new commands.
+  + reference.xml: Document 2 new commands pg_escape_literal and
+    pg_escape_identifier. Update pg_quote and pg_escape_string including
+    references to the new commands.
+  + Makefile: Version 20131004
+
+  + .ispell_words: Update
+
+* 2013-09-28
+  Feature Request #7 "Support new error message fields":
+  + reference.xml: Rewrote and merged 2 tables under pg_result -errorField
+    which show the available field codes. Added 5 new codes. Updated
+    information on case-sensitivity to reflect incompatible change.
+  + Makefile: Version 20130928
+
+* 2013-09-24
+  Feature Request #6 "Add new forms for connection options":
+  + reference.xml: Document new option -connlist to pg_connect, and
+    expand the notes on this command, including pgintcl limitations.
+    Document use of URI syntax in a connection options string.
+  + Makefile: Version 20130924
+
+* 2013-09-22
+  Feature Request #5 "Add 64-bit large object support":
+  Document 3 new commands for 64-bit offsets in large objects:
+  + Makefile: Version 20130918
+  + legalinfo.xml: Copyright years extended.
+  + overview.xml: Add links to 3 new commands.
+  + pgtcl.xml: Update version numbers and URL to other Pgtcl project on github.
+  + reference.xml: Document new commands pg_lo_lseek64, pg_lo_tell64, and
+    pg_lo_truncate64.
+
+
+* 2011-09-18
+  Reference manual version: 20110918
+  + overview.xml: Add links to 2 new commands.
+  + reference.xml: Document new commands pg_backend_pid and pg_server_version.
+       Document new -pid option to pg_listen, fix the examples which were
+       missing a parameter, and document case folding/quote stripping
+       behavior of notifyName.
+
+  + building.xml: Update referenced versions of Tcl, PostreSQL, pgtclng.
+       Remove link from MinGW section to BCC (which doesn't work now).
+  + loading.xml: Update version numbers.
+  + pgtcl.xml: Update version numbers.
+
+* 2011-09-09
+  Changes for Sourceforge.net hosting:
+  + local.xsl: Add conditional template for adding the Sourceforge logo
+    into the page footers (required by Sourceforge policy). This will be
+    used to make a special copy of the manual for the project web site.
+  + Makefile: Add target 'sfhtml' to build the logo-ized manual.
+    Also: removed obsolete targets and macros.
+
+* 2011-03-26
+  Reference manual version: 20110326
+  + Preface: Changed URLs to pgtclng and pgintcl projects, as these have
+    now been rehosted on sourceforge.net.
+
+* 2011-03-21
+  Reference manual version: 20110321 - for pgtclng-1.9.0 and pgin.tcl-3.3.0
+  Copyright years extended.
+  + Reference:
+    Document new pg_result -dict option.
+  + Examples:
+    Add pg_result -dict example output.
+    Add note explaining that some pg_result options don't work well when a
+    query has duplicate column names, because they use column names as keys
+    or indexes.
+  + Building:
+    Document Windows requirement for MS Visual C++ Redistributables if not
+    using the EnterpriseDB PostgreSQL Installer.
+
+* 2010-10-10
+  Reference manual version: 20101010 - for pgtclng-1.8.0 and pgin.tcl-3.2.0
+  + Reference:
+    Document notification command payload argument for pg_listen.
+    Added note to pg_escape_bytea describing hex vs escape encoding with
+    PostgreSQL-9.0 and higher.
+
+* 2010-07-14
+  Reference manual version: 20100714
+  + Building and Installing on Windows:
+    Fixes to new section on building on Windows with MinGW. Document the
+    need for the whole EnterpriseDB "bin" directory at runtime, because there
+    are more dependencies than just libpq.dll.
+
+  + Loading pgtcl:
+    Update for loading MinGW-built version of the interface.
+
+* 2010-06-05
+  Reference manual version: 20100605
+  Copyright years extended.
+
+  + Building:
+    New section for building on Windows with MinGW. Changes to BCC building
+    section to distinguish it from the new text. (Note: The MinGW makefile
+    will be in the next source release.)
+    Fixed link references so the URL text is visible when plain-text INSTALL
+    is generated.
+
+* 2009-11-25
+
+  + Building and Installing on Windows:
+    Document building stubs-enabled version for Windows. As of Pgtclng-1.7.1
+    this is the default, but leave instructions in for non stubs enabled
+    building also.
+
+* 2009-09-24
+
+  Manual generation with new toolset. Updated README to reflect versions. No
+  visible changes to the manual.
+
+  To fix the unwanted word "Abstract", just need to use empty titles. Applied
+  this to all abstracts in the document, and removed the display:none hack from
+  the CSS style sheet.
+
+
+* 2009-09-11
+
+  Minor final changes before release with pgtclng-1.7.0
+  Reference manual version: 20090911
+
+* 2009-09-09
+
+  + Overview, Reference:
+    Document two new commands: pg_describe_cursor and pg_describe_prepared.
+    Document new options -numParams and -paramTypes to pg_result.
+
+* 2009-09-05
+
+  + legalinfo:
+    Clarify copyright/legal notice. The material originally started as a
+    product of the PostgreSQL Global Development Group, but they no longer
+    contribute and are not responsible for any of the content after 2004.
+
+  + Overview, Reference:
+    Document two new commands: pg_encrypt_password and pg_lo_truncate.
+    Document new optional $conn argument to pg_escape_string, pg_quote, and
+      pg_escape_bytea.
+
+  + Building: Update recommended versions.
+
+* 2007-12-27
+
+  + Building: Updated build instructions for Windows with ActiveState
+              ActiveTcl 8.5.0. For pgtclng-1.6.2.
+
+* 2007-01-15
+
+  Final changes before release with pgtclng-1.6.0:
+
+  + Overall:
+    Copyright years extended to 2007.
+    Changed "pgtcl" to "pgtcl-ng" in more places to avoid confusion.
+
+  + Building:
+    Patches for Windows BCC builds are removed from the manual. Separate
+      per-version patch files will be released with the source release of
+      pgtcl-ng. (Because of length of patches for PostgreSQL-8.2.0.)
+    Don't add -c to BCC link flags. Doesn't seem to be needed.
+
+  + Loading:
+    Add a mention of 'rpath' in the library.
+    Referenced version change to 1.6.0
+
+  + Reference:
+    A few commands were missing a note naming the libpq function they use
+      or emulate, and these have now been added.
+    Use a DocBook trick to get a Table of Contents in the Reference sections,
+    but not in the rest of the manual sections.
+
+  + Examples:
+    Add a new example for pg_result_callback: event-driven results.
+
+* 2006-12-24
+
+  Corrections, and updating the manual for pgtclng-1.6.0:
+
+  + XSL Style sheet:
+    Fix optional parameter notation to use the Tcl conventions ?...? rather
+      than the usual convention [...] (which has a different meaning in Tcl).
+      This was in older versions of the manual, but was lost during the
+      conversion to DocBook-XML, and has now been restored.
+
+  + Overview:
+    Use consistent wording for "executing SQL commands on the server".
+    Add table entries for 3 new commands (see next item).
+
+  + Reference:
+    Document new command: pg_result_callback
+    Document new command: pg_sendquery_params
+    Document new command: pg_sendquery_prepared
+    Document new feature: optional parameters for pg_sendquery
+    Add note about the optional parameter notation "?...?".
+    Same changes as in Overview for consistent wording of query execution.
+    Refer to optional parameter arguments as 'param' not the generic 'arg'.
+    Fix: In pg_exec_params and pg_exec_prepared, parameter arguments are
+      optional. (Although it doesn't make much sense to use them without
+      parameters.)
+    Remove caution notes stating that the asynchronous commands and
+      prepared/parameterized commands are experimental.
+    Add cautions on pg_exec_prepared and pg_escape_string regarding
+      incompatibility with "original Pgtcl".
+    Add note to pg_exec_param pointing to use of pg_exec instead if all
+      parameters and return value are TEXT type.
+
+* 2006-12-08
+  Fix: Missing pg_quote from table 1-1 command listing.
+
+* 2006-09-09 Released reference manual dated 20060909 on pgfoundry
+
+  This is a conversion of the manual source from DocBook-SGML to
+    DocBook-XML. There are numerous small style changes as a result,
+    but the content is basically the same.
+
+* 2006-05-29 Released reference manual version 20060529 on gborg
+
+  This is a minor update to the Pgtcl Reference Manual with corrections
+    to building under Windows with PostgreSQL-8.1.x.
+
+* 2004-11-11 Released reference manual version 20041108 on gborg
+
+  This is the updated Pgtcl Reference Manual that goes with pgtclng-1.5.2
+    and pgintcl-2.2.0.

@@ -81,12 +81,6 @@ TkWinGetModifierState(void)
     if (GetKeyState(VK_RBUTTON) & 0x8000) {
 	state |= Button3Mask;
     }
-    if (GetKeyState(VK_XBUTTON1) & 0x8000) {
-	state |= Button4Mask;
-    }
-    if (GetKeyState(VK_XBUTTON2) & 0x8000) {
-	state |= Button5Mask;
-    }
     return state;
 }
 
@@ -232,6 +226,11 @@ MouseTimerProc(
 
     mouseTimerSet = 0;
 
+    /*
+     * Get the current mouse position and window. Don't do anything if the
+     * mouse hasn't moved since the last time we looked.
+     */
+
     GetCursorPos(&pos);
     Tk_PointerEvent(NULL, pos.x, pos.y);
 }
@@ -331,10 +330,10 @@ XQueryPointer(
 /*
  *----------------------------------------------------------------------
  *
- * XWarpPointer, TkpWarpPointer --
+ * XWarpPointer --
  *
- *	Move pointer to new location. Note that implementation of XWarpPointer
- *	is incomplete.
+ *	Move pointer to new location. This is not a complete implementation of
+ *	this function.
  *
  * Results:
  *	None.
@@ -345,12 +344,12 @@ XQueryPointer(
  *----------------------------------------------------------------------
  */
 
-/*
- * TkSetCursorPos is a helper function replacing SetCursorPos since this
- * latter Windows function appears to have been broken by Microsoft
- * since Win10 Falls Creator Update - See ticket [69b48f427e] along with
- * several other Internet reports about this breakage.
- */
+ /*
+  * TkSetCursorPos is a helper function replacing SetCursorPos since this
+  * latter Windows function appears to have been broken by Microsoft
+  * since Win10 Falls Creator Update - See ticket [69b48f427e] along with
+  * several other Internet reports about this breakage.
+  */
 
 void TkSetCursorPos(
     int x,
@@ -361,8 +360,8 @@ void TkSetCursorPos(
     int yscreen = (int)(GetSystemMetrics(SM_CYSCREEN) - 1);
 
     input.type = INPUT_MOUSE;
-    input.mi.dx = (x * 65535 + xscreen/2) / xscreen;
-    input.mi.dy = (y * 65535 + yscreen/2) / yscreen;
+    input.mi.dx = (x * 65535 + xscreen / 2) / xscreen;
+    input.mi.dy = (y * 65535 + yscreen / 2) / yscreen;
 
     /*
      * Horrible workaround here. There is a bug on Win 10: when warping to
@@ -373,7 +372,7 @@ void TkSetCursorPos(
      * See ticket [69b48f427e].
      */
     if (input.mi.dx == 0 && input.mi.dy == 0) {
-        input.mi.dx = 1;
+	input.mi.dx = 1;
     }
 
     input.mi.mouseData = 0;
@@ -400,20 +399,6 @@ XWarpPointer(
     GetWindowRect(Tk_GetHWND(dest_w), &r);
     TkSetCursorPos(r.left+dest_x, r.top+dest_y);
     return Success;
-}
-
-void
-TkpWarpPointer(
-    TkDisplay *dispPtr)
-{
-    if (dispPtr->warpWindow) {
-	RECT r;
-
-	GetWindowRect(Tk_GetHWND(Tk_WindowId(dispPtr->warpWindow)), &r);
-	TkSetCursorPos(r.left + dispPtr->warpX, r.top + dispPtr->warpY);
-    } else {
-	TkSetCursorPos(dispPtr->warpX, dispPtr->warpY);
-    }
 }
 
 /*
@@ -574,29 +559,6 @@ TkpSetCapture(
 	captured = 0;
 	ReleaseCapture();
     }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkpGetCapture --
- *
- *	This function requests which window is capturing the mouse.
- *
- * Results:
- *	The return value is a pointer to the capture window, if there is
- *      one, otherwise it is NULL.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-Tk_Window
-TkpGetCapture(void)
-{
-    return Tk_HWNDToWindow(GetCapture());
 }
 
 /*

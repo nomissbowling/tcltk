@@ -37,7 +37,7 @@ namespace eval tk {
 
 	namespace eval bg {
 	    # Manage a background process.
-	    # Replace with child interp or thread?
+	    # Replace with slave interp or thread?
 	    namespace import ::tcltest::interpreter
 	    namespace import ::tk::test::loadTkCommand
 	    namespace export setup cleanup do
@@ -136,42 +136,6 @@ namespace eval tk {
             focus -force .focus.e
             destroy .focus
 	}
-
-
-        namespace export imageInit imageFinish imageCleanup imageNames
-        variable ImageNames
-        proc imageInit {} {
-            variable ImageNames
-            if {![info exists ImageNames]} {
-                set ImageNames [lsort [image names]]
-            }
-            imageCleanup
-            if {[lsort [image names]] ne $ImageNames} {
-                return -code error "IMAGE NAMES mismatch: [image names] != $ImageNames"
-            }
-        }
-        proc imageFinish {} {
-            variable ImageNames
-            if {[lsort [image names]] ne $ImageNames} {
-                return -code error "images remaining: [image names] != $ImageNames"
-            }
-            imageCleanup
-        }
-        proc imageCleanup {} {
-            variable ImageNames
-            foreach img [image names] {
-                if {$img ni $ImageNames} {image delete $img}
-            }
-        }
-        proc imageNames {} {
-            variable ImageNames
-            set r {}
-            foreach img [image names] {
-                if {$img ni $ImageNames} {lappend r $img}
-            }
-            return $r
-        }
-
     }
 }
 
@@ -182,9 +146,6 @@ testConstraint notAqua [expr {[tk windowingsystem] ne "aqua"}]
 testConstraint aqua [expr {[tk windowingsystem] eq "aqua"}]
 testConstraint x11 [expr {[tk windowingsystem] eq "x11"}]
 testConstraint nonwin [expr {[tk windowingsystem] ne "win32"}]
-testConstraint aquaOrWin32 [expr {
-    ([tk windowingsystem] eq "win32") || [testConstraint aqua]
-}]
 testConstraint userInteraction 0
 testConstraint nonUnixUserInteraction [expr {
     [testConstraint userInteraction] ||
@@ -197,8 +158,8 @@ testConstraint noExceed [expr {
 }]
 
 # constraints for testing facilities defined in the tktest executable...
-testConstraint testImageType [expr {"test" in [image types]}]
-testConstraint testOldImageType [expr {"oldtest" in [image types]}]
+testConstraint testImageType [expr {[lsearch [image types] test] >= 0}]
+testConstraint testOldImageType [expr {[lsearch [image types] oldtest] >= 0}]
 testConstraint testbitmap    [llength [info commands testbitmap]]
 testConstraint testborder    [llength [info commands testborder]]
 testConstraint testcbind     [llength [info commands testcbind]]
@@ -219,7 +180,7 @@ testConstraint testwrapper   [llength [info commands testwrapper]]
 # constraint to see what sort of fonts are available
 testConstraint fonts 1
 destroy .e
-entry .e -width 0 -font {Helvetica -12} -bd 1 -highlightthickness 1
+entry .e -width 0 -font {Helvetica -12} -bd 1
 .e insert end a.bcd
 if {([winfo reqwidth .e] != 37) || ([winfo reqheight .e] != 20)} {
     testConstraint fonts 0
@@ -247,10 +208,10 @@ testConstraint pseudocolor8 [expr {
 }]
 destroy .t
 testConstraint haveTruecolor24 [expr {
-    {truecolor 24} in [winfo visualsavailable .]
+    [lsearch -exact [winfo visualsavailable .] {truecolor 24}] >= 0
 }]
 testConstraint haveGrayscale8 [expr {
-    {grayscale 8} in [winfo visualsavailable .]
+    [lsearch -exact [winfo visualsavailable .] {grayscale 8}] >= 0
 }]
 testConstraint defaultPseudocolor8 [expr {
     ([winfo visual .] eq "pseudocolor") && ([winfo depth .] == 8)
@@ -279,6 +240,7 @@ namespace import -force tcltest::removeDirectory
 namespace import -force tcltest::interpreter
 namespace import -force tcltest::testsDirectory
 namespace import -force tcltest::cleanupTests
+namespace import -force tcltest::bytestring
 
 deleteWindows
 wm geometry . {}

@@ -1,0 +1,20 @@
+Last updated: 24/05/2000 (d/m/y), 15:38 
+
+-------- ??/??/???? TclExcept version 1.0 --------
+
+
+
+-------- 24/05/2000 TclExcept version 2.0 --------
+
+1. Added "exception" command and exception hierarchies
+
+2. Modified the semantics of "finally" in try blocks: in version 1.0, the 
+finally block wasn't called if control flow exception (return/break/continue) 
+occurred during the try block. The logic was that the code behaved as if there 
+were no exception handling in case no exception occurred. In the current 
+version, the finally block is always called. This is consistent with exception 
+handling in other languages (Java, Python...). Thanks to William H. Duquette for 
+pointing that out.
+
+3. Removed french documentation (maintaining both french and english was taking 
+too much time).

@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<!-- $Id: INSTALL.xml 182 2009-09-25 03:20:59Z lbayuk $ -->
+<!--
+  This is used to generate INSTALL for the Pgtcl release.
+  The main source is in building.xml - see the Makefile.
+  The building.xml source file has special conditional markup which
+  handles the difference between stand-alone INSTALL or part of the
+  manual. The actual selection is done in the Makefile with a parameter.
+  Conditionals standalone-ignore and standalone-include are used
+  to select parts of the building.sgml file which apply only when
+  in the whole manual. This is copied from the PostgreSQL manual.
+-->
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "docbookx.dtd" [
+<!ENTITY % version SYSTEM "version.xml">
+%version;
+<!ENTITY building SYSTEM "building.xml">
+]>
+<article>
+&building;
+</article>

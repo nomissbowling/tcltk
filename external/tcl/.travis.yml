@@ -27,6 +27,13 @@ jobs:
       env:
         - BUILD_DIR=unix
         - CFGOPT=CFLAGS=-DTCL_UTF_MAX=4
+    - name: "Linux/GCC/Shared: UTF_MAX=5"
+      os: linux
+      dist: focal
+      compiler: gcc
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT=CFLAGS=-DTCL_UTF_MAX=5
     - name: "Linux/GCC/Shared: UTF_MAX=6"
       os: linux
       dist: focal
@@ -120,7 +127,6 @@ jobs:
       osx_image: xcode12.2
       env:
         - BUILD_DIR=unix
-        - CFGOPT="--enable-dtrace"
 # Newer MacOS versions
     - name: "macOS/Xcode 12/Universal Apps/Shared"
       os: osx
@@ -166,7 +172,7 @@ jobs:
       compiler: x86_64-w64-mingw32-gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT="--host=x86_64-w64-mingw32 --enable-64bit"
+        - CFGOPT="--host=x86_64-w64-mingw32 --enable-64bit --enable-threads"
       script: &crosstest
         - make all tcltest
         # Include a high visibility marker that tests are skipped outright
@@ -180,7 +186,7 @@ jobs:
       compiler: i686-w64-mingw32-gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT=--host=i686-w64-mingw32
+        - CFGOPT="--host=i686-w64-mingw32 --enable-threads"
       script: *crosstest
 # Test on Windows with MSVC native
     - name: "Windows/MSVC/Shared"
@@ -190,22 +196,12 @@ jobs:
         - BUILD_DIR=win
         - VCDIR="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Auxiliary/Build"
       before_install: &vcpreinst
-        - touch generic/tclStubInit.c generic/tclOOStubInit.c
         - PATH="$PATH:$VCDIR"
         - cd ${BUILD_DIR}
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake '-f' makefile.vc test
-    - name: "Windows/MSVC/Shared: UTF_MAX=4"
-      os: windows
-      compiler: cl
-      env: *vcenv
-      before_install: *vcpreinst
-      install: []
-      script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=threads' '-f' makefile.vc test
     - name: "Windows/MSVC/Static"
       os: windows
       compiler: cl
@@ -213,17 +209,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc test
-    - name: "Windows/MSVC/StaticPackage"
-      os: windows
-      compiler: cl
-      env: *vcenv
-      before_install: *vcpreinst
-      install: []
-      script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,staticpkg,msvcrt' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,staticpkg,msvcrt' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,msvcrt,threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,msvcrt,threads' '-f' makefile.vc test
     - name: "Windows/MSVC/Debug"
       os: windows
       compiler: cl
@@ -231,8 +218,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=symbols' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=symbols' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=symbols,threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=symbols,threads' '-f' makefile.vc test
     - name: "Windows/MSVC/Mem-Debug"
       os: windows
       compiler: cl
@@ -240,8 +227,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'STATS=memdbg' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'STATS=memdbg' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'STATS=memdbg OPTS=threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'STATS=memdbg OPTS=threads' '-f' makefile.vc test
 # Test on Windows with MSVC native (32-bit)
     - name: "Windows/MSVC-x86/Shared"
       os: windows
@@ -250,17 +237,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake '-f' makefile.vc test
-    - name: "Windows/MSVC-x86/Shared: UTF_MAX=4"
-      os: windows
-      compiler: cl
-      env: *vcenv
-      before_install: *vcpreinst
-      install: []
-      script:
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=threads' '-f' makefile.vc test
     - name: "Windows/MSVC-x86/Static"
       os: windows
       compiler: cl
@@ -268,8 +246,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static,msvcrt,threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static,msvcrt,threads' '-f' makefile.vc test
     - name: "Windows/MSVC-x86/Debug"
       os: windows
       compiler: cl
@@ -277,8 +255,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=symbols' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=symbols' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=symbols,threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=symbols,threads' '-f' makefile.vc test
     - name: "Windows/MSVC-x86/Mem-Debug"
       os: windows
       compiler: cl
@@ -286,46 +264,31 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'STATS=memdbg' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'STATS=memdbg' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'STATS=memdbg OPTS=threads' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'STATS=memdbg OPTS=threads' '-f' makefile.vc test
 # Test on Windows with GCC native
     - name: "Windows/GCC/Shared"
       os: windows
       compiler: gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT="--enable-64bit"
+        - CFGOPT="--enable-64bit --enable-threads"
       before_install: &makepreinst
-        - touch generic/tclStubInit.c generic/tclOOStubInit.c
         - choco install -y make
         - cd ${BUILD_DIR}
-    - name: "Windows/GCC/Shared: UTF_MAX=4"
-      os: windows
-      compiler: gcc
-      env:
-        - BUILD_DIR=win
-        - CFGOPT="--enable-64bit CFLAGS=-DTCL_UTF_MAX=4"
-      before_install: *makepreinst
     - name: "Windows/GCC/Static"
       os: windows
       compiler: gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT="--enable-64bit --disable-shared"
+        - CFGOPT="--enable-64bit --enable-threads --disable-shared"
       before_install: *makepreinst
     - name: "Windows/GCC/Debug"
       os: windows
       compiler: gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT="--enable-64bit --enable-symbols"
-      before_install: *makepreinst
-    - name: "Windows/GCC/Mem-Debug"
-      os: windows
-      compiler: gcc
-      env:
-        - BUILD_DIR=win
-        - CFGOPT="--enable-64bit --enable-symbols=mem"
+        - CFGOPT="--enable-64bit --enable-threads --enable-symbols"
       before_install: *makepreinst
 # Test on Windows with GCC native (32-bit)
     - name: "Windows/GCC-x86/Shared"
@@ -333,53 +296,36 @@ jobs:
       compiler: gcc
       env:
         - BUILD_DIR=win
-      before_install: *makepreinst
-    - name: "Windows/GCC-x86/Shared: UTF_MAX=4"
-      os: windows
-      compiler: gcc
-      env:
-        - BUILD_DIR=win
-        - CFGOPT="CFLAGS=-DTCL_UTF_MAX=4"
+        - CFGOPT="--enable-threads"
       before_install: *makepreinst
     - name: "Windows/GCC-x86/Static"
       os: windows
       compiler: gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT="--disable-shared"
+        - CFGOPT="--enable-threads --disable-shared"
       before_install: *makepreinst
     - name: "Windows/GCC-x86/Debug"
       os: windows
       compiler: gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT="--enable-symbols"
+        - CFGOPT="--enable-threads --enable-symbols"
       before_install: *makepreinst
     - name: "Windows/GCC-x86/Mem-Debug"
       os: windows
       compiler: gcc
       env:
         - BUILD_DIR=win
-        - CFGOPT="--enable-symbols=mem"
+        - CFGOPT="--enable-threads --enable-symbols=mem"
       before_install: *makepreinst
-# "make dist" only
-    - name: "Linux: make dist"
-      os: linux
-      dist: focal
-      compiler: gcc
-      env:
-        - BUILD_DIR=unix
-      script:
-        - make dist
 before_install:
-  - touch generic/tclStubInit.c generic/tclOOStubInit.c
+  - touch generic/tclStubInit.c
   - cd ${BUILD_DIR}
 install:
-  - mkdir "$HOME/install dir"
-  - ./configure ${CFGOPT} "--prefix=$HOME/install dir" || (cat config.log && exit 1)
+  - ./configure ${CFGOPT} --prefix=$HOME || (cat config.log && exit 1)
 before_script:
   - export ERROR_ON_FAILURES=1
 script:
   - make all tcltest || echo "Something wrong, maybe a hickup, let's try again"
   - make test
-  - make install

@@ -4,7 +4,8 @@
  * ttk::scrollbar widget.
  */
 
-#include "tkInt.h"
+#include <tk.h>
+
 #include "ttkTheme.h"
 #include "ttkWidget.h"
 
@@ -21,7 +22,7 @@ typedef struct
     double	first;			/* top fraction */
     double	last;			/* bottom fraction */
 
-    Ttk_Box	troughBox;		/* trough parcel */
+    Ttk_Box	troughBox;		/* trough parcel */ 
     int 	minSize;		/* minimum size of thumb */
 } ScrollbarPart;
 
@@ -39,7 +40,7 @@ static Tk_OptionSpec ScrollbarOptionSpecs[] =
     {TK_OPTION_STRING_TABLE, "-orient", "orient", "Orient", "vertical",
 	Tk_Offset(Scrollbar,scrollbar.orientObj),
 	Tk_Offset(Scrollbar,scrollbar.orient),
-	0, (void *)ttkOrientStrings, STYLE_CHANGED },
+	0,(ClientData)ttkOrientStrings,STYLE_CHANGED },
 
     WIDGET_TAKEFOCUS_FALSE,
     WIDGET_INHERIT_OPTIONS(ttkCoreOptionSpecs)
@@ -49,12 +50,10 @@ static Tk_OptionSpec ScrollbarOptionSpecs[] =
  * +++ Widget hooks.
  */
 
-static void
-ScrollbarInitialize(Tcl_Interp *dummy, void *recordPtr)
+static void 
+ScrollbarInitialize(Tcl_Interp *interp, void *recordPtr)
 {
-    Scrollbar *sb = (Scrollbar *)recordPtr;
-    (void)dummy;
-
+    Scrollbar *sb = recordPtr;
     sb->scrollbar.first = 0.0;
     sb->scrollbar.last = 1.0;
 
@@ -64,7 +63,7 @@ ScrollbarInitialize(Tcl_Interp *dummy, void *recordPtr)
 static Ttk_Layout ScrollbarGetLayout(
     Tcl_Interp *interp, Ttk_Theme theme, void *recordPtr)
 {
-    Scrollbar *sb = (Scrollbar *)recordPtr;
+    Scrollbar *sb = recordPtr;
     return TtkWidgetGetOrientedLayout(
 	interp, theme, recordPtr, sb->scrollbar.orientObj);
 }
@@ -78,7 +77,7 @@ static Ttk_Layout ScrollbarGetLayout(
  */
 static void ScrollbarDoLayout(void *recordPtr)
 {
-    Scrollbar *sb = (Scrollbar *)recordPtr;
+    Scrollbar *sb = recordPtr;
     WidgetCore *corePtr = &sb->core;
     Ttk_Element thumb;
     Ttk_Box thumbBox;
@@ -134,7 +133,7 @@ static int
 ScrollbarSetCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-    Scrollbar *scrollbar = (Scrollbar *)recordPtr;
+    Scrollbar *scrollbar = recordPtr;
     Tcl_Obj *firstObj, *lastObj;
     double first, last;
 
@@ -185,7 +184,7 @@ static int
 ScrollbarGetCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-    Scrollbar *scrollbar = (Scrollbar *)recordPtr;
+    Scrollbar *scrollbar = recordPtr;
     Tcl_Obj *result[2];
 
     if (objc != 2) {
@@ -208,7 +207,7 @@ static int
 ScrollbarDeltaCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-    Scrollbar *sb = (Scrollbar *)recordPtr;
+    Scrollbar *sb = recordPtr;
     double dx, dy;
     double delta = 0.0;
 
@@ -242,13 +241,13 @@ ScrollbarDeltaCommand(
 
 /* $sb fraction $x $y --
  * 	Returns a real number between 0 and 1 indicating  where  the
- * 	point given by x and y lies in the trough area of the scrollbar.
+ * 	point given by x and y lies in the trough area of the scrollbar. 
  */
 static int
 ScrollbarFractionCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-    Scrollbar *sb = (Scrollbar *)recordPtr;
+    Scrollbar *sb = recordPtr;
     Ttk_Box b = sb->scrollbar.troughBox;
     int minSize = sb->scrollbar.minSize;
     double x, y;
@@ -316,14 +315,16 @@ TTK_BEGIN_LAYOUT(VerticalScrollbarLayout)
     TTK_GROUP("Vertical.Scrollbar.trough", TTK_FILL_Y,
 	TTK_NODE("Vertical.Scrollbar.uparrow", TTK_PACK_TOP)
 	TTK_NODE("Vertical.Scrollbar.downarrow", TTK_PACK_BOTTOM)
-	TTK_NODE("Vertical.Scrollbar.thumb", TTK_FILL_BOTH))
+	TTK_NODE(
+	    "Vertical.Scrollbar.thumb", TTK_PACK_TOP|TTK_EXPAND|TTK_FILL_BOTH))
 TTK_END_LAYOUT
 
 TTK_BEGIN_LAYOUT(HorizontalScrollbarLayout)
     TTK_GROUP("Horizontal.Scrollbar.trough", TTK_FILL_X,
 	TTK_NODE("Horizontal.Scrollbar.leftarrow", TTK_PACK_LEFT)
 	TTK_NODE("Horizontal.Scrollbar.rightarrow", TTK_PACK_RIGHT)
-	TTK_NODE("Horizontal.Scrollbar.thumb", TTK_FILL_BOTH))
+	TTK_NODE(
+	"Horizontal.Scrollbar.thumb", TTK_PACK_LEFT|TTK_EXPAND|TTK_FILL_BOTH))
 TTK_END_LAYOUT
 
 /*------------------------------------------------------------------------

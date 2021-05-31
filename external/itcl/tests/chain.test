@@ -13,8 +13,8 @@
 
 package require tcltest 2.1
 namespace import ::tcltest::test
+
 ::tcltest::loadTestedCommands
-package require itcl
 
 # ----------------------------------------------------------------------
 #  Chaining methods and procs
@@ -22,7 +22,6 @@ package require itcl
 test chain-1.1 {define simple classes with inheritance} {
     itcl::class test_chain_a {
         constructor {args} {
-#
             eval chain $args
         } {
             global ::test_chain_status
@@ -41,7 +40,6 @@ test chain-1.1 {define simple classes with inheritance} {
     }
     itcl::class test_chain_b {
         constructor {args} {
-#
             eval chain $args
         } {
             global ::test_chain_status
@@ -144,18 +142,6 @@ test chain-2.2 {invoke a chained method} {
 test chain-3.0 {invoke "chain" outside of a class} {
     list [catch {itcl::builtin::chain 1 2 3} err] $err
 } {1 {cannot chain functions outside of a class context}}
-
-test chain-4.0 {[35a5baca67]} -setup {
-    unset -nocomplain ::answer
-    itcl::class B {method act args {lappend ::answer B}}
-    itcl::class D {inherit B; method act args {lappend ::answer D; chain}}
-} -body {
-    [D d] act Now!
-    set ::answer
-} -cleanup {
-    itcl::delete class B
-    unset -nocomplain ::answer
-} -result {D B}
 
 # ----------------------------------------------------------------------
 #  Clean up

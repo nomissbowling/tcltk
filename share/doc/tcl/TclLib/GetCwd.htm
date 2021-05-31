@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_GetCwd manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> GetCwd</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> GetCwd</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="GetCwd.htm#M2" NAME="L357">NAME</A>
-<DL><DD>Tcl_GetCwd, Tcl_Chdir &mdash; manipulate the current working directory</DD></DL>
-<DD><A HREF="GetCwd.htm#M3" NAME="L358">SYNOPSIS</A>
+<DD><A HREF="GetCwd.htm#M2" NAME="L324">NAME</A>
+<DL><DD>Tcl_GetCwd, Tcl_Chdir - manipulate the current working directory</DD></DL>
+<DD><A HREF="GetCwd.htm#M3" NAME="L325">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>char *
@@ -16,14 +16,14 @@
 <DD>int
 <DD><B>Tcl_Chdir</B>(<I>path</I>)
 </DL>
-<DD><A HREF="GetCwd.htm#M4" NAME="L359">ARGUMENTS</A>
+<DD><A HREF="GetCwd.htm#M4" NAME="L326">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="GetCwd.htm#M5" NAME="L360">DESCRIPTION</A>
-<DD><A HREF="GetCwd.htm#M6" NAME="L361">KEYWORDS</A>
+<DD><A HREF="GetCwd.htm#M5" NAME="L327">DESCRIPTION</A>
+<DD><A HREF="GetCwd.htm#M6" NAME="L328">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_GetCwd, Tcl_Chdir &mdash; manipulate the current working directory
+Tcl_GetCwd, Tcl_Chdir - manipulate the current working directory
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 char *<BR>
@@ -34,7 +34,7 @@ int<BR>
 <DL class="arguments">
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter in which to report an error, if any.
-<P><DT><A HREF="../TclLib/DString.htm">Tcl_DString</A> <B>*bufferPtr</B> (in/out)<DD>
+<P><DT>Tcl_DString <B>*bufferPtr</B> (in/out)<DD>
 This dynamic string is used to store the current working directory.
 At the time of the call it should be uninitialized or free.  The
 caller must eventually call <B><A HREF="../TclLib/DString.htm">Tcl_DStringFree</A></B> to free up
@@ -51,7 +51,7 @@ the same functionality as the Tcl <B><A HREF="../TclCmd/pwd.htm">pwd</A></B> com
 directory, or NULL if the current directory could not be determined.
 If NULL is returned, an error message is left in the <I>interp</I>'s result.
 Storage for the result string is allocated in bufferPtr; the caller
-must call <B><A HREF="../TclLib/DString.htm">Tcl_DStringFree()</A></B> when the result is no longer needed.
+must call <B>Tcl_DStringFree()</B> when the result is no longer needed.
 The format of the path is UTF-8.
 <P>
 <B>Tcl_Chdir</B> changes the applications current working directory to
@@ -60,6 +60,7 @@ must be UTF-8.  The function returns -1 on error or 0 on success.
 
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/P.htm#pwd">pwd</A>
-<div class="copy">Copyright &copy; 1998-1999 Scriptics Corporation
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1998-1999 Scriptics Corporation
 </div>
 </BODY></HTML>

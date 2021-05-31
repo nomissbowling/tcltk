@@ -3,15 +3,15 @@
 <HEAD><TITLE>message manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> message</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> message</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="message.htm#M2" NAME="L1028">NAME</A>
-<DL><DD>message &mdash; Create and manipulate message widgets</DD></DL>
-<DD><A HREF="message.htm#M3" NAME="L1029">SYNOPSIS</A>
+<DD><A HREF="message.htm#M2" NAME="L965">NAME</A>
+<DL><DD>message - Create and manipulate message widgets</DD></DL>
+<DD><A HREF="message.htm#M3" NAME="L966">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="message.htm#M4" NAME="L1030">STANDARD OPTIONS</A>
+<DD><A HREF="message.htm#M4" NAME="L967">STANDARD OPTIONS</A>
 <DL>
 <DD><A HREF="options.htm#M-anchor">-anchor, anchor, Anchor</A>
 <DD><A HREF="options.htm#M-background">-background or -bg, background, Background</A>
@@ -29,25 +29,25 @@
 <DD><A HREF="options.htm#M-text">-text, text, Text</A>
 <DD><A HREF="options.htm#M-textvariable">-textvariable, textVariable, Variable</A>
 </DL>
-<DD><A HREF="message.htm#M5" NAME="L1031">WIDGET-SPECIFIC OPTIONS</A>
+<DD><A HREF="message.htm#M5" NAME="L968">WIDGET-SPECIFIC OPTIONS</A>
 <DL>
-<DD><A HREF="message.htm#M6" NAME="L1032">-aspect, aspect, Aspect</A>
-<DD><A HREF="message.htm#M7" NAME="L1033">-justify, justify, Justify</A>
-<DD><A HREF="message.htm#M8" NAME="L1034">-width, width, Width</A>
+<DD><A HREF="message.htm#M-aspect" NAME="L969">-aspect, aspect, Aspect</A>
+<DD><A HREF="message.htm#M-justify" NAME="L970">-justify, justify, Justify</A>
+<DD><A HREF="message.htm#M-width" NAME="L971">-width, width, Width</A>
 </DL>
-<DD><A HREF="message.htm#M9" NAME="L1035">DESCRIPTION</A>
-<DD><A HREF="message.htm#M10" NAME="L1036">WIDGET COMMAND</A>
+<DD><A HREF="message.htm#M6" NAME="L972">DESCRIPTION</A>
+<DD><A HREF="message.htm#M7" NAME="L973">WIDGET COMMAND</A>
 <DL class="widget command">
-<DD><A HREF="message.htm#M11" NAME="L1037"><I>pathName </I><B>cget </B><I>option</I></A>
-<DD><A HREF="message.htm#M12" NAME="L1038"><I>pathName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A>
+<DD><A HREF="message.htm#M8" NAME="L974"><I>pathName </I><B>cget</B> <I>option</I></A>
+<DD><A HREF="message.htm#M9" NAME="L975"><I>pathName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A>
 </DL>
-<DD><A HREF="message.htm#M13" NAME="L1039">DEFAULT BINDINGS</A>
-<DD><A HREF="message.htm#M14" NAME="L1040">BUGS</A>
-<DD><A HREF="message.htm#M15" NAME="L1041">SEE ALSO</A>
-<DD><A HREF="message.htm#M16" NAME="L1042">KEYWORDS</A>
+<DD><A HREF="message.htm#M10" NAME="L976">DEFAULT BINDINGS</A>
+<DD><A HREF="message.htm#M11" NAME="L977">BUGS</A>
+<DD><A HREF="message.htm#M12" NAME="L978">SEE ALSO</A>
+<DD><A HREF="message.htm#M13" NAME="L979">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-message &mdash; Create and manipulate message widgets
+message - Create and manipulate message widgets
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>message</B> <I>pathName </I>?<I>options</I>?<BR>
 <H3><A NAME="M4">STANDARD OPTIONS</A></H3>
@@ -70,7 +70,7 @@ message &mdash; Create and manipulate message widgets
 </DL>
 <H3><A NAME="M5">WIDGET-SPECIFIC OPTIONS</A></H3>
 <DL>
-<DT>Command-Line Name: <B><A NAME="M6">-aspect</A></B>
+<DT>Command-Line Name: <B><A NAME="M-aspect">-aspect</A></B>
 <DT>Database Name: <B>aspect</B>
 <DT>Database Class: <B>Aspect</B>
 <DD>Specifies a non-negative integer value indicating desired
@@ -79,43 +79,43 @@ aspect ratio for the text.  The aspect ratio is specified as
 be as wide as it is tall, 200 means the text should
 be twice as wide as it is tall, 50 means the text should
 be twice as tall as it is wide, and so on.
-Used to choose line length for text if <B>-width</B> option
+Used to choose line length for text if <B>width</B> option
 is not specified.
 Defaults to 150.
-<P><DT>Command-Line Name: <B><A NAME="M7">-justify</A></B>
+<P><DT>Command-Line Name: <B><A NAME="M-justify">-justify</A></B>
 <DT>Database Name: <B>justify</B>
 <DT>Database Class: <B>Justify</B>
 <DD>Specifies how to justify lines of text.
 Must be one of <B>left</B>, <B>center</B>, or <B>right</B>.  Defaults
 to <B>left</B>.
-This option works together with the <B>-anchor</B>, <B>-aspect</B>,
-<B>-padx</B>, <B>-pady</B>, and <B>-width</B> options to provide a variety
+This option works together with the <B>anchor</B>, <B>aspect</B>,
+<B>padX</B>, <B>padY</B>, and <B>width</B> options to provide a variety
 of arrangements of the text within the window.
-The <B>-aspect</B> and <B>-width</B> options determine the amount of
+The <B>aspect</B> and <B>width</B> options determine the amount of
 screen space needed to display the text.
-The <B>-anchor</B>, <B>-padx</B>, and <B>-pady</B> options determine where this
+The <B>anchor</B>, <B>padX</B>, and <B>padY</B> options determine where this
 rectangular area is displayed within the widget's window, and the
-<B>-justify</B> option determines how each line is displayed within that
+<B>justify</B> option determines how each line is displayed within that
 rectangular region.
-For example, suppose <B>-anchor</B> is <B>e</B> and <B>-justify</B> is
+For example, suppose <B>anchor</B> is <B>e</B> and <B>justify</B> is
 <B>left</B>, and that the message window is much larger than needed
 for the text.
 The text will be displayed so that the left edges of all the lines
-line up and the right edge of the longest line is <B>-padx</B> from
+line up and the right edge of the longest line is <B>padX</B> from
 the right side of the window;  the entire text block will be centered
 in the vertical span of the window.
-<P><DT>Command-Line Name: <B><A NAME="M8">-width</A></B>
+<P><DT>Command-Line Name: <B><A NAME="M-width">-width</A></B>
 <DT>Database Name: <B>width</B>
 <DT>Database Class: <B>Width</B>
 <DD>Specifies the length of lines in the window.
 The value may have any of the forms acceptable to <B><A HREF="../TkLib/GetPixels.htm">Tk_GetPixels</A></B>.
-If this option has a value greater than zero then the <B>-aspect</B>
-option is ignored and the <B>-width</B> option determines the line
+If this option has a value greater than zero then the <B>aspect</B>
+option is ignored and the <B>width</B> option determines the line
 length.
 If this option has a value less than or equal to zero, then
-the <B>-aspect</B> option determines the line length.
+the <B>aspect</B> option determines the line length.
 </DL>
-<H3><A NAME="M9">DESCRIPTION</A></H3>
+<H3><A NAME="M6">DESCRIPTION</A></H3>
 The <B>message</B> command creates a new window (given by the
 <I>pathName</I> argument) and makes it into a message widget.
 Additional
@@ -152,7 +152,7 @@ the character.  In the unusual case where the font does not contain
 all of the characters in
 &#8220;0123456789abcdef&#92;x&#8221;
 then control characters and undefined characters are not displayed at all.
-<H3><A NAME="M10">WIDGET COMMAND</A></H3>
+<H3><A NAME="M7">WIDGET COMMAND</A></H3>
 The <B>message</B> command creates a new Tcl command whose
 name is <I>pathName</I>.  This
 command may be used to invoke various
@@ -163,12 +163,12 @@ determine the exact behavior of the command.  The following
 commands are possible for message widgets:
 <P>
 <DL class="widget command">
-<DT><A NAME="M11"><I>pathName </I><B>cget </B><I>option</I></A><DD>
+<DT><A NAME="M8"><I>pathName </I><B>cget</B> <I>option</I></A><DD>
 Returns the current value of the configuration option given
 by <I>option</I>.
 <I>Option</I> may have any of the values accepted by the <B>message</B>
 command.
-<P><DT><A NAME="M12"><I>pathName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A><DD>
+<P><DT><A NAME="M9"><I>pathName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A><DD>
 Query or modify the configuration options of the widget.
 If no <I>option</I> is specified, returns a list describing all of
 the available options for <I>pathName</I> (see <B><A HREF="../TkLib/ConfigWidg.htm">Tk_ConfigureInfo</A></B> for
@@ -182,17 +182,18 @@ this case the command returns an empty string.
 <I>Option</I> may have any of the values accepted by the <B>message</B>
 command.
 <P></DL>
-<H3><A NAME="M13">DEFAULT BINDINGS</A></H3>
+<H3><A NAME="M10">DEFAULT BINDINGS</A></H3>
 When a new message is created, it has no default event bindings:
 messages are intended for output purposes only.
-<H3><A NAME="M14">BUGS</A></H3>
+<H3><A NAME="M11">BUGS</A></H3>
 Tabs do not work very well with text that is centered or right-justified.
 The most common result is that the line is justified wrong.
-<H3><A NAME="M15">SEE ALSO</A></H3>
+<H3><A NAME="M12">SEE ALSO</A></H3>
 <B><A HREF="../TkCmd/label.htm">label</A></B>
-<H3><A NAME="M16">KEYWORDS</A></H3>
+<H3><A NAME="M13">KEYWORDS</A></H3>
 <A href="../Keywords/M.htm#message">message</A>, <A href="../Keywords/W.htm#widget">widget</A>
-<div class="copy">Copyright &copy; 1990-1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

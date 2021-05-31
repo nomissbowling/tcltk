@@ -4,7 +4,8 @@
  * ttk::separator and ttk::sizegrip widgets.
  */
 
-#include "tkInt.h"
+#include <tk.h>
+
 #include "ttkTheme.h"
 #include "ttkWidget.h"
 
@@ -26,7 +27,7 @@ static Tk_OptionSpec SeparatorOptionSpecs[] = {
     {TK_OPTION_STRING_TABLE, "-orient", "orient", "Orient", "horizontal",
 	Tk_Offset(Separator,separator.orientObj),
 	Tk_Offset(Separator,separator.orient),
-	0, (void *)ttkOrientStrings, STYLE_CHANGED },
+	0,(ClientData)ttkOrientStrings,STYLE_CHANGED },
 
     WIDGET_TAKEFOCUS_FALSE,
     WIDGET_INHERIT_OPTIONS(ttkCoreOptionSpecs)

@@ -10,8 +10,8 @@
 # Copyright (c) 1997 by Sun Microsystems, Inc.  All rights reserved.
 # Copyright (c) 1998-1999 by Scriptics Corporation.
 
-if {"::tcltest" ni [namespace children]} {
-    package require tcltest 2.5
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest 2
     namespace import -force ::tcltest::*
 }
 

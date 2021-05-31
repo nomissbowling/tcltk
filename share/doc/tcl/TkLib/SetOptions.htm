@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_SetOptions manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> SetOptions</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> SetOptions</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="SetOptions.htm#M2" NAME="L552">NAME</A>
-<DL><DD>Tk_CreateOptionTable, Tk_DeleteOptionTable, Tk_InitOptions, Tk_SetOptions, Tk_FreeSavedOptions, Tk_RestoreSavedOptions, Tk_GetOptionValue, Tk_GetOptionInfo, Tk_FreeConfigOptions, Tk_Offset &mdash; process configuration options</DD></DL>
-<DD><A HREF="SetOptions.htm#M3" NAME="L553">SYNOPSIS</A>
+<DD><A HREF="SetOptions.htm#M2" NAME="L550">NAME</A>
+<DL><DD>Tk_CreateOptionTable, Tk_DeleteOptionTable, Tk_InitOptions, Tk_SetOptions, Tk_FreeSavedOptions, Tk_RestoreSavedOptions, Tk_GetOptionValue,  Tk_GetOptionInfo, Tk_FreeConfigOptions, Tk_Offset - process configuration options</DD></DL>
+<DD><A HREF="SetOptions.htm#M3" NAME="L551">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>Tk_OptionTable
@@ -28,48 +28,48 @@
 <DD>int
 <DD><B>Tk_Offset(</B><I>type, field</I><B>)</B>
 </DL>
-<DD><A HREF="SetOptions.htm#M4" NAME="L554">ARGUMENTS</A>
+<DD><A HREF="SetOptions.htm#M4" NAME="L552">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="SetOptions.htm#M5" NAME="L555">DESCRIPTION</A>
-<DD><A HREF="SetOptions.htm#M6" NAME="L556">TEMPLATES</A>
+<DD><A HREF="SetOptions.htm#M5" NAME="L553">DESCRIPTION</A>
+<DD><A HREF="SetOptions.htm#M6" NAME="L554">TEMPLATES</A>
 <DL class="templates">
-<DD><A HREF="SetOptions.htm#M7" NAME="L557"><B>TK_OPTION_ANCHOR</B></A>
-<DD><A HREF="SetOptions.htm#M8" NAME="L558"><B>TK_OPTION_BITMAP</B></A>
-<DD><A HREF="SetOptions.htm#M9" NAME="L559"><B>TK_OPTION_BOOLEAN</B></A>
-<DD><A HREF="SetOptions.htm#M10" NAME="L560"><B>TK_OPTION_BORDER</B></A>
-<DD><A HREF="SetOptions.htm#M11" NAME="L561"><B>TK_OPTION_COLOR</B></A>
-<DD><A HREF="SetOptions.htm#M12" NAME="L562"><B>TK_OPTION_CURSOR</B></A>
-<DD><A HREF="SetOptions.htm#M13" NAME="L563"><B>TK_OPTION_CUSTOM</B></A>
-<DD><A HREF="SetOptions.htm#M14" NAME="L564"><B>TK_OPTION_DOUBLE</B></A>
-<DD><A HREF="SetOptions.htm#M15" NAME="L565"><B>TK_OPTION_END</B></A>
-<DD><A HREF="SetOptions.htm#M16" NAME="L566"><B>TK_OPTION_FONT</B></A>
-<DD><A HREF="SetOptions.htm#M17" NAME="L567"><B>TK_OPTION_INT</B></A>
-<DD><A HREF="SetOptions.htm#M18" NAME="L568"><B>TK_OPTION_JUSTIFY</B></A>
-<DD><A HREF="SetOptions.htm#M19" NAME="L569"><B>TK_OPTION_PIXELS</B></A>
-<DD><A HREF="SetOptions.htm#M20" NAME="L570"><B>TK_OPTION_RELIEF</B></A>
-<DD><A HREF="SetOptions.htm#M21" NAME="L571"><B>TK_OPTION_STRING</B></A>
-<DD><A HREF="SetOptions.htm#M22" NAME="L572"><B>TK_OPTION_STRING_TABLE</B></A>
-<DD><A HREF="SetOptions.htm#M23" NAME="L573"><B>TK_OPTION_SYNONYM</B></A>
-<DD><A HREF="SetOptions.htm#M24" NAME="L574"><B>TK_OPTION_WINDOW</B></A>
+<DD><A HREF="SetOptions.htm#M7" NAME="L555"><B>TK_OPTION_ANCHOR</B></A>
+<DD><A HREF="SetOptions.htm#M8" NAME="L556"><B>TK_OPTION_BITMAP</B></A>
+<DD><A HREF="SetOptions.htm#M9" NAME="L557"><B>TK_OPTION_BOOLEAN</B></A>
+<DD><A HREF="SetOptions.htm#M10" NAME="L558"><B>TK_OPTION_BORDER</B></A>
+<DD><A HREF="SetOptions.htm#M11" NAME="L559"><B>TK_OPTION_COLOR</B></A>
+<DD><A HREF="SetOptions.htm#M12" NAME="L560"><B>TK_OPTION_CURSOR</B></A>
+<DD><A HREF="SetOptions.htm#M13" NAME="L561"><B>TK_OPTION_CUSTOM</B></A>
+<DD><A HREF="SetOptions.htm#M14" NAME="L562"><B>TK_OPTION_DOUBLE</B></A>
+<DD><A HREF="SetOptions.htm#M15" NAME="L563"><B>TK_OPTION_END</B></A>
+<DD><A HREF="SetOptions.htm#M16" NAME="L564"><B>TK_OPTION_FONT</B></A>
+<DD><A HREF="SetOptions.htm#M17" NAME="L565"><B>TK_OPTION_INT</B></A>
+<DD><A HREF="SetOptions.htm#M18" NAME="L566"><B>TK_OPTION_JUSTIFY</B></A>
+<DD><A HREF="SetOptions.htm#M19" NAME="L567"><B>TK_OPTION_PIXELS</B></A>
+<DD><A HREF="SetOptions.htm#M20" NAME="L568"><B>TK_OPTION_RELIEF</B></A>
+<DD><A HREF="SetOptions.htm#M21" NAME="L569"><B>TK_OPTION_STRING</B></A>
+<DD><A HREF="SetOptions.htm#M22" NAME="L570"><B>TK_OPTION_STRING_TABLE</B></A>
+<DD><A HREF="SetOptions.htm#M23" NAME="L571"><B>TK_OPTION_SYNONYM</B></A>
+<DD><A HREF="SetOptions.htm#M24" NAME="L572"><B>TK_OPTION_WINDOW</B></A>
 </DL>
-<DD><A HREF="SetOptions.htm#M25" NAME="L575">STORAGE MANAGEMENT ISSUES</A>
-<DD><A HREF="SetOptions.htm#M26" NAME="L576">OBJOFFSET VS. INTERNALOFFSET</A>
-<DD><A HREF="SetOptions.htm#M27" NAME="L577">CUSTOM OPTION TYPES</A>
+<DD><A HREF="SetOptions.htm#M25" NAME="L573">STORAGE MANAGEMENT ISSUES</A>
+<DD><A HREF="SetOptions.htm#M26" NAME="L574">OBJOFFSET VS. INTERNALOFFSET</A>
+<DD><A HREF="SetOptions.htm#M27" NAME="L575">CUSTOM OPTION TYPES</A>
 <DL class="custom option types">
-<DD><A HREF="SetOptions.htm#M28" NAME="L578"><I>clientData</I></A>
-<DD><A HREF="SetOptions.htm#M29" NAME="L579"><I>interp</I></A>
-<DD><A HREF="SetOptions.htm#M30" NAME="L580"><I>Tkwin</I></A>
-<DD><A HREF="SetOptions.htm#M31" NAME="L581"><I>valuePtr</I></A>
-<DD><A HREF="SetOptions.htm#M32" NAME="L582"><I>recordPtr</I></A>
-<DD><A HREF="SetOptions.htm#M33" NAME="L583"><I>internalOffset</I></A>
-<DD><A HREF="SetOptions.htm#M34" NAME="L584"><I>saveInternalPtr</I></A>
-<DD><A HREF="SetOptions.htm#M35" NAME="L585"><I>flags</I></A>
+<DD><A HREF="SetOptions.htm#M28" NAME="L576"><I>clientData</I></A>
+<DD><A HREF="SetOptions.htm#M29" NAME="L577"><I>interp</I></A>
+<DD><A HREF="SetOptions.htm#M30" NAME="L578"><I>Tkwin</I></A>
+<DD><A HREF="SetOptions.htm#M31" NAME="L579"><I>valuePtr</I></A>
+<DD><A HREF="SetOptions.htm#M32" NAME="L580"><I>recordPtr</I></A>
+<DD><A HREF="SetOptions.htm#M33" NAME="L581"><I>internalOffset</I></A>
+<DD><A HREF="SetOptions.htm#M34" NAME="L582"><I>saveInternalPtr</I></A>
+<DD><A HREF="SetOptions.htm#M35" NAME="L583"><I>flags</I></A>
 </DL>
-<DD><A HREF="SetOptions.htm#M36" NAME="L586">KEYWORDS</A>
+<DD><A HREF="SetOptions.htm#M36" NAME="L584">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CreateOptionTable, Tk_DeleteOptionTable, Tk_InitOptions, Tk_SetOptions, Tk_FreeSavedOptions, Tk_RestoreSavedOptions, Tk_GetOptionValue, Tk_GetOptionInfo, Tk_FreeConfigOptions, Tk_Offset &mdash; process configuration options
+Tk_CreateOptionTable, Tk_DeleteOptionTable, Tk_InitOptions, Tk_SetOptions, Tk_FreeSavedOptions, Tk_RestoreSavedOptions, Tk_GetOptionValue,  Tk_GetOptionInfo, Tk_FreeConfigOptions, Tk_Offset - process configuration options
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Tk_OptionTable<BR>
@@ -81,9 +81,9 @@ int<BR>
 <B>Tk_SetOptions(</B><I>interp, recordPtr, optionTable, objc, objv, tkwin, savePtr, maskPtr</I><B>)</B><BR>
 <B>Tk_FreeSavedOptions(</B><I>savedPtr</I><B>)</B><BR>
 <B>Tk_RestoreSavedOptions(</B><I>savedPtr</I><B>)</B><BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tk_GetOptionValue(</B><I>interp, recordPtr, optionTable, namePtr, tkwin</I><B>)</B><BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tk_GetOptionInfo(</B><I>interp, recordPtr, optionTable, namePtr, tkwin</I><B>)</B><BR>
 <B>Tk_FreeConfigOptions(</B><I>recordPtr, optionTable, tkwin</I><B>)</B><BR>
 int<BR>
@@ -106,14 +106,14 @@ to <B>Tk_CreateOptionTable</B>.
 Points to structure in which values of configuration options are stored;
 fields of this record are modified by procedures such as <B>Tk_SetOptions</B>
 and read by procedures such as <B>Tk_GetOptionValue</B>.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 For options such as <B>TK_OPTION_COLOR</B>, this argument indicates
 the window in which the option will be used.  If <I>optionTable</I> uses
 no window-dependent options, then a NULL value may be supplied for
 this argument.
 <P><DT>int <B>objc</B> (in)<DD>
 Number of values in <I>objv</I>.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*const objv[]</B> (in)<DD>
+<P><DT>Tcl_Obj <B>*const objv[]</B> (in)<DD>
 Command-line arguments for setting configuring options.
 <P><DT>Tk_SavedOptions <B>*savePtr</B> (out)<DD>
 If not NULL, the structure pointed to by this argument is filled
@@ -126,7 +126,7 @@ were modified.
 <P><DT>Tk_SavedOptions <B>*savedPtr</B> (in/out)<DD>
 Points to a structure previously filled in by <B>Tk_SetOptions</B> with
 old values of modified options.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*namePtr</B> (in)<DD>
+<P><DT>Tcl_Obj <B>*namePtr</B> (in)<DD>
 The value of this object is the name of a particular option.  If NULL
 is passed to <B>Tk_GetOptionInfo</B> then information is returned for
 all options.  Must not be NULL when <B>Tk_GetOptionValue</B> is called.
@@ -187,8 +187,8 @@ uses the information in the option table to
 choose an appropriate default for each option, then it stores the default
 value directly into the widget record, overwriting any information that
 was already present in the widget record.  <B>Tk_InitOptions</B> normally
-returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.  If an error occurred while setting the default values
-(e.g., because a default value was erroneous) then <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned
+returns <B>TCL_OK</B>.  If an error occurred while setting the default values
+(e.g., because a default value was erroneous) then <B>TCL_ERROR</B> is returned
 and an error message is left in <I>interp</I>'s result if <I>interp</I>
 is not NULL.
 <P>
@@ -202,9 +202,9 @@ an option and the second object gives the new value for that option.
 <B>Tk_SetOptions</B> looks up each name in <I>optionTable</I>, checks that
 the new value of the option conforms to the type in <I>optionTable</I>,
 and stores the value of the option into the widget record given by
-<I>recordPtr</I>.  <B>Tk_SetOptions</B> normally returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.  If
+<I>recordPtr</I>.  <B>Tk_SetOptions</B> normally returns <B>TCL_OK</B>.  If
 an error occurred (such as an unknown option name or an illegal option
-value) then <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and an error message is left in
+value) then <B>TCL_ERROR</B> is returned and an error message is left in
 <I>interp</I>'s result if <I>interp</I> is not NULL.
 <P>
 <B>Tk_SetOptions</B> has two additional features.  First, if the
@@ -306,7 +306,7 @@ one configuration option and has the following fields:
     int <I>objOffset</I>;
     int <I>internalOffset</I>;
     int <I>flags</I>;
-    const void *<I>clientData</I>;
+    ClientData <I>clientData</I>;
     int <I>typeMask</I>;
 } <B>Tk_OptionSpec</B>;</PRE>
 The <I>type</I> field indicates what kind of configuration option this is
@@ -342,7 +342,7 @@ When <B>Tk_InitOptions</B> and <B>Tk_SetOptions</B> store the value of an
 option into the widget record, they can do it in either of two ways.
 If the <I>objOffset</I> field of the Tk_OptionSpec is greater than
 or equal to zero, then the value of the option is stored as a
-(<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *) at the location in the widget record given by <I>objOffset</I>.
+(Tcl_Obj *) at the location in the widget record given by <I>objOffset</I>.
 If the <I>internalOffset</I> field of the Tk_OptionSpec is
 greater than or equal to zero, then the value of the option is stored
 in a type-specific internal form at the location in the widget record
@@ -378,7 +378,7 @@ nor <I>clientData</I>.
 <DL class="templates">
 <DT><A NAME="M7"><B>TK_OPTION_ANCHOR</B></A><DD>
 The value must be a standard anchor position such as <B>ne</B> or
-<B>center</B>.  The internal form is a <A HREF="../TkLib/GetAnchor.htm">Tk_Anchor</A> value like the ones
+<B>center</B>.  The internal form is a Tk_Anchor value like the ones
 returned by <B><A HREF="../TkLib/GetAnchor.htm">Tk_GetAnchorFromObj</A></B>.
 <P><DT><A NAME="M8"><B>TK_OPTION_BITMAP</B></A><DD>
 The value must be a standard Tk bitmap name. The internal form is a
@@ -390,7 +390,7 @@ The value must be a standard boolean value such as <B>true</B> or
 <B>no</B>.  The internal form is an integer with value 0 or 1.
 <P><DT><A NAME="M10"><B>TK_OPTION_BORDER</B></A><DD>
 The value must be a standard color name such as <B>red</B> or <B>#ff8080</B>.
-The internal form is a <A HREF="../TkLib/3DBorder.htm">Tk_3DBorder</A> token like the ones returned
+The internal form is a Tk_3DBorder token like the ones returned
 by <B><A HREF="../TkLib/3DBorder.htm">Tk_Alloc3DBorderFromObj</A></B>.
 This option type requires <I>tkwin</I> to be supplied to procedures
 such as <B>Tk_SetOptions</B>, and it supports the <B>TK_OPTION_NULL_OK</B> flag.
@@ -402,7 +402,7 @@ This option type requires <I>tkwin</I> to be supplied to procedures
 such as <B>Tk_SetOptions</B>, and it supports the <B>TK_OPTION_NULL_OK</B> flag.
 <P><DT><A NAME="M12"><B>TK_OPTION_CURSOR</B></A><DD>
 The value must be a standard cursor name such as <B>cross</B> or <B>@foo</B>.
-The internal form is a <A HREF="../TkLib/GetCursor.htm">Tk_Cursor</A> token like the ones returned by
+The internal form is a Tk_Cursor token like the ones returned by
 <B><A HREF="../TkLib/GetCursor.htm">Tk_AllocCursorFromObj</A></B>.
 This option type requires <I>tkwin</I> to be supplied to procedures
 such as <B>Tk_SetOptions</B>, and when the option is set the cursor
@@ -411,7 +411,7 @@ option type also supports the <B>TK_OPTION_NULL_OK</B> flag.
 <P><DT><A NAME="M13"><B>TK_OPTION_CUSTOM</B></A><DD>
 This option allows applications to define new option types.  The
 clientData field of the entry points to a structure defining the new
-option type.  See the section <B><A HREF="#M27">CUSTOM OPTION TYPES</A></B> below for details.
+option type.  See the section <B>CUSTOM OPTION TYPES</B> below for details.
 <P><DT><A NAME="M14"><B>TK_OPTION_DOUBLE</B></A><DD>
 The string value must be a floating-point number in
 the format accepted by <B>strtol</B>.  The internal form is a C
@@ -427,7 +427,7 @@ deeply.  This feature allows common options to be shared by several
 widget classes.
 <P><DT><A NAME="M16"><B>TK_OPTION_FONT</B></A><DD>
 The value must be a standard font name such as <B>Times 16</B>.
-The internal form is a <A HREF="../TkLib/GetFont.htm">Tk_Font</A> handle like the ones returned by
+The internal form is a Tk_Font handle like the ones returned by
 <B><A HREF="../TkLib/GetFont.htm">Tk_AllocFontFromObj</A></B>.
 This option type requires <I>tkwin</I> to be supplied to procedures
 such as <B>Tk_SetOptions</B>, and it supports the <B>TK_OPTION_NULL_OK</B> flag.
@@ -438,7 +438,7 @@ specify octal or hexadecimal numbers, respectively).  The internal
 form is a C <B>int</B> value.
 <P><DT><A NAME="M18"><B>TK_OPTION_JUSTIFY</B></A><DD>
 The value must be a standard justification value such as <B>left</B>.
-The internal form is a <A HREF="../TkLib/GetJustify.htm">Tk_Justify</A> like the values returned by
+The internal form is a Tk_Justify like the values returned by
 <B><A HREF="../TkLib/GetJustify.htm">Tk_GetJustifyFromObj</A></B>.
 <P><DT><A NAME="M19"><B>TK_OPTION_PIXELS</B></A><DD>
 The value must specify a screen distance such as <B>2i</B> or <B>6.4</B>.
@@ -474,7 +474,7 @@ option in the same table.  Whenever the synonym option is used, the
 information from the other option will be used instead.
 <P><DT><A NAME="M24"><B>TK_OPTION_WINDOW</B></A><DD>
 The value must be a window path name.  The internal form is a
-<B><A HREF="../TkLib/WindowId.htm">Tk_Window</A></B> token for the window.
+<B>Tk_Window</B> token for the window.
 This option type requires <I>tkwin</I> to be supplied to procedures
 such as <B>Tk_SetOptions</B> (in order to identify the application),
 and it supports the <B>TK_OPTION_NULL_OK</B> flag.
@@ -547,28 +547,28 @@ pointing to those procedures:
 typedef int <B>Tk_CustomOptionSetProc</B>(
     ClientData <I>clientData</I>,
     <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
-    <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
-    <A HREF="../TclLib/Object.htm">Tcl_Obj</A> **<I>valuePtr</I>,
+    Tk_Window <I>tkwin</I>,
+    Tcl_Obj **<I>valuePtr</I>,
     char *<I>recordPtr</I>,
     int <I>internalOffset</I>,
     char *<I>saveInternalPtr</I>,
     int <I>flags</I>);
 
-typedef <A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<B>Tk_CustomOptionGetProc</B>(
+typedef Tcl_Obj *<B>Tk_CustomOptionGetProc</B>(
     ClientData <I>clientData</I>,
-    <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
+    Tk_Window <I>tkwin</I>,
     char *<I>recordPtr</I>,
     int <I>internalOffset</I>);
 
 typedef void <B>Tk_CustomOptionRestoreProc</B>(
     ClientData <I>clientData</I>,
-    <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
+    Tk_Window <I>tkwin</I>,
     char *<I>internalPtr</I>,
     char *<I>saveInternalPtr</I>);
 
 typedef void <B>Tk_CustomOptionFreeProc</B>(
     ClientData <I>clientData</I>,
-    <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
+    Tk_Window <I>tkwin</I>,
     char *<I>internalPtr</I>);</PRE>
 <P>
 The Tk_ObjCustomOption structure contains six fields: a name
@@ -581,7 +581,7 @@ may be NULL, indicating that no function should be called for those
 operations.
 <P>
 The <I>setProc</I> procedure is invoked by <B>Tk_SetOptions</B> to
-convert a <A HREF="../TclLib/Object.htm">Tcl_Obj</A> into an internal representation and store the
+convert a Tcl_Obj into an internal representation and store the
 resulting value in the widget record.  The arguments are:
 <P>
 <DL class="custom option types">
@@ -593,11 +593,11 @@ A pointer to a Tcl interpreter, used for error reporting.
 <P><DT><A NAME="M30"><I>Tkwin</I></A><DD>
 A copy of the <I>tkwin</I> argument to <B>Tk_SetOptions</B>
 <P><DT><A NAME="M31"><I>valuePtr</I></A><DD>
-A pointer to a reference to a <A HREF="../TclLib/Object.htm">Tcl_Obj</A> describing the new value for the
+A pointer to a reference to a Tcl_Obj describing the new value for the
 option; it could have been specified explicitly in the call to
 <B>Tk_SetOptions</B> or it could come from the option database or a
 default.  If the objOffset for the option is non-negative (the option
-value is stored as a (<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *) in the widget record), the <A HREF="../TclLib/Object.htm">Tcl_Obj</A>
+value is stored as a (Tcl_Obj *) in the widget record), the Tcl_Obj
 pointer referenced by <I>valuePtr</I> is the pointer that will be
 stored at the objOffset for the option.  <I>SetProc</I> may modify the
 value if necessary; for example, <I>setProc</I> may change the value to
@@ -618,13 +618,13 @@ A copy of the <I>flags</I> field in the Tk_OptionSpec structure for the
 option
 <P></DL>
 <P>
-<I>SetProc</I> returns a standard Tcl result: <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> to indicate successful
-processing, or <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> to indicate a failure of any kind.  An error
+<I>SetProc</I> returns a standard Tcl result: <B>TCL_OK</B> to indicate successful
+processing, or <B>TCL_ERROR</B> to indicate a failure of any kind.  An error
 message may be left in the Tcl interpreter given by <I>interp</I> in
 the case of an error.
 <P>
 The <I>getProc</I> procedure is invoked by <B>Tk_GetOptionValue</B> and
-<B>Tk_GetOptionInfo</B> to retrieve a <A HREF="../TclLib/Object.htm">Tcl_Obj</A> representation of the
+<B>Tk_GetOptionInfo</B> to retrieve a Tcl_Obj representation of the
 internal representation of an option.  The <I>clientData</I> argument
 is a copy of the <I>clientData</I> field in the Tk_ObjCustomOption
 structure.  <I>Tkwin</I> is a copy of the <I>tkwin</I> argument to
@@ -633,7 +633,7 @@ is a pointer to the beginning of the widget record to query.
 <I>InternalOffset</I> is the offset in bytes from the beginning of the
 widget record to the location where the internal representation of the
 option value is stored.  <I>GetProc</I> must return a pointer to a
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> representing the value of the option.
+Tcl_Obj representing the value of the option.
 <P>
 The <I>restoreProc</I> procedure is invoked by
 <B>Tk_RestoreSavedOptions</B> to restore a previously saved internal
@@ -661,6 +661,7 @@ option value is stored.  The <I>freeProc</I> must free any storage
 associated with the option.  <I>FreeProc</I> has no return value.
 <H3><A NAME="M36">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#anchor">anchor</A>, <A href="../Keywords/B.htm#bitmap">bitmap</A>, <A href="../Keywords/B.htm#boolean">boolean</A>, <A href="../Keywords/B.htm#border">border</A>, <A href="../Keywords/C.htm#color">color</A>, <A href="../Keywords/C.htm#configuration option">configuration option</A>, <A href="../Keywords/C.htm#cursor">cursor</A>, <A href="../Keywords/D.htm#double">double</A>, <A href="../Keywords/F.htm#font">font</A>, <A href="../Keywords/I.htm#integer">integer</A>, <A href="../Keywords/J.htm#justify">justify</A>, <A href="../Keywords/P.htm#pixels">pixels</A>, <A href="../Keywords/R.htm#relief">relief</A>, <A href="../Keywords/S.htm#screen distance">screen distance</A>, <A href="../Keywords/S.htm#synonym">synonym</A>
-<div class="copy">Copyright &copy; 1998 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

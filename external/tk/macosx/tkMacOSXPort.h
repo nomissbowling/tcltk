@@ -1,7 +1,7 @@
 /*
  * tkMacOSXPort.h --
  *
- *	This file is included by all of the Tk C files.  It contains
+ *	This file is included by all of the Tk C files. It contains
  *	information that may be configuration-dependent, such as
  *	#includes for system include files and a few other things.
  *
@@ -16,16 +16,29 @@
 #ifndef _TKMACPORT
 #define _TKMACPORT
 
+/*
+ * Macro to use instead of "void" for arguments that must have
+ * type "void *" in ANSI C; maps them to type "char *" in
+ * non-ANSI systems. This macro may be used in some of the include
+ * files below, which is why it is defined here.
+ */
+
+#ifndef VOID
+#   ifdef __STDC__
+#	define VOID void
+#   else
+#	define VOID char
+#   endif
+#endif
+
 #include <stdio.h>
-#include <pwd.h>
-#include <assert.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <ctype.h>
-#include <math.h>
-#include <string.h>
+#include <fcntl.h>
 #include <limits.h>
+#include <math.h>
+#include <pwd.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/file.h>
 #ifdef HAVE_SYS_SELECT_H
@@ -55,6 +68,7 @@
 #include <X11/Xatom.h>
 #include <X11/Xfuncproto.h>
 #include <X11/Xutil.h>
+#include "tkIntXlibDecls.h"
 
 /*
  * The following macro defines the type of the mask arguments to
@@ -112,40 +126,35 @@
  * no-op functions on the Macintosh.
  */
 
-#undef XFlush
-#define XFlush(display) (0)
-#undef XFree
-#define XFree(data) (((data) != NULL) ? (ckfree(data),0) : 0)
-#undef XGrabServer
-#define XGrabServer(display) (0)
-#undef XNoOp
-#define XNoOp(display) (display->request++,0)
-#undef XUngrabServer
-#define XUngrabServer(display) (0)
-#undef XSynchronize
-#define XSynchronize(display, onoff) (display->request++,NULL)
-#undef XVisualIDFromVisual
+#define XFlush(display)
+#define XFree(data) {if ((data) != NULL) ckfree((char *) (data));}
+#define XGrabServer(display)
+#define XNoOp(display) {display->request++;}
+#define XUngrabServer(display)
+#define XSynchronize(display, bool) {display->request++;}
 #define XVisualIDFromVisual(visual) (visual->visualid)
 
 /*
  * The following functions are not used on the Mac, so we stub them out.
  */
 
+#define TkFreeWindowId(dispPtr,w)
+#define TkInitXId(dispPtr)
 #define TkpCmapStressed(tkwin,colormap) (0)
 #define TkpFreeColor(tkColPtr)
 #define TkSetPixmapColormap(p,c) {}
 #define TkpSync(display)
 
 /*
- * TkMacOSXGetCapture is a legacy function used on the Mac. When fixing
- * [943d5ebe51], TkpGetCapture was added to the Windows port. Both
- * are actually the same feature and should bear the same name. However,
- * in order to avoid potential backwards incompatibilities, renaming
- * TkMacOSXGetCapture into TkpGetCapture in *PlatDecls.h shall not be
- * done in a patch release, therefore use a define here.
+ * The following macro returns the pixel value that corresponds to the
+ * RGB values in the given XColor structure.
  */
 
-#define TkpGetCapture TkMacOSXGetCapture
+#define PIXEL_MAGIC ((unsigned char) 0x69)
+#define TkpGetPixel(p) ((((((PIXEL_MAGIC << 8) \
+	| (((p)->red >> 8) & 0xff)) << 8) \
+	| (((p)->green >> 8) & 0xff)) << 8) \
+	| (((p)->blue >> 8) & 0xff))
 
 /*
  * This macro stores a representation of the window handle in a string.
@@ -159,38 +168,28 @@
  */
 
 #define TK_NO_DOUBLE_BUFFERING 1
-#define TK_HAS_DYNAMIC_COLORS 1
-#define TK_DYNAMIC_COLORMAP 0x0fffffff
 
 /*
- * Inform tkImgPhInstance.c that our tkPutImage can render an image with an
- * alpha channel directly into a window.
+ * Magic pixel code values for system colors.
+ *
+ * NOTE: values must be kept in sync with indices into the
+ *	 systemColorMap array in tkMacOSXColor.c !
  */
 
-#define TKPUTIMAGE_CAN_BLEND
-
-/*
- * Used by xcolor.c
- */
-
-MODULE_SCOPE unsigned long TkMacOSXRGBPixel(unsigned long red, unsigned long green,
-					    unsigned long blue);
-#define TkpGetPixel(p) (TkMacOSXRGBPixel(p->red >> 8, p->green >> 8, p->blue >> 8))
-
-/*
- * Used by tkWindow.c
- */
-
-MODULE_SCOPE void TkMacOSXHandleMapOrUnmap(Tk_Window tkwin, XEvent *event);
-
-#define TkpHandleMapOrUnmap(tkwin, event)  TkMacOSXHandleMapOrUnmap(tkwin, event)
-
-/*
- * Used by tkAppInit
- */
-
-#define USE_CUSTOM_EXIT_PROC
-EXTERN int TkpWantsExitProc(void);
-EXTERN TCL_NORETURN void TkpExitProc(void *);
+#define TRANSPARENT_PIXEL		30
+#define HIGHLIGHT_PIXEL			31
+#define HIGHLIGHT_SECONDARY_PIXEL	32
+#define HIGHLIGHT_TEXT_PIXEL		33
+#define HIGHLIGHT_ALTERNATE_PIXEL	34
+#define CONTROL_TEXT_PIXEL		35
+#define CONTROL_BODY_PIXEL		37
+#define CONTROL_FRAME_PIXEL		39
+#define WINDOW_BODY_PIXEL		41
+#define MENU_ACTIVE_PIXEL		43
+#define MENU_ACTIVE_TEXT_PIXEL		45
+#define MENU_BACKGROUND_PIXEL		47
+#define MENU_DISABLED_PIXEL		49
+#define MENU_TEXT_PIXEL			51
+#define APPEARANCE_PIXEL		52
 
 #endif /* _TKMACPORT */

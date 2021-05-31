@@ -3,30 +3,30 @@
 <HEAD><TITLE>ttk_image manual page - Tk Themed Widget</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> ttk_image</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> ttk_image</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="ttk_image.htm#M2" NAME="L1843">NAME</A>
-<DL><DD>ttk_image &mdash; Define an element based on an image</DD></DL>
-<DD><A HREF="ttk_image.htm#M3" NAME="L1844">SYNOPSIS</A>
+<DD><A HREF="ttk_image.htm#M2" NAME="L1738">NAME</A>
+<DL><DD>ttk_image - Define an element based on an image</DD></DL>
+<DD><A HREF="ttk_image.htm#M3" NAME="L1739">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="ttk_image.htm#M4" NAME="L1845">DESCRIPTION</A>
-<DD><A HREF="ttk_image.htm#M5" NAME="L1846">OPTIONS</A>
+<DD><A HREF="ttk_image.htm#M4" NAME="L1740">DESCRIPTION</A>
+<DD><A HREF="ttk_image.htm#M5" NAME="L1741">OPTIONS</A>
 <DL class="options">
-<DD><A HREF="ttk_image.htm#M6" NAME="L1847"><B>-border</B> <I>padding</I></A>
-<DD><A HREF="ttk_image.htm#M7" NAME="L1848"><B>-height </B><I>height</I></A>
-<DD><A HREF="ttk_image.htm#M8" NAME="L1849"><B>-padding</B> <I>padding</I></A>
-<DD><A HREF="ttk_image.htm#M9" NAME="L1850"><B>-sticky</B> <I>spec</I></A>
-<DD><A HREF="ttk_image.htm#M10" NAME="L1851"><B>-width </B><I>width</I></A>
+<DD><A HREF="ttk_image.htm#M6" NAME="L1742"><B>-border</B> <I>padding</I></A>
+<DD><A HREF="ttk_image.htm#M7" NAME="L1743"><B>-height </B><I>height</I></A>
+<DD><A HREF="ttk_image.htm#M8" NAME="L1744"><B>-padding</B> <I>padding</I></A>
+<DD><A HREF="ttk_image.htm#M9" NAME="L1745"><B>-sticky</B> <I>spec</I></A>
+<DD><A HREF="ttk_image.htm#M10" NAME="L1746"><B>-width </B><I>width</I></A>
 </DL>
-<DD><A HREF="ttk_image.htm#M11" NAME="L1852">IMAGE STRETCHING</A>
-<DD><A HREF="ttk_image.htm#M12" NAME="L1853">EXAMPLE</A>
-<DD><A HREF="ttk_image.htm#M13" NAME="L1854">SEE ALSO</A>
-<DD><A HREF="ttk_image.htm#M14" NAME="L1855">KEYWORDS</A>
+<DD><A HREF="ttk_image.htm#M11" NAME="L1747">IMAGE STRETCHING</A>
+<DD><A HREF="ttk_image.htm#M12" NAME="L1748">EXAMPLE</A>
+<DD><A HREF="ttk_image.htm#M13" NAME="L1749">SEE ALSO</A>
+<DD><A HREF="ttk_image.htm#M14" NAME="L1750">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-ttk_image &mdash; Define an element based on an image
+ttk_image - Define an element based on an image
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>ttk::style element create </B><I>name</I> <B><A HREF="../TkCmd/image.htm">image</A></B> <I>imageSpec</I> ?<I>options</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -45,7 +45,7 @@ Valid <I>options</I> are:
 <DT><A NAME="M6"><B>-border</B> <I>padding</I></A><DD>
 <I>padding</I> is a list of up to four integers, specifying
 the left, top, right, and bottom borders, respectively.
-See <B><A HREF="#M11">IMAGE STRETCHING</A></B>, below.
+See <B><A HREF="../TkCmd/image.htm">IMAGE STRETCHING</A></B>, below.
 <P><DT><A NAME="M7"><B>-height </B><I>height</I></A><DD>
 Specifies a minimum height for the element.
 If less than zero, the base image's height is used as a default.
@@ -86,6 +86,7 @@ style element create Button.button image &#92;
 <B><A HREF="../TkCmd/ttk_intro.htm">ttk::intro</A></B>, <B><A HREF="../TkCmd/ttk_style.htm">ttk::style</A></B>, <B><A HREF="../TkCmd/ttk_vsapi.htm">ttk_vsapi</A></B>, <B><A HREF="../TkCmd/image.htm">image</A></B>, <B><A HREF="../TkCmd/photo.htm">photo</A></B>
 <H3><A NAME="M14">KEYWORDS</A></H3>
 <A href="../Keywords/S.htm#style">style</A>, <A href="../Keywords/T.htm#theme">theme</A>, <A href="../Keywords/A.htm#appearance">appearance</A>, <A href="../Keywords/P.htm#pixmap theme">pixmap theme</A>, <A href="../Keywords/I.htm#image">image</A>
-<div class="copy">Copyright &copy; 2004 Joe English
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2004 Joe English
 </div>
 </BODY></HTML>

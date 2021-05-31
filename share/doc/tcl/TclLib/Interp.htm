@@ -3,55 +3,47 @@
 <HEAD><TITLE>Tcl_Interp manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Interp</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Interp</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Interp.htm#M2" NAME="L426">NAME</A>
-<DL><DD>Tcl_Interp &mdash; client-visible fields of interpreter structures</DD></DL>
-<DD><A HREF="Interp.htm#M3" NAME="L427">SYNOPSIS</A>
+<DD><A HREF="Interp.htm#M2" NAME="L397">NAME</A>
+<DL><DD>Tcl_Interp - client-visible fields of interpreter structures</DD></DL>
+<DD><A HREF="Interp.htm#M3" NAME="L398">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>typedef struct {
-<DD>char *<I>result</I>;
-<DD>Tcl_FreeProc *<I>freeProc</I>;
-<DD>int <I>errorLine</I>;
-<DD>} <B>Tcl_Interp</B>;
+<DD>        char *<I>result</I>;
+<DD>        Tcl_FreeProc *<I>freeProc</I>;
+<DD>        int <I>errorLine</I>;
+<DD>} Tcl_Interp;
 <DD>
-<DD>typedef void <B>Tcl_FreeProc</B>(
-<DD>char *<I>blockPtr</I>);
+<DD>typedef void Tcl_FreeProc(char *<I>blockPtr</I>);
 </DL>
-<DD><A HREF="Interp.htm#M4" NAME="L428">DESCRIPTION</A>
-<DD><A HREF="Interp.htm#M5" NAME="L429">KEYWORDS</A>
+<DD><A HREF="Interp.htm#M4" NAME="L399">DESCRIPTION</A>
+<DD><A HREF="Interp.htm#M5" NAME="L400">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_Interp &mdash; client-visible fields of interpreter structures
+Tcl_Interp - client-visible fields of interpreter structures
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 typedef struct {<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT>char *<I>result</I>;<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT>Tcl_FreeProc *<I>freeProc</I>;<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT>int <I>errorLine</I>;<BR>
-} <B>Tcl_Interp</B>;<BR>
+        char *<I>result</I>;<BR>
+        Tcl_FreeProc *<I>freeProc</I>;<BR>
+        int <I>errorLine</I>;<BR>
+} Tcl_Interp;<BR>
 <BR>
-typedef void <B>Tcl_FreeProc</B>(<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>char *<I>blockPtr</I>);<BR>
+typedef void Tcl_FreeProc(char *<I>blockPtr</I>);<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 The <B><A HREF="../TclLib/CrtInterp.htm">Tcl_CreateInterp</A></B> procedure returns a pointer to a Tcl_Interp
-structure.  Callers of <B><A HREF="../TclLib/CrtInterp.htm">Tcl_CreateInterp</A></B> should use this pointer
-as an opaque token, suitable for nothing other than passing back to
-other routines in the Tcl interface.  Accessing fields directly through
-the pointer as described below is no longer supported.  The supported
-public routines <B><A HREF="../TclLib/SetResult.htm">Tcl_SetResult</A></B>, <B>Tcl_GetResult</B>,
-<B><A HREF="../TclLib/AddErrInfo.htm">Tcl_SetErrorLine</A></B>, <B><A HREF="../TclLib/AddErrInfo.htm">Tcl_GetErrorLine</A></B> must be used instead.
+structure.  This pointer is then passed into other Tcl procedures
+to process commands in the interpreter and perform other operations
+on the interpreter.  Interpreter structures contain many fields
+that are used by Tcl, but only three that may be accessed by
+clients:  <I>result</I>, <I>freeProc</I>, and <I>errorLine</I>.
 <P>
-For legacy programs and extensions no longer being maintained, compiles
-against the Tcl 8.6 header files are only possible with the compiler
-directives
-<PRE>#define USE_INTERP_RESULT</PRE>
-and/or
-<PRE>#define USE_INTERP_ERRORLINE</PRE>
-depending on which fields of the <B>Tcl_Interp</B> struct are accessed.
-These directives may be embedded in code or supplied via compiler options.
+<B>Note that access to all three fields, </B><I>result</I><B>, </B><I>freeProc</I><B> and
+</B><I>errorLine</I><B> is deprecated.</B>  Use <B><A HREF="../TclLib/SetResult.htm">Tcl_SetResult</A></B>,
+<B>Tcl_GetResult</B>, and <B><A HREF="../TclLib/AddErrInfo.htm">Tcl_GetReturnOptions</A></B> instead.
 <P>
 The <I>result</I> and <I>freeProc</I> fields are used to return
 results or error messages from commands.
@@ -127,7 +119,7 @@ reset the result to its initialized state.  The direct use of
 <P>
 The <I>errorLine</I>
 field is valid only after <B><A HREF="../TclLib/Eval.htm">Tcl_Eval</A></B> returns
-a <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> return code.  In this situation the <I>errorLine</I>
+a <B>TCL_ERROR</B> return code.  In this situation the <I>errorLine</I>
 field identifies the line number of the command being executed when
 the error occurred.  The line numbers are relative to the command
 being executed:  1 means the first line of the command passed to
@@ -139,7 +131,8 @@ occurred.
 
 <H3><A NAME="M5">KEYWORDS</A></H3>
 <A href="../Keywords/F.htm#free">free</A>, <A href="../Keywords/I.htm#initialized">initialized</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/M.htm#malloc">malloc</A>, <A href="../Keywords/R.htm#result">result</A>
-<div class="copy">Copyright &copy; 1989-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1989-1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

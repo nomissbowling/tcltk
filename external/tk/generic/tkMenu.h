@@ -13,12 +13,21 @@
 #ifndef _TKMENU
 #define _TKMENU
 
+#ifndef _TK
+#include "tk.h"
+#endif
+
 #ifndef _TKINT
 #include "tkInt.h"
 #endif
 
 #ifndef _DEFAULT
 #include "default.h"
+#endif
+
+#ifdef BUILD_tk
+# undef TCL_STORAGE_CLASS
+# define TCL_STORAGE_CLASS DLLEXPORT
 #endif
 
 /*
@@ -116,7 +125,7 @@ typedef struct TkMenuEntry {
 				 * always 0 for tearoff and separator
 				 * entries. */
     int hideMargin;		/* If this is 0, then the item has enough
-    				 * margin to accommodate a standard check mark
+    				 * margin to accomodate a standard check mark
     				 * and a default right margin. If this is 1,
     				 * then the item has no such margins, and
     				 * checkbuttons and radiobuttons with this set
@@ -185,7 +194,7 @@ typedef struct TkMenuEntry {
     				 * the menu. */
 
     /*
-     * Bookeeping for main menus and cascade menus.
+     * Bookeeping for master menus and cascade menus.
      */
 
     struct TkMenuReferences *childMenuRefPtr;
@@ -243,6 +252,8 @@ typedef struct TkMenuEntry {
  * Menu states
  */
 
+MODULE_SCOPE const char *tkMenuStateStrings[];
+
 #define ENTRY_ACTIVE 0
 #define ENTRY_NORMAL 1
 #define ENTRY_DISABLED 2
@@ -266,7 +277,7 @@ typedef struct TkMenu {
     int numEntries;		/* Number of elements in entries. */
     int active;			/* Index of active entry. -1 means nothing
 				 * active. */
-    int menuType;		/* MAIN_MENU, TEAROFF_MENU, or MENUBAR. See
+    int menuType;		/* MASTER_MENU, TEAROFF_MENU, or MENUBAR. See
     				 * below for definitions. */
     Tcl_Obj *menuTypePtr;	/* Used to control whether created tkwin is a
 				 * toplevel or not. "normal", "menubar", or
@@ -354,8 +365,11 @@ typedef struct TkMenu {
     struct TkMenu *masterMenuPtr;
     				/* A pointer to the original menu for this
     				 * clone chain. Points back to this structure
-    				 * if this menu is a main menu. */
-    void *reserved1; /* not used any more. */
+    				 * if this menu is a master menu. */
+    struct TkMenuOptionTables *optionTablesPtr;
+				/* A pointer to the collection of option
+				 * tables that work with menus and menu
+				 * entries. */
     Tk_Window parentTopLevelPtr;/* If this menu is a menubar, this is the
     				 * toplevel that owns the menu. Only
     				 * applicable for menubar clones. */
@@ -424,6 +438,17 @@ typedef struct TkMenuReferences {
 } TkMenuReferences;
 
 /*
+ * This structure contains all of the option tables that are needed by menus.
+ */
+
+typedef struct TkMenuOptionTables {
+    Tk_OptionTable menuOptionTable;
+				/* The option table for menus. */
+    Tk_OptionTable entryOptionTables[6];
+				/* The tables for menu entries. */
+} TkMenuOptionTables;
+
+/*
  * Flag bits for menus:
  *
  * REDRAW_PENDING:		Non-zero means a DoWhenIdle handler has
@@ -433,7 +458,7 @@ typedef struct TkMenuReferences {
  * MENU_DELETION_PENDING	Non-zero means that we are currently
  *				destroying this menu's internal structures.
  *				This is useful when we are in the middle of
- *				cleaning this main menu's chain of menus up
+ *				cleaning this master menu's chain of menus up
  *				when TkDestroyMenu was called again on this
  *				menu (via a destroy binding or somesuch).
  * MENU_WIN_DESTRUCTION_PENDING Non-zero means we are in the middle of
@@ -451,16 +476,15 @@ typedef struct TkMenuReferences {
 #define MENU_PLATFORM_FLAG3	(1 << 28)
 
 /*
- * Each menu created by the user is a MAIN_MENU. When a menu is torn off, a
+ * Each menu created by the user is a MASTER_MENU. When a menu is torn off, a
  * TEAROFF_MENU instance is created. When a menu is assigned to a toplevel as
  * a menu bar, a MENUBAR instance is created. All instances have the same
- * configuration information. If the main instance is deleted, all instances
+ * configuration information. If the master instance is deleted, all instances
  * are deleted. If one of the other instances is deleted, only that instance
  * is deleted.
  */
 
 #define UNKNOWN_TYPE		-1
-#define MAIN_MENU 		0
 #define MASTER_MENU 		0
 #define TEAROFF_MENU 		1
 #define MENUBAR 		2
@@ -481,12 +505,12 @@ typedef struct TkMenuReferences {
 MODULE_SCOPE int	TkActivateMenuEntry(TkMenu *menuPtr, int index);
 MODULE_SCOPE void	TkBindMenu(Tk_Window tkwin, TkMenu *menuPtr);
 MODULE_SCOPE TkMenuReferences*TkCreateMenuReferences(Tcl_Interp *interp,
-			    const char *name);
+			    char *name);
 MODULE_SCOPE void	TkDestroyMenu(TkMenu *menuPtr);
 MODULE_SCOPE void	TkEventuallyRecomputeMenu(TkMenu *menuPtr);
 MODULE_SCOPE void	TkEventuallyRedrawMenu(TkMenu *menuPtr,
 			    TkMenuEntry *mePtr);
-MODULE_SCOPE TkMenuReferences*TkFindMenuReferences(Tcl_Interp *interp, const char *name);
+MODULE_SCOPE TkMenuReferences*TkFindMenuReferences(Tcl_Interp *interp, char *name);
 MODULE_SCOPE TkMenuReferences*TkFindMenuReferencesObj(Tcl_Interp *interp,
 			    Tcl_Obj *namePtr);
 MODULE_SCOPE int	TkFreeMenuReferences(TkMenuReferences *menuRefPtr);
@@ -517,7 +541,7 @@ MODULE_SCOPE int	TkPostCommand(TkMenu *menuPtr);
 MODULE_SCOPE int	TkPostSubmenu(Tcl_Interp *interp, TkMenu *menuPtr,
 			    TkMenuEntry *mePtr);
 MODULE_SCOPE int	TkPostTearoffMenu(Tcl_Interp *interp, TkMenu *menuPtr,
-					   int x, int y);
+			    int x, int y);
 MODULE_SCOPE int	TkPreprocessMenu(TkMenu *menuPtr);
 MODULE_SCOPE void	TkRecomputeMenu(TkMenu *menuPtr);
 
@@ -540,9 +564,10 @@ MODULE_SCOPE void	TkpMenuInit(void);
 MODULE_SCOPE int	TkpMenuNewEntry(TkMenuEntry *mePtr);
 MODULE_SCOPE int	TkpNewMenu(TkMenu *menuPtr);
 MODULE_SCOPE int	TkpPostMenu(Tcl_Interp *interp, TkMenu *menuPtr,
-			    int x, int y, int index);
-MODULE_SCOPE int	TkpPostTearoffMenu(Tcl_Interp *interp, TkMenu *menuPtr,
-					   int x, int y, int index);
+			    int x, int y);
 MODULE_SCOPE void	TkpSetWindowMenuBar(Tk_Window tkwin, TkMenu *menuPtr);
+
+# undef TCL_STORAGE_CLASS
+# define TCL_STORAGE_CLASS DLLIMPORT
 
 #endif /* _TKMENU */

@@ -3,14 +3,13 @@
 <HEAD><TITLE>keysyms manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> keysyms</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> keysyms</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-keysyms &mdash; keysyms recognized by Tk
+keysyms - keysyms recognized by Tk
 <H3><A NAME="M3">DESCRIPTION</A></H3>
-Tk recognizes many keysyms when specifying key bindings (e.g.,
-&#8220;<B><A HREF="../TkCmd/bind.htm">bind</A></B> <B>. &lt;Key-</B><I>keysym</I><B>&gt;</B>&#8221;).
-The following list enumerates the
+Tk recognizes many keysyms when specifying key bindings (e.g. 
+<B>bind . &lt;Key-</B><I>keysym</I><B>&gt;</B>).  The following list enumerates the
 keysyms that will be recognized by Tk.  Note that not all keysyms will
 be valid on all platforms.  For example, on Unix systems, the presence
 of a particular keysym is dependant on the configuration of the
@@ -907,9 +906,10 @@ Hyper_L                          65517     0xffed
 Hyper_R                          65518     0xffee
 Delete                           65535     0xffff</PRE>
 <H3><A NAME="M4">SEE ALSO</A></H3>
-<B><A HREF="../TkCmd/bind.htm">bind</A></B>, <B><A HREF="../TkCmd/event.htm">event</A></B>
+<B><A HREF="../TkCmd/bind.htm">bind</A></B>
 <H3><A NAME="M5">KEYWORDS</A></H3>
-<A href="../Keywords/B.htm#bind">bind</A>, <A href="../Keywords/B.htm#binding">binding</A>, <A href="../Keywords/E.htm#event">event</A>, <A href="../Keywords/K.htm#keysym">keysym</A>
-<div class="copy">Copyright &copy; 1998-2000 by Scriptics Corporation.
+<A href="../Keywords/K.htm#keysym">keysym</A>, <A href="../Keywords/B.htm#bind">bind</A>, <A href="../Keywords/B.htm#binding">binding</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1998-2000 by Scriptics Corporation.
 </div>
 </BODY></HTML>

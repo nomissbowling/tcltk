@@ -3,71 +3,71 @@
 <HEAD><TITLE>winfo manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> winfo</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> winfo</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="winfo.htm#M2" NAME="L2208">NAME</A>
-<DL><DD>winfo &mdash; Return window-related information</DD></DL>
-<DD><A HREF="winfo.htm#M3" NAME="L2209">SYNOPSIS</A>
+<DD><A HREF="winfo.htm#M2" NAME="L2104">NAME</A>
+<DL><DD>winfo - Return window-related information</DD></DL>
+<DD><A HREF="winfo.htm#M3" NAME="L2105">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="winfo.htm#M4" NAME="L2210">DESCRIPTION</A>
+<DD><A HREF="winfo.htm#M4" NAME="L2106">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="winfo.htm#M5" NAME="L2211"><B>winfo atom </B>?<B>-displayof </B><I>window</I>? <I>name</I></A>
-<DD><A HREF="winfo.htm#M6" NAME="L2212"><B>winfo atomname </B>?<B>-displayof </B><I>window</I>? <I>id</I></A>
-<DD><A HREF="winfo.htm#M7" NAME="L2213"><B>winfo cells </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M8" NAME="L2214"><B>winfo children </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M9" NAME="L2215"><B>winfo class </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M10" NAME="L2216"><B>winfo colormapfull </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M11" NAME="L2217"><B>winfo containing </B>?<B>-displayof </B><I>window</I>? <I>rootX rootY</I></A>
-<DD><A HREF="winfo.htm#M12" NAME="L2218"><B>winfo depth </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M13" NAME="L2219"><B>winfo exists </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M14" NAME="L2220"><B>winfo fpixels </B><I>window</I> <I>number</I></A>
-<DD><A HREF="winfo.htm#M15" NAME="L2221"><B>winfo geometry </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M16" NAME="L2222"><B>winfo height </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M17" NAME="L2223"><B>winfo id </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M18" NAME="L2224"><B>winfo interps </B>?<B>-displayof </B><I>window</I>?</A>
-<DD><A HREF="winfo.htm#M19" NAME="L2225"><B>winfo ismapped </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M20" NAME="L2226"><B>winfo manager </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M21" NAME="L2227"><B>winfo name </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M22" NAME="L2228"><B>winfo parent </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M23" NAME="L2229"><B>winfo pathname </B>?<B>-displayof </B><I>window</I>? <I>id</I></A>
-<DD><A HREF="winfo.htm#M24" NAME="L2230"><B>winfo pixels </B><I>window</I> <I>number</I></A>
-<DD><A HREF="winfo.htm#M25" NAME="L2231"><B>winfo pointerx </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M26" NAME="L2232"><B>winfo pointerxy </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M27" NAME="L2233"><B>winfo pointery </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M28" NAME="L2234"><B>winfo reqheight </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M29" NAME="L2235"><B>winfo reqwidth </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M30" NAME="L2236"><B>winfo rgb </B><I>window color</I></A>
-<DD><A HREF="winfo.htm#M31" NAME="L2237"><B>winfo rootx </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M32" NAME="L2238"><B>winfo rooty </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M33" NAME="L2239"><B>winfo screen </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M34" NAME="L2240"><B>winfo screencells </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M35" NAME="L2241"><B>winfo screendepth </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M36" NAME="L2242"><B>winfo screenheight </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M37" NAME="L2243"><B>winfo screenmmheight </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M38" NAME="L2244"><B>winfo screenmmwidth </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M39" NAME="L2245"><B>winfo screenvisual </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M40" NAME="L2246"><B>winfo screenwidth </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M41" NAME="L2247"><B>winfo server </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M42" NAME="L2248"><B>winfo toplevel </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M43" NAME="L2249"><B>winfo viewable </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M44" NAME="L2250"><B>winfo visual </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M45" NAME="L2251"><B>winfo visualid </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M46" NAME="L2252"><B>winfo visualsavailable </B><I>window</I> ?<B>includeids</B>?</A>
-<DD><A HREF="winfo.htm#M47" NAME="L2253"><B>winfo vrootheight </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M48" NAME="L2254"><B>winfo vrootwidth </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M49" NAME="L2255"><B>winfo vrootx </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M50" NAME="L2256"><B>winfo vrooty </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M51" NAME="L2257"><B>winfo width </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M52" NAME="L2258"><B>winfo x </B><I>window</I></A>
-<DD><A HREF="winfo.htm#M53" NAME="L2259"><B>winfo y </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M5" NAME="L2107"><B>winfo atom </B>?<B>-displayof </B><I>window</I>? <I>name</I></A>
+<DD><A HREF="winfo.htm#M6" NAME="L2108"><B>winfo atomname </B>?<B>-displayof </B><I>window</I>? <I>id</I></A>
+<DD><A HREF="winfo.htm#M7" NAME="L2109"><B>winfo cells </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M8" NAME="L2110"><B>winfo children </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M9" NAME="L2111"><B>winfo class </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M10" NAME="L2112"><B>winfo colormapfull </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M11" NAME="L2113"><B>winfo containing </B>?<B>-displayof </B><I>window</I>? <I>rootX rootY</I></A>
+<DD><A HREF="winfo.htm#M12" NAME="L2114"><B>winfo depth </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M13" NAME="L2115"><B>winfo exists </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M14" NAME="L2116"><B>winfo fpixels </B><I>window</I> <I>number</I></A>
+<DD><A HREF="winfo.htm#M15" NAME="L2117"><B>winfo geometry </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M16" NAME="L2118"><B>winfo height </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M17" NAME="L2119"><B>winfo id </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M18" NAME="L2120"><B>winfo interps </B>?<B>-displayof </B><I>window</I>?</A>
+<DD><A HREF="winfo.htm#M19" NAME="L2121"><B>winfo ismapped </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M20" NAME="L2122"><B>winfo manager </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M21" NAME="L2123"><B>winfo name </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M22" NAME="L2124"><B>winfo parent </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M23" NAME="L2125"><B>winfo pathname </B>?<B>-displayof </B><I>window</I>? <I>id</I></A>
+<DD><A HREF="winfo.htm#M24" NAME="L2126"><B>winfo pixels </B><I>window</I> <I>number</I></A>
+<DD><A HREF="winfo.htm#M25" NAME="L2127"><B>winfo pointerx </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M26" NAME="L2128"><B>winfo pointerxy </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M27" NAME="L2129"><B>winfo pointery </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M28" NAME="L2130"><B>winfo reqheight </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M29" NAME="L2131"><B>winfo reqwidth </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M30" NAME="L2132"><B>winfo rgb </B><I>window color</I></A>
+<DD><A HREF="winfo.htm#M31" NAME="L2133"><B>winfo rootx </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M32" NAME="L2134"><B>winfo rooty </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M33" NAME="L2135"><B>winfo screen </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M34" NAME="L2136"><B>winfo screencells </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M35" NAME="L2137"><B>winfo screendepth </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M36" NAME="L2138"><B>winfo screenheight </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M37" NAME="L2139"><B>winfo screenmmheight </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M38" NAME="L2140"><B>winfo screenmmwidth </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M39" NAME="L2141"><B>winfo screenvisual </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M40" NAME="L2142"><B>winfo screenwidth </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M41" NAME="L2143"><B>winfo server </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M42" NAME="L2144"><B>winfo toplevel </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M43" NAME="L2145"><B>winfo viewable </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M44" NAME="L2146"><B>winfo visual </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M45" NAME="L2147"><B>winfo visualid </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M46" NAME="L2148"><B>winfo visualsavailable </B><I>window</I> ?<B>includeids</B>?</A>
+<DD><A HREF="winfo.htm#M47" NAME="L2149"><B>winfo vrootheight </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M48" NAME="L2150"><B>winfo vrootwidth </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M49" NAME="L2151"><B>winfo vrootx </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M50" NAME="L2152"><B>winfo vrooty </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M51" NAME="L2153"><B>winfo width </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M52" NAME="L2154"><B>winfo x </B><I>window</I></A>
+<DD><A HREF="winfo.htm#M53" NAME="L2155"><B>winfo y </B><I>window</I></A>
 </DL>
-<DD><A HREF="winfo.htm#M54" NAME="L2260">EXAMPLE</A>
-<DD><A HREF="winfo.htm#M55" NAME="L2261">KEYWORDS</A>
+<DD><A HREF="winfo.htm#M54" NAME="L2156">EXAMPLE</A>
+<DD><A HREF="winfo.htm#M55" NAME="L2157">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-winfo &mdash; Return window-related information
+winfo - Return window-related information
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>winfo</B> <I>option </I>?<I>arg arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -149,7 +149,7 @@ in pixels.
 <P><DT><A NAME="M16"><B>winfo height </B><I>window</I></A><DD>
 Returns a decimal string giving <I>window</I>'s height in pixels.
 When a window is first created its height will be 1 pixel;  the
-height will eventually be changed by a geometry manager to fulfil
+height will eventually be changed by a geometry manager to fulfill
 the window's needs.
 If you need the true height immediately after creating a widget,
 invoke <B><A HREF="../TclCmd/update.htm">update</A></B> to force the geometry manager to arrange it,
@@ -325,7 +325,7 @@ Returns 0 if there is no virtual root window for <I>window</I>.
 <P><DT><A NAME="M51"><B>winfo width </B><I>window</I></A><DD>
 Returns a decimal string giving <I>window</I>'s width in pixels.
 When a window is first created its width will be 1 pixel;  the
-width will eventually be changed by a geometry manager to fulfil
+width will eventually be changed by a geometry manager to fulfill
 the window's needs.
 If you need the true width immediately after creating a widget,
 invoke <B><A HREF="../TclCmd/update.htm">update</A></B> to force the geometry manager to arrange it,
@@ -354,7 +354,8 @@ if {$win eq &quot;&quot;} {
 }</PRE>
 <H3><A NAME="M55">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#atom">atom</A>, <A href="../Keywords/C.htm#children">children</A>, <A href="../Keywords/C.htm#class">class</A>, <A href="../Keywords/G.htm#geometry">geometry</A>, <A href="../Keywords/H.htm#height">height</A>, <A href="../Keywords/I.htm#identifier">identifier</A>, <A href="../Keywords/I.htm#information">information</A>, <A href="../Keywords/I.htm#interpreters">interpreters</A>, <A href="../Keywords/M.htm#mapped">mapped</A>, <A href="../Keywords/P.htm#parent">parent</A>, <A href="../Keywords/P.htm#path name">path name</A>, <A href="../Keywords/S.htm#screen">screen</A>, <A href="../Keywords/V.htm#virtual root">virtual root</A>, <A href="../Keywords/W.htm#width">width</A>, <A href="../Keywords/W.htm#window">window</A>
-<div class="copy">Copyright &copy; 1990-1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1994 The Regents of the University of California.
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

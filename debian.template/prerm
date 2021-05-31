@@ -11,10 +11,9 @@ GITHASH=%git_hash%
 GITBRANCH=%git_branch%
 DEBNAME=%deb_name%
 DEBVERSION=%deb_version%
-DEBRELEASE=%deb_release%
 DEBFILE=%deb_file%
-INSTDIR=%inst_dir%
-BINDIR=%bindir%
+PREFIX=%prefix%
+POSTFIX=%postfix%
 
 case "$1" in
     remove)

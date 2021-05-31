@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_GetInt manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> GetInt</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> GetInt</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="GetInt.htm#M2" NAME="L372">NAME</A>
-<DL><DD>Tcl_GetInt, Tcl_GetDouble, Tcl_GetBoolean &mdash; convert from string to integer, double, or boolean</DD></DL>
-<DD><A HREF="GetInt.htm#M3" NAME="L373">SYNOPSIS</A>
+<DD><A HREF="GetInt.htm#M2" NAME="L339">NAME</A>
+<DL><DD>Tcl_GetInt, Tcl_GetDouble, Tcl_GetBoolean - convert from string to integer, double, or boolean</DD></DL>
+<DD><A HREF="GetInt.htm#M3" NAME="L340">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>int
@@ -18,14 +18,14 @@
 <DD>int
 <DD><B>Tcl_GetBoolean</B>(<I>interp, src, boolPtr</I>)
 </DL>
-<DD><A HREF="GetInt.htm#M4" NAME="L374">ARGUMENTS</A>
+<DD><A HREF="GetInt.htm#M4" NAME="L341">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="GetInt.htm#M5" NAME="L375">DESCRIPTION</A>
-<DD><A HREF="GetInt.htm#M6" NAME="L376">KEYWORDS</A>
+<DD><A HREF="GetInt.htm#M5" NAME="L342">DESCRIPTION</A>
+<DD><A HREF="GetInt.htm#M6" NAME="L343">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_GetInt, Tcl_GetDouble, Tcl_GetBoolean &mdash; convert from string to integer, double, or boolean
+Tcl_GetInt, Tcl_GetDouble, Tcl_GetBoolean - convert from string to integer, double, or boolean
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 int<BR>
@@ -55,8 +55,8 @@ integers).  Each of the procedures takes a <I>src</I> argument,
 converts it to an internal form of a particular type, and stores
 the converted value at the location indicated by the procedure's
 third argument.  If all goes well, each of the procedures returns
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.  If <I>src</I> does not have the proper syntax for the
-desired type then <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned, an error message is left
+<B>TCL_OK</B>.  If <I>src</I> does not have the proper syntax for the
+desired type then <B>TCL_ERROR</B> is returned, an error message is left
 in the interpreter's result, and nothing is stored at *<I>intPtr</I>
 or *<I>doublePtr</I> or *<I>boolPtr</I>.
 <P>
@@ -94,7 +94,8 @@ are also acceptable.
 
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#boolean">boolean</A>, <A href="../Keywords/C.htm#conversion">conversion</A>, <A href="../Keywords/D.htm#double">double</A>, <A href="../Keywords/F.htm#floating-point">floating-point</A>, <A href="../Keywords/I.htm#integer">integer</A>
-<div class="copy">Copyright &copy; 1989-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1989-1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

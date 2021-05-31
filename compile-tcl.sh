@@ -10,7 +10,10 @@ MODULE=tcl
 if [ -n "$SW_DEBUG" ]; then
     CONFIGURE_SWITCH+="--enable-symbols "
 fi
-
+## check symbol switch
+if [ -n "$SW_SYMBOLS" ]; then
+    CFLAGS="-g"
+fi
 ## check 64bit platform
 if [ "$BARCH" == "x86_64" ]; then
     CONFIGURE_SWITCH+="--enable-64bit "
@@ -31,14 +34,12 @@ fi
 ## copy source to temp compile path
 if [ ! -d $COMPILEDIR/$MODULE ] || [ -n "$SW_FORCECOPY" ]; then
     echo -n "Copying new sources ... "
-    rsync -a --exclude "*/.git" --exclude "*.fossil" $EXTSRCDIR/$MODULE $COMPILEDIR/
+    rsync -a --exclude "*/.git" $EXTSRCDIR/$MODULE $COMPILEDIR/
     rsync -a $PATCHDIR/$MODULE/tclsh.ico $COMPILEDIR/$MODULE/win/
     mkdir -p $INSTALLDIR/img
     rsync -a $PATCHDIR/$MODULE/mainicon.png $INSTALLDIR/img/
     rm -rf $COMPILEDIR/$MODULE/.fossil-settings
     echo done
-    ## apply mandatory patches
-    patch $COMPILEDIR/$MODULE/generic/tclIO.c $PATCHDIR/$MODULE/tcpnodelay.patch
 fi
 
 ## change to compile dir
@@ -49,8 +50,7 @@ else
 fi
 
 ## configure and make
-autoconf
-./configure --prefix=$INSTALLDIR --mandir=$iSHAREDIR --enable-threads $CONFIGURE_SWITCH
+(CFLAGS="$CFLAGS" ./configure --prefix=$INSTALLDIR --mandir=$iSHAREDIR --enable-threads $CONFIGURE_SWITCH)
 # --disable-shared
 make
 make install
@@ -59,18 +59,16 @@ echo -n "Copying extras ... "
 ## postprocess
 cd $INSTALLDIR/bin
 if [ -z "$WINDIR" ]; then
-    mv tclsh8.6 tclsh86
-    rsync -a tclsh86 tclsh
+    mv tclsh8.5 tclsh85
+    rsync -a tclsh85 tclsh
 else
     if [ -n "$SW_DEBUG" ]; then
-        mv tclsh86g.exe tclsh86.exe
-        rsync -a tclsh86.exe tclsh.exe
-        rsync -a tcl86g.dll tcl86.dll
+        mv tclsh85g.exe tclsh85.exe
+        rsync -a tclsh85.exe tclsh.exe
+        rsync -a tcl85g.dll tcl85.dll
     else
-        rsync -a tclsh86.exe tclsh.exe
+        rsync -a tclsh85.exe tclsh.exe
     fi
-    rsync -a $PATCHDIR/mingw/x32/*.dll $iSHARELIB32DIR
-    rsync -a $PATCHDIR/mingw/x64/*.dll $iSHARELIB64DIR
 fi
 
 ## install the shared folder
@@ -78,6 +76,10 @@ rsync -a $SHAREDIR/* $iSHAREDIR/
 ## copy licence files
 rsync -a $COMPILEDIR/$MODULE/license.terms $iLICENCEDIR/$MODULE.licence
 rsync -a $PATCHDIR/mingw/*.licence $iLICENCEDIR
+## copy important win libraries
+if [ -n "$WINDIR" ]; then
+    rsync $PATCHDIR/mingw/x64/*.dll $iSHARELIB64DIR
+fi
 echo done
 
 ## fini

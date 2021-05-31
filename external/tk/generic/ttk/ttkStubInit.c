@@ -3,7 +3,7 @@
  * It is compiled and linked in with the ttk package proper.
  */
 
-#include "tkInt.h"
+#include "tk.h"
 #include "ttkTheme.h"
 
 MODULE_SCOPE const TtkStubs ttkStubs;

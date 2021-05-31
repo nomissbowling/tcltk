@@ -3,34 +3,34 @@
 <HEAD><TITLE>unload manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> unload</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> unload</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="unload.htm#M2" NAME="L2133">NAME</A>
-<DL><DD>unload &mdash; Unload machine code</DD></DL>
-<DD><A HREF="unload.htm#M3" NAME="L2134">SYNOPSIS</A>
+<DD><A HREF="unload.htm#M2" NAME="L1870">NAME</A>
+<DL><DD>unload - Unload machine code</DD></DL>
+<DD><A HREF="unload.htm#M3" NAME="L1871">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="unload.htm#M4" NAME="L2135">DESCRIPTION</A>
+<DD><A HREF="unload.htm#M4" NAME="L1872">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="unload.htm#M5" NAME="L2136"><B>-nocomplain</B></A>
-<DD><A HREF="unload.htm#M6" NAME="L2137"><B>-keeplibrary</B></A>
-<DD><A HREF="unload.htm#M7" NAME="L2138"><B>--</B></A>
+<DD><A HREF="unload.htm#M5" NAME="L1873"><B>-nocomplain</B></A>
+<DD><A HREF="unload.htm#M6" NAME="L1874"><B>-keeplibrary</B></A>
+<DD><A HREF="unload.htm#M7" NAME="L1875"><B>--</B></A>
 </DL>
-<DD><A HREF="unload.htm#M8" NAME="L2139">UNLOAD OPERATION</A>
-<DD><A HREF="unload.htm#M9" NAME="L2140">UNLOAD HOOK PROTOTYPE</A>
-<DD><A HREF="unload.htm#M10" NAME="L2141">NOTES</A>
-<DD><A HREF="unload.htm#M11" NAME="L2142">PORTABILITY ISSUES</A>
+<DD><A HREF="unload.htm#M8" NAME="L1876">UNLOAD OPERATION</A>
+<DD><A HREF="unload.htm#M9" NAME="L1877">UNLOAD HOOK PROTOTYPE</A>
+<DD><A HREF="unload.htm#M10" NAME="L1878">NOTES</A>
+<DD><A HREF="unload.htm#M11" NAME="L1879">PORTABILITY ISSUES</A>
 <DL class="portability issues">
-<DD><A HREF="unload.htm#M12" NAME="L2143"><B>Unix</B></A>
+<DD><A HREF="unload.htm#M12" NAME="L1880"><B>Unix</B></A>
 </DL>
-<DD><A HREF="unload.htm#M13" NAME="L2144">BUGS</A>
-<DD><A HREF="unload.htm#M14" NAME="L2145">EXAMPLE</A>
-<DD><A HREF="unload.htm#M15" NAME="L2146">SEE ALSO</A>
-<DD><A HREF="unload.htm#M16" NAME="L2147">KEYWORDS</A>
+<DD><A HREF="unload.htm#M13" NAME="L1881">BUGS</A>
+<DD><A HREF="unload.htm#M14" NAME="L1882">EXAMPLE</A>
+<DD><A HREF="unload.htm#M15" NAME="L1883">SEE ALSO</A>
+<DD><A HREF="unload.htm#M16" NAME="L1884">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-unload &mdash; Unload machine code
+unload - Unload machine code
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>unload </B>?<I>switches</I>? <I>fileName</I><BR>
 <B>unload </B>?<I>switches</I>? <I>fileName packageName</I><BR>
@@ -94,20 +94,17 @@ instead of <I>pkg</I><B>_Unload</B>.
 If <B>unload</B> determines that a library is not unloadable (or unload
 functionality has been disabled during compilation), an error will be returned.
 If the library is unloadable, then <B>unload</B> will call the unload
-procedure. If the unload procedure returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>, <B>unload</B> will proceed
+procedure. If the unload procedure returns <B>TCL_OK</B>, <B>unload</B> will proceed
 and decrease the proper reference count (depending on the target interpreter
 type). When both reference counts have reached 0, the library will be
 detached from the process.
 <H4><A NAME="M9">UNLOAD HOOK PROTOTYPE</A></H4>
 The unload procedure must match the following prototype:
-<P>
-<PRE>typedef int <B>Tcl_PackageUnloadProc</B>(
-        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
-        int <I>flags</I>);</PRE>
+<PRE>typedef int Tcl_PackageUnloadProc(<A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>, int <I>flags</I>);</PRE>
 <P>
 The <I>interp</I> argument identifies the interpreter from which the
 library is to be unloaded.  The unload procedure must return
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> or <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> to indicate whether or not it completed
+<B>TCL_OK</B> or <B>TCL_ERROR</B> to indicate whether or not it completed
 successfully;  in the event of an error it should set the interpreter's result
 to point to an error message.  In this case, the result of the
 <B>unload</B> command will be the result returned by the unload procedure.
@@ -155,11 +152,8 @@ from the application while some interpreters will continue to use it).
 <H3><A NAME="M14">EXAMPLE</A></H3>
 If an unloadable module in the file <B>foobar.dll</B> had been loaded
 using the <B><A HREF="../TclCmd/load.htm">load</A></B> command like this (on Windows):
-<P>
 <PRE>load c:/some/dir/foobar.dll</PRE>
-<P>
 then it would be unloaded like this:
-<P>
 <PRE><B>unload</B> c:/some/dir/foobar.dll</PRE>
 <P>
 This allows a C code module to be installed temporarily into a
@@ -167,9 +161,10 @@ long-running Tcl program and then removed again (either because it is
 no longer needed or because it is being updated with a new version)
 without having to shut down the overall Tcl process.
 <H3><A NAME="M15">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/info.htm">info sharedlibextension</A></B>, <B><A HREF="../TclCmd/load.htm">load</A></B>, <B><A HREF="../TclCmd/safe.htm">safe</A></B>
+<B><A HREF="../TclCmd/info.htm">info sharedlibextension</A></B>, <B><A HREF="../TclCmd/load.htm">load</A></B>, <B>safe</B>
 <H3><A NAME="M16">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#binary code">binary code</A>, <A href="../Keywords/U.htm#unloading">unloading</A>, <A href="../Keywords/S.htm#safe interpreter">safe interpreter</A>, <A href="../Keywords/S.htm#shared library">shared library</A>
-<div class="copy">Copyright &copy; 2003 George Petasis &lt;petasis(at)iit.demokritos.gr&gt;.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2003 George Petasis &lt;petasis(at)iit.demokritos.gr&gt;.
 </div>
 </BODY></HTML>

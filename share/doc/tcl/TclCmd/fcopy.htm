@@ -3,10 +3,10 @@
 <HEAD><TITLE>fcopy manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> fcopy</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> fcopy</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-fcopy &mdash; Copy data from one channel to another
+fcopy - Copy data from one channel to another
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>fcopy </B><I>inchan</I> <I>outchan</I> ?<B>-size </B><I>size</I>? ?<B>-command </B><I>callback</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -83,12 +83,12 @@ the system will assume that the incoming
 bytes are valid UTF-8 characters and convert them according to the
 output encoding. The behaviour of the system for bytes which are not
 valid UTF-8 characters is undefined in this case.
+
 <H3><A NAME="M5">EXAMPLES</A></H3>
 The first example transfers the contents of one channel exactly to
 another. Note that when copying one file to another, it is better to
 use <B><A HREF="../TclCmd/file.htm">file copy</A></B> which also copies file metadata (e.g. the file
 access permissions) where possible.
-<P>
 <PRE>fconfigure $in -translation binary
 fconfigure $out -translation binary
 <B>fcopy</B> $in $out</PRE>
@@ -98,14 +98,13 @@ passed the number of bytes transferred.
 It also uses vwait to put the application into the event loop.
 Of course, this simplified example could be done without the command 
 callback.
-<P>
 <PRE>proc Cleanup {in out bytes {error {}}} {
     global total
     set total $bytes
     close $in
     close $out
     if {[string length $error] != 0} {
-        # error occurred during the copy
+	# error occurred during the copy
     }
 }
 set in [open $file1]
@@ -114,17 +113,16 @@ set out [socket $server $port]
 vwait total</PRE>
 <P>
 The third example copies in chunks and tests for end of file
-in the command callback.
-<P>
+in the command callback
 <PRE>proc CopyMore {in out chunk bytes {error {}}} {
     global total done
     incr total $bytes
     if {([string length $error] != 0) || [eof $in]} {
-        set done $total
-        close $in
-        close $out
+	set done $total
+	close $in
+	close $out
     } else {
-        <B>fcopy</B> $in $out -size $chunk &#92;
+	<B>fcopy</B> $in $out -size $chunk &#92;
                 -command [list CopyMore $in $out $chunk]
     }
 }
@@ -139,7 +137,8 @@ vwait done</PRE>
 <B><A HREF="../TclCmd/eof.htm">eof</A></B>, <B><A HREF="../TclCmd/fblocked.htm">fblocked</A></B>, <B><A HREF="../TclCmd/fconfigure.htm">fconfigure</A></B>, <B><A HREF="../TclCmd/file.htm">file</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#blocking">blocking</A>, <A href="../Keywords/C.htm#channel">channel</A>, <A href="../Keywords/E.htm#end of line">end of line</A>, <A href="../Keywords/E.htm#end of file">end of file</A>, <A href="../Keywords/N.htm#nonblocking">nonblocking</A>, <A href="../Keywords/R.htm#read">read</A>, <A href="../Keywords/T.htm#translation">translation</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

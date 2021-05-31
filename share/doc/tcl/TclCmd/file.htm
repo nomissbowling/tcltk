@@ -3,65 +3,64 @@
 <HEAD><TITLE>file manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> file</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> file</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="file.htm#M2" NAME="L529">NAME</A>
-<DL><DD>file &mdash; Manipulate file names and attributes</DD></DL>
-<DD><A HREF="file.htm#M3" NAME="L530">SYNOPSIS</A>
+<DD><A HREF="file.htm#M2" NAME="L441">NAME</A>
+<DL><DD>file - Manipulate file names and attributes</DD></DL>
+<DD><A HREF="file.htm#M3" NAME="L442">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="file.htm#M4" NAME="L531">DESCRIPTION</A>
+<DD><A HREF="file.htm#M4" NAME="L443">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="file.htm#M5" NAME="L532"><B>file atime </B><I>name</I> ?<B>time</B>?</A>
-<DD><A HREF="file.htm#M6" NAME="L533"><B>file attributes </B><I>name</I></A>
-<DD><A HREF="file.htm#M7" NAME="L534"><B>file attributes </B><I>name</I> ?<B>option</B>?</A>
-<DD><A HREF="file.htm#M8" NAME="L535"><B>file attributes </B><I>name</I> ?<B>option value option value...</B>?</A>
-<DD><A HREF="file.htm#M9" NAME="L536"><B>file channels ?</B><I>pattern</I>?</A>
-<DD><A HREF="file.htm#M10" NAME="L537"><B>file copy </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> <I>target</I></A>
-<DD><A HREF="file.htm#M11" NAME="L538"><B>file copy </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> ?<I>source</I> ...? <I>targetDir</I></A>
-<DD><A HREF="file.htm#M12" NAME="L539"><B>file delete </B>?<B>-force</B>? ?<B>--</B>? ?<I>pathname</I> ... ?</A>
-<DD><A HREF="file.htm#M13" NAME="L540"><B>file dirname </B><I>name</I></A>
-<DD><A HREF="file.htm#M14" NAME="L541"><B>file executable </B><I>name</I></A>
-<DD><A HREF="file.htm#M15" NAME="L542"><B>file exists </B><I>name</I></A>
-<DD><A HREF="file.htm#M16" NAME="L543"><B>file extension </B><I>name</I></A>
-<DD><A HREF="file.htm#M17" NAME="L544"><B>file isdirectory </B><I>name</I></A>
-<DD><A HREF="file.htm#M18" NAME="L545"><B>file isfile </B><I>name</I></A>
-<DD><A HREF="file.htm#M19" NAME="L546"><B>file join </B><I>name</I> ?<I>name ...</I>?</A>
-<DD><A HREF="file.htm#M20" NAME="L547"><B>file link ?</B><I>-linktype</I>? <I>linkName</I> ?<I>target</I>?</A>
-<DD><A HREF="file.htm#M21" NAME="L548"><B>file lstat </B><I>name varName</I></A>
-<DD><A HREF="file.htm#M22" NAME="L549"><B>file mkdir ?</B><I>dir</I> ...?</A>
-<DD><A HREF="file.htm#M23" NAME="L550"><B>file mtime </B><I>name</I> ?<I>time</I>?</A>
-<DD><A HREF="file.htm#M24" NAME="L551"><B>file nativename </B><I>name</I></A>
-<DD><A HREF="file.htm#M25" NAME="L552"><B>file normalize </B><I>name</I></A>
-<DD><A HREF="file.htm#M26" NAME="L553"><B>file owned </B><I>name</I></A>
-<DD><A HREF="file.htm#M27" NAME="L554"><B>file pathtype </B><I>name</I></A>
-<DD><A HREF="file.htm#M28" NAME="L555"><B>file readable </B><I>name</I></A>
-<DD><A HREF="file.htm#M29" NAME="L556"><B>file readlink </B><I>name</I></A>
-<DD><A HREF="file.htm#M30" NAME="L557"><B>file rename </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> <I>target</I></A>
-<DD><A HREF="file.htm#M31" NAME="L558"><B>file rename </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> ?<I>source</I> ...? <I>targetDir</I></A>
-<DD><A HREF="file.htm#M32" NAME="L559"><B>file rootname </B><I>name</I></A>
-<DD><A HREF="file.htm#M33" NAME="L560"><B>file separator</B> ?<I>name</I>?</A>
-<DD><A HREF="file.htm#M34" NAME="L561"><B>file size </B><I>name</I></A>
-<DD><A HREF="file.htm#M35" NAME="L562"><B>file split </B><I>name</I></A>
-<DD><A HREF="file.htm#M36" NAME="L563"><B>file stat  </B><I>name varName</I></A>
-<DD><A HREF="file.htm#M37" NAME="L564"><B>file system </B><I>name</I></A>
-<DD><A HREF="file.htm#M38" NAME="L565"><B>file tail </B><I>name</I></A>
-<DD><A HREF="file.htm#M39" NAME="L566"><B>file tempfile</B> ?<I>nameVar</I>? ?<I>template</I>?</A>
-<DD><A HREF="file.htm#M40" NAME="L567"><B>file type </B><I>name</I></A>
-<DD><A HREF="file.htm#M41" NAME="L568"><B>file volumes</B></A>
-<DD><A HREF="file.htm#M42" NAME="L569"><B>file writable </B><I>name</I></A>
+<DD><A HREF="file.htm#M5" NAME="L444"><B>file atime </B><I>name</I> ?<B>time</B>?</A>
+<DD><A HREF="file.htm#M6" NAME="L445"><B>file attributes </B><I>name</I></A>
+<DD><A HREF="file.htm#M7" NAME="L446"><B>file attributes </B><I>name</I> ?<B>option</B>?</A>
+<DD><A HREF="file.htm#M8" NAME="L447"><B>file attributes </B><I>name</I> ?<B>option value option value...</B>?</A>
+<DD><A HREF="file.htm#M9" NAME="L448"><B>file channels ?</B><I>pattern</I>?</A>
+<DD><A HREF="file.htm#M10" NAME="L449"><B>file copy </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> <I>target</I></A>
+<DD><A HREF="file.htm#M11" NAME="L450"><B>file copy </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> ?<I>source</I> ...? <I>targetDir</I></A>
+<DD><A HREF="file.htm#M12" NAME="L451"><B>file delete </B>?<B>-force</B>? ?<B>--</B>? <I>pathname</I> ?<I>pathname</I> ... ?</A>
+<DD><A HREF="file.htm#M13" NAME="L452"><B>file dirname </B><I>name</I></A>
+<DD><A HREF="file.htm#M14" NAME="L453"><B>file executable </B><I>name</I></A>
+<DD><A HREF="file.htm#M15" NAME="L454"><B>file exists </B><I>name</I></A>
+<DD><A HREF="file.htm#M16" NAME="L455"><B>file extension </B><I>name</I></A>
+<DD><A HREF="file.htm#M17" NAME="L456"><B>file isdirectory </B><I>name</I></A>
+<DD><A HREF="file.htm#M18" NAME="L457"><B>file isfile </B><I>name</I></A>
+<DD><A HREF="file.htm#M19" NAME="L458"><B>file join </B><I>name</I> ?<I>name ...</I>?</A>
+<DD><A HREF="file.htm#M20" NAME="L459"><B>file link ?</B><I>-linktype</I>? <I>linkName</I> ?<I>target</I>?</A>
+<DD><A HREF="file.htm#M21" NAME="L460"><B>file lstat </B><I>name varName</I></A>
+<DD><A HREF="file.htm#M22" NAME="L461"><B>file mkdir </B><I>dir</I> ?<I>dir</I> ...?</A>
+<DD><A HREF="file.htm#M23" NAME="L462"><B>file mtime </B><I>name</I> ?<I>time</I>?</A>
+<DD><A HREF="file.htm#M24" NAME="L463"><B>file nativename </B><I>name</I></A>
+<DD><A HREF="file.htm#M25" NAME="L464"><B>file normalize </B><I>name</I></A>
+<DD><A HREF="file.htm#M26" NAME="L465"><B>file owned </B><I>name</I></A>
+<DD><A HREF="file.htm#M27" NAME="L466"><B>file pathtype </B><I>name</I></A>
+<DD><A HREF="file.htm#M28" NAME="L467"><B>file readable </B><I>name</I></A>
+<DD><A HREF="file.htm#M29" NAME="L468"><B>file readlink </B><I>name</I></A>
+<DD><A HREF="file.htm#M30" NAME="L469"><B>file rename </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> <I>target</I></A>
+<DD><A HREF="file.htm#M31" NAME="L470"><B>file rename </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> ?<I>source</I> ...? <I>targetDir</I></A>
+<DD><A HREF="file.htm#M32" NAME="L471"><B>file rootname </B><I>name</I></A>
+<DD><A HREF="file.htm#M33" NAME="L472"><B>file separator</B> ?<I>name</I>?</A>
+<DD><A HREF="file.htm#M34" NAME="L473"><B>file size </B><I>name</I></A>
+<DD><A HREF="file.htm#M35" NAME="L474"><B>file split </B><I>name</I></A>
+<DD><A HREF="file.htm#M36" NAME="L475"><B>file stat  </B><I>name varName</I></A>
+<DD><A HREF="file.htm#M37" NAME="L476"><B>file system </B><I>name</I></A>
+<DD><A HREF="file.htm#M38" NAME="L477"><B>file tail </B><I>name</I></A>
+<DD><A HREF="file.htm#M39" NAME="L478"><B>file type </B><I>name</I></A>
+<DD><A HREF="file.htm#M40" NAME="L479"><B>file volumes</B></A>
+<DD><A HREF="file.htm#M41" NAME="L480"><B>file writable </B><I>name</I></A>
 </DL>
-<DD><A HREF="file.htm#M43" NAME="L570">PORTABILITY ISSUES</A>
+<DD><A HREF="file.htm#M42" NAME="L481">PORTABILITY ISSUES</A>
 <DL class="portability issues">
-<DD><A HREF="file.htm#M44" NAME="L571"><B>Unix</B></A>
+<DD><A HREF="file.htm#M43" NAME="L482"><B>Unix</B></A>
 </DL>
-<DD><A HREF="file.htm#M45" NAME="L572">EXAMPLES</A>
-<DD><A HREF="file.htm#M46" NAME="L573">SEE ALSO</A>
-<DD><A HREF="file.htm#M47" NAME="L574">KEYWORDS</A>
+<DD><A HREF="file.htm#M44" NAME="L483">EXAMPLES</A>
+<DD><A HREF="file.htm#M45" NAME="L484">SEE ALSO</A>
+<DD><A HREF="file.htm#M46" NAME="L485">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-file &mdash; Manipulate file names and attributes
+file - Manipulate file names and attributes
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>file </B><I>option</I> <I>name</I> ?<I>arg arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -141,11 +140,11 @@ within a single filesystem, <I>file copy</I> will copy soft links (i.e.
 the links themselves are copied, not the things they point to).  Trying
 to overwrite a non-empty directory, overwrite a directory with a file,
 or overwrite a file with a directory will all result in errors even if
-<B>-force</B> was specified.  Arguments are processed in the order
+<I>-force</I> was specified.  Arguments are processed in the order
 specified, halting at the first error, if any.  A <B>--</B> marks
 the end of switches; the argument following the <B>--</B> will be
 treated as a <I>source</I> even if it starts with a <B>-</B>.
-<P><DT><A NAME="M12"><B>file delete </B>?<B>-force</B>? ?<B>--</B>? ?<I>pathname</I> ... ?</A><DD>
+<P><DT><A NAME="M12"><B>file delete </B>?<B>-force</B>? ?<B>--</B>? <I>pathname</I> ?<I>pathname</I> ... ?</A><DD>
 Removes the file or directory specified by each <I>pathname</I>
 argument.  Non-empty directories will be removed only if the
 <B>-force</B> option is specified.  When operating on symbolic links,
@@ -169,20 +168,15 @@ only contains one path element, then returns
 &#8220;<B>.</B>&#8221;.
 If <I>name</I> refers to a root directory, then the root directory is
 returned.  For example,
-<P>
-<PRE><B>file dirname</B> c:/</PRE>
-<P>
+<PRE><B>file dirname c:/</B></PRE>
 returns <B>c:/</B>. 
 <P>
 Note that tilde substitution will only be
 performed if it is necessary to complete the command. For example,
-<P>
-<PRE><B>file dirname</B> ~/src/foo.c</PRE>
-<P>
+<PRE><B>file dirname ~/src/foo.c</B></PRE>
 returns <B>~/src</B>, whereas
-<P>
-<PRE><B>file dirname</B> ~</PRE>
-<P>returns <B>/home</B> (or something similar).
+<PRE><B>file dirname ~</B></PRE>
+returns <B>/home</B> (or something similar).
 <P><DT><A NAME="M14"><B>file executable </B><I>name</I></A><DD>
 Returns <B>1</B> if file <I>name</I> is executable by the current user,
 <B>0</B> otherwise.  
@@ -203,9 +197,7 @@ separator for the current platform.  If a particular <I>name</I> is
 relative, then it will be joined to the previous file name argument.
 Otherwise, any earlier arguments will be discarded, and joining will
 proceed from the current argument.  For example,
-<P>
-<PRE><B>file join</B> a b /foo bar</PRE>
-<P>
+<PRE><B>file join a b /foo bar</B></PRE>
 returns <B>/foo/bar</B>.
 <P>Note that any of the names can contain separators, and that the result
 is always canonical for the current platform: <B>/</B> for Unix and
@@ -232,9 +224,9 @@ If the user wishes to make a link of a specific type only, (and signal an
 error if for some reason that is not possible), then the optional
 <I>-linktype</I> argument should be given.  Accepted values for
 <I>-linktype</I> are
-&#8220;<B>-symbolic</B>&#8221;
+&#8220;-symbolic&#8221;
 and
-&#8220;<B>-hard</B>&#8221;.
+&#8220;-hard&#8221;.
 <P>On Unix, symbolic links can be made to relative paths, and those paths
 must be relative to the actual <I>linkName</I>'s location (not to the
 cwd), but on all other platforms where relative links are not supported,
@@ -257,7 +249,7 @@ refers to a symbolic link the information returned in <I>varName</I>
 is for the link rather than the file it refers to.  On systems that
 do not support symbolic links this option behaves exactly the same
 as the <B>stat</B> option.
-<P><DT><A NAME="M22"><B>file mkdir ?</B><I>dir</I> ...?</A><DD>
+<P><DT><A NAME="M22"><B>file mkdir </B><I>dir</I> ?<I>dir</I> ...?</A><DD>
 Creates each directory specified.  For each pathname <I>dir</I> specified,
 this command will create all non-existing parent directories as
 well as <I>dir</I> itself.  If an existing directory is specified, then
@@ -274,7 +266,7 @@ or set then an error is generated.
 <P><DT><A NAME="M24"><B>file nativename </B><I>name</I></A><DD>
 Returns the platform-specific name of the file. This is useful if the
 filename is needed to pass to a platform-specific call, such as to a
-subprocess via <B><A HREF="../TclCmd/exec.htm">exec</A></B> under Windows (see <B><A HREF="#M45">EXAMPLES</A></B> below).
+subprocess via <B><A HREF="../TclCmd/exec.htm">exec</A></B> under Windows (see <B>EXAMPLES</B> below).
 <P><DT><A NAME="M25"><B>file normalize </B><I>name</I></A><DD>
 Returns a unique normalized path representation for the file-system
 object (file, directory, link, etc), whose string value can be used as a
@@ -351,11 +343,8 @@ first element of the list will have the same path type as <I>name</I>.
 All other elements will be relative.  Path separators will be discarded
 unless they are needed to ensure that an element is unambiguously relative.
 For example, under Unix
-<P>
-<PRE><B>file split</B> /foo/~bar/baz</PRE>
-<P>returns
-&#8220;<B>/  foo  ./~bar  baz</B>&#8221;
-to ensure that later commands
+<PRE>file split /foo/~bar/baz</PRE>
+returns <B>/  foo  ./~bar  baz</B> to ensure that later commands
 that use the third component do not attempt to perform tilde
 substitution.
 <P><DT><A NAME="M36"><B>file stat  </B><I>name varName</I></A><DD>
@@ -395,24 +384,11 @@ Returns all of the characters in the last filesystem component of
 If <I>name</I> contains no separators then returns <I>name</I>.  So, 
 <B>file tail a/b</B>, <B>file tail a/b/</B> and <B>file tail b</B> all
 return <B>b</B>.
-<P><DT><A NAME="M39"><B>file tempfile</B> ?<I>nameVar</I>? ?<I>template</I>?</A><DD>
-Creates a temporary file and returns a read-write channel opened on that file.
-If the <I>nameVar</I> is given, it specifies a variable that the name of the
-temporary file will be written into; if absent, Tcl will attempt to arrange
-for the temporary file to be deleted once it is no longer required. If the
-<I>template</I> is present, it specifies parts of the template of the filename
-to use when creating it (such as the directory, base-name or extension) though
-some platforms may ignore some or all of these parts and use a built-in
-default instead.
-<P>
-Note that temporary files are <I>only</I> ever created on the native
-filesystem. As such, they can be relied upon to be used with operating-system
-native APIs and external programs that require a filename.
-<P><DT><A NAME="M40"><B>file type </B><I>name</I></A><DD>
+<P><DT><A NAME="M39"><B>file type </B><I>name</I></A><DD>
 Returns a string giving the type of file <I>name</I>, which will be one of
 <B>file</B>, <B>directory</B>, <B>characterSpecial</B>, <B>blockSpecial</B>,
 <B>fifo</B>, <B>link</B>, or <B><A HREF="../TclCmd/socket.htm">socket</A></B>.
-<P><DT><A NAME="M41"><B>file volumes</B></A><DD>
+<P><DT><A NAME="M40"><B>file volumes</B></A><DD>
 Returns the absolute paths to the volumes mounted on the system, as a
 proper Tcl list.  Without any virtual filesystems mounted as root
 volumes, on UNIX, the command will always return
@@ -423,48 +399,46 @@ On Windows, it will return a list of the available local drives
 &#8220;a:/ c:/&#8221;).
 If any virtual filesystem has mounted additional
 volumes, they will be in the returned list.
-<P><DT><A NAME="M42"><B>file writable </B><I>name</I></A><DD>
+<P><DT><A NAME="M41"><B>file writable </B><I>name</I></A><DD>
 Returns <B>1</B> if file <I>name</I> is writable by the current user,
 <B>0</B> otherwise.
 <P></DL>
-<H3><A NAME="M43">PORTABILITY ISSUES</A></H3>
+<H3><A NAME="M42">PORTABILITY ISSUES</A></H3>
 <DL class="portability issues">
-<DT><A NAME="M44"><B>Unix</B></A><DD>
+<DT><A NAME="M43"><B>Unix</B></A><DD>
 These commands always operate using the real user and group identifiers,
 not the effective ones. 
 <P></DL>
-<H3><A NAME="M45">EXAMPLES</A></H3>
+<H3><A NAME="M44">EXAMPLES</A></H3>
 This procedure shows how to search for C files in a given directory
 that have a correspondingly-named object file in the current
 directory:
-<P>
 <PRE>proc findMatchingCFiles {dir} {
-    set files {}
-    switch $::tcl_platform(platform) {
-        windows {
-            set ext .obj
-        }
-        unix {
-           set ext .o
-        }
-    }
-    foreach file [glob -nocomplain -directory $dir *.c] {
-        set objectFile [<B>file tail</B> [<B>file rootname</B> $file]]$ext
-        if {[<B>file exists</B> $objectFile]} {
-            lappend files $file
-        }
-    }
-    return $files
+   set files {}
+   switch $::tcl_platform(platform) {
+      windows {
+         set ext .obj
+      }
+      unix {
+         set ext .o
+      }
+   }
+   foreach file [glob -nocomplain -directory $dir *.c] {
+      set objectFile [<B>file tail</B> [<B>file rootname</B> $file]]$ext
+      if {[<B>file exists</B> $objectFile]} {
+         lappend files $file
+      }
+   }
+   return $files
 }</PRE>
 <P>
 Rename a file and leave a symbolic link pointing from the old location
 to the new place:
-<P>
 <PRE>set oldName foobar.txt
 set newName foo/bar.txt
 # Make sure that where we're going to move to exists...
 if {![<B>file isdirectory</B> [<B>file dirname</B> $newName]]} {
-    <B>file mkdir</B> [<B>file dirname</B> $newName]
+   <B>file mkdir</B> [<B>file dirname</B> $newName]
 }
 <B>file rename</B> $oldName $newName
 <B>file link</B> -symbolic $oldName $newName</PRE>
@@ -474,13 +448,13 @@ On Windows, a file can be
 easily enough (equivalent to double-clicking on it in the Explorer
 interface) but the name passed to the operating system must be in
 native format:
-<P>
 <PRE>exec {*}[auto_execok start] {} [<B>file nativename</B> ~/example.txt]</PRE>
-<H3><A NAME="M46">SEE ALSO</A></H3>
+<H3><A NAME="M45">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/filename.htm">filename</A></B>, <B><A HREF="../TclCmd/open.htm">open</A></B>, <B><A HREF="../TclCmd/close.htm">close</A></B>, <B><A HREF="../TclCmd/eof.htm">eof</A></B>, <B><A HREF="../TclCmd/gets.htm">gets</A></B>, <B><A HREF="../TclCmd/tell.htm">tell</A></B>, <B><A HREF="../TclCmd/seek.htm">seek</A></B>, <B><A HREF="../TclCmd/fblocked.htm">fblocked</A></B>, <B><A HREF="../TclCmd/flush.htm">flush</A></B>
-<H3><A NAME="M47">KEYWORDS</A></H3>
-<A href="../Keywords/A.htm#attributes">attributes</A>, <A href="../Keywords/C.htm#copy files">copy files</A>, <A href="../Keywords/D.htm#delete files">delete files</A>, <A href="../Keywords/D.htm#directory">directory</A>, <A href="../Keywords/F.htm#file">file</A>, <A href="../Keywords/M.htm#move files">move files</A>, <A href="../Keywords/N.htm#name">name</A>, <A href="../Keywords/R.htm#rename files">rename files</A>, <A href="../Keywords/S.htm#stat">stat</A>, <A href="../Keywords/U.htm#user">user</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<H3><A NAME="M46">KEYWORDS</A></H3>
+<A href="../Keywords/A.htm#attributes">attributes</A>, <A href="../Keywords/C.htm#copy files">copy files</A>, <A href="../Keywords/D.htm#delete files">delete files</A>, <A href="../Keywords/D.htm#directory">directory</A>, <A href="../Keywords/F.htm#file">file</A>, <A href="../Keywords/M.htm#move files">move files</A>, <A href="../Keywords/N.htm#name">name</A>, <A href="../Keywords/R.htm#rename files">rename files</A>, <A href="../Keywords/S.htm#stat">stat</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

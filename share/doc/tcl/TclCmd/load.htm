@@ -3,14 +3,14 @@
 <HEAD><TITLE>load manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> load</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> load</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-load &mdash; Load machine code and initialize new commands
+load - Load machine code and initialize new commands
 <H3><A NAME="M3">SYNOPSIS</A></H3>
-<B>load</B> ?<B>-global</B>? ?<B>-lazy</B>? ?<B>--</B>? <I>fileName</I><BR>
-<B>load</B> ?<B>-global</B>? ?<B>-lazy</B>? ?<B>--</B>? <I>fileName packageName</I><BR>
-<B>load</B> ?<B>-global</B>? ?<B>-lazy</B>? ?<B>--</B>? <I>fileName packageName interp</I><BR>
+<B>load </B><I>fileName</I><BR>
+<B>load </B><I>fileName packageName</I><BR>
+<B>load </B><I>fileName packageName interp</I><BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 This command loads binary code from a file into the
 application's address space and calls an initialization procedure
@@ -45,16 +45,13 @@ instead of <I>pkg</I><B>_Init</B>.
 The <I>pkg</I><B>_SafeInit</B> function should be written carefully, so that it
 initializes the safe interpreter only with partial functionality provided
 by the package that is safe for use by untrusted code. For more information
-on Safe-Tcl, see the <B><A HREF="../TclCmd/safe.htm">safe</A></B> manual entry.
+on Safe-Tcl, see the <B>safe</B> manual entry.
 <P>
 The initialization procedure must match the following prototype:
-<P>
-<PRE>typedef int <B>Tcl_PackageInitProc</B>(
-        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>);</PRE>
-<P>
+<PRE>typedef int Tcl_PackageInitProc(<A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>);</PRE>
 The <I>interp</I> argument identifies the interpreter in which the
 package is to be loaded.  The initialization procedure must return
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> or <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> to indicate whether or not it completed
+<B>TCL_OK</B> or <B>TCL_ERROR</B> to indicate whether or not it completed
 successfully;  in the event of an error it should set the interpreter's result
 to point to an error message.  The result of the <B>load</B> command
 will be the result returned by the initialization procedure.
@@ -95,22 +92,6 @@ Otherwise, the <B>load</B> command searches for a dynamically loaded
 package by that name, and uses it if it is found.  If several
 different files have been <B>load</B>ed with different versions of
 the package, Tcl picks the file that was loaded first.
-<P>
-If <B>-global</B> is specified preceding the filename, all symbols
-found in the shared library are exported for global use by other
-libraries. The option <B>-lazy</B> delays the actual loading of
-symbols until their first actual use. The options may be abbreviated.
-The option <B>--</B> indicates the end of the options, and should
-be used if you wish to use a filename which starts with <B>-</B>
-and you provide a packageName to the <B>load</B> command.
-<P>
-On platforms which do not support the <B>-global</B> or <B>-lazy</B>
-options, the options still exist but have no effect. Note that use
-of the <B>-global</B> or <B>-lazy</B> option may lead to crashes
-in your application later (in case of symbol conflicts resp. missing
-symbols), which cannot be detected during the <B>load</B>. So, only
-use this when you know what you are doing, you will not get a nice
-error message when something is wrong with the loaded library.
 <H3><A NAME="M5">PORTABILITY ISSUES</A></H3>
 <DL class="portability issues">
 <DT><A NAME="M6"><B>Windows</B></A><DD>
@@ -125,7 +106,6 @@ When loading a DLL in the current directory, Windows will ignore
 &#8220;./&#8221;
 as a path specifier and use a search heuristic to find the DLL instead.
 To avoid this, load the DLL with:
-<P>
 <PRE><B>load</B> [file join [pwd] mylib.DLL]</PRE>
 <P></DL>
 <H3><A NAME="M7">BUGS</A></H3>
@@ -139,7 +119,7 @@ The following is a minimal extension:
 <PRE>#include &lt;tcl.h&gt;
 #include &lt;stdio.h&gt;
 static int fooCmd(ClientData clientData,
-        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *interp, int objc, <A HREF="../TclLib/Object.htm">Tcl_Obj</A> *const objv[]) {
+        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *interp, int objc, Tcl_Obj *const objv[]) {
     printf(&quot;called with %d arguments&#92;n&quot;, objc);
     return TCL_OK;
 }
@@ -158,20 +138,21 @@ it can then be loaded into Tcl with the following:
 <P>
 <PRE># Load the extension
 switch $tcl_platform(platform) {
-    windows {
-        <B>load</B> [file join [pwd] foo.dll]
-    }
-    unix {
-        <B>load</B> [file join [pwd] libfoo[info sharedlibextension]]
-    }
+   windows {
+      <B>load</B> [file join [pwd] foo.dll]
+   }
+   unix {
+      <B>load</B> [file join [pwd] libfoo[info sharedlibextension]]
+   }
 }
 
 # Now execute the command defined by the extension
 foo</PRE>
 <H3><A NAME="M9">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/info.htm">info sharedlibextension</A></B>, <B><A HREF="../TclCmd/package.htm">package</A></B>, <B><A HREF="../TclLib/StaticPkg.htm">Tcl_StaticPackage</A></B>, <B><A HREF="../TclCmd/safe.htm">safe</A></B>
+<B><A HREF="../TclCmd/info.htm">info sharedlibextension</A></B>, <B><A HREF="../TclLib/StaticPkg.htm">Tcl_StaticPackage</A></B>, <B>safe</B>
 <H3><A NAME="M10">KEYWORDS</A></H3>
-<A href="../Keywords/B.htm#binary code">binary code</A>, <A href="../Keywords/D.htm#dynamic library">dynamic library</A>, <A href="../Keywords/L.htm#load">load</A>, <A href="../Keywords/S.htm#safe interpreter">safe interpreter</A>, <A href="../Keywords/S.htm#shared library">shared library</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<A href="../Keywords/B.htm#binary code">binary code</A>, <A href="../Keywords/L.htm#loading">loading</A>, <A href="../Keywords/S.htm#safe interpreter">safe interpreter</A>, <A href="../Keywords/S.htm#shared library">shared library</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

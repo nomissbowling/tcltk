@@ -1,0 +1,1258 @@
+<!-- $Id: examples.xml 267 2011-03-21 20:07:51Z lbayuk $ -->
+<chapter id="pgtcl-examples">
+<title>Example Programs</title>
+<abstract>
+  <title></title>
+  <para>
+This chapter contains several examples of <application>pgtcl</application>.
+Most of these are not self-contained programs, and in many cases error
+checking has been omitted for clarity.
+  </para>
+</abstract>
+
+<sect1 id="pgtcl-example-cnq-exec">
+<title>Example - Connect and query with pg_exec</title>
+
+<para>
+This example shows how to connect to the database
+and get the server version string using <xref linkend="pg-exec" />.
+</para>
+
+<para>
+Note that <literal>pg_result ... -getTuple</literal> always returns a Tcl
+list of values, even if only a single column of data is produced by the query.
+To get the first (or only) column value, you must use
+<function>lindex</function>.
+</para>
+
+<example id="pgtcl-example-cnq-exec-code">
+<title>Connect to the database and get its version with pg_exec</title>
+<programlisting>
+set conn [pg_connect -conninfo "host=server.example.com dbname=template1 user=guest password=secret"]
+set result [pg_exec $conn "SELECT version()"]
+set value [lindex [pg_result $result -getTuple 0] 0]
+pg_result $result -clear
+puts "Server version is: $value"
+pg_disconnect $conn
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-cnq-execute">
+<title>Example - Connect and query with pg_execute</title>
+
+<para>
+This example is the same as the previous example, except
+it uses <xref linkend="pg-execute" /> instead of <xref linkend="pg-exec" /> to
+query the database. <function>pg_execute</function> is simpler to use
+in some circumstances, but less flexible since it does not return
+a result handle.
+</para>
+
+<para>
+In this example, we use the fact that <function>pg_execute</function> will
+store the query values as variables named by the result column names
+(if not given the <option>-array name</option> option), and if the query
+returns a single row there is no need for a procedure body.
+</para>
+
+<example id="pgtcl-example-cnq-execute-code">
+<title>Connect to the database and get its version with pg_execute</title>
+<programlisting>
+set conn [pg_connect -conninfo "host=server.example.com dbname=template1 user=guest password=secret"]
+pg_execute $conn "SELECT version() AS v"
+puts "Server version is: $v"
+pg_disconnect $conn
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-dblist">
+<title>Example - Get List of Databases</title>
+<para>
+The examples in this section show a procedure to return a list of
+the databases known to the server (which are stored in the
+<literal>pg_database</literal> table).
+</para>
+<para>
+Note that the connect command does not specify a username or password. This
+would usually fail, unless the credentials are provided through some other
+means such as the environment variables.
+</para>
+
+<para>
+The first example uses the <xref linkend="pg-exec" /> function.
+</para>
+
+<example id="pgtcl-example-dblist-code1">
+<title>Connect and get list of databases - pg_exec</title>
+<programlisting>
+proc getDBs { {host "localhost"} {port "5432"} } {
+    set conn [pg_connect -conninfo "host=$host port=$port dbname=template1"]
+    set res [pg_exec $conn "SELECT datname FROM pg_database ORDER BY datname"]
+    set datnames {}
+    set ntups [pg_result $res -numTuples]
+    for {set i 0} {$i &lt; $ntups} {incr i} {
+        lappend datnames [lindex [pg_result $res -getTuple $i] 0]
+    }
+    pg_result $res -clear
+    pg_disconnect $conn
+    return $datnames
+}
+</programlisting>
+</example>
+
+<para>
+Here is the same procedure, using <xref linkend="pg-select" /> to iterate over
+the returned rows.
+</para>
+
+<example id="pgtcl-example-dblist-code2">
+<title>Connect and get list of databases - pg_select</title>
+<programlisting>
+proc getDBs { {host "localhost"} {port "5432"} } {
+    set conn [pg_connect -conninfo "host=$host port=$port dbname=template1"]
+    set datnames {}
+    pg_select $conn "SELECT datname FROM pg_database ORDER BY datname" data {
+        lappend datnames $data(datname)
+    }
+    pg_disconnect $conn
+    return $datnames
+}
+</programlisting>
+</example>
+
+</sect1>
+
+<sect1 id="pgtcl-example-results">
+<title>Example - The Different Ways to Get Query Results</title>
+
+<para>
+<application>pgtcl</application> has many different ways to get at query 
+results. The purpose of this example is to clarify the different ways the
+query result data can be returned.
+</para>
+
+<para>
+Assume the following data table called <literal>volcanos</literal>:
+</para>
+<informaltable id="pgtcl-example-datatable">
+  <tgroup cols="3">
+  <thead>
+    <row>
+      <entry>(id INTEGER PRIMARY KEY,</entry>
+      <entry>volcano TEXT,</entry>
+      <entry>location TEXT,</entry>
+      <entry>last_eruption DATE)</entry>
+    </row>
+  </thead>
+  <tbody>
+    <row>
+      <entry>1</entry>
+      <entry>Mount Karangetang</entry>
+      <entry>Indonesia</entry>
+      <entry>2001-01-25</entry>
+    </row>
+    <row>
+      <entry>2</entry>
+      <entry>Hakkoda</entry>
+      <entry>Japan</entry>
+      <entry>1997-07-12</entry>
+    </row>
+    <row>
+      <entry>3</entry>
+      <entry>Akutan</entry>
+      <entry>Alaska</entry>
+      <entry>1996-03-10</entry>
+    </row>
+    <row>
+      <entry>4</entry>
+      <entry>Momotombo</entry>
+      <entry>Nicaragua</entry>
+      <entry>1996-04-04</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+Now assume the following query was issued:
+</para>
+<programlisting>
+set result [pg_exec $conn "SELECT * FROM volcanos ORDER BY ID"]
+</programlisting>
+
+<para>
+The following examples illustrate the different ways to access the data.
+</para>
+
+<example id="pgtcl-example-results-code1">
+<title>Result data: -getTuple</title>
+<programlisting>
+# pg_result -getTuple returns a Tcl list containing the result column values
+# from a single row (tuple), selected by a zero-based row number argument.
+puts "Result is: [pg_result $result -getTuple 0]
+</programlisting>
+<para>
+Output:
+</para>
+<screen>
+Result is: 1 {Mount Karangetang} Indonesia 2001-01-25
+</screen>
+</example>
+
+<example id="pgtcl-example-results-code2">
+<title>Result data: -tupleArray</title>
+<programlisting>
+# pg_result -tupleArray assigns values from one row of the query to an array.
+# The desired row is selected by a zero-based row number argument.
+# The array indexes are the column names.
+pg_result $result -tupleArray 2 MyArray
+parray MyArray
+</programlisting>
+<para>
+Output:
+</para>
+<screen>
+MyArray(id)            = 3
+MyArray(last_eruption) = 1996-03-10
+MyArray(location)      = Alaska
+MyArray(volcano)       = Akutan
+</screen>
+</example>
+
+<example id="pgtcl-example-results-code3">
+<title>Result data: -assign</title>
+<programlisting>
+# pg_result -assign assigns the entire query result - column values from
+# all rows - to a single array, indexed by the row number (starting at zero),
+# and the column name, with the parts of the array index separated by a comma.
+pg_result $result -assign MyArray
+parray MyArray
+</programlisting>
+<para>
+Output:
+</para>
+<screen>
+MyArray(0,id)            = 1
+MyArray(0,last_eruption) = 2001-01-25
+MyArray(0,location)      = Indonesia
+MyArray(0,volcano)       = Mount Karangetang
+MyArray(1,id)            = 2
+MyArray(1,last_eruption) = 1997-07-12
+MyArray(1,location)      = Japan
+MyArray(1,volcano)       = Hakkoda
+MyArray(2,id)            = 3
+MyArray(2,last_eruption) = 1996-03-10
+MyArray(2,location)      = Alaska
+MyArray(2,volcano)       = Akutan
+MyArray(3,id)            = 4
+MyArray(3,last_eruption) = 1996-04-04
+MyArray(3,location)      = Nicaragua
+MyArray(3,volcano)       = Momotombo
+</screen>
+</example>
+
+<example id="pgtcl-example-results-code4">
+<title>Result data: -list</title>
+<programlisting>
+# pg_result -list returns a Tcl list containing the entire query result.
+# The list items are in row-major, column-minor order.
+puts "Result is: [pg_result $result -list]
+</programlisting>
+<para>
+Output (line-wrapped for presentation):
+</para>
+<screen>
+Result is: 1 {Mount Karangetang} Indonesia 2001-01-25 2 Hakkoda Japan
+  1997-07-12 3 Akutan Alaska 1996-03-10 4 Momotombo Nicaragua 1996-04-04
+</screen>
+</example>
+
+<example id="pgtcl-example-results-code5">
+<title>Result data: -llist</title>
+<programlisting>
+# pg_result -llist returns a Tcl list of lists containing the entire query
+# result.  Each item in the outer list is for one row of the query result,
+# and each inner list contains the column values for that row.
+puts "Result is: [pg_result $result -llist]
+</programlisting>
+<para>
+Output (line-wrapped for presentation):
+</para>
+<screen>
+Result is: {1 {Mount Karangetang} Indonesia 2001-01-25} {2 Hakkoda Japan
+  1997-07-12} {3 Akutan Alaska 1996-03-10} {4 Momotombo Nicaragua 1996-04-04}
+</screen>
+</example>
+
+<example id="pgtcl-example-results-code6">
+<title>Result data: -assignbyidx</title>
+<programlisting>
+# pg_result -assignbyidx is similar to -assign in that it assigns all the
+# values from all the rows in the query to a single array, but it forms
+# the array indexes using the value of the first column of the query result
+# (typically the table primary key column), followed by the field names,
+# followed by an optional suffix. Note that the first column of the result
+# is not stored in the array - it is used as part of the index for the
+# other values in each row.
+# In this example, the optional suffix is not used.
+pg_result $result -assignbyidx MyArray
+parray MyArray
+</programlisting>
+<para>
+Output:
+</para>
+<screen>
+MyArray(1,last_eruption) = 2001-01-25
+MyArray(1,location)      = Indonesia
+MyArray(1,volcano)       = Mount Karangetang
+MyArray(2,last_eruption) = 1997-07-12
+MyArray(2,location)      = Japan
+MyArray(2,volcano)       = Hakkoda
+MyArray(3,last_eruption) = 1996-03-10
+MyArray(3,location)      = Alaska
+MyArray(3,volcano)       = Akutan
+MyArray(4,last_eruption) = 1996-04-04
+MyArray(4,location)      = Nicaragua
+MyArray(4,volcano)       = Momotombo
+</screen>
+</example>
+
+<example id="pgtcl-example-results-code7">
+<title>Result data: -dict</title>
+<programlisting>
+# pg_result -dict returns all the values from all the rows in the query
+# result, similar to -assign, but it stores them in a Tcl dictionary rather
+# than an array. This requires Tcl-8.5 or higher.
+# The returned value is a two-level dictionary. The outer keys are row
+# numbers starting from 0, and the inner keys are column names.
+set MyDict [pg_result $result -dict]
+dict for {i row} $MyDict {
+  dict for {field value} $row {
+    puts "MyDict.$i.$field = $value"
+  }
+}
+puts "\nLocation from row 2: [dict get $MyDict 2 location]"
+</programlisting>
+<para>
+Output:
+</para>
+<screen>
+MyDict.0.id = 1
+MyDict.0.volcano = Mount Karangetang
+MyDict.0.location = Indonesia
+MyDict.0.last_eruption = 2001-01-25
+MyDict.1.id = 2
+MyDict.1.volcano = Hakkoda
+MyDict.1.location = Japan
+MyDict.1.last_eruption = 1997-07-12
+MyDict.2.id = 3
+MyDict.2.volcano = Akutan
+MyDict.2.location = Alaska
+MyDict.2.last_eruption = 1996-03-10
+MyDict.3.id = 4
+MyDict.3.volcano = Momotombo
+MyDict.3.location = Nicaragua
+MyDict.3.last_eruption = 1996-04-04
+
+Location from row 2: Alaska
+</screen>
+</example>
+
+<note>
+  <para>
+Some <function>pg_result</function> methods may not be usable with queries
+that produce results with duplicate column names.
+  </para>
+  <para>
+Queries can produce results with duplicate column names due to table joins,
+column aliasing, or other SQL constructs.
+(Note that the column names as seen by <application>Pgtcl</application> do not
+include table name prefixes.  If tables A and B both have a column named
+'amount', then including A.amount and B.amount in a query will result in two
+columns named 'amount'.)
+  </para>
+  <para>
+The <function>pg_result</function> options <option>-tupleArray</option>,
+<option>-assign</option>, <option>-assignbyidx</option>,
+and <option>-dict</option> all use the names of the query result
+columns as array indexes or dictionary keys. Since array indexes and
+dictionary keys are by definition unique, only one of the columns
+with the same name can be returned. (Exactly which of the duplicate column
+name values is returned is not defined.)
+  </para>
+  <para>
+To avoid this, use column name aliases in your SQL query to make all column
+names unique, or use one of the other access methods that does not rely on
+column names: <option>-getTuple</option>, <option>-list</option>, or
+<option>-llist</option>.
+  </para>
+</note>
+
+</sect1>
+
+<sect1 id="pgtcl-example-picstore-lo">
+<title>Example - Large Objects - Picture Viewer, Part 1 - Store Pictures</title>
+
+<para>
+This example is the first part of a GIF picture viewer which stores
+the images as large objects in the database. Given pairs of
+identifiers (arbitrary names used as keys) and filenames on the command line,
+it inserts the contents of each file into the database as a large object,
+and inserts a record in a table to allow retrieving the large object
+using the provided identifier as the key.
+</para>
+
+<para>
+See <xref linkend="pgtcl-example-picview-lo" /> for the program used to view
+the pictures.  A different implementation using <literal>bytea</literal>
+fields instead of large objects can be found in
+<xref linkend="pgtcl-example-picstore-pq" />.
+and <xref linkend="pgtcl-example-picstore-esc" />.
+</para>
+
+<para>
+The schema is created automatically if the table is not found. This method
+wouldn't normally be used in production, though. The example assumes
+database connection information is provided through the environment.
+</para>
+
+<example id="pgtcl-example-picstore-lo-code">
+<title>Large Objects - Store Pictures in Database</title>
+<programlisting>
+#!/usr/bin/tclsh
+# Example - picture storage as Large Object - importer
+
+package require Pgtcl
+
+# Build the table schema:
+proc build {conn} {
+    pg_execute $conn "CREATE TABLE pics (pname TEXT PRIMARY KEY, poid OID)"
+}
+
+# Insert file 'file' into the database with key 'name':
+# If an error occurs, throws a Tcl error.
+proc insert_file {conn name file } {
+    set qname [pg_escape_string $name]
+    pg_execute $conn BEGIN
+    if {[catch {
+        set oid [pg_lo_import $conn $file]
+        pg_execute $conn "INSERT INTO pics (poid, pname) VALUES ($oid, '$qname')"
+    } msg]} {
+        pg_execute $conn ROLLBACK
+        error "Error importing large object: $msg"
+    }
+    pg_execute $conn COMMIT
+}
+
+if {$argc &lt; 2 || $argc % 2 != 0} {
+    puts stderr "Usage: insert_picture name filename \[name filename\]..."
+    exit 1
+}
+
+# Connect to the database.
+set conn [pg_connect -conninfo ""]
+
+# Check for table:
+if {[catch {pg_execute $conn "SELECT COUNT(*) AS n FROM pics"} msg]} {
+     puts "Note: unable to select from table. Let's try creating it."
+     build $conn
+}
+
+# Insert all the pictures named on the command line:
+foreach {name filename} $argv {
+    if {[catch {insert_file $conn $name $filename} message]} {
+        puts "$filename NOT inserted: $message"
+    } else {
+        puts "$filename inserted OK as '$name'"
+    }
+}
+
+pg_disconnect $conn
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-picview-lo">
+<title>Example - Large Objects - Picture Viewer, Part 2 - View Pictures</title>
+
+<para>
+This example is the second part of a GIF picture viewer which stores
+the images as large objects in the database. Given an identifier on
+the command line, it attempts to retrieve and display the stored
+picture with that identifier.
+</para>
+
+<para>
+See <xref linkend="pgtcl-example-picstore-lo" /> for the program used to
+insert the pictures in the database.
+</para>
+
+<para>
+This example runs under <application>wish</application>, not
+<application>tclsh</application>.  It also assumes database connection
+information is provided through the environment.
+</para>
+
+<example id="pgtcl-example-picview-lo-code">
+<title>Large Objects - View Pictures Stored in Database</title>
+<programlisting>
+#!/usr/bin/wish
+# Example - picture storage as Large Object - viewer
+
+package require Pgtcl
+
+# Return the large object data identified by 'name'.
+# Throw an error if it can't be read.
+proc get_picture {conn name} {
+    set q_name [pg_escape_string $name]
+
+    set result [pg_exec $conn "SELECT poid FROM pics WHERE pname='$q_name'"]
+
+    if {[pg_result $result -status] != "PGRES_TUPLES_OK"} {
+        set message [pg_result $result -error]
+        pg_result $result -clear
+        error "Error: Query failed: $message"
+    }
+
+    if {[set n [pg_result $result -numTuples]] != 1} {
+        pg_result $result -clear
+        error "Error: Query returned $n results"
+    }
+
+    # Get the OID from the query result: tuple 0, column 0:
+    set oid [lindex [pg_result $result -getTuple 0] 0]
+    pg_result $result -clear
+
+    # Read the large object from the database, and store it in $data:
+    pg_execute $conn BEGIN
+    if {[catch {
+        set lofd [pg_lo_open $conn $oid r]
+        set data {}
+        while {[pg_lo_read $conn $lofd buf 8192] &gt; 0} {
+            append data $buf
+        }
+        pg_lo_close $conn $lofd
+    } msg]} {
+        pg_execute $conn ROLLBACK
+        error "Error reading large object: $msg"
+    }
+    # No changes, might as well roll back
+    pg_execute $conn ROLLBACK
+    return $data
+}
+
+
+if {$argc != 1} {
+    puts stderr "Usage: view_picture name"
+    exit 1
+}
+set name [lindex $argv 0]
+
+# Connect to the database.
+set conn [pg_connect -conninfo ""]
+
+# Get the picture data:
+set failed [catch {get_picture $conn $name} data]
+
+# Done with database connection:
+pg_disconnect $conn
+
+# Exit if unable to retrieve the data:
+if {$failed} {
+    puts "Failed to view picture '$name': $data"
+    exit
+}
+
+# Make the viewer and show the picture:
+wm title . "Picture: $name"
+image create photo p -data $data -format GIF
+label .top -image p
+button .quit -text Close -command exit -default active
+bind . &lt;Return&gt; exit
+pack .top -side top
+pack .quit
+</programlisting>
+</example>
+</sect1>
+
+
+<sect1 id="pgtcl-example-picstore-pq">
+<title>Example - Prepared Queries - Picture Viewer, Part 1 - Store Pictures</title>
+
+<para>
+This example is another version of the GIF picture viewer shown in
+<xref linkend="pgtcl-example-picstore-lo" />, but this one stores the images
+as <literal>bytea</literal> fields in the database.
+(The <literal>bytea</literal> datatype is a
+PostgreSQL extension which stores an unlimited
+size byte stream with no interpretation by the database.)
+This example shows the use of prepared queries with
+<xref linkend="pg-exec-prepared" /> to insert binary data into the database,
+and to retrieve binary data from the database, without having to escape
+or quote the data.
+</para>
+
+<para>
+Given pairs of identifiers (arbitrary names used as keys) and filenames on
+the command line, it inserts a record in a table with the name and the
+image data. The image data can be retrieved using the name as the key.
+</para>
+
+<para>
+See <xref linkend="pgtcl-example-picview-pq" /> for the program used to view
+the pictures.
+Also see <xref linkend="pgtcl-example-picstore-esc" /> for an implementation
+without prepared queries.
+</para>
+
+<para>
+The schema is created automatically if the table is not found. This method
+wouldn't normally be used in production, though. The example assumes
+database connection information is provided through the environment.
+</para>
+
+<para>
+The prepared query, <literal>pics_insert</literal>, is used to insert the
+data. (So strictly speaking it isn't a query, but a command.) It takes two
+parameters: a text type for the picture name, and a bytea type for the
+image itself, and returns no result values.  When
+<function>pg_exec_prepared</function> is used to execute the prepared
+query, one TEXT format parameter, the name, and one BINARY format
+parameter, the image data, are passed to the prepared query.
+</para>
+
+<example id="pgtcl-example-picstore-pq-code">
+<title>Prepared Queries - Store Pictures in Database</title>
+<programlisting>
+#!/usr/bin/tclsh
+# Example - picture storage as bytea - importer
+
+package require Pgtcl
+
+# Build the table schema:
+proc build {conn} {
+    pg_execute $conn "CREATE TABLE pics (pname TEXT PRIMARY KEY, picture BYTEA)"
+}
+
+# Create the prepared SQL statement:
+#  pics_insert(name, data) - Insert the picture 'data' under name 'name'
+# Note that the query parameters do not need to be quoted or escaped.
+# Implicit error handling: will throw a Tcl error if it fails.
+proc prepare_statement {conn} {
+    pg_execute $conn "PREPARE pics_insert (TEXT, BYTEA) AS\
+       INSERT INTO pics (pname, picture) VALUES (\$1, \$2)"
+}
+
+# Insert file 'file' into the database with key 'name':
+# If an error occurs, throws a Tcl error.
+proc insert_file {conn name file } {
+    # Read the whole image file into a variable:
+    set f [open $file]
+    fconfigure $f -translation binary
+    set data [read $f]
+    close $f
+
+    # Insert the image into the database, using a prepared statement.
+    set result [pg_exec_prepared $conn pics_insert {} {TEXT BINARY} $name $data]
+    if {[pg_result $result -status] != "PGRES_COMMAND_OK"} {
+        set message [pg_result $result -error]
+        pg_result $result -clear
+        error "Error inserting picture '$name': $message"
+    }
+    pg_result $result -clear
+}
+
+if {$argc &lt; 2 || $argc % 2 != 0} {
+    puts stderr "Usage: insert_picture name filename \[name filename\]..."
+    exit 1
+}
+
+# Connect to the database.
+set conn [pg_connect -conninfo ""]
+
+# Check for table:
+if {[catch {pg_execute $conn "SELECT COUNT(*) AS n FROM pics"} msg]} {
+     puts "Note: unable to select from table. Let's try creating it."
+     build $conn
+}
+
+# Prepare the SQL statement:
+prepare_statement $conn
+
+# Insert all the pictures named on the command line:
+foreach {name filename} $argv {
+    if {[catch {insert_file $conn $name $filename} message]} {
+        puts "$filename NOT inserted: $message"
+    } else {
+        puts "$filename inserted OK as '$name'"
+    }
+}
+
+pg_disconnect $conn
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-picview-pq">
+<title>Example - Prepared Queries - Picture Viewer, Part 2 - View Pictures</title>
+
+<para>
+This example is the second part of a GIF picture viewer which stores the
+images as <literal>bytea</literal> fields in the database, and uses
+prepared queries to retrieve the images without having to convert from or
+to an ASCII encoding of binary data. Given an identifier on the command
+line, it attempts to retrieve and display the stored picture with that
+identifier.
+</para>
+
+<para>
+See <xref linkend="pgtcl-example-picstore-pq" /> for the program used to
+insert the pictures in the database.
+</para>
+
+<para>
+The prepared query, <literal>pics_select</literal>, is used to select
+the data from the table, using the picture name as the primary key.
+It takes one parameter: a text type for the picture name, and returns
+one bytea type which is the image itself.
+When <function>pg_exec_prepared</function>
+is used to execute the prepared query, one TEXT format parameter, the
+name, is passed to the prepared query, and the result is one BINARY
+format value, the image data.
+</para>
+
+
+<para>
+This example runs under <application>wish</application>, not
+<application>tclsh</application>.  It also assumes database connection
+information is provided through the environment.
+</para>
+
+<example id="pgtcl-example-picview-pq-code">
+<title>Prepared Queries - View Pictures Stored in Database</title>
+<programlisting>
+#!/usr/bin/wish
+# Example - picture storage as bytea - viewer
+
+package require Pgtcl
+
+# Create the prepared SQL statement:
+#  pics_select(name) - Return the picture data for the name.
+# Note that the query parameters do not need to be quoted or escaped.
+# Implicit error handling: will throw a Tcl error if it fails.
+proc prepare_statement {conn} {
+    pg_execute $conn "PREPARE pics_select (TEXT) AS\
+        SELECT picture FROM pics WHERE pname=\$1"
+}
+
+# Return the picture data identified by 'name'.
+# Throw an error if it can't be read.
+proc get_picture {conn name} {
+
+    set result [pg_exec_prepared $conn pics_select BINARY TEXT $name]
+    if {[pg_result $result -status] != "PGRES_TUPLES_OK"} {
+        set message [pg_result $result -error]
+        pg_result $result -clear
+        error "Error: Query failed: $message"
+    }
+
+    if {[set n [pg_result $result -numTuples]] != 1} {
+        pg_result $result -clear
+        error "Error: Query returned $n results"
+    }
+
+    # Return the data, which is the only column in the only row:
+    set data [lindex [pg_result $result -getTuple 0] 0]
+    pg_result $result -clear
+    return $data
+}
+
+
+if {$argc != 1} {
+    puts stderr "Usage: view_picture name"
+    exit 1
+}
+set name [lindex $argv 0]
+
+# Connect to the database.
+set conn [pg_connect -conninfo ""]
+
+# Prepare the SQL statement:
+prepare_statement $conn
+
+# Get the picture data:
+set failed [catch {get_picture $conn $name} data]
+
+# Done with database connection:
+pg_disconnect $conn
+
+# Exit if unable to retrieve the data:
+if {$failed} {
+    puts "Failed to view picture '$name': $data"
+    exit
+}
+
+# Make the viewer and show the picture:
+wm title . "Picture: $name"
+image create photo p -data $data -format GIF
+label .top -image p
+button .quit -text Close -command exit -default active
+bind . &lt;Return&gt; exit
+pack .top -side top
+pack .quit
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-picstore-esc">
+<title>Example - Bytea Escaping - Picture Viewer, Part 1 - Store Pictures</title>
+
+<para>
+This example is a variation of the GIF picture viewer shown in
+<xref linkend="pgtcl-example-picstore-pq" />. It also stores the images
+as <literal>bytea</literal> fields in the database, but rather than
+using prepared queries in binary mode, it uses normal text mode queries.
+In order to get the binary data through normal SQL queries intact,
+the commands <xref linkend="pg-escape-bytea" />
+and <xref linkend="pg-unescape-bytea" /> are used.
+This version is generally less efficient that using binary prepared
+queries, and can be significantly slower.
+</para>
+
+<note>
+<para>
+<function>pg_escape_bytea</function> and <function>pg_unescape_bytea</function>
+are extensions added to
+<application>pgtcl-ng</application> version 1.5.2 and
+<application>pgin.tcl</application> version 2.2.0.
+This example will not work with other versions or implementations.
+</para>
+</note>
+
+<para>
+Given pairs of identifiers (arbitrary names used as keys) and filenames on
+the command line, it inserts a record in a table with the name and the
+image data. The image data can be retrieved using the name as the key.
+</para>
+
+<para>
+See <xref linkend="pgtcl-example-picview-esc" /> for the program used to view
+the pictures. (Since the same schema is used, the script in
+<xref linkend="pgtcl-example-picview-pq" /> can also be used.)
+</para>
+
+<para>
+The schema is created automatically if the table is not found. This method
+wouldn't normally be used in production, though. The example assumes
+database connection information is provided through the environment.
+</para>
+
+<example id="pgtcl-example-picstore-esc-code">
+<title>Bytea Escaping - Store Pictures in Database</title>
+<programlisting>
+#!/usr/bin/tclsh
+# Example - picture storage as bytea, using escape/unescape:
+
+package require Pgtcl
+
+# Build the table schema:
+proc build {conn} {
+    pg_execute $conn "CREATE TABLE pics (pname TEXT PRIMARY KEY, picture BYTEA)"
+}
+
+# Insert file 'file' into the database with key 'name':
+# If an error occurs, throws a Tcl error.
+proc insert_file {conn name file } {
+
+    # Read the whole image file into a variable:
+    set f [open $file]
+    fconfigure $f -translation binary
+    set data [read $f]
+    close $f
+
+    # Insert the image into the database:
+    set result [pg_exec $conn "INSERT INTO pics (pname, picture) VALUES \
+        ('[pg_escape_string $name]',\
+        '[pg_escape_bytea $data]')"]
+    if {[pg_result $result -status] != "PGRES_COMMAND_OK"} {
+        set message [pg_result $result -error]
+        pg_result $result -clear
+        error "Error inserting picture '$name': $message"
+    }
+    pg_result $result -clear
+}
+
+if {$argc &lt; 2 || $argc % 2 != 0} {
+    puts stderr "Usage: insert_picture name filename \[name filename\]..."
+    exit 1
+}
+
+# Connect to the database.
+set conn [pg_connect -conninfo ""]
+
+# Check for table:
+if {[catch {pg_execute $conn "SELECT COUNT(*) AS n FROM pics"} msg]} {
+     puts "Note: unable to select from table. Let's try creating it."
+     build $conn
+}
+
+# Insert all the pictures named on the command line:
+foreach {name filename} $argv {
+    if {[catch {insert_file $conn $name $filename} message]} {
+        puts "$filename NOT inserted: $message"
+    } else {
+        puts "$filename inserted OK as '$name'"
+    }
+}
+
+pg_disconnect $conn
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-picview-esc">
+<title>Example - Bytea Escaping - Picture Viewer, Part 2 - View Pictures</title>
+
+<para>
+This example is a variation of the GIF picture viewer shown in
+<xref linkend="pgtcl-example-picview-pq" />. It also stores the images
+as <literal>bytea</literal> fields in the database, but rather than
+using prepared queries in binary mode, it uses normal text mode queries.
+In order to get the binary data through normal SQL queries intact,
+the commands <xref linkend="pg-escape-bytea" />
+and <xref linkend="pg-unescape-bytea" /> are used.
+This version is generally less efficient that using binary prepared
+queries, and can be significantly slower.
+</para>
+
+<note>
+<para>
+<function>pg_escape_bytea</function> and <function>pg_unescape_bytea</function>
+are extensions added to
+<application>pgtcl-ng</application> version 1.5.2 and
+<application>pgin.tcl</application> version 2.2.0.
+This example will not work with other versions or implementations.
+</para>
+</note>
+
+<para>
+Given an identifier on the command line, it attempts to retrieve and
+display the stored picture with that identifier.
+</para>
+
+<para>
+See <xref linkend="pgtcl-example-picstore-esc" /> for the program used to
+insert the pictures in the database.
+(Since the same schema is used, the script in
+<xref linkend="pgtcl-example-picstore-pq" /> can also be used.)
+</para>
+
+<para>
+This example runs under <application>wish</application>, not
+<application>tclsh</application>.  It also assumes database connection
+information is provided through the environment.
+</para>
+
+<example id="pgtcl-example-picview-esc-code">
+<title>Bytea Escaping - View Pictures Stored in Database</title>
+<programlisting>
+#!/usr/bin/wish
+# Example - picture storage as bytea, using escape/unescape:
+
+package require Pgtcl
+
+# Return the picture data identified by 'name'.
+# Throw an error if it can't be read.
+proc get_picture {conn name} {
+
+    # Note that for a text-mode query on a BYTEA column, PostgreSQL will escape
+    # the data for us.
+    set result [pg_exec $conn "SELECT picture FROM pics\
+            WHERE pname='[pg_escape_string $name]'"]
+    if {[pg_result $result -status] != "PGRES_TUPLES_OK"} {
+        set message [pg_result $result -error]
+        pg_result $result -clear
+        error "Error: Query failed: $message"
+    }
+
+    if {[set n [pg_result $result -numTuples]] != 1} {
+        pg_result $result -clear
+        error "Error: Query returned $n results"
+    }
+    # Unescape and return the data, which is the only column in the only row:
+    set data [pg_unescape_bytea [lindex [pg_result $result -getTuple 0] 0]]
+    pg_result $result -clear
+    return $data
+}
+
+
+if {$argc != 1} {
+    puts stderr "Usage: view_picture name"
+    exit 1
+}
+set name [lindex $argv 0]
+
+# Connect to the database.
+set conn [pg_connect -conninfo ""]
+
+# Get the picture data:
+set failed [catch {get_picture $conn $name} data]
+
+# Done with database connection:
+pg_disconnect $conn
+
+# Exit if unable to retrieve the data:
+if {$failed} {
+    puts "Failed to view picture '$name': $data"
+    exit
+}
+
+# Make the viewer and show the picture:
+wm title . "Picture: $name"
+image create photo p -data $data -format GIF
+label .top -image p
+button .quit -text Close -command exit -default active
+bind . &lt;Return&gt; exit
+pack .top -side top
+pack .quit
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-async">
+<title>Example - Asynchronous Queries</title>
+
+<para>
+This example uses the asynchronous query commands
+described in <xref linkend="pgtcl-ref-async" />.
+It shows how a query could be sent to the database, and the
+application could continue processing without blocking while
+waiting for the results to come back. It also shows part of how
+a Cancel button might be implemented.
+Note: this is not a complete script.
+</para>
+
+<example id="pgtcl-example-async-code">
+<title>Asynchronous Queries</title>
+<programlisting>
+pg_sendquery $conn "SELECT * FROM tables... WHERE conditions ORDER BY ..."
+# Wait for not-busy condition:
+while {[pg_isbusy $conn]} {
+   ... Do something here, like check for user input and update the interface...
+   ... Good idea to insert a delay so it doesn't busy-wait ...
+   ... Check for cancel button ...
+   if {$user_pressed_cancel_button} break
+}
+
+# Did the user hit the Cancel button? If so, try to cancel the query.
+if {$user_pressed_cancel_button} {
+  pg_cancelrequest $conn
+}
+
+# Fetch results until it there are none left (even if canceled):
+while {[set res [pg_getresult $conn]] != ""} {
+  if {!$user_pressed_cancel_button} {
+    ... do something with the query result $res ...
+  }
+  pg_result $res -clear
+}
+
+</programlisting>
+</example>
+</sect1>
+
+<sect1 id="pgtcl-example-asyncevent">
+<title>Example - Asynchronous Query with Event-Driven Results</title>
+
+<para>
+Like the previous example, this example uses the asynchronous query commands
+described in <xref linkend="pgtcl-ref-async" />.
+Unlike that example in <xref linkend="pgtcl-example-async" />, this example
+uses <xref linkend="pg-result-callback" /> to establish an event handler
+to notify the Tcl interpreter when a result is ready.
+This feature was added to <application>pgtcl-ng </application> at version
+1.6.0. In this example, Tcl waits for either an alarm-clock timeout or
+a result from the query.
+The same method can be used to wait for file or socket events,
+or to respond to user actions in a Tk interface, while also waiting for
+query results.
+Note: this is not a complete script.
+</para>
+
+<example id="pgtcl-example-asyncevent-code">
+<title>Asynchronous Query with Event-Driven Results</title>
+<programlisting>
+# Timeout handler. It sets a global flag to indicate TIMEOUT.
+proc event_timeout {} {
+  global event_flag
+  if {$event_flag eq "WAITING"} {
+    set event_flag TIMEOUT
+  }
+}
+
+# Query ready handler. It sets a global flag to indicate READY.
+proc event_result {} {
+  global event_flag
+  if {$event_flag eq "WAITING"} {
+    set event_flag READY
+  }
+}
+
+
+# Issue a query with timeout.
+#   conn is the database connection handle.
+#   sql is the SQL text to execute.
+#   timeout is the number of seconds to wait for the query.
+# If the query completes, this just displays the row count. In real life,
+# you would do something more with the results.
+proc query_timeout {conn sql {timeout 20}} {
+  global event_flag
+
+  # Calculate timeout in milliseconds:
+  set timeout_msec [expr {1000 * $timeout}]
+
+  # Initialize the global flag:
+  set event_flag WAITING
+
+  # Establish the result callback:
+  pg_result_callback $conn event_result
+ 
+  # Set the alarm clock:
+  set after_id [after $timeout_msec event_timeout]
+
+  # Send the query off, but do not wait:
+  pg_sendquery $conn $sql
+
+  # Wait for something - timeout or results - to change the global flag:
+  vwait event_flag
+
+  # Did the query complete?
+  if {$event_flag eq "READY"} {
+    # Cancel the alarm clock:
+    after cancel $after_id
+    puts "Query complete. Fetching result:"
+    set res [pg_getresult $conn]
+    puts "The query returned [pg_result $res -numTuples] row(s)."
+    pg_result $res -clear
+  } elseif {$event_flag eq "TIMEOUT"} {
+    puts "Query did not complete! It timed out in about $timeout seconds."
+    puts "Canceling the request:"
+    # Note pg_cancelrequest also cancels the result callback.
+    pg_cancelrequest $conn
+    # Now we have to block until the backend is ready.
+    pg_result [pg_getresult $conn] -clear
+    puts "Request canceled."
+  }
+}
+</programlisting>
+</example>
+
+<para>
+Here is an example of using the above function. The pg_sleep PostgreSQL
+backend function (added at PostgreSQL-8.2.0) is used to simulate a slow
+query. Because the query time is longer than the specified timeout, this
+will time out. If the numbers are switched, the query will complete.
+</para>
+
+<programlisting>
+  query_timeout $conn "select pg_sleep(6)" 4
+</programlisting>
+
+</sect1>
+
+<sect1 id="pgtcl-example-copy">
+<title>Example - COPY FROM and COPY TO</title>
+
+<para>
+These examples show how to use SQL <command>COPY</command>
+to perform bulk transfers to and from a database table.
+For more information on <command>COPY</command>, refer
+to the PostgreSQL Reference Manual.
+</para>
+
+<note>
+<para>
+This example does not work with <application>pgintcl</application>, which
+uses special commands to read and write during COPY. Refer to the
+<application>pgintcl</application> documentation for details.
+</para>
+</note>
+
+<para>
+The first example copies data into a table. After sending the
+SQL <command>COPY</command> command, tab-separated data is written
+directly to the database connection handle, one record
+per line. End of data is signaled
+by sending a line with a backslash followed by a dot,
+written in Tcl as "\\.". This converts the connection back
+to its normal mode, and the final status of the copy can be verified.
+</para>
+
+<example id="pgtcl-example-copy-code-to">
+<title>COPY TO</title>
+<programlisting>
+  # Send the SQL COPY command and check initial status:
+  set res [pg_exec $conn "COPY mytable FROM STDIN"]
+  if {[pg_result $res -status] != "PGRES_COPY_IN"} {
+    set message [pg_result $res -error]
+    pg_result $res -clear
+    error $message
+  }
+
+  # Write to the database:
+  for {set i 0} {$i &lt; 100} {incr i} {
+    puts $conn "$i\tThis is data line $i"
+  }
+
+  # Write the end of data marker:
+  puts $conn "\\."
+
+  # Check final status:
+  if {[pg_result $res -status] != "PGRES_COMMAND_OK"} {
+    set message [pg_result $res -error]
+    pg_result $res -clear
+    error $message
+  }
+  pg_result $res -clear
+</programlisting>
+</example>
+
+<para>
+The second example copies data from a table. After sending the SQL
+<command>COPY</command> command, tab-separated data is read directly from
+the database connection handle, one record per line. When Tcl sees End of
+File on the database connection handle channel, the copy is complete, the
+connection is back in its normal mode, and the final status of the copy can
+be verified.
+</para>
+
+<example id="pgtcl-example-copy-code-from">
+<title>COPY FROM</title>
+<programlisting>
+  # Send the SQL COPY command and check initial status:
+  set res [pg_exec $conn "COPY mytable TO STDOUT"]
+  if {[pg_result $res -status] != "PGRES_COPY_OUT"} {
+    set message [pg_result $res -error]
+    pg_result $res -clear
+    error $message
+  }
+
+  # Read until EOF
+  while {[gets $conn line] &gt;= 0} {
+    puts "Read line: $line"
+  }
+
+  # Check final status:
+  if {[pg_result $res -status] != "PGRES_COMMAND_OK"} {
+    set message [pg_result $res -error]
+    pg_result $res -clear
+    error $message
+  }
+  pg_result $res -clear
+</programlisting>
+</example>
+</sect1>
+
+</chapter>

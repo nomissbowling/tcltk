@@ -1,0 +1,254 @@
+<!-- $Id: loading.xml 348 2013-10-07 14:40:22Z lbayuk $ -->
+<chapter id="pgtcl-loading">
+<title>Loading <application>pgtcl</application> into an Application</title>
+
+<abstract>
+  <title></title>
+  <para>
+This chapter describes how to use <application>pgtcl</application> with
+your Tcl application.  Before using <application>pgtcl</application> commands,
+you must load the <filename>libpgtcl</filename> library into your Tcl
+application.  There are three approaches to doing this, but care must be
+taken because of the dependency on the PostgreSQL
+client library <filename>libpq</filename>.
+  </para>
+  <para>
+This chapter also describes <application>pgtclsh</application> and
+<application>pgwish</application>, which are Tcl and Tcl/Tk shells
+built with <application>pgtcl</application>.
+  </para>
+  <para>
+This chapter only applies to the <application>pgtcl-ng</application>
+implementation of <application>pgtcl</application>. For other
+implementations, check the included documentation.
+  </para>
+</abstract>
+
+<sect1 id="pgtcl-load-package">
+<title>Using the Tcl Package Command</title>
+<para>
+You can use the Tcl <literal>package</literal> command to load
+the <application>pgtcl</application> library.
+This is the recommended approach, especially if you have multiple
+applications using <application>pgtcl</application> on your system.
+For this to work, you need the <filename>libpgtcl</filename> library
+and the <filename>pkgIndex.tcl</filename> package index file installed.
+If these files are installed properly, your application can use:
+
+<programlisting>
+package require Pgtcl
+</programlisting>
+
+to load the <application>pgtcl</application> library.
+Or, if your application requires a specific version:
+
+<programlisting>
+package require Pgtcl 2.1
+</programlisting>
+
+</para>
+
+<para>
+This is the preferred method for loading a package into a Tcl application,
+however it does require some installation setup. Specifically, the library
+and package index file must be installed into a subdirectory of the Tcl
+<literal>$auto_path</literal> or <literal>$tcl_pkgPath</literal>
+directories.
+A typical location for installation of this package might be:
+<filename>/usr/lib/tcl8.5/pgtcl2.1/</filename> .
+(Note the subdirectory name (here <filename>pgtcl2.1</filename>), does
+not need to match the library name, and by convention includes only
+the two parts of the version. Tcl looks in all subdirectories
+of its package library directory to find packages.)
+Refer to the Tcl documentation on
+<command>pkgMkIndex</command> for more details.
+</para>
+
+<para>
+In addition to installing the <filename>libpgtcl</filename> library,
+you must install the <filename>libpq</filename> library in a location
+where it will be found by the system shared library loader. Just
+installing <filename>libpq</filename> in the package directory along
+with <filename>libpgtcl</filename> will not work.
+</para>
+
+<sect2 id="pgtcl-load-package-ix">
+<title>"Package require" setup for Unix-like systems</title>
+<para>
+On Unix-like systems, either install the <filename>libpq</filename> library
+into a well-known system directory such as
+<filename>/usr/local/lib</filename>, or install it somewhere else. If you
+install it somewhere else, either modify the system loader configuration
+(typically using a command like <command>ldconfig</command>), or use the
+environment variable <envar>LD_LIBRARY_PATH</envar> to tell the system
+loader where to find it.
+</para>
+
+<para>
+On some Unix-like systems, such as Linux, the path where
+<filename>libpq</filename> was found when building
+<filename>libpgtcl</filename> is stored in the
+<filename>libpgtcl</filename> library (as <literal>rpath</literal>).
+This lets the system find the library even if it isn't in a well-known
+system directory or pointed to by <envar>LD_LIBRARY_PATH</envar>.
+The other methods of finding the library still apply, if it is not
+in the stored location.
+</para>
+</sect2>
+
+<sect2 id="pgtcl-load-package-win">
+<title>"Package require" setup for Windows</title>
+<para>
+There are two possibilities for <filename>libpgtcl</filename> on
+Windows systems: one built with Borland C++ Builder (BCC), and one built
+with MinGW. These have different dependencies.
+</para>
+<note>
+  <para>
+Starting with pgtclng-1.8.0, only MinGW tools are being tested and used.
+Information about BCC-built versions is included for reference only.
+  </para>
+</note>
+
+<para>
+On Windows systems, using the MinGW-built <filename>libpgtcl.dll</filename>,
+the entire EnterpriseDB PostgreSQL <filename>bin</filename> directory needs
+to be available and on the PATH, because there are multiple dependent
+libraries.
+Supplying access to <filename>libpq.dll</filename> is not sufficient.
+(If necessary, you can trim this down by removing the executables.)
+</para>
+
+<para>
+On Windows systems, using the BCC-built <filename>libpgtcl.dll</filename>,
+install the <filename>blibpq.dll</filename> library
+into a directory named in the <envar>PATH</envar> environment variable.
+(Note that the version of libpq built with BCC is called "blibpq.dll".)
+It will also work if the <filename>blibpq.dll</filename> library is installed in
+the same directory as the Tcl script interpreter <filename>tclsh.exe</filename>
+or <filename>wish.exe</filename>.
+Note: It will not work to simply place blibpq.dll in the same directory as
+libpgtcl.dll, unless the trick below using pkgIndex.tcl is used. It must be
+found on the PATH.
+</para>
+
+<para>
+Another option for installing the <filename>blibpq.dll</filename> library
+is to place it in the <application>pgtcl</application> package directory,
+and use a modified package index file to load it.
+Here is a <filename>pkgIndex.tcl</filename> package index file for
+Windows systems which enables loading both libraries from the
+package directory. (This file is included in the source distribution as
+<filename>pkgIndex.tcl.win32</filename>.)
+</para>
+<para>
+<programlisting>
+# Tcl package index file, version 1.1
+# This is a modified package index file for Pgtcl on Windows. libpgtcl needs
+# libpq, but libpq has to be found on PATH. So this modifies PATH before
+# loading libpgtcl, then restores PATH after. This allows you to store
+# both libpgtcl.dll and [b]libpq.dll in the package directory.
+
+proc Pgtcl__load_with_path {dir} {
+  global env
+  set save_path $env(PATH)
+  append env(PATH) ";$dir"
+  load [file join $dir libpgtcl.dll]
+  set env(PATH) $save_path
+}
+package ifneeded Pgtcl 1.7.2 [list Pgtcl__load_with_path $dir]
+</programlisting>
+</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="pgtcl-loading-load">
+<title>Directly loading <filename>libpgtcl</filename></title>
+<para>
+This is normally
+done with the Tcl <literal>load</literal> command.  Here is an example:
+
+<programlisting>
+load libpgtcl[info sharedlibextension]
+</programlisting>
+
+The use of <literal>info sharedlibextension</literal> is recommended in
+preference to using a platform-dependent extension such as
+<literal>.so</literal>, <literal>.sl</literal>, or <literal>.dll</literal>.
+</para>
+
+<para>
+The <literal>load</literal> command will fail unless the system's dynamic
+loader knows where to look for the <filename>libpgtcl</filename> shared
+library file.  You may need to work with <command>ldconfig</command>, or
+set the environment variable <envar>LD_LIBRARY_PATH</envar>, or use
+some equivalent facility for your platform to make it work.
+Of course, you can also specify a full path to the
+library in the <literal>load</literal> command.
+</para>
+
+<para>
+<filename>libpgtcl</filename> in turn depends on
+<filename>libpq</filename>, so the dynamic loader must also be able to find
+the <filename>libpq</filename> shared library.  Since you cannot directly
+specify the location of <filename>libpq</filename>, the system must be
+able to locate it using its default methods for finding loadable libraries.
+See <xref linkend="pgtcl-load-package"/> for more information on locating
+the dependent library or libraries.
+To summarize, Linux systems use 'rpath' (hard-coded path to libpq at build
+time), and fall back to the loader configuration (ld.so.conf) or
+<envar>LD_LIBRARY_PATH</envar>;
+Windows (BCC build) requires <filename>blibpq.dll</filename> be in the
+<envar>PATH</envar>;
+and Windows (MinGW build) requires multiple libraries from the EnterpriseDB
+'bin' directory be in the <envar>PATH</envar>.
+</para>
+
+</sect1>
+
+<sect1 id="pgtcl-load-static">
+<title>Linking <filename>libpgtcl</filename> Into an Application</title>
+
+<para>
+You can link the <filename>libpgtcl</filename> library into an application.
+The application might be a version of the standard
+<application>Tcl</application> shells <command>tclsh</command> or
+<command>wish</command>, or it can be a complete application with more
+custom packages and commands.
+</para>
+
+<para>
+The pgtcl-ng distribution includes the source code to custom
+versions of the <application>Tcl</application> shells
+<command>tclsh</command> and <command>wish</command> in the
+<filename>extra/</filename> directory.
+They are called <application>pgtclsh</application> and
+<application>pgwish</application>.
+(Note pgwish used to be called <application>pgtksh</application>).
+These are the same as the standard Tcl shells, but with
+<application>pgtcl</application> pre-loaded.
+See the documentation in the <filename>extra/</filename> directory for
+instructions on building and using these shells. Building and using
+these have only been tested on Unix-like systems, not on Windows systems.
+</para>
+
+<para>
+Use of these shells is not the recommended method for using
+<application>pgtcl</application>.  With the large number of extensions
+available for Tcl/Tk, it rarely makes sense to build a new shell with one
+extension. It is much better to arrange to dynamically load extensions as
+needed into the standard tclsh (or wish) shells.
+</para>
+
+<para>
+The contents of the <filename>extra/</filename> directory can also be used
+as a reference if you want to build a custom executable for your own
+application with <application>pgtcl</application> built-in. But you should
+consider dynamic loading instead.
+</para>
+
+</sect1>
+
+</chapter>

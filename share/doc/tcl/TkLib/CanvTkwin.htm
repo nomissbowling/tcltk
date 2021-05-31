@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_CanvasTkwin manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> CanvTkwin</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> CanvTkwin</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="CanvTkwin.htm#M2" NAME="L26">NAME</A>
-<DL><DD>Tk_CanvasTkwin, Tk_CanvasGetCoord, Tk_CanvasDrawableCoords, Tk_CanvasSetStippleOrigin, Tk_CanvasWindowCoords, Tk_CanvasEventuallyRedraw, Tk_CanvasTagsOption &mdash; utility procedures for canvas type managers</DD></DL>
+<DL><DD>Tk_CanvasTkwin, Tk_CanvasGetCoord, Tk_CanvasDrawableCoords, Tk_CanvasSetStippleOrigin, Tk_CanvasWindowCoords, Tk_CanvasEventuallyRedraw, Tk_CanvasTagsOption - utility procedures for canvas type managers</DD></DL>
 <DD><A HREF="CanvTkwin.htm#M3" NAME="L27">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -29,10 +29,10 @@
 <DD><A HREF="CanvTkwin.htm#M6" NAME="L30">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CanvasTkwin, Tk_CanvasGetCoord, Tk_CanvasDrawableCoords, Tk_CanvasSetStippleOrigin, Tk_CanvasWindowCoords, Tk_CanvasEventuallyRedraw, Tk_CanvasTagsOption &mdash; utility procedures for canvas type managers
+Tk_CanvasTkwin, Tk_CanvasGetCoord, Tk_CanvasDrawableCoords, Tk_CanvasSetStippleOrigin, Tk_CanvasWindowCoords, Tk_CanvasEventuallyRedraw, Tk_CanvasTagsOption - utility procedures for canvas type managers
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
-<A HREF="../TkLib/WindowId.htm">Tk_Window</A><BR>
+Tk_Window<BR>
 <B>Tk_CanvasTkwin</B>(<I>canvas</I>)<BR>
 int<BR>
 <B>Tk_CanvasGetCoord</B>(<I>interp, canvas, string, doublePtr</I>)<BR>
@@ -87,7 +87,7 @@ this coordinate need to be redisplayed.
 These procedures are called by canvas type managers to perform various
 utility functions.
 <P>
-<B>Tk_CanvasTkwin</B> returns the <A HREF="../TkLib/WindowId.htm">Tk_Window</A> associated with a particular
+<B>Tk_CanvasTkwin</B> returns the Tk_Window associated with a particular
 canvas.
 <P>
 <B>Tk_CanvasGetCoord</B> translates a string specification of a
@@ -95,9 +95,9 @@ coordinate (such as <B>2p</B> or <B>1.6c</B>) into a double-precision
 canvas coordinate.
 If <I>string</I> is a valid coordinate description then <B>Tk_CanvasGetCoord</B>
 stores the corresponding canvas coordinate at *<I>doublePtr</I>
-and returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.
-Otherwise it stores an error message in the interpreter result and
-returns <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>.
+and returns <B>TCL_OK</B>.
+Otherwise it stores an error message in <I>interp-&gt;result</I> and
+returns <B>TCL_ERROR</B>.
 <P>
 <B>Tk_CanvasDrawableCoords</B> is called by type managers during
 redisplay to compute where to draw things.
@@ -142,7 +142,7 @@ the redisplay request on its behalf (this happens, for example
 whenever Tk calls a <I>configureProc</I> or <I>scaleProc</I>).
 The only time that a type manager needs to call
 <B>Tk_CanvasEventuallyRedraw</B> is if an item has changed on its own
-without being invoked through one of the procedures in its <A HREF="../TkLib/CrtItemType.htm">Tk_ItemType</A>;
+without being invoked through one of the procedures in its Tk_ItemType;
 this could happen, for example, in an image item if the image is
 modified using image commands.
 <P>
@@ -152,19 +152,19 @@ The code of a canvas type manager will not call these procedures
 directly, but will use their addresses to create a <B>Tk_CustomOption</B>
 structure for the <B>-tags</B> option.   The code typically looks
 like this:
-<P>
-<PRE>static const Tk_CustomOption tagsOption = {Tk_CanvasTagsParseProc,
+<PRE>static Tk_CustomOption tagsOption = {Tk_CanvasTagsParseProc,
     Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
 
-static const Tk_ConfigSpec configSpecs[] = {
+static Tk_ConfigSpec configSpecs[] = {
     ...
-    {TK_CONFIG_CUSTOM, &quot;-tags&quot;, NULL, NULL,
-        NULL, 0, TK_CONFIG_NULL_OK, &amp;tagsOption},
+    {TK_CONFIG_CUSTOM, &quot;-tags&quot;, (char *) NULL, (char *) NULL,
+        (char *) NULL, 0, TK_CONFIG_NULL_OK, &amp;tagsOption},
     ...
 };</PRE>
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#canvas">canvas</A>, <A href="../Keywords/F.htm#focus">focus</A>, <A href="../Keywords/I.htm#item type">item type</A>, <A href="../Keywords/R.htm#redisplay">redisplay</A>, <A href="../Keywords/S.htm#selection">selection</A>, <A href="../Keywords/T.htm#type manager">type manager</A>
-<div class="copy">Copyright &copy; 1994-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -1,8 +1,8 @@
 ## Definition of global variables, used later with %{...} in the spec file
 %define vendor (c) 2014 SIEMENS Convergence Creators GmbH, Thomas Perschak
-%define name tcltk86
+%define name tcltk
 %define version %rpm_version%
-%define release 1
+%define release 2
 %define _prefix %prefix%
 %define summary TclTk runtime environment
 %define url www.siemens.at/space
@@ -79,7 +79,7 @@ function installDesktop {
     ## copy icons
     cp -f %{prefix}/%{name}/img/mainicon.png /usr/share/pixmaps/tkcon.png
     cp -f %{prefix}/%{name}/img/mainicon.png /usr/share/pixmaps/wish.png
-    cp -f %{prefix}/%{name}/img/mainicon.png /usr/share/pixmaps/wish86.png
+    cp -f %{prefix}/%{name}/img/mainicon.png /usr/share/pixmaps/wish85.png
     echo done
 }
 ##
@@ -109,9 +109,13 @@ echo done
 ## install desktop files
 STEMPDIR=%{prefix}/%{name}/share/config
 SITESDIR=/usr/share/applications
-SITECONF=tkcon86.desktop
+SITECONF=tkcon.desktop
 installDesktop
 
+## some old projects depend on a link in /opt
+cd /opt
+ln -fns %{prefix}/%{name} tcltk85 &> /dev/null | true
+ln -fns %{prefix}/%{name} tcltk &> /dev/null | true
 
 ## action before deinstallation starts
 %preun

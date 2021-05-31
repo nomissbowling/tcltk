@@ -10,26 +10,39 @@
 # All rights reserved.
 
 package require tcltest 2.2
-namespace import ::tcltest::*
-tcltest::configure {*}$argv
+eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint failsOnXQuarz [expr {$tcl_platform(os) ne "Darwin" || [tk windowingsystem] ne "x11" }]
+testConstraint failsOnUbuntu [expr {![info exists ::env(CI)] || ![string match Linux $::tcl_platform(os)]}]
+testConstraint failsOnQuarz [expr {![info exists ::env(MAC_CI)]}]
 
-test winWm-1.1 {TkWmMapWindow} -constraints win -setup {
-    destroy .t
-} -body {
+# Measure the height of a single menu line
+
+toplevel .t
+frame .t.f -width 100 -height 50
+pack .t.f
+menu .t.m
+.t.m add command -label "thisisreallylong"
+.t configure -menu .t.m
+wm geometry .t -0-0
+update
+set menuheight [winfo y .t]
+.t.m add command -label "thisisreallylong"
+wm geometry .t -0-0
+update
+set menuheight [expr {$menuheight - [winfo y .t]}]
+destroy .t
+
+test winWm-1.1 {TkWmMapWindow} win {
     toplevel .t
     wm override .t 1
     wm geometry .t +0+0
     update
-    list [winfo rootx .t] [winfo rooty .t]
-} -cleanup {
+    set result [list [winfo rootx .t] [winfo rooty .t]]
     destroy .t
-} -result {0 0}
-test winWm-1.2 {TkWmMapWindow} -constraints win -setup {
-    destroy .t
-} -body {
+    set result
+} {0 0}
+test winWm-1.2 {TkWmMapWindow} win {
     toplevel .t
     wm transient .t .
     update
@@ -37,47 +50,40 @@ test winWm-1.2 {TkWmMapWindow} -constraints win -setup {
     update
     wm deiconify .
     update
-    wm iconify .t
-} -cleanup {
+    catch {wm iconify .t} msg
     destroy .t
-} -returnCodes error -result {can't iconify ".t": it is a transient}
-test winWm-1.3 {TkWmMapWindow} -constraints win -setup {
-    destroy .t
-} -body {
+    set msg
+} {can't iconify ".t": it is a transient}
+test winWm-1.3 {TkWmMapWindow} win {
     toplevel .t
     update
     toplevel .t2
     update
-    expr {[winfo x .t] != [winfo x .t2]}
-} -cleanup {
+    set result [expr {[winfo x .t] != [winfo x .t2]}]
     destroy .t .t2
-} -result 1
-test winWm-1.4 {TkWmMapWindow} -constraints win -setup {
-    destroy .t
-} -body {
+    set result
+} 1
+test winWm-1.4 {TkWmMapWindow} win {
     toplevel .t
     wm geometry .t +10+10
     update
     toplevel .t2
     wm geometry .t2 +40+10
     update
-    list [winfo x .t] [winfo x .t2]
-} -cleanup {
+    set result [list [winfo x .t] [winfo x .t2]]
     destroy .t .t2
-} -result {10 40}
-test winWm-1.5 {TkWmMapWindow} -constraints win -setup {
-    destroy .t
-} -body {
+    set result
+} {10 40}
+test winWm-1.5 {TkWmMapWindow} win {
     toplevel .t
     wm iconify .t
     update
-    wm state .t
-} -result {iconic}
-
-
-test winWm-2.1 {TkpWmSetState} -constraints win -setup {
+    set result [wm state .t]
     destroy .t
-} -body {
+    set result
+} iconic
+
+test winWm-2.1 {TkpWmSetState} win {
     toplevel .t
     wm geometry .t 150x50+10+10
     update
@@ -88,12 +94,10 @@ test winWm-2.1 {TkpWmSetState} -constraints win -setup {
     wm deiconify .t
     update
     lappend result [wm state .t]
-} -cleanup {
     destroy .t
-} -result {normal iconic normal}
-test winWm-2.2 {TkpWmSetState} -constraints win -setup {
-    destroy .t
-} -body {
+    set result
+} {normal iconic normal}
+test winWm-2.2 {TkpWmSetState} win {
     toplevel .t
     wm geometry .t 150x50+10+10
     update
@@ -107,12 +111,10 @@ test winWm-2.2 {TkpWmSetState} -constraints win -setup {
     wm deiconify .t
     update
     lappend result [wm state .t]
-} -cleanup {
     destroy .t
-} -result {normal withdrawn iconic normal}
-test winWm-2.3 {TkpWmSetState} -constraints win -setup {
-    destroy .t
-} -body {
+    set result
+} {normal withdrawn iconic normal}
+test winWm-2.3 {TkpWmSetState} win {
     toplevel .t
     wm geometry .t 150x50+10+10
     update
@@ -126,13 +128,11 @@ test winWm-2.3 {TkpWmSetState} -constraints win -setup {
     wm state .t normal
     update
     lappend result [wm state .t]
-} -cleanup {
     destroy .t
-} -result {normal withdrawn iconic normal}
-test winWm-2.4 {TkpWmSetState} -constraints win -setup {
-    destroy .t
+    set result
+} {normal withdrawn iconic normal}
+test winWm-2.4 {TkpWmSetState} win {
     set result {}
-} -body {
     toplevel .t
     wm geometry .t 150x50+10+10
     update
@@ -146,16 +146,11 @@ test winWm-2.4 {TkpWmSetState} -constraints win -setup {
     wm deiconify .t
     update
     lappend result [list [wm state .t] [wm geometry .t]]
-} -cleanup {
     destroy .t
-} -result {{normal 150x50+10+10} {iconic 150x50+10+10} {iconic 150x50+10+10} {normal 200x50+10+10}}
+    set result
+} {{normal 150x50+10+10} {iconic 150x50+10+10} {iconic 150x50+10+10} {normal 200x50+10+10}}
 
-
-test winWm-3.1 {ConfigureTopLevel: window geometry propagation} -constraints {
-    win
-} -setup {
-    destroy .t
-} -body {
+test winWm-3.1 {ConfigureTopLevel: window geometry propagation} win {
     toplevel .t
     wm geometry .t +0+0
     button .t.b
@@ -169,30 +164,13 @@ test winWm-3.1 {ConfigureTopLevel: window geometry propagation} -constraints {
     update
     pack .t.b
     update
-    expr {$x == [winfo x .t.b]}
-} -cleanup {
+    set x [expr {$x == [winfo x .t.b]}]
     destroy .t
-} -result 1
+    set x
+} 1
 
-
-test winWm-4.1 {ConfigureTopLevel: menu resizing} -constraints win -setup {
-    destroy .t
-} -body {
-    toplevel .t
-    frame .t.f -width 100 -height 50
-    pack .t.f
-    menu .t.m
-    .t.m add command -label "thisisreallylong"
-    .t configure -menu .t.m
-    wm geometry .t -0-0
-    update
-    set menuheight [winfo y .t]
-    .t.m add command -label "thisisreallylong"
-    wm geometry .t -0-0
-    update
-    set menuheight [expr {$menuheight - [winfo y .t]}]
-    destroy .t
-
+test winWm-4.1 {ConfigureTopLevel: menu resizing} win {
+    set result {}
     toplevel .t
     frame .t.f -width 150 -height 50 -background red
     pack .t.f
@@ -203,11 +181,10 @@ test winWm-4.1 {ConfigureTopLevel: menu resizing} -constraints win -setup {
     .t.m add command -label foo
     .t configure -menu .t.m
     update
-    expr {$y - [winfo y .t]  eq  $menuheight + 1}
-} -cleanup {
+    set result [expr {$y - [winfo y .t]}]
     destroy .t
-} -result 1
-
+    set result
+} [expr {$menuheight + 1}]
 
 # This test works on 8.0p2 but has not worked on anything since 8.2.
 # It would be very strange to have a windows application increase the size
@@ -255,7 +232,7 @@ test winWm-5.2 {UpdateGeometryInfo: menu resizing} -constraints win -setup {
     lappend result [winfo height .t]
     lappend result [expr {$y - [winfo rooty .t]}]
     destroy .t
-    return $result
+    set result
 } -cleanup {
     destroy .t
 } -result {50 50 0}
@@ -533,7 +510,7 @@ test winWm-9.1 "delayed activation of grabbed destroyed window" -constraints win
     destroy .tx .t .sd
 } -result ok
 
-test winWm-9.2 "check wm forget for unmapped parent (#3205464,#2967911)" -constraints {failsOnUbuntu failsOnXQuarz} -setup {
+test winWm-9.2 "check wm forget for unmapped parent (#3205464,#2967911)" -constraints {failsOnUbuntu failsOnQuarz} -setup {
     destroy .t
     toplevel .t
     set winwm92 {}
@@ -563,7 +540,7 @@ test winWm-9.2 "check wm forget for unmapped parent (#3205464,#2967911)" -constr
     set winwm92
 } -cleanup {
     destroy .t.f.x .t.f .t
-    unset -nocomplain winwm92 aid id
+    unset -nocomplain winwm92 aid
 } -result ok
 
 destroy .t
@@ -575,4 +552,3 @@ return
 # Local variables:
 # mode: tcl
 # End:
-

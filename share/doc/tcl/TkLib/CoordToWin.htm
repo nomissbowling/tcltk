@@ -3,13 +3,13 @@
 <HEAD><TITLE>Tk_CoordsToWindow manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> CoordToWin</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> CoordToWin</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CoordsToWindow &mdash; Find window containing a point
+Tk_CoordsToWindow - Find window containing a point
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
-<A HREF="../TkLib/WindowId.htm">Tk_Window</A><BR>
+Tk_Window<BR>
 <B>Tk_CoordsToWindow</B>(<I>rootX, rootY, tkwin</I>)<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
@@ -17,7 +17,7 @@ Tk_CoordsToWindow &mdash; Find window containing a point
 X-coordinate (in root window coordinates).
 <P><DT>int <B>rootY</B> (in)<DD>
 Y-coordinate (in root window coordinates).
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window that identifies application.
 <P></DL>
 <H3><A NAME="M5">DESCRIPTION</A></H3>
@@ -37,9 +37,11 @@ which window contains the mouse cursor:  if a parent and a child both
 contain the point then the child gets preference, and if two siblings
 both contain the point then the highest one in the stacking order
 (i.e. the one that's visible on the screen) gets preference.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#containing">containing</A>, <A href="../Keywords/C.htm#coordinates">coordinates</A>, <A href="../Keywords/R.htm#root window">root window</A>
-<div class="copy">Copyright &copy; 1990-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

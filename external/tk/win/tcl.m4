@@ -30,7 +30,7 @@ AC_DEFUN([SC_PATH_TCLCONFIG], [
 	AC_ARG_WITH(tcl,
 	    AS_HELP_STRING([--with-tcl],
 		[directory containing tcl configuration (tclConfig.sh)]),
-	    with_tclconfig="${withval}")
+	    [with_tclconfig="${withval}"])
 	AC_MSG_CHECKING([for Tcl configuration])
 	AC_CACHE_VAL(ac_cv_c_tclconfig,[
 
@@ -148,7 +148,7 @@ AC_DEFUN([SC_PATH_TKCONFIG], [
 	AC_ARG_WITH(tk,
 	    AS_HELP_STRING([--with-tk],
 		[directory containing tk configuration (tkConfig.sh)]),
-	    with_tkconfig="${withval}")
+	    [with_tkconfig="${withval}"])
 	AC_MSG_CHECKING([for Tk configuration])
 	AC_CACHE_VAL(ac_cv_c_tkconfig,[
 
@@ -393,11 +393,11 @@ AC_DEFUN([SC_ENABLE_SHARED], [
 
 AC_DEFUN([SC_ENABLE_THREADS], [
     AC_MSG_CHECKING(for building with threads)
-    AC_ARG_ENABLE(threads, [  --enable-threads        build with threads (default: on)],
-	[tcl_ok=$enableval], [tcl_ok=yes])
+    AC_ARG_ENABLE(threads, [  --enable-threads        build with threads (default: off)],
+	[tcl_ok=$enableval], [tcl_ok=no])
 
     if test "$tcl_ok" = "yes"; then
-	AC_MSG_RESULT([yes (default)])
+	AC_MSG_RESULT(yes)
 	TCL_THREADS=1
 	AC_DEFINE(TCL_THREADS)
 	# USE_THREAD_ALLOC tells us to try the special thread-based
@@ -405,7 +405,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 	AC_DEFINE(USE_THREAD_ALLOC)
     else
 	TCL_THREADS=0
-	AC_MSG_RESULT(no)
+	AC_MSG_RESULT([no (default)])
     fi
     AC_SUBST(TCL_THREADS)
 ])
@@ -499,7 +499,6 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
 #		CFLAGS_DEBUG
 #		CFLAGS_OPTIMIZE
 #		CFLAGS_WARNING
-#		CFLAGS_NOLTO
 #		LDFLAGS_DEBUG
 #		LDFLAGS_OPTIMIZE
 #		LDFLAGS_CONSOLE
@@ -576,14 +575,14 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
       if test "$ac_cv_cross" = "yes"; then
 	case "$do64bit" in
 	    amd64|x64|yes)
-		CC="x86_64-w64-mingw32-${CC}"
+		CC="x86_64-w64-mingw32-gcc"
 		LD="x86_64-w64-mingw32-ld"
 		AR="x86_64-w64-mingw32-ar"
 		RANLIB="x86_64-w64-mingw32-ranlib"
 		RC="x86_64-w64-mingw32-windres"
 	    ;;
 	    *)
-		CC="i686-w64-mingw32-${CC}"
+		CC="i686-w64-mingw32-gcc"
 		LD="i686-w64-mingw32-ld"
 		AR="i686-w64-mingw32-ar"
 		RANLIB="i686-w64-mingw32-ranlib"
@@ -642,42 +641,13 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
 	if test "$ac_cv_win32" != "yes"; then
 	    AC_MSG_ERROR([${CC} cannot produce win32 executables.])
 	fi
-
-	hold_cflags=$CFLAGS; CFLAGS="$CFLAGS -mwindows -municode -Dmain=xxmain"
-	AC_CACHE_CHECK(for working -municode linker flag,
-	    ac_cv_municode,
-	AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-	#include <windows.h>
-	int APIENTRY wWinMain(HINSTANCE a, HINSTANCE b, LPWSTR c, int d) {return 0;}
-	]], [[]])],
-	    [ac_cv_municode=yes],
-	    [ac_cv_municode=no])
-	)
-	CFLAGS=$hold_cflags
-	if test "$ac_cv_municode" = "yes" ; then
-	    extra_ldflags="$extra_ldflags -municode"
-	else
-	    extra_cflags="$extra_cflags -DTCL_BROKEN_MAINARGS"
-	fi
-	AC_CACHE_CHECK(for working -fno-lto,
-	    ac_cv_nolto,
-	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
-	    [ac_cv_nolto=yes],
-	    [ac_cv_nolto=no])
-	)
-	CFLAGS=$hold_cflags
-	if test "$ac_cv_nolto" = "yes" ; then
-	    CFLAGS_NOLTO="-fno-lto"
-	else
-	    CFLAGS_NOLTO=""
-	fi
     fi
 
     AC_MSG_CHECKING([compiler flags])
     if test "${GCC}" = "yes" ; then
 	SHLIB_LD=""
 	SHLIB_LD_LIBS='${LIBS}'
-	LIBS="-lnetapi32 -lkernel32 -luser32 -ladvapi32 -luserenv -lws2_32"
+	LIBS="-lws2_32"
 	# mingw needs to link ole32 and oleaut32 for [send], but MSVC doesn't
 	LIBS_GUI="-lgdi32 -lcomdlg32 -limm32 -lcomctl32 -lshell32 -luuid -lole32 -loleaut32"
 	STLIB_LD='${AR} cr'
@@ -731,18 +701,9 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
 
 	CFLAGS_DEBUG=-g
 	CFLAGS_OPTIMIZE="-O2 -fomit-frame-pointer"
-	CFLAGS_WARNING="-Wall -Wpointer-arith"
+	CFLAGS_WARNING="-Wall -Wdeclaration-after-statement -Wpointer-arith"
 	LDFLAGS_DEBUG=
 	LDFLAGS_OPTIMIZE=
-
-	case "${CC}" in
-	    *++)
-		CFLAGS_WARNING="${CFLAGS_WARNING} -Wno-format"
-		;;
-	    *)
-		CFLAGS_WARNING="${CFLAGS_WARNING} -Wdeclaration-after-statement"
-		;;
-	esac
 
 	# Specify the CC output file names based on the target name
 	CC_OBJNAME="-o \[$]@"
@@ -780,13 +741,13 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
 			#error 32-bit
 		    #endif
 		]], [[]])],
-			[tcl_win_64bit=yes],
-			[tcl_win_64bit=no]
+		    [tcl_win_64bit=yes],
+		    [tcl_win_64bit=no]
 		)
 		if test "$tcl_win_64bit" = "yes" ; then
-			do64bit=amd64
-			MACHINE="AMD64"
-			AC_MSG_RESULT([   Using 64-bit $MACHINE mode])
+		    do64bit=amd64
+		    MACHINE="AMD64"
+		    AC_MSG_RESULT([   Using 64-bit $MACHINE mode])
 		fi
 		;;
 	esac
@@ -831,7 +792,7 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
 	    AC_MSG_RESULT([   Using 64-bit $MACHINE mode])
 	fi
 
-	LIBS="netapi32.lib kernel32.lib user32.lib advapi32.lib userenv.lib ws2_32.lib"
+	LIBS="user32.lib advapi32.lib ws2_32.lib"
 
 	case "x`echo \${VisualStudioVersion}`" in
 		x1[[4-9]]*)
@@ -1040,8 +1001,8 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
 	    ]], [[
 		EXCEPTION_DISPOSITION x;
 	    ]])],
-		[tcl_cv_eh_disposition=yes],
-		[tcl_cv_eh_disposition=no])
+	    [tcl_cv_eh_disposition=yes],
+	    [tcl_cv_eh_disposition=no])
 	)
 	if test "$tcl_cv_eh_disposition" = "no" ; then
 	AC_DEFINE(EXCEPTION_DISPOSITION, int,
@@ -1096,7 +1057,6 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
     AC_SUBST(CFLAGS_DEBUG)
     AC_SUBST(CFLAGS_OPTIMIZE)
     AC_SUBST(CFLAGS_WARNING)
-    AC_SUBST(CFLAGS_NOLTO)
 ])
 
 #------------------------------------------------------------------------
@@ -1117,13 +1077,13 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_WITH_TCL], [
-    if test -d ../../tcl8.6$1/win;  then
-	TCL_BIN_DEFAULT=../../tcl8.6$1/win
+    if test -d ../../tcl8.5$1/win;  then
+	TCL_BIN_DEFAULT=../../tcl8.5$1/win
     else
-	TCL_BIN_DEFAULT=../../tcl8.6/win
+	TCL_BIN_DEFAULT=../../tcl8.5/win
     fi
 
-    AC_ARG_WITH(tcl, [  --with-tcl=DIR          use Tcl 8.6 binaries from DIR],
+    AC_ARG_WITH(tcl, [  --with-tcl=DIR          use Tcl 8.5 binaries from DIR],
 	    TCL_BIN_DIR=$withval, TCL_BIN_DIR=`cd $TCL_BIN_DEFAULT; pwd`)
     if test ! -d $TCL_BIN_DIR; then
 	AC_MSG_ERROR(Tcl directory $TCL_BIN_DIR does not exist)

@@ -3,23 +3,19 @@
 ## load defaults
 . ./common.sh
 
-## install mandatory packages
-for PKG in autoconf dpkg-dev libxt-dev libxft-dev libxcursor-dev libssl-dev; do
-    dpkg-query -s $PKG &> /dev/null || sudo apt-get install --yes $PKG
-done
-
 ## collect modules list
-MODULES="tcl tk tcllib tklib thread tcltls tkimg tbcload tkcon gse bwidget tdbc tdbcodbc tdbcpostgres tdbcmysql tdbcsqlite3 tcludp vectcl performance photoresize"
+MODULES="tcl tk thread tcllib tklib itcl itk tkimg rbc tkpath tbcload bwidget iwidgets tkcon gse tcludp tktable"
 
-## platform linux
-if [ -z "$WINDIR" ]; then
-    MODULES+=" xcursor sqlite3"
+## architecture i686/x86_64
+if [ "$BARCH" == "i686" ]; then
+    MODULES+=""
 else
-    ## platform windows
-    ## for 64bit platforms only
-    if [ "$BARCH" == "x86_64" ]; then
-        MODULES+=" sqlite3"
-    fi
+    MODULES+=" pgtcl"
+fi
+
+## platform linux/windows
+if [ -z "$WINDIR" ]; then
+    MODULES+=" xcursor"
 fi
 
 ## start to compile

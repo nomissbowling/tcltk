@@ -3,119 +3,119 @@
 <HEAD><TITLE>clock manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> clock</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> clock</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="clock.htm#M2" NAME="L196">NAME</A>
-<DL><DD>clock &mdash; Obtain and manipulate dates and times</DD></DL>
-<DD><A HREF="clock.htm#M3" NAME="L197">SYNOPSIS</A>
+<DD><A HREF="clock.htm#M2" NAME="L168">NAME</A>
+<DL><DD>clock - Obtain and manipulate dates and times</DD></DL>
+<DD><A HREF="clock.htm#M3" NAME="L169">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="clock.htm#M4" NAME="L198">DESCRIPTION</A>
+<DD><A HREF="clock.htm#M4" NAME="L170">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="clock.htm#M5" NAME="L199"><B>clock add</B> <I>timeVal</I> ?<I>count unit...</I>? ?<I>-option value</I>?</A>
-<DD><A HREF="clock.htm#M6" NAME="L200"><B>clock clicks</B> ?<I>-option</I>?</A>
-<DD><A HREF="clock.htm#M7" NAME="L201"><B>clock format</B> <I>timeVal</I> ?<I>-option value</I>...?</A>
-<DD><A HREF="clock.htm#M8" NAME="L202"><B>clock microseconds</B></A>
-<DD><A HREF="clock.htm#M9" NAME="L203"><B>clock milliseconds</B></A>
-<DD><A HREF="clock.htm#M10" NAME="L204"><B>clock scan</B> <I>inputString</I> ?<I>-option value</I>...?</A>
-<DD><A HREF="clock.htm#M11" NAME="L205"><B>clock seconds</B></A>
+<DD><A HREF="clock.htm#M5" NAME="L171"><B>clock add</B> <I>timeVal</I> ?<I>count unit...</I>? ?<I>-option value</I>?</A>
+<DD><A HREF="clock.htm#M6" NAME="L172"><B>clock clicks</B> ?<I>-option</I>?</A>
+<DD><A HREF="clock.htm#M7" NAME="L173"><B>clock format</B> <I>timeVal</I> ?<I>-option value</I>...?</A>
+<DD><A HREF="clock.htm#M8" NAME="L174"><B>clock microseconds</B></A>
+<DD><A HREF="clock.htm#M9" NAME="L175"><B>clock milliseconds</B></A>
+<DD><A HREF="clock.htm#M10" NAME="L176"><B>clock scan</B> <I>inputString</I> ?<I>-option value</I>...?</A>
+<DD><A HREF="clock.htm#M11" NAME="L177"><B>clock seconds</B></A>
 </DL>
-<DD><A HREF="clock.htm#M12" NAME="L206">PARAMETERS</A>
+<DD><A HREF="clock.htm#M12" NAME="L178">PARAMETERS</A>
 <DL class="parameters">
-<DD><A HREF="clock.htm#M13" NAME="L207"><I>count</I></A>
-<DD><A HREF="clock.htm#M14" NAME="L208"><I>timeVal</I></A>
-<DD><A HREF="clock.htm#M15" NAME="L209"><I>unit</I></A>
+<DD><A HREF="clock.htm#M13" NAME="L179"><I>count</I></A>
+<DD><A HREF="clock.htm#M14" NAME="L180"><I>timeVal</I></A>
+<DD><A HREF="clock.htm#M15" NAME="L181"><I>unit</I></A>
 </DL>
-<DD><A HREF="clock.htm#M16" NAME="L210">OPTIONS</A>
+<DD><A HREF="clock.htm#M16" NAME="L182">OPTIONS</A>
 <DL class="options">
-<DD><A HREF="clock.htm#M17" NAME="L211"><B>-base</B> time</A>
-<DD><A HREF="clock.htm#M18" NAME="L212"><B>-format</B> format</A>
-<DD><A HREF="clock.htm#M19" NAME="L213"><B>-gmt</B> boolean</A>
-<DD><A HREF="clock.htm#M20" NAME="L214"><B>-locale</B> localeName</A>
-<DD><A HREF="clock.htm#M21" NAME="L215"><B>-timezone</B> zoneName</A>
-<OL class="options">
-</OL>
+<DD><A HREF="clock.htm#M17" NAME="L183"><B>-base</B> time</A>
+<DD><A HREF="clock.htm#M18" NAME="L184"><B>-format</B> format</A>
+<DD><A HREF="clock.htm#M19" NAME="L185"><B>-gmt</B> boolean</A>
+<DD><A HREF="clock.htm#M20" NAME="L186"><B>-locale</B> localeName</A>
+<DD><A HREF="clock.htm#M21" NAME="L187"><B>-timezone</B> zoneName</A>
+<DL class="options">
 </DL>
-<DD><A HREF="clock.htm#M22" NAME="L216">CLOCK ARITHMETIC</A>
-<DD><A HREF="clock.htm#M23" NAME="L217">HIGH RESOLUTION TIMERS</A>
-<DD><A HREF="clock.htm#M24" NAME="L218">FORMATTING TIMES</A>
-<DD><A HREF="clock.htm#M25" NAME="L219">SCANNING TIMES</A>
-<OL class="scanning times">
-</OL>
-<OL class="scanning times">
-</OL>
-<DD><A HREF="clock.htm#M26" NAME="L220">FORMAT GROUPS</A>
+</DL>
+<DD><A HREF="clock.htm#M22" NAME="L188">CLOCK ARITHMETIC</A>
+<DD><A HREF="clock.htm#M23" NAME="L189">HIGH RESOLUTION TIMERS</A>
+<DD><A HREF="clock.htm#M24" NAME="L190">FORMATTING TIMES</A>
+<DD><A HREF="clock.htm#M25" NAME="L191">SCANNING TIMES</A>
+<DL class="scanning times">
+</DL>
+<DL class="scanning times">
+</DL>
+<DD><A HREF="clock.htm#M26" NAME="L192">FORMAT GROUPS</A>
 <DL class="format groups">
-<DD><A HREF="clock.htm#M27" NAME="L221"><B>%a</B></A>
-<DD><A HREF="clock.htm#M28" NAME="L222"><B>%A</B></A>
-<DD><A HREF="clock.htm#M29" NAME="L223"><B>%b</B></A>
-<DD><A HREF="clock.htm#M30" NAME="L224"><B>%B</B></A>
-<DD><A HREF="clock.htm#M31" NAME="L225"><B>%c</B></A>
-<DD><A HREF="clock.htm#M32" NAME="L226"><B>%C</B></A>
-<DD><A HREF="clock.htm#M33" NAME="L227"><B>%d</B></A>
-<DD><A HREF="clock.htm#M34" NAME="L228"><B>%D</B></A>
-<DD><A HREF="clock.htm#M35" NAME="L229"><B>%e</B></A>
-<DD><A HREF="clock.htm#M36" NAME="L230"><B>%Ec</B></A>
-<DD><A HREF="clock.htm#M37" NAME="L231"><B>%EC</B></A>
-<DD><A HREF="clock.htm#M38" NAME="L232"><B>%EE</B></A>
-<DD><A HREF="clock.htm#M39" NAME="L233"><B>%Ex</B></A>
-<DD><A HREF="clock.htm#M40" NAME="L234"><B>%EX</B></A>
-<DD><A HREF="clock.htm#M41" NAME="L235"><B>%Ey</B></A>
-<DD><A HREF="clock.htm#M42" NAME="L236"><B>%EY</B></A>
-<DD><A HREF="clock.htm#M43" NAME="L237"><B>%g</B></A>
-<DD><A HREF="clock.htm#M44" NAME="L238"><B>%G</B></A>
-<DD><A HREF="clock.htm#M45" NAME="L239"><B>%h</B></A>
-<DD><A HREF="clock.htm#M46" NAME="L240"><B>%H</B></A>
-<DD><A HREF="clock.htm#M47" NAME="L241"><B>%I</B></A>
-<DD><A HREF="clock.htm#M48" NAME="L242"><B>%j</B></A>
-<DD><A HREF="clock.htm#M49" NAME="L243"><B>%J</B></A>
-<DD><A HREF="clock.htm#M50" NAME="L244"><B>%k</B></A>
-<DD><A HREF="clock.htm#M51" NAME="L245"><B>%l</B></A>
-<DD><A HREF="clock.htm#M52" NAME="L246"><B>%m</B></A>
-<DD><A HREF="clock.htm#M53" NAME="L247"><B>%M</B></A>
-<DD><A HREF="clock.htm#M54" NAME="L248"><B>%N</B></A>
-<DD><A HREF="clock.htm#M55" NAME="L249"><B>%Od</B>, <B>%Oe</B>, <B>%OH</B>, <B>%OI</B>, <B>%Ok</B>, <B>%Ol</B>, <B>%Om</B>, <B>%OM</B>, <B>%OS</B>, <B>%Ou</B>, <B>%Ow</B>, <B>%Oy</B></A>
-<DD><A HREF="clock.htm#M56" NAME="L250"><B>%p</B></A>
-<DD><A HREF="clock.htm#M57" NAME="L251"><B>%P</B></A>
-<DD><A HREF="clock.htm#M58" NAME="L252"><B>%Q</B></A>
-<DD><A HREF="clock.htm#M59" NAME="L253"><B>%r</B></A>
-<DD><A HREF="clock.htm#M60" NAME="L254"><B>%R</B></A>
-<DD><A HREF="clock.htm#M61" NAME="L255"><B>%s</B></A>
-<DD><A HREF="clock.htm#M62" NAME="L256"><B>%S</B></A>
-<DD><A HREF="clock.htm#M63" NAME="L257"><B>%t</B></A>
-<DD><A HREF="clock.htm#M64" NAME="L258"><B>%T</B></A>
-<DD><A HREF="clock.htm#M65" NAME="L259"><B>%u</B></A>
-<DD><A HREF="clock.htm#M66" NAME="L260"><B>%U</B></A>
-<DD><A HREF="clock.htm#M67" NAME="L261"><B>%V</B></A>
-<DD><A HREF="clock.htm#M68" NAME="L262"><B>%w</B></A>
-<DD><A HREF="clock.htm#M69" NAME="L263"><B>%W</B></A>
-<DD><A HREF="clock.htm#M70" NAME="L264"><B>%x</B></A>
-<DD><A HREF="clock.htm#M71" NAME="L265"><B>%X</B></A>
-<DD><A HREF="clock.htm#M72" NAME="L266"><B>%y</B></A>
-<DD><A HREF="clock.htm#M73" NAME="L267"><B>%Y</B></A>
-<DD><A HREF="clock.htm#M74" NAME="L268"><B>%z</B></A>
-<DD><A HREF="clock.htm#M75" NAME="L269"><B>%Z</B></A>
-<DD><A HREF="clock.htm#M76" NAME="L270"><B>%%</B></A>
-<DD><A HREF="clock.htm#M77" NAME="L271"><B>%+</B></A>
+<DD><A HREF="clock.htm#M27" NAME="L193"><B>%a</B></A>
+<DD><A HREF="clock.htm#M28" NAME="L194"><B>%A</B></A>
+<DD><A HREF="clock.htm#M29" NAME="L195"><B>%b</B></A>
+<DD><A HREF="clock.htm#M30" NAME="L196"><B>%B</B></A>
+<DD><A HREF="clock.htm#M31" NAME="L197"><B>%c</B></A>
+<DD><A HREF="clock.htm#M32" NAME="L198"><B>%C</B></A>
+<DD><A HREF="clock.htm#M33" NAME="L199"><B>%d</B></A>
+<DD><A HREF="clock.htm#M34" NAME="L200"><B>%D</B></A>
+<DD><A HREF="clock.htm#M35" NAME="L201"><B>%e</B></A>
+<DD><A HREF="clock.htm#M36" NAME="L202"><B>%Ec</B></A>
+<DD><A HREF="clock.htm#M37" NAME="L203"><B>%EC</B></A>
+<DD><A HREF="clock.htm#M38" NAME="L204"><B>%EE</B></A>
+<DD><A HREF="clock.htm#M39" NAME="L205"><B>%Ex</B></A>
+<DD><A HREF="clock.htm#M40" NAME="L206"><B>%EX</B></A>
+<DD><A HREF="clock.htm#M41" NAME="L207"><B>%Ey</B></A>
+<DD><A HREF="clock.htm#M42" NAME="L208"><B>%EY</B></A>
+<DD><A HREF="clock.htm#M43" NAME="L209"><B>%g</B></A>
+<DD><A HREF="clock.htm#M44" NAME="L210"><B>%G</B></A>
+<DD><A HREF="clock.htm#M45" NAME="L211"><B>%h</B></A>
+<DD><A HREF="clock.htm#M46" NAME="L212"><B>%H</B></A>
+<DD><A HREF="clock.htm#M47" NAME="L213"><B>%I</B></A>
+<DD><A HREF="clock.htm#M48" NAME="L214"><B>%j</B></A>
+<DD><A HREF="clock.htm#M49" NAME="L215"><B>%J</B></A>
+<DD><A HREF="clock.htm#M50" NAME="L216"><B>%k</B></A>
+<DD><A HREF="clock.htm#M51" NAME="L217"><B>%l</B></A>
+<DD><A HREF="clock.htm#M52" NAME="L218"><B>%m</B></A>
+<DD><A HREF="clock.htm#M53" NAME="L219"><B>%M</B></A>
+<DD><A HREF="clock.htm#M54" NAME="L220"><B>%N</B></A>
+<DD><A HREF="clock.htm#M55" NAME="L221"><B>%Od</B>, <B>%Oe</B>, <B>%OH</B>, <B>%OI</B>, <B>%Ok</B>, <B>%Ol</B>, <B>%Om</B>, <B>%OM</B>, <B>%OS</B>, <B>%Ou</B>, <B>%Ow</B>, <B>%Oy</B></A>
+<DD><A HREF="clock.htm#M56" NAME="L222"><B>%p</B></A>
+<DD><A HREF="clock.htm#M57" NAME="L223"><B>%P</B></A>
+<DD><A HREF="clock.htm#M58" NAME="L224"><B>%Q</B></A>
+<DD><A HREF="clock.htm#M59" NAME="L225"><B>%r</B></A>
+<DD><A HREF="clock.htm#M60" NAME="L226"><B>%R</B></A>
+<DD><A HREF="clock.htm#M61" NAME="L227"><B>%s</B></A>
+<DD><A HREF="clock.htm#M62" NAME="L228"><B>%S</B></A>
+<DD><A HREF="clock.htm#M63" NAME="L229"><B>%t</B></A>
+<DD><A HREF="clock.htm#M64" NAME="L230"><B>%T</B></A>
+<DD><A HREF="clock.htm#M65" NAME="L231"><B>%u</B></A>
+<DD><A HREF="clock.htm#M66" NAME="L232"><B>%U</B></A>
+<DD><A HREF="clock.htm#M67" NAME="L233"><B>%V</B></A>
+<DD><A HREF="clock.htm#M68" NAME="L234"><B>%w</B></A>
+<DD><A HREF="clock.htm#M69" NAME="L235"><B>%W</B></A>
+<DD><A HREF="clock.htm#M70" NAME="L236"><B>%x</B></A>
+<DD><A HREF="clock.htm#M71" NAME="L237"><B>%X</B></A>
+<DD><A HREF="clock.htm#M72" NAME="L238"><B>%y</B></A>
+<DD><A HREF="clock.htm#M73" NAME="L239"><B>%Y</B></A>
+<DD><A HREF="clock.htm#M74" NAME="L240"><B>%z</B></A>
+<DD><A HREF="clock.htm#M75" NAME="L241"><B>%Z</B></A>
+<DD><A HREF="clock.htm#M76" NAME="L242"><B>%%</B></A>
+<DD><A HREF="clock.htm#M77" NAME="L243"><B>%+</B></A>
 </DL>
-<DD><A HREF="clock.htm#M78" NAME="L272">TIME ZONES</A>
-<OL class="time zones">
-</OL>
-<DD><A HREF="clock.htm#M79" NAME="L273">LOCALIZATION</A>
-<DD><A HREF="clock.htm#M80" NAME="L274">FREE FORM SCAN</A>
+<DD><A HREF="clock.htm#M78" NAME="L244">TIME ZONES</A>
+<DL class="time zones">
+</DL>
+<DD><A HREF="clock.htm#M79" NAME="L245">LOCALIZATION</A>
+<DD><A HREF="clock.htm#M80" NAME="L246">FREE FORM SCAN</A>
 <DL class="free form scan">
-<DD><A HREF="clock.htm#M81" NAME="L275"><I>time</I></A>
-<DD><A HREF="clock.htm#M82" NAME="L276"><I>date</I></A>
-<DD><A HREF="clock.htm#M83" NAME="L277"><I>ISO 8601 point-in-time</I></A>
-<DD><A HREF="clock.htm#M84" NAME="L278"><I>relative time</I></A>
+<DD><A HREF="clock.htm#M81" NAME="L247"><I>time</I></A>
+<DD><A HREF="clock.htm#M82" NAME="L248"><I>date</I></A>
+<DD><A HREF="clock.htm#M83" NAME="L249"><I>ISO 8601 point-in-time</I></A>
+<DD><A HREF="clock.htm#M84" NAME="L250"><I>relative time</I></A>
 </DL>
-<DD><A HREF="clock.htm#M85" NAME="L279">SEE ALSO</A>
-<DD><A HREF="clock.htm#M86" NAME="L280">KEYWORDS</A>
-<DD><A HREF="clock.htm#M87" NAME="L281">COPYRIGHT</A>
+<DD><A HREF="clock.htm#M85" NAME="L251">SEE ALSO</A>
+<DD><A HREF="clock.htm#M86" NAME="L252">KEYWORDS</A>
+<DD><A HREF="clock.htm#M87" NAME="L253">COPYRIGHT</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-clock &mdash; Obtain and manipulate dates and times
+clock - Obtain and manipulate dates and times
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 package require <B>Tcl 8.5</B><BR>
 <B>clock add</B> <I>timeVal</I> ?<I>count unit...</I>? ?<I>-option value</I>?<BR>
@@ -133,33 +133,33 @@ subcommands that determine what action is carried out by the command.
 <DL class="description">
 <DT><A NAME="M5"><B>clock add</B> <I>timeVal</I> ?<I>count unit...</I>? ?<I>-option value</I>?</A><DD>
 Adds a (possibly negative) offset to a time that is expressed as an
-integer number of seconds.  See <B><A HREF="#M22">CLOCK ARITHMETIC</A></B> for a full description.
+integer number of seconds.  See <B>CLOCK ARITHMETIC</B> for a full description.
 <P><DT><A NAME="M6"><B>clock clicks</B> ?<I>-option</I>?</A><DD>
 If no <I>-option</I> argument is supplied, returns a high-resolution
 time value as a system-dependent integer value.  The unit of the value
 is system-dependent but should be the highest resolution clock available
-on the system such as a CPU cycle counter.  See <B><A HREF="#M23">HIGH RESOLUTION TIMERS</A></B> for a full description.
+on the system such as a CPU cycle counter.  See <B>HIGH RESOLUTION TIMERS</B> for a full description.
 <P>
-If the <I>-option</I> argument is <B>-milliseconds</B>, then the command
+If the <I>-option</I> argument is <I>-milliseconds</I>, then the command
 is synonymous with <B>clock milliseconds</B> (see below).  This
 usage is obsolete, and <B>clock milliseconds</B> is to be
 considered the preferred way of obtaining a count of milliseconds.
-<P>If the <I>-option</I> argument is <B>-microseconds</B>, then the command
+<P>If the <I>-option</I> argument is <I>-microseconds</I>, then the command
 is synonymous with <B>clock microseconds</B> (see below).  This
 usage is obsolete, and <B>clock microseconds</B> is to be
 considered the preferred way of obtaining a count of microseconds.
 <P><DT><A NAME="M7"><B>clock format</B> <I>timeVal</I> ?<I>-option value</I>...?</A><DD>
 Formats a time that is expressed as an integer number of seconds into a format
 intended for consumption by users or external programs.
-See <B><A HREF="#M24">FORMATTING TIMES</A></B> for a full description.
+See <B>FORMATTING TIMES</B> for a full description.
 <P><DT><A NAME="M8"><B>clock microseconds</B></A><DD>
-Returns the current time as an integer number of microseconds.  See <B><A HREF="#M23">HIGH RESOLUTION TIMERS</A></B> for a full description.
+Returns the current time as an integer number of microseconds.  See <B>HIGH RESOLUTION TIMERS</B> for a full description.
 <P><DT><A NAME="M9"><B>clock milliseconds</B></A><DD>
-Returns the current time as an integer number of milliseconds.  See <B><A HREF="#M23">HIGH RESOLUTION TIMERS</A></B> for a full description.
+Returns the current time as an integer number of milliseconds.  See <B>HIGH RESOLUTION TIMERS</B> for a full description.
 <P><DT><A NAME="M10"><B>clock scan</B> <I>inputString</I> ?<I>-option value</I>...?</A><DD>
 Scans a time that is expressed as a character string and produces an
 integer number of seconds.
-See <B><A HREF="#M25">SCANNING TIMES</A></B> for a full description.
+See <B>SCANNING TIMES</B> for a full description.
 <P><DT><A NAME="M11"><B>clock seconds</B></A><DD>
 Returns the current time as an integer number of seconds.
 <P></DL>
@@ -167,7 +167,7 @@ Returns the current time as an integer number of seconds.
 <DL class="parameters">
 <DT><A NAME="M13"><I>count</I></A><DD>
 An integer representing a count of some unit of time.  See
-<B><A HREF="#M22">CLOCK ARITHMETIC</A></B> for the details.
+<B>CLOCK ARITHMETIC</B> for the details.
 <P><DT><A NAME="M14"><I>timeVal</I></A><DD>
 An integer value passed to the <B>clock</B> command that represents an
 absolute time as a number of seconds from the <I>epoch time</I> of
@@ -197,14 +197,13 @@ of any number of characters other than the per-cent sign
 (&#8220;<B>%</B>&#8221;)
 interspersed with any number of <I>format groups</I>, which are two-character
 sequences beginning with the per-cent sign.  The permissible format groups,
-and their interpretation, are described under <B><A HREF="#M26">FORMAT GROUPS</A></B>.
+and their interpretation, are described under <B>FORMAT GROUPS</B>.
 <P>
 On <B>clock format</B>, the default format is
-<P>
 <PRE>%a %b %d %H:%M:%S %z %Y</PRE>
-<P>On <B>clock scan</B>, the lack of a <B>-format</B> option indicates that a
+<P>On <B>clock scan</B>, the lack of a <I>-format</I> option indicates that a
 &#8220;free format scan&#8221;
-is requested; see <B><A HREF="#M80">FREE FORM SCAN</A></B> for a description of what happens.
+is requested; see <B>FREE FORM SCAN</B> for a description of what happens.
 <P><DT><A NAME="M19"><B>-gmt</B> boolean</A><DD>
 If <I>boolean</I> is true, specifies that a time specified to <B>clock add</B>,
 <B>clock format</B> or <B>clock scan</B> should be processed in
@@ -222,33 +221,32 @@ name <I>system</I>, which represents the current locale of the process, or
 the null string, which represents Tcl's default locale.
 <P>
 The effect of locale on scanning and formatting is discussed in the
-descriptions of the individual format groups under <B><A HREF="#M26">FORMAT GROUPS</A></B>.
+descriptions of the individual format groups under <B>FORMAT GROUPS</B>.
 The effect of locale on clock arithmetic is discussed under
-<B><A HREF="#M22">CLOCK ARITHMETIC</A></B>.
+<B>CLOCK ARITHMETIC</B>.
 <P><DT><A NAME="M21"><B>-timezone</B> zoneName</A><DD>
 Specifies that clock arithmetic, formatting, and scanning are to be done
 according to the rules for the time zone specified by <I>zoneName</I>.
 The permissible values, and their interpretation, are discussed under
-<B><A HREF="#M78">TIME ZONES</A></B>.
+<B>TIME ZONES</B>.
 On subcommands that expect a <B>-timezone</B> argument, the default
 is to use the <I>current time zone</I>.  The current time zone is
 determined, in order of preference, by:
 <P>
-<OL class="options">
-<LI value="1">
+<DL class="options">
+<DT>[1]<DD>
 the environment variable <B>TCL_TZ</B>.
-<P><LI value="2">
+<P><DT>[2]<DD>
 the environment variable <B>TZ</B>.
-<P><LI value="3">
+<P><DT>[3]<DD>
 on Windows systems, the time zone settings from the Control Panel.
-<P></OL>
 <P></DL>
-<P>
 If none of these is present, the C <B>localtime</B> and <B>mktime</B>
 functions are used to attempt to convert times between local and
 Greenwich.  On 32-bit systems, this approach is likely to have bugs,
 particularly for times that lie outside the window (approximately the
 years 1902 to 2037) that can be represented in a 32-bit integer.
+<P></DL>
 <H3><A NAME="M22">CLOCK ARITHMETIC</A></H3>
 The <B>clock add</B> command performs clock arithmetic on a value
 (expressed as nominal seconds from the epoch time of 1 January 1970, 00:00 UTC)
@@ -279,7 +277,6 @@ absolute time means that it will add fixed amounts of time in time zones
 that observe summer time (Daylight Saving Time).  For example,
 the following code sets the value of <B>x</B> to <B>04:00:00</B> because
 the clock has changed in the interval in question.
-<P>
 <PRE>set s [<B>clock scan</B> {2004-10-30 05:00:00} &#92;
            -format {%Y-%m-%d %H:%M:%S} &#92;
            -timezone :America/New_York]
@@ -298,7 +295,6 @@ Adding and subtracting a given number of days across the point that
 the time changes at the start or end of summer time (Daylight Saving Time)
 results in the <I>same local time</I> on the day in question.  For
 instance, the following code sets the value of <B>x</B> to <B>05:00:00</B>.
-<P>
 <PRE>set s [<B>clock scan</B> {2004-10-30 05:00:00} &#92;
            -format {%Y-%m-%d %H:%M:%S} &#92;
            -timezone :America/New_York]
@@ -312,7 +308,6 @@ yields an impossible time (for instance, 02:30 during the Spring
 Daylight Saving Time change using US rules), the time is converted
 as if the clock had not changed.  Thus, the following code
 will set the value of <B>x</B> to <B>03:30:00</B>.
-<P>
 <PRE>set s [<B>clock scan</B> {2004-04-03 02:30:00} &#92;
            -format {%Y-%m-%d %H:%M:%S} &#92;
            -timezone :America/New_York]
@@ -323,7 +318,6 @@ set x [<B>clock format</B> $a &#92;
 Adding a given number of days or weeks works correctly across the conversion
 between the Julian and Gregorian calendars; the omitted days are skipped.
 The following code sets <B>z</B> to <B>1752-09-14</B>.
-<P>
 <PRE>set x [<B>clock scan</B> 1752-09-02 -format %Y-%m-%d -locale en_US]
 set y [<B>clock add</B> $x 1 day -locale en_US]
 set z [<B>clock format</B> $y -format %Y-%m-%d -locale en_US]</PRE>
@@ -377,7 +371,7 @@ of any number of characters other than the per-cent sign
 (&#8220;<B>%</B>&#8221;)
 interspersed with any number of <I>format groups</I>, which are two-character
 sequences beginning with the per-cent sign.  The permissible format groups,
-and their interpretation, are described under <B><A HREF="#M26">FORMAT GROUPS</A></B>.
+and their interpretation, are described under <B>FORMAT GROUPS</B>.
 <P>
 If a <B>-timezone</B> option is present, the following
 argument is a string that specifies the time zone in which the date and time
@@ -386,7 +380,7 @@ are to be formatted.  As an alternative to
 the obsolete usage
 &#8220;<B>-gmt</B> <I>true</I>&#8221;
 may be used.  See
-<B><A HREF="#M78">TIME ZONES</A></B> for the permissible variants for the time zone.
+<B>TIME ZONES</B> for the permissible variants for the time zone.
 <P>
 If a <B>-locale</B> option is present, the following argument is
 a string that specifies the locale in which the time is to be formatted,
@@ -407,19 +401,19 @@ strings and converts them to counts of seconds from the epoch time
 of 1 January 1970, 00:00 UTC.  It normally takes a <B>-format</B>
 option that is followed by a string describing
 the expected format of the input.  (See
-<B><A HREF="#M80">FREE FORM SCAN</A></B> for the effect of <B>clock scan</B>
+<B>FREE FORM SCAN</B> for the effect of <B>clock scan</B>
 without such an argument.)  The string consists of any number of
 characters other than the per-cent sign
 (&#8220;<B>%</B>&#8221;),
 interspersed with any number of <I>format groups</I>, which are two-character
 sequences beginning with the per-cent sign.  The permissible format groups,
-and their interpretation, are described under <B><A HREF="#M26">FORMAT GROUPS</A></B>.
+and their interpretation, are described under <B>FORMAT GROUPS</B>.
 <P>
 If a <B>-timezone</B> option is present, the following
 argument is a string that specifies the time zone in which the date and time
 are to be interpreted.  As an alternative to <B>-timezone</B> <I>:UTC</I>,
 the obsolete usage <B>-gmt</B> <I>true</I> may be used.  See
-<B><A HREF="#M78">TIME ZONES</A></B> for the permissible variants for the time zone.
+<B>TIME ZONES</B> for the permissible variants for the time zone.
 <P>
 If a <B>-locale</B> option is present, the following argument is
 a string that specifies the locale in which the time is to be interpreted,
@@ -456,21 +450,21 @@ be replaced with <B>%m/%d/%Y</B>.
 The date is determined according to the fields that are present in the
 preprocessed format string.  In order of preference:
 <P>
-<OL class="scanning times">
-<LI value="1">
+<DL class="scanning times">
+<DT>[1]<DD>
 If the string contains a <B>%s</B> format group, representing
 seconds from the epoch, that group is used to determine the date.
-<P><LI value="2">
+<P><DT>[2]<DD>
 If the string contains a <B>%J</B> format group, representing
 the Julian Day Number, that group is used to determine the date.
-<P><LI value="3">
+<P><DT>[3]<DD>
 If the string contains a complete set of format groups specifying
 century, year, month, and day of month; century, year, and day of year;
 or ISO8601 fiscal year, week of year, and day of week; those groups are
 combined and used to determine the date.  If more than one complete
 set is present, the one at the rightmost position in the string is
 used.
-<P><LI value="4">
+<P><DT>[4]<DD>
 If the string lacks a century but contains a set of format
 groups specifying year of century, month and day of month; year of
 century and day of year; or two-digit ISO8601 fiscal year, week of year,
@@ -478,7 +472,7 @@ and day of week; those groups are
 combined and used to determine the date.  If more than one complete
 set is present, the one at the rightmost position in the string is
 used.  The year is presumed to lie in the range 1938 to 2037 inclusive.
-<P><LI value="5">
+<P><DT>[5]<DD>
 If the string entirely lacks any specification for the year
 (or contains the year only on the locale's alternative calendar)
 and contains a set of format groups specifying month and day of month,
@@ -487,7 +481,7 @@ combined and used to determine the date.  If more than one complete
 set is present, the one at the rightmost position in the string is
 used.  The year is determined by interpreting the base time in the given
 time zone.
-<P><LI value="6">
+<P><DT>[6]<DD>
 If the string contains none of the above sets, but has a day
 of the month or day of the week, the day of the month or day of the week
 are used to determine the date by interpreting the base time in the
@@ -495,32 +489,32 @@ given time zone and returning the given day of the current week or month.
 (The week runs from Monday to Sunday, ISO8601-fashion.)  If both day
 of month and day of week are present, the day of the month takes
 priority.
-<P><LI value="7">
+<P><DT>[7]<DD>
 If none of the above rules results in a usable date, the date
 of the base time in the given time zone is used.
-<P></OL>
+<P></DL>
 <P>
 The time is also determined according to the fields that are present in the
 preprocessed format string.  In order of preference:
 <P>
-<OL class="scanning times">
-<LI value="1">
+<DL class="scanning times">
+<DT>[1]<DD>
 If the string contains a <B>%s</B> format group, representing
 seconds from the epoch, that group determines the time of day.
-<P><LI value="2">
+<P><DT>[2]<DD>
 If the string contains either an hour on the 24-hour clock
 or an hour on the 12-hour clock plus an AM/PM indicator, that hour determines
 the hour of the day.  If the string further contains a group specifying
 the minute of the hour, that group combines with the hour.  If the string
 further contains a group specifying the second of the minute, that group
 combines with the hour and minute.
-<P><LI value="3">
+<P><DT>[3]<DD>
 If the string contains neither a <B>%s</B> format group nor
 a group specifying the hour of the day, then midnight (<B>00:00</B>, the start
 of the given date) is used.
 The time zone is determined by either the <B>-timezone</B> or <B>-gmt</B>
 options, or by using the current time zone.
-<P></OL>
+<P></DL>
 <P>
 If a format string lacks a <B>%z</B> or <B>%Z</B> format group,
 it is possible for the time to be ambiguous because it appears twice
@@ -749,12 +743,12 @@ week number <B>%V</B>; programs should use <B>%G</B> for that purpose.
 <P><DT><A NAME="M74"><B>%z</B></A><DD>
 On output, produces the current time zone, expressed in hours and
 minutes east (+hhmm) or west (-hhmm) of Greenwich. On input, accepts a
-time zone specifier (see <B><A HREF="#M78">TIME ZONES</A></B> below) that will be used to
+time zone specifier (see <B>TIME ZONES</B> below) that will be used to
 determine the time zone.
 <P><DT><A NAME="M75"><B>%Z</B></A><DD>
 On output, produces the current time zone's name, possibly
 translated to the given locale. On input, accepts a time zone
-specifier (see <B><A HREF="#M78">TIME ZONES</A></B> below) that will be used to determine the
+specifier (see <B>TIME ZONES</B> below) that will be used to determine the
 time zone. This option should, in general, be used on input only when
 parsing RFC822 dates. Other uses are fraught with ambiguity; for
 instance, the string <B>BST</B> may represent British Summer Time or
@@ -775,27 +769,26 @@ When the <B>clock</B> command is processing a local time, it has several
 possible sources for the time zone to use.  In order of preference, they
 are:
 <P>
-<OL class="time zones">
-<LI value="1">
+<DL class="time zones">
+<DT>[1]<DD>
 A time zone specified inside a string being parsed and matched by a <B>%z</B>
 or <B>%Z</B> format group.
-<P><LI value="2">
+<P><DT>[2]<DD>
 A time zone specified with the <B>-timezone</B> option to the <B>clock</B>
 command (or, equivalently, by <B>-gmt</B> <B>1</B>).
-<P><LI value="3">
+<P><DT>[3]<DD>
 A time zone specified in an environment variable <B>TCL_TZ</B>.
-<P><LI value="4">
+<P><DT>[4]<DD>
 A time zone specified in an environment variable <B>TZ</B>.
-<P><LI value="5">
+<P><DT>[5]<DD>
 The local time zone from the Control Panel on Windows systems.
-<P><LI value="6">
+<P><DT>[6]<DD>
 The C library's idea of the local time zone, as defined by the
 <B>mktime</B> and <B>localtime</B> functions.
-<P></OL>
+<P></DL>
 <P>
 In case [1] <I>only,</I> the string is tested to see if it is one 
 of the strings:
-<P>
 <PRE>gmt     ut      utc     bst     wet     wat     at
  nft     nst     ndt     ast     adt     est     edt
  cst     cdt     mst     mdt     pst     pdt     yst
@@ -805,7 +798,6 @@ of the strings:
  zp6     wast    wadt    jt      cct     jst     cast
  cadt    east    eadt    gst     nzt     nzst    nzdt
  idle</PRE>
-<P>
 If it is a string in the above list, it designates a known
 time zone, and is interpreted as such.
 <P>
@@ -837,30 +829,13 @@ the minus sign one west of Greenwich.
 A time zone string conforming to the Posix specification of the <B>TZ</B>
 environment variable will be recognized.  The specification
 may be found at
-<I><A HREF="http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap08.html">http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap08.html</A></I>.
-<P>
-If the Posix time zone string contains a DST (Daylight Savings Time)
-part, but doesn't contain a rule stating when DST starts or ends,
-then default rules are used. For Timezones with an offset between 0
-and +12, the current European/Russian rules are used, otherwise the
-current US rules are used. In Europe (offset +0 to +2) the switch
-to summertime is done each last Sunday in March at 1:00 GMT, and
-the switch back is each last Sunday in October at 2:00 GMT. In
-Russia (offset +3 to +12), the switch dates are the same, only
-the switch to summertime is at 2:00 local time, and the switch
-back is at 3:00 local time in all time zones. The US switch to
-summertime takes place each second Sunday in March at 2:00 local
-time, and the switch back is each first Sunday in November at
-3:00 local time. These default rules mean that in all European,
-Russian and US (or compatible) time zones, DST calculations will
-be correct for dates in 2007 and later, unless in the future the
-rules change again.
+<I>http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap08.html</I>.
 <P>
 Any other time zone string is processed by prefixing a colon and attempting
 to use it as a location name, as above.
 <H3><A NAME="M79">LOCALIZATION</A></H3>
 Developers wishing to localize the date and time formatting and parsing
-are referred to <I><A HREF="http://tip.tcl.tk/173">http://tip.tcl.tk/173</A></I> for a
+are referred to <I>http://tip.tcl.tk/173</I> for a
 specification.
 <H3><A NAME="M80">FREE FORM SCAN</A></H3>
 If the <B>clock scan</B> command is invoked without a <B>-format</B>
@@ -928,7 +903,7 @@ or
 Note that only these three formats are accepted.
 The command does <I>not</I> accept the full range of point-in-time
 specifications specified in ISO8601.  Other formats can be recognized by
-giving an explicit <B>-format</B> option to the <B>clock scan</B> command.
+giving an explicit <I>-format</I> option to the <B>clock scan</B> command.
 <P><DT><A NAME="M84"><I>relative time</I></A><DD>
 A specification relative to the current time.  The format is <B>number
 unit</B>. Acceptable units are <B>year</B>, <B>fortnight</B>, 
@@ -956,6 +931,7 @@ of a long month to a short month.
 <A href="../Keywords/C.htm#clock">clock</A>, <A href="../Keywords/D.htm#date">date</A>, <A href="../Keywords/T.htm#time">time</A>
 <H3><A NAME="M87">COPYRIGHT</A></H3>
 Copyright (c) 2004 Kevin B. Kenny &lt;kennykb@acm.org&gt;. All rights reserved.
-<div class="copy">Copyright &copy; 2004 Kevin B. Kenny &lt;kennykb(at)acm.org&gt;. All rights reserved.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2004 Kevin B. Kenny &lt;kennykb(at)acm.org&gt;. All rights reserved.
 </div>
 </BODY></HTML>

@@ -1,0 +1,69 @@
+pgtcl/doc/README: Pgtcl Reference Manual Source
+Last updated: 2010-07-14
+-----------------------------------------------------------------------------
+
+This directory contains the DocBook XML source files for the Pgtcl Reference
+Manual, which covers pgtclng and pgintcl.
+
+You will need the DocBook DTD, DocBook XML Stylesheets, and an XSL
+Transformation Processor program such as xsltproc in order to build
+the manual.
+
+I am using the following:
+   DocBook DTD V4.5 from http://www.docbook.org/xml/4.4/
+   DocBook-XSL-1.75.1 Stylesheets from http://docbook.sourceforge.net/
+   xsltproc from libxslt-1.1.24
+Other versions should also work, more or less. If you use a different version
+of the DocBook DTD, you may have to edit the DOCTYPE declaration in pgtcl.xml
+and INSTALL.xml. If you don't have a working XML catalog system that can locally
+resolve the XSL Stylesheets location, you must edit the URIs in manual.xsl
+and install.xsl .
+
+To build the manual HTML files from source:
+  $ make
+To build the stand-alone INSTALL file requires the above plus lynx.
+  $ make INSTALL
+
+To install the manual after building it, copy *.html and *.css into a
+directory convenient for your web browser. The CSS file is the stylesheet
+used by the manual. You can also use "make release" to package up the HTML
+and CSS files into a Zip file.
+
+-----------------------------------------------------------------------------
+File List:
+
+  README            This file
+  Makefile          Makefile for building the manual
+
+  INSTALL.xml       Main source file for the stand-alone INSTALL document
+  install.xsl       XML Style Sheet for making INSTALL
+
+  pgtcl.xml         Main source file for the manual
+  building.xml      Building... source, also INSTALL source
+  examples.xml      Example Programs source
+  legalinfo.xml     Copyright source
+  loading.xml       Loading... chapter source
+  overview.xml      Overview chapter source
+  reference.xml     Command Reference chapter source
+
+  manual.xsl        XML Style Sheet for the manual
+  local.xsl         XML Style Sheet used by both the manual and INSTALL
+
+  stylesheet.css    HTML stylesheet used by the manual
+
+-----------------------------------------------------------------------------
+Notes on manual production:
+
+The actual manual output is XHTML, not HTML.
+
+This manual was originally written in DocBook SGML, and later converted to
+XML. Here are some of the issues I ran into when converting the manual sources.
+
++ Had to remove all uses of <productname>. Unlike DocBook-SGML, DocBook-XML
+  always puts a registered trademark symbol after the productname markup. I
+  consider this a bug, since <productname class="trademark"> is documented
+  for that purpose.
+
++ I have never had success making quality PDF files from DocBook-XML.
+
+-----------------------------------------------------------------------------

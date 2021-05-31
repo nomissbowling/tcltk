@@ -9,18 +9,13 @@
 # Copyright (c) 1996 Sun Microsystems, Inc.
 # Copyright (c) 1998-1999 by Scriptics Corporation.
 #
-# See the file "license.terms" for information on usage and redistribution of
-# this file, and for a DISCLAIMER OF ALL WARRANTIES.
+# See the file "license.terms" for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-package require tcltest 2.5
+package require tcltest
 namespace import -force ::tcltest::*
 unset -nocomplain path
 
-catch {
-    ::tcltest::loadTestedCommands
-    package require -exact Tcltest [info patchlevel]
-    set ::tcltestlib [lindex [package ifneeded Tcltest [info patchlevel]] 1]
-}
 
 set org_pwd [pwd]
 set bindir [file join $org_pwd [file dirname [info nameofexecutable]]]
@@ -30,23 +25,21 @@ set cat32 [file join $bindir cat32.exe]
 cd [temporaryDirectory]
 
 testConstraint exec         [llength [info commands exec]]
+testConstraint testexcept   [llength [info commands testexcept]]
 testConstraint cat32        [file exists $cat32]
 testConstraint AllocConsole [catch {puts console1 ""}]
 testConstraint RealConsole  [expr {![testConstraint AllocConsole]}]
-testConstraint testexcept   [llength [info commands testexcept]]
-testConstraint slowTest     0
-
 
 set big bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n
 append big $big
-append big $big
+append big $big	
 append big $big
 append big $big
 append big $big
 append big $big
 
 set path(little) [makeFile {} little]
-set f [open $path(little) w]
+set f [open $path(little) w] 
 puts -nonewline $f "little"
 close $f
 
@@ -70,7 +63,7 @@ set path(more) [makeFile {
 
 set path(stdout) [makeFile {} stdout]
 set path(stderr) [makeFile {} stderr]
-
+
 test winpipe-1.1 {32 bit comprehensive tests: from little file} {win exec cat32} {
     exec $cat32 < $path(little) > $path(stdout) 2> $path(stderr)
     list [contents $path(stdout)] [contents $path(stderr)]
@@ -80,11 +73,15 @@ test winpipe-1.2 {32 bit comprehensive tests: from big file} {win exec cat32} {
     list [contents $path(stdout)] [contents $path(stderr)]
 } "{$big} stderr32"
 test winpipe-1.3 {32 bit comprehensive tests: a little from pipe} {win nt exec cat32} {
-    exec [interpreter] $path(more) < $path(little) | $cat32 > $path(stdout) 2> $path(stderr)
+    exec [interpreter] more < little | $cat32 > $path(stdout) 2> $path(stderr)
     list [contents $path(stdout)] [contents $path(stderr)]
 } {little stderr32}
 test winpipe-1.4 {32 bit comprehensive tests: a lot from pipe} {win nt exec cat32} {
-    exec [interpreter] $path(more) < $path(big) | $cat32 > $path(stdout) 2> $path(stderr)
+    exec [interpreter] more < big | $cat32 > $path(stdout) 2> $path(stderr)
+    list [contents $path(stdout)] [contents $path(stderr)]
+} "{$big} stderr32"
+test winpipe-1.5 {32 bit comprehensive tests: a lot from pipe} {win 95 exec cat32} {
+    exec command /c type big |& $cat32 > $path(stdout) 2> $path(stderr)
     list [contents $path(stdout)] [contents $path(stderr)]
 } "{$big} stderr32"
 test winpipe-1.6 {32 bit comprehensive tests: from console} \
@@ -175,6 +172,11 @@ test winpipe-1.21 {32 bit comprehensive tests: read/write application} \
     catch {close $f}
     set r
 } "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+test winpipe-1.22 {Checking command.com for Win95/98 hanging} {win 95 exec} {
+    exec command.com /c dir /b
+    set result 1
+} 1
+file delete more
 
 test winpipe-4.1 {Tcl_WaitPid} {win nt exec cat32} {
     proc readResults {f} {
@@ -187,7 +189,8 @@ test winpipe-4.1 {Tcl_WaitPid} {win nt exec cat32} {
 	    set result "$result$line"
 	}
     }
-    set f [open "|[list $cat32] < $path(big) 2> $path(stderr)" r]
+
+    set f [open "|[list $cat32] < big 2> $path(stderr)" r]
     fconfigure $f  -buffering none -blocking 0
     fileevent $f readable "readResults $f"
     set x 0
@@ -198,7 +201,6 @@ test winpipe-4.1 {Tcl_WaitPid} {win nt exec cat32} {
 test winpipe-4.2 {Tcl_WaitPid: return of exception codes, SIGFPE} {win exec testexcept} {
     set f [open "|[list [interpreter]]" w+]
     set pid [pid $f]
-    puts $f "load $::tcltestlib Tcltest"
     puts $f "testexcept float_underflow"
     set status [catch {close $f}]
     list $status [expr {$pid == [lindex $::errorCode 1]}] [lindex $::errorCode 2]
@@ -206,7 +208,6 @@ test winpipe-4.2 {Tcl_WaitPid: return of exception codes, SIGFPE} {win exec test
 test winpipe-4.3 {Tcl_WaitPid: return of exception codes, SIGSEGV} {win exec testexcept} {
     set f [open "|[list [interpreter]]" w+]
     set pid [pid $f]
-    puts $f "load $::tcltestlib Tcltest"
     puts $f "testexcept access_violation"
     set status [catch {close $f}]
     list $status [expr {$pid == [lindex $::errorCode 1]}] [lindex $::errorCode 2]
@@ -214,7 +215,6 @@ test winpipe-4.3 {Tcl_WaitPid: return of exception codes, SIGSEGV} {win exec tes
 test winpipe-4.4 {Tcl_WaitPid: return of exception codes, SIGILL} {win exec testexcept} {
     set f [open "|[list [interpreter]]" w+]
     set pid [pid $f]
-    puts $f "load $::tcltestlib Tcltest"
     puts $f "testexcept illegal_instruction"
     set status [catch {close $f}]
     list $status [expr {$pid == [lindex $::errorCode 1]}] [lindex $::errorCode 2]
@@ -222,7 +222,6 @@ test winpipe-4.4 {Tcl_WaitPid: return of exception codes, SIGILL} {win exec test
 test winpipe-4.5 {Tcl_WaitPid: return of exception codes, SIGINT} {win exec testexcept} {
     set f [open "|[list [interpreter]]" w+]
     set pid [pid $f]
-    puts $f "load $::tcltestlib Tcltest"
     puts $f "testexcept ctrl+c"
     set status [catch {close $f}]
     list $status [expr {$pid == [lindex $::errorCode 1]}] [lindex $::errorCode 2]
@@ -240,9 +239,9 @@ set env(TEMP) c:/
 test winpipe-5.1 {TclpCreateTempFile: cleanup temp files} {win exec} {
     set x {}
     set existing [glob -nocomplain c:/tcl*.tmp]
-    exec [interpreter] < $path(nothing)
+    exec [interpreter] < nothing 
     foreach p [glob -nocomplain c:/tcl*.tmp] {
-	if {$p ni $existing} {
+	if {[lsearch $existing $p] == -1} {
 	    lappend x $p
 	}
     }
@@ -253,7 +252,7 @@ test winpipe-5.2 {TclpCreateTempFile: TMP and TEMP not defined} {win exec} {
     set temp $env(TEMP)
     unset env(TMP)
     unset env(TEMP)
-    exec [interpreter] < $path(nothing)
+    exec [interpreter] < nothing
     set env(TMP) $tmp
     set env(TEMP) $temp
     set x {}
@@ -262,7 +261,7 @@ test winpipe-5.3 {TclpCreateTempFile: TMP specifies non-existent directory} \
 	{win exec } {
     set tmp $env(TMP)
     set env(TMP) snarky
-    exec [interpreter] < $path(nothing)
+    exec [interpreter] < nothing
     set env(TMP) $tmp
     set x {}
 } {}
@@ -272,7 +271,7 @@ test winpipe-5.4 {TclpCreateTempFile: TEMP specifies non-existent directory} \
     set temp $env(TEMP)
     unset env(TMP)
     set env(TEMP) snarky
-    exec [interpreter] < $path(nothing)
+    exec [interpreter] < nothing
     set env(TMP) $tmp
     set env(TEMP) $temp
     set x {}
@@ -328,16 +327,16 @@ proc _testExecArgs {single args} {
 	lappend cmds [list $path(echoArgs.bat)]
     } else {
 	if {![info exists path(echoArgs2.bat)] || ![file exists $path(echoArgs2.bat)]} {
-	    set path(echoArgs2.bat) [makeFile \
-		"@[file native [interpreter]] $path(echoArgs.tcl) %*" \
-		"echo(Cmd)Test Args & Batch.bat" [makeDirectory test(Dir)Check]]
+	    file mkdir [file join [temporaryDirectory] test(Dir)Check]
+	    set path(echoArgs2.bat) [makeFile "@[file native [interpreter]] $path(echoArgs.tcl) %*" \
+		"test(Dir)Check/echo(Cmd)Test Args & Batch.bat"]
 	}
 	lappend cmds [list $path(echoArgs2.bat)]
     }
     set broken {}
     foreach args $args {
 	if {$single & 1} {
-	    # enclose single test-arg between 1st/3rd to be sure nothing is truncated
+	    # enclose single test-arg between 1st/3rd to be sure nothing is truncated 
 	    # (e. g. to cover unexpected trim by nts-zero case, and args don't recombined):
 	    set args [list "1st" $args "3rd"]
 	}
@@ -574,7 +573,7 @@ set injectList {
 
 test winpipe-8.6 {BuildCommandLine/parse_cmdline pass-thru: check new-line quoted in args} \
 -constraints {win exec} -body {
-    # test exe only, because currently there is no proper way to escape a new-line char resp.
+    # test exe only, because currently there is no proper way to escape a new-line char resp. 
     # to supply a new-line to the batch-files within arguments (command line is truncated).
     _testExecArgs 8 \
 	[list START     {*}$injectList END] \
@@ -591,7 +590,7 @@ test winpipe-8.7 {BuildCommandLine/parse_cmdline pass-thru: check new-line quote
 
 
 rename _testExecArgs {}
-
+
 # restore old values for env(TMP) and env(TEMP)
 
 if {[catch {set env(TMP) $env_tmp}]} {
@@ -602,20 +601,9 @@ if {[catch {set env(TEMP) $env_temp}]} {
 }
 
 # cleanup
-removeFile little
-removeFile big
-removeFile more
-removeFile stdout
-removeFile stderr
-removeFile nothing
-if {[info exists path(echoArgs.tcl)]} { removeFile echoArgs.tcl }
-if {[info exists path(echoArgs.bat)]} { removeFile echoArgs.bat }
-if {[info exists path(echoArgs2.bat)]} { removeDirectory test(Dir)Check }
+file delete big little stdout stderr nothing echoArgs.tcl echoArgs.bat 
+file delete -force [file join [temporaryDirectory] test(Dir)Check]
 ::tcltest::cleanupTests
 # back to original directory:
 cd $org_pwd; unset org_pwd
 return
-
-# Local Variables:
-# mode: tcl
-# End:

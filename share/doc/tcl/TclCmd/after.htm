@@ -3,11 +3,11 @@
 <HEAD><TITLE>after manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> after</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> after</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="after.htm#M2" NAME="L2">NAME</A>
-<DL><DD>after &mdash; Execute a command after a time delay</DD></DL>
+<DL><DD>after - Execute a command after a time delay</DD></DL>
 <DD><A HREF="after.htm#M3" NAME="L3">SYNOPSIS</A>
 <DL>
 </DL>
@@ -25,7 +25,7 @@
 <DD><A HREF="after.htm#M13" NAME="L13">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-after &mdash; Execute a command after a time delay
+after - Execute a command after a time delay
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>after </B><I>ms</I><BR>
 <B>after </B><I>ms </I>?<I>script script script ...</I>?<BR>
@@ -55,7 +55,7 @@ The command will be executed at global level (outside the context
 of any Tcl procedure).
 If an error occurs while executing the delayed command then 
 the background error will be reported by the command
-registered with <B><A HREF="../TclCmd/interp.htm">interp bgerror</A></B>.
+registered with <B> interp bgerror</B>.
 The <B>after</B> command returns an identifier that can be used
 to cancel the delayed command using <B>after cancel</B>.
 <P><DT><A NAME="M7"><B>after cancel </B><I>id</I></A><DD>
@@ -70,7 +70,7 @@ This command also cancels the execution of a delayed command.
 The <I>script</I> arguments are concatenated together with space
 separators (just as in the <B><A HREF="../TclCmd/concat.htm">concat</A></B> command).
 If there is a pending command that matches the string, it is
-canceled and will never be executed;  if no such command is
+cancelled and will never be executed;  if no such command is
 currently pending then the <B>after cancel</B> command has no effect.
 <P><DT><A NAME="M9"><B>after idle </B><I>script </I>?<I>script script ...</I>?</A><DD>
 Concatenates the <I>script</I> arguments together with space
@@ -82,7 +82,7 @@ The command returns an identifier that can be used
 to cancel the delayed command using <B>after cancel</B>.
 If an error occurs while executing the script then the
 background error will be reported by the command
-registered with <B><A HREF="../TclCmd/interp.htm">interp bgerror</A></B>.
+registered with <B> interp bgerror</B>.
 <P><DT><A NAME="M10"><B>after info </B>?<I>id</I>?</A><DD>
 This command returns information about existing event handlers.
 If no <I>id</I> argument is supplied, the command returns
@@ -91,7 +91,7 @@ event handlers created by the <B>after</B> command for this
 interpreter.
 If <I>id</I> is supplied, it specifies an existing handler;
 <I>id</I> must have been the return value from some previous call
-to <B>after</B> and it must not have triggered yet or been canceled.
+to <B>after</B> and it must not have triggered yet or been cancelled.
 In this case the command returns a list with two elements.
 The first element of the list is the script associated
 with <I>id</I>, and the second element is either
@@ -108,14 +108,12 @@ and <B><A HREF="../TclCmd/update.htm">update</A></B> commands.
 <H3><A NAME="M11">EXAMPLES</A></H3>
 This defines a command to make Tcl do nothing at all for <I>N</I>
 seconds:
-<P>
 <PRE>proc sleep {N} {
-    <B>after</B> [expr {int($N * 1000)}]
+   <B>after</B> [expr {int($N * 1000)}]
 }</PRE>
 <P>
 This arranges for the command <I>wake_up</I> to be run in eight hours
 (providing the event loop is active at that time):
-<P>
 <PRE><B>after</B> [expr {1000 * 60 * 60 * 8}] wake_up</PRE>
 <P>
 The following command can be used to do long-running calculations (as
@@ -128,18 +126,18 @@ processing steps (arranging for the next step to be done using an
 already-triggered timer event only when the event queue has been
 drained) and is useful when you want to ensure that a Tk GUI remains
 responsive during a slow task.
-<P>
 <PRE>proc doOneStep {} {
-    if {[::my_calc::one_step]} {
-        <B>after idle</B> [list <B>after</B> 0 doOneStep]
-    }
+   if {[::my_calc::one_step]} {
+      <B>after idle</B> [list <B>after</B> 0 doOneStep]
+   }
 }
 doOneStep</PRE>
 <H3><A NAME="M12">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/concat.htm">concat</A></B>, <B><A HREF="../TclCmd/interp.htm">interp</A></B>, <B><A HREF="../TclCmd/update.htm">update</A></B>, <B><A HREF="../TclCmd/vwait.htm">vwait</A></B>
 <H3><A NAME="M13">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#cancel">cancel</A>, <A href="../Keywords/D.htm#delay">delay</A>, <A href="../Keywords/I.htm#idle callback">idle callback</A>, <A href="../Keywords/S.htm#sleep">sleep</A>, <A href="../Keywords/T.htm#time">time</A>
-<div class="copy">Copyright &copy; 1990-1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

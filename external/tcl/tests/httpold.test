@@ -11,8 +11,8 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-if {"::tcltest" ni [namespace children]} {
-    package require tcltest 2.5
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
     namespace import -force ::tcltest::*
 }
 
@@ -22,7 +22,7 @@ if {[catch {package require http 1.0}]} {
 	::tcltest::cleanupTests
 	return
     } else {
-	catch {puts "Running http 1.0 tests in child interp"}
+	catch {puts "Running http 1.0 tests in slave interp"}
 	set interp [interp create httpold]
 	$interp eval [list set httpold "running"]
 	$interp eval [list set argv $argv]
@@ -33,22 +33,16 @@ if {[catch {package require http 1.0}]} {
     }
 }
 
-# Do not use [info hostname].
-# Name resolution is often a problem on OSX; not focus of HTTP package anyway.
-# Also a problem on other platforms for http-4.14 (test with bad port number).
-set HOST localhost
-
 set bindata "This is binary data\x0d\x0amore\x0dmore\x0amore\x00null"
 catch {unset data}
 
-##
+## 
 ## The httpd script implement a stub http server
-## Sourcing httpd overwrites the value of HOST.
 ##
 source [file join [file dirname [info script]] httpd]
 
 set port 8010
-if {[catch {httpd_init $port} listen]} {
+if [catch {httpd_init $port} listen] {
     puts "Cannot start http server, http test skipped"
     unset port
     ::tcltest::cleanupTests
@@ -91,7 +85,7 @@ test httpold-3.2 {http_get} {
     set err
 } {Unsupported URL: http:junk}
 
-set url ${::HOST}:$port
+set url [info hostname]:$port
 test httpold-3.3 {http_get} {
     set token [http_get $url]
     http_data $token
@@ -101,8 +95,8 @@ test httpold-3.3 {http_get} {
 </body></html>"
 
 set tail /a/b/c
-set url ${::HOST}:$port/a/b/c
-set binurl ${::HOST}:$port/binary
+set url [info hostname]:$port/a/b/c
+set binurl [info hostname]:$port/binary
 
 test httpold-3.4 {http_get} {
     set token [http_get $url]
@@ -114,7 +108,7 @@ test httpold-3.4 {http_get} {
 
 proc selfproxy {host} {
     global port
-    return [list ${::HOST} $port]
+    return [list [info hostname] $port]
 }
 test httpold-3.5 {http_get} {
     http_config -proxyfilter selfproxy
@@ -167,7 +161,7 @@ test httpold-4.1 {httpEvent} {
     set token [http_get $url]
     upvar #0 $token data
     array set meta $data(meta)
-    expr {$data(totalsize) == $meta(Content-Length)}
+    expr ($data(totalsize) == $meta(Content-Length))
 } 1
 
 test httpold-4.2 {httpEvent} {
@@ -204,7 +198,7 @@ test httpold-4.5 {httpEvent} {
     close $out
     upvar #0 $token data
     removeFile $testfile
-    expr {$data(currentsize) == $data(totalsize)}
+    expr $data(currentsize) == $data(totalsize)
 } 1
 
 test httpold-4.6 {httpEvent} {
@@ -279,7 +273,7 @@ test httpold-5.3 {http_formatQuery} {
 
 test httpold-6.1 {httpProxyRequired} {
     update
-    http_config -proxyhost ${::HOST} -proxyport $port
+    http_config -proxyhost [info hostname] -proxyport $port
     set token [http_get $url]
     http_wait $token
     http_config -proxyhost {} -proxyport {}

@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_Alloc manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Alloc</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Alloc</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Alloc.htm#M2" NAME="L15">NAME</A>
-<DL><DD>Tcl_Alloc, Tcl_Free, Tcl_Realloc, Tcl_AttemptAlloc, Tcl_AttemptRealloc, ckalloc, ckfree, ckrealloc, attemptckalloc, attemptckrealloc &mdash; allocate or free heap memory</DD></DL>
-<DD><A HREF="Alloc.htm#M3" NAME="L16">SYNOPSIS</A>
+<DD><A HREF="Alloc.htm#M2" NAME="L13">NAME</A>
+<DL><DD>Tcl_Alloc, Tcl_Free, Tcl_Realloc, Tcl_AttemptAlloc, Tcl_AttemptRealloc, ckalloc, ckfree, ckrealloc, attemptckalloc, attemptckrealloc - allocate or free heap memory</DD></DL>
+<DD><A HREF="Alloc.htm#M3" NAME="L14">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>char *
@@ -32,14 +32,14 @@
 <DD>char *
 <DD><B>attemptckrealloc</B>(<I>ptr, size</I>)
 </DL>
-<DD><A HREF="Alloc.htm#M4" NAME="L17">ARGUMENTS</A>
+<DD><A HREF="Alloc.htm#M4" NAME="L15">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Alloc.htm#M5" NAME="L18">DESCRIPTION</A>
-<DD><A HREF="Alloc.htm#M6" NAME="L19">KEYWORDS</A>
+<DD><A HREF="Alloc.htm#M5" NAME="L16">DESCRIPTION</A>
+<DD><A HREF="Alloc.htm#M6" NAME="L17">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_Alloc, Tcl_Free, Tcl_Realloc, Tcl_AttemptAlloc, Tcl_AttemptRealloc, ckalloc, ckfree, ckrealloc, attemptckalloc, attemptckrealloc &mdash; allocate or free heap memory
+Tcl_Alloc, Tcl_Free, Tcl_Realloc, Tcl_AttemptAlloc, Tcl_AttemptRealloc, ckalloc, ckfree, ckrealloc, attemptckalloc, attemptckrealloc - allocate or free heap memory
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 char *<BR>
@@ -108,6 +108,7 @@ module, use the macros rather than direct calls to <B>Tcl_Alloc</B>, etc.
 
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#alloc">alloc</A>, <A href="../Keywords/A.htm#allocation">allocation</A>, <A href="../Keywords/F.htm#free">free</A>, <A href="../Keywords/M.htm#malloc">malloc</A>, <A href="../Keywords/M.htm#memory">memory</A>, <A href="../Keywords/R.htm#realloc">realloc</A>, <A href="../Keywords/T.htm#TCL_MEM_DEBUG">TCL_MEM_DEBUG</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -15,8 +15,8 @@
 
 /*
  * Each call to Tk_GetImage returns a pointer to one of the following
- * structures, which is used as a token by clients (widgets) that display
- * images.
+ * structures, which is used as a token by clients (widgets) that
+ * display images.
  */
 
 typedef struct Image {
@@ -26,8 +26,8 @@ typedef struct Image {
     Display *display;		/* Display for tkwin. Needed because when the
 				 * image is eventually freed tkwin may not
 				 * exist anymore. */
-    struct ImageModel *modelPtr;
-				/* Model for this image (identifiers image
+    struct ImageMaster *masterPtr;
+				/* Master for this image (identifiers image
 				 * manager, for example). */
     ClientData instanceData;	/* One word argument to pass to image manager
 				 * when dealing with this image instance. */
@@ -40,17 +40,17 @@ typedef struct Image {
 } Image;
 
 /*
- * For each image model there is one of the following structures, which
+ * For each image master there is one of the following structures, which
  * represents a name in the image table and all of the images instantiated
  * from it. Entries in mainPtr->imageTable point to these structures.
  */
 
-typedef struct ImageModel {
+typedef struct ImageMaster {
     Tk_ImageType *typePtr;	/* Information about image type. NULL means
 				 * that no image manager owns this image: the
 				 * image was deleted. */
-    ClientData modelData;	/* One-word argument to pass to image mgr when
-				 * dealing with the model, as opposed to
+    ClientData masterData;	/* One-word argument to pass to image mgr when
+				 * dealing with the master, as opposed to
 				 * instances. */
     int width, height;		/* Last known dimensions for image. */
     Tcl_HashTable *tablePtr;	/* Pointer to hash table containing image (the
@@ -64,9 +64,9 @@ typedef struct ImageModel {
     int deleted;		/* Flag set when image is being deleted. */
     TkWindow *winPtr;		/* Main window of interpreter (used to detect
 				 * when the world is falling apart.) */
-} ImageModel;
+} ImageMaster;
 
-typedef struct {
+typedef struct ThreadSpecificData {
     Tk_ImageType *imageTypeList;/* First in a list of all known image
 				 * types. */
     Tk_ImageType *oldImageTypeList;
@@ -82,8 +82,8 @@ static Tcl_ThreadDataKey dataKey;
  */
 
 static void		ImageTypeThreadExitProc(ClientData clientData);
-static void		DeleteImage(ImageModel *modelPtr);
-static void		EventuallyDeleteImage(ImageModel *modelPtr,
+static void		DeleteImage(ImageMaster *masterPtr);
+static void		EventuallyDeleteImage(ImageMaster *masterPtr,
 			    int forgetImageHashNow);
 
 /*
@@ -104,24 +104,24 @@ static void		EventuallyDeleteImage(ImageModel *modelPtr,
 
 static void
 ImageTypeThreadExitProc(
-    TCL_UNUSED(void *))
+    ClientData clientData)	/* not used */
 {
-    Tk_ImageType *freePtr;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+	Tk_ImageType *freePtr;
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     while (tsdPtr->oldImageTypeList != NULL) {
 	freePtr = tsdPtr->oldImageTypeList;
 	tsdPtr->oldImageTypeList = tsdPtr->oldImageTypeList->nextPtr;
-	ckfree(freePtr);
+	ckfree((char *) freePtr);
     }
     while (tsdPtr->imageTypeList != NULL) {
 	freePtr = tsdPtr->imageTypeList;
 	tsdPtr->imageTypeList = tsdPtr->imageTypeList->nextPtr;
-	ckfree(freePtr);
+	ckfree((char *) freePtr);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -143,20 +143,19 @@ ImageTypeThreadExitProc(
 
 void
 Tk_CreateOldImageType(
-    const Tk_ImageType *typePtr)
-				/* Structure describing the type. All of the
+    Tk_ImageType *typePtr)	/* Structure describing the type. All of the
 				 * fields except "nextPtr" must be filled in
 				 * by caller. */
 {
-    Tk_ImageType *copyPtr;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+	Tk_ImageType *copyPtr;
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (!tsdPtr->initialized) {
 	tsdPtr->initialized = 1;
 	Tcl_CreateThreadExitHandler(ImageTypeThreadExitProc, NULL);
     }
-    copyPtr = (Tk_ImageType *)ckalloc(sizeof(Tk_ImageType));
+    copyPtr = (Tk_ImageType *) ckalloc(sizeof(Tk_ImageType));
     *copyPtr = *typePtr;
     copyPtr->nextPtr = tsdPtr->oldImageTypeList;
     tsdPtr->oldImageTypeList = copyPtr;
@@ -164,20 +163,19 @@ Tk_CreateOldImageType(
 
 void
 Tk_CreateImageType(
-    const Tk_ImageType *typePtr)
-				/* Structure describing the type. All of the
+    Tk_ImageType *typePtr)	/* Structure describing the type. All of the
 				 * fields except "nextPtr" must be filled in
 				 * by caller. */
 {
-    Tk_ImageType *copyPtr;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+	Tk_ImageType *copyPtr;
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (!tsdPtr->initialized) {
 	tsdPtr->initialized = 1;
 	Tcl_CreateThreadExitHandler(ImageTypeThreadExitProc, NULL);
     }
-    copyPtr = (Tk_ImageType *)ckalloc(sizeof(Tk_ImageType));
+    copyPtr = (Tk_ImageType *) ckalloc(sizeof(Tk_ImageType));
     *copyPtr = *typePtr;
     copyPtr->nextPtr = tsdPtr->imageTypeList;
     tsdPtr->imageTypeList = copyPtr;
@@ -205,9 +203,9 @@ Tk_ImageObjCmd(
     ClientData clientData,	/* Main window associated with interpreter. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
-    Tcl_Obj *const objv[])	/* Argument strings. */
+    Tcl_Obj *CONST objv[])	/* Argument strings. */
 {
-    static const char *const imageOptions[] = {
+    static CONST char *imageOptions[] = {
 	"create", "delete", "height", "inuse", "names", "type", "types",
 	"width", NULL
     };
@@ -215,17 +213,16 @@ Tk_ImageObjCmd(
 	IMAGE_CREATE, IMAGE_DELETE, IMAGE_HEIGHT, IMAGE_INUSE, IMAGE_NAMES,
 	IMAGE_TYPE, IMAGE_TYPES, IMAGE_WIDTH
     };
-    TkWindow *winPtr = (TkWindow *)clientData;
+    TkWindow *winPtr = (TkWindow *) clientData;
     int i, isNew, firstOption, index;
     Tk_ImageType *typePtr;
-    ImageModel *modelPtr;
+    ImageMaster *masterPtr;
     Image *imagePtr;
     Tcl_HashEntry *hPtr;
     Tcl_HashSearch search;
     char idString[16 + TCL_INTEGER_SPACE];
     TkDisplay *dispPtr = winPtr->dispPtr;
-    const char *arg, *name;
-    Tcl_Obj *resultObj;
+    char *arg, *name;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
@@ -234,18 +231,16 @@ Tk_ImageObjCmd(
 	return TCL_ERROR;
     }
 
-    if (Tcl_GetIndexFromObjStruct(interp, objv[1], imageOptions,
-	    sizeof(char *), "option", 0, &index) != TCL_OK) {
+    if (Tcl_GetIndexFromObj(interp, objv[1], imageOptions, "option", 0,
+	    &index) != TCL_OK) {
 	return TCL_ERROR;
     }
     switch ((enum options) index) {
     case IMAGE_CREATE: {
 	Tcl_Obj **args;
 	int oldimage = 0;
-
 	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 2, objv,
-		    "type ?name? ?-option value ...?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "type ?name? ?options?");
 	    return TCL_ERROR;
 	}
 
@@ -272,9 +267,8 @@ Tk_ImageObjCmd(
 	    }
 	}
 	if (typePtr == NULL) {
-	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "image type \"%s\" doesn't exist", arg));
-	    Tcl_SetErrorCode(interp, "TK", "LOOKUP", "IMAGE_TYPE", arg, NULL);
+	    Tcl_AppendResult(interp, "image type \"", arg, "\" doesn't exist",
+		    NULL);
 	    return TCL_ERROR;
 	}
 
@@ -283,11 +277,12 @@ Tk_ImageObjCmd(
 	 */
 
 	if ((objc == 3) || (*(arg = Tcl_GetString(objv[3])) == '-')) {
+	    Tcl_CmdInfo dummy;
 	    do {
 		dispPtr->imageId++;
 		sprintf(idString, "image%d", dispPtr->imageId);
 		name = idString;
-	    } while (Tcl_FindCommand(interp, name, NULL, 0) != NULL);
+	    } while (Tcl_GetCommandInfo(interp, name, &dummy) != 0);
 	    firstOption = 3;
 	} else {
 	    TkWindow *topWin;
@@ -297,17 +292,15 @@ Tk_ImageObjCmd(
 
 	    /*
 	     * Need to check if the _command_ that we are about to create is
-	     * the name of the current model widget command (normally "." but
+	     * the name of the current master widget command (normally "." but
 	     * could have been renamed) and fail in that case before a really
 	     * nasty and hard to stop crash happens.
 	     */
 
 	    topWin = (TkWindow *) TkToplevelWindowForCommand(interp, name);
 	    if (topWin != NULL && winPtr->mainPtr->winPtr == topWin) {
-		Tcl_SetObjResult(interp, Tcl_NewStringObj(
-			"images may not be named the same as the main window",
-			-1));
-		Tcl_SetErrorCode(interp, "TK", "IMAGE", "SMASH_MAIN", NULL);
+		Tcl_AppendResult(interp, "images may not be named the ",
+			"same as the main window", NULL);
 		return TCL_ERROR;
 	    }
 	}
@@ -318,37 +311,37 @@ Tk_ImageObjCmd(
 
 	hPtr = Tcl_CreateHashEntry(&winPtr->mainPtr->imageTable, name, &isNew);
 	if (isNew) {
-	    modelPtr = (ImageModel *)ckalloc(sizeof(ImageModel));
-	    modelPtr->typePtr = NULL;
-	    modelPtr->modelData = NULL;
-	    modelPtr->width = modelPtr->height = 1;
-	    modelPtr->tablePtr = &winPtr->mainPtr->imageTable;
-	    modelPtr->hPtr = hPtr;
-	    modelPtr->instancePtr = NULL;
-	    modelPtr->deleted = 0;
-	    modelPtr->winPtr = winPtr->mainPtr->winPtr;
-	    Tcl_Preserve(modelPtr->winPtr);
-	    Tcl_SetHashValue(hPtr, modelPtr);
+	    masterPtr = (ImageMaster *) ckalloc(sizeof(ImageMaster));
+	    masterPtr->typePtr = NULL;
+	    masterPtr->masterData = NULL;
+	    masterPtr->width = masterPtr->height = 1;
+	    masterPtr->tablePtr = &winPtr->mainPtr->imageTable;
+	    masterPtr->hPtr = hPtr;
+	    masterPtr->instancePtr = NULL;
+	    masterPtr->deleted = 0;
+	    masterPtr->winPtr = winPtr->mainPtr->winPtr;
+	    Tcl_Preserve((ClientData) masterPtr->winPtr);
+	    Tcl_SetHashValue(hPtr, masterPtr);
 	} else {
 	    /*
 	     * An image already exists by this name. Disconnect the instances
-	     * from the model.
+	     * from the master.
 	     */
 
-	    modelPtr = (ImageModel *)Tcl_GetHashValue(hPtr);
-	    if (modelPtr->typePtr != NULL) {
-		for (imagePtr = modelPtr->instancePtr; imagePtr != NULL;
+	    masterPtr = (ImageMaster *) Tcl_GetHashValue(hPtr);
+	    if (masterPtr->typePtr != NULL) {
+		for (imagePtr = masterPtr->instancePtr; imagePtr != NULL;
 			imagePtr = imagePtr->nextPtr) {
-		    modelPtr->typePtr->freeProc(imagePtr->instanceData,
+		    (*masterPtr->typePtr->freeProc)(imagePtr->instanceData,
 			    imagePtr->display);
-		    imagePtr->changeProc(imagePtr->widgetClientData, 0, 0,
-			    modelPtr->width, modelPtr->height,
-			    modelPtr->width, modelPtr->height);
+		    (*imagePtr->changeProc)(imagePtr->widgetClientData,
+			    0, 0, masterPtr->width, masterPtr->height,
+			    masterPtr->width, masterPtr->height);
 		}
-		modelPtr->typePtr->deleteProc(modelPtr->modelData);
-		modelPtr->typePtr = NULL;
+		(*masterPtr->typePtr->deleteProc)(masterPtr->masterData);
+		masterPtr->typePtr = NULL;
 	    }
-	    modelPtr->deleted = 0;
+	    masterPtr->deleted = 0;
 	}
 
 	/*
@@ -361,34 +354,37 @@ Tk_ImageObjCmd(
 	objc -= firstOption;
 	args = (Tcl_Obj **) objv;
 	if (oldimage) {
-	    args = (Tcl_Obj **)ckalloc((objc+1) * sizeof(Tcl_Obj *));
+	    int i;
+
+	    args = (Tcl_Obj **) ckalloc((objc+1) * sizeof(char *));
 	    for (i = 0; i < objc; i++) {
 		args[i] = (Tcl_Obj *) Tcl_GetString(objv[i]);
 	    }
 	    args[objc] = NULL;
 	}
-	Tcl_Preserve(modelPtr);
-	if (typePtr->createProc(interp, name, objc, args, typePtr,
-		(Tk_ImageModel)modelPtr, &modelPtr->modelData) != TCL_OK){
-	    EventuallyDeleteImage(modelPtr, 0);
-	    Tcl_Release(modelPtr);
+	Tcl_Preserve((ClientData) masterPtr);
+	if ((*typePtr->createProc)(interp, name, objc, args, typePtr,
+		(Tk_ImageMaster)masterPtr, &masterPtr->masterData) != TCL_OK) {
+	    EventuallyDeleteImage(masterPtr, 0);
+	    Tcl_Release((ClientData) masterPtr);
 	    if (oldimage) {
-		ckfree(args);
+		ckfree((char *) args);
 	    }
 	    return TCL_ERROR;
 	}
-	Tcl_Release(modelPtr);
+	Tcl_Release((ClientData) masterPtr);
 	if (oldimage) {
-	    ckfree(args);
+	    ckfree((char *) args);
 	}
-	modelPtr->typePtr = typePtr;
-	for (imagePtr = modelPtr->instancePtr; imagePtr != NULL;
+	masterPtr->typePtr = typePtr;
+	for (imagePtr = masterPtr->instancePtr; imagePtr != NULL;
 		imagePtr = imagePtr->nextPtr) {
-	    imagePtr->instanceData = typePtr->getProc(imagePtr->tkwin,
-		    modelPtr->modelData);
+	    imagePtr->instanceData = (*typePtr->getProc)(imagePtr->tkwin,
+		    masterPtr->masterData);
 	}
-	Tcl_SetObjResult(interp, Tcl_NewStringObj(
-		(const char *)Tcl_GetHashKey(&winPtr->mainPtr->imageTable, hPtr), -1));
+	Tcl_SetResult(interp,
+		Tcl_GetHashKey(&winPtr->mainPtr->imageTable, hPtr),
+		TCL_STATIC);
 	break;
     }
     case IMAGE_DELETE:
@@ -398,11 +394,11 @@ Tk_ImageObjCmd(
 	    if (hPtr == NULL) {
 		goto alreadyDeleted;
 	    }
-	    modelPtr = (ImageModel *)Tcl_GetHashValue(hPtr);
-	    if (modelPtr->deleted) {
+	    masterPtr = (ImageMaster *) Tcl_GetHashValue(hPtr);
+	    if (masterPtr->deleted) {
 		goto alreadyDeleted;
 	    }
-	    DeleteImage(modelPtr);
+	    DeleteImage(masterPtr);
 	}
 	break;
     case IMAGE_NAMES:
@@ -411,34 +407,28 @@ Tk_ImageObjCmd(
 	    return TCL_ERROR;
 	}
 	hPtr = Tcl_FirstHashEntry(&winPtr->mainPtr->imageTable, &search);
-	resultObj = Tcl_NewObj();
 	for ( ; hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
-	    modelPtr = (ImageModel *)Tcl_GetHashValue(hPtr);
-	    if (modelPtr->deleted) {
+	    masterPtr = (ImageMaster *) Tcl_GetHashValue(hPtr);
+	    if (masterPtr->deleted) {
 		continue;
 	    }
-	    Tcl_ListObjAppendElement(NULL, resultObj, Tcl_NewStringObj(
-		    (const char *)Tcl_GetHashKey(&winPtr->mainPtr->imageTable, hPtr), -1));
+	    Tcl_AppendElement(interp, Tcl_GetHashKey(
+		    &winPtr->mainPtr->imageTable, hPtr));
 	}
-	Tcl_SetObjResult(interp, resultObj);
 	break;
     case IMAGE_TYPES:
 	if (objc != 2) {
 	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
 	    return TCL_ERROR;
 	}
-	resultObj = Tcl_NewObj();
 	for (typePtr = tsdPtr->imageTypeList; typePtr != NULL;
 		typePtr = typePtr->nextPtr) {
-	    Tcl_ListObjAppendElement(NULL, resultObj, Tcl_NewStringObj(
-		    typePtr->name, -1));
+	    Tcl_AppendElement(interp, typePtr->name);
 	}
 	for (typePtr = tsdPtr->oldImageTypeList; typePtr != NULL;
 		typePtr = typePtr->nextPtr) {
-	    Tcl_ListObjAppendElement(NULL, resultObj, Tcl_NewStringObj(
-		    typePtr->name, -1));
+	    Tcl_AppendElement(interp, typePtr->name);
 	}
-	Tcl_SetObjResult(interp, resultObj);
 	break;
 
     case IMAGE_HEIGHT:
@@ -447,7 +437,7 @@ Tk_ImageObjCmd(
     case IMAGE_WIDTH:
 	/*
 	 * These operations all parse virtually identically. First check to
-	 * see if three args are given. Then get a non-deleted model from the
+	 * see if three args are given. Then get a non-deleted master from the
 	 * third arg.
 	 */
 
@@ -461,8 +451,8 @@ Tk_ImageObjCmd(
 	if (hPtr == NULL) {
 	    goto alreadyDeleted;
 	}
-	modelPtr = (ImageModel *)Tcl_GetHashValue(hPtr);
-	if (modelPtr->deleted) {
+	masterPtr = (ImageMaster *) Tcl_GetHashValue(hPtr);
+	if (masterPtr->deleted) {
 	    goto alreadyDeleted;
 	}
 
@@ -472,20 +462,19 @@ Tk_ImageObjCmd(
 
 	switch ((enum options) index) {
 	case IMAGE_HEIGHT:
-	    Tcl_SetObjResult(interp, Tcl_NewIntObj(modelPtr->height));
+	    Tcl_SetIntObj(Tcl_GetObjResult(interp), masterPtr->height);
 	    break;
 	case IMAGE_INUSE:
-	    Tcl_SetObjResult(interp, Tcl_NewBooleanObj(
-		    modelPtr->typePtr && modelPtr->instancePtr));
+	    Tcl_SetBooleanObj(Tcl_GetObjResult(interp),
+		    masterPtr->typePtr!=NULL && masterPtr->instancePtr!=NULL);
 	    break;
 	case IMAGE_TYPE:
-	    if (modelPtr->typePtr != NULL) {
-		Tcl_SetObjResult(interp,
-			Tcl_NewStringObj(modelPtr->typePtr->name, -1));
+	    if (masterPtr->typePtr != NULL) {
+		Tcl_SetResult(interp, masterPtr->typePtr->name, TCL_STATIC);
 	    }
 	    break;
 	case IMAGE_WIDTH:
-	    Tcl_SetObjResult(interp, Tcl_NewIntObj(modelPtr->width));
+	    Tcl_SetIntObj(Tcl_GetObjResult(interp), masterPtr->width);
 	    break;
 	default:
 	    Tcl_Panic("can't happen");
@@ -495,8 +484,7 @@ Tk_ImageObjCmd(
     return TCL_OK;
 
   alreadyDeleted:
-    Tcl_SetObjResult(interp, Tcl_ObjPrintf("image \"%s\" doesn't exist",arg));
-    Tcl_SetErrorCode(interp, "TK", "LOOKUP", "IMAGE", arg, NULL);
+    Tcl_AppendResult(interp, "image \"", arg, "\" doesn't exist", NULL);
     return TCL_ERROR;
 }
 
@@ -521,7 +509,7 @@ Tk_ImageObjCmd(
 
 void
 Tk_ImageChanged(
-    Tk_ImageModel imageModel,	/* Image that needs redisplay. */
+    Tk_ImageMaster imageMaster,	/* Image that needs redisplay. */
     int x, int y,		/* Coordinates of upper-left pixel of region
 				 * of image that needs to be redrawn. */
     int width, int height,	/* Dimensions (in pixels) of region of image
@@ -532,15 +520,15 @@ Tk_ImageChanged(
     int imageWidth, int imageHeight)
 				/* New dimensions of image. */
 {
-    ImageModel *modelPtr = (ImageModel *) imageModel;
+    ImageMaster *masterPtr = (ImageMaster *) imageMaster;
     Image *imagePtr;
 
-    modelPtr->width = imageWidth;
-    modelPtr->height = imageHeight;
-    for (imagePtr = modelPtr->instancePtr; imagePtr != NULL;
+    masterPtr->width = imageWidth;
+    masterPtr->height = imageHeight;
+    for (imagePtr = masterPtr->instancePtr; imagePtr != NULL;
 	    imagePtr = imagePtr->nextPtr) {
-	imagePtr->changeProc(imagePtr->widgetClientData, x, y, width, height,
-		imageWidth, imageHeight);
+	(*imagePtr->changeProc)(imagePtr->widgetClientData, x, y,
+		width, height, imageWidth, imageHeight);
     }
 }
 
@@ -549,11 +537,11 @@ Tk_ImageChanged(
  *
  * Tk_NameOfImage --
  *
- *	Given a token for an image model, this function returns the name of
+ *	Given a token for an image master, this function returns the name of
  *	the image.
  *
  * Results:
- *	The return value is the string name for imageModel.
+ *	The return value is the string name for imageMaster.
  *
  * Side effects:
  *	None.
@@ -561,16 +549,16 @@ Tk_ImageChanged(
  *----------------------------------------------------------------------
  */
 
-const char *
+CONST char *
 Tk_NameOfImage(
-    Tk_ImageModel imageModel)	/* Token for image. */
+    Tk_ImageMaster imageMaster)	/* Token for image. */
 {
-    ImageModel *modelPtr = (ImageModel *) imageModel;
+    ImageMaster *masterPtr = (ImageMaster *) imageMaster;
 
-    if (modelPtr->hPtr == NULL) {
+    if (masterPtr->hPtr == NULL) {
 	return NULL;
     }
-    return (const char *)Tcl_GetHashKey(modelPtr->tablePtr, modelPtr->hPtr);
+    return Tcl_GetHashKey(masterPtr->tablePtr, masterPtr->hPtr);
 }
 
 /*
@@ -601,44 +589,42 @@ Tk_GetImage(
 				 * be found. */
     Tk_Window tkwin,		/* Token for window in which image will be
 				 * used. */
-    const char *name,		/* Name of desired image. */
+    CONST char *name,		/* Name of desired image. */
     Tk_ImageChangedProc *changeProc,
 				/* Function to invoke when redisplay is needed
 				 * because image's pixels or size changed. */
     ClientData clientData)	/* One-word argument to pass to damageProc. */
 {
     Tcl_HashEntry *hPtr;
-    ImageModel *modelPtr;
+    ImageMaster *masterPtr;
     Image *imagePtr;
 
     hPtr = Tcl_FindHashEntry(&((TkWindow *) tkwin)->mainPtr->imageTable, name);
     if (hPtr == NULL) {
 	goto noSuchImage;
     }
-    modelPtr = (ImageModel *)Tcl_GetHashValue(hPtr);
-    if (modelPtr->typePtr == NULL) {
+    masterPtr = (ImageMaster *) Tcl_GetHashValue(hPtr);
+    if (masterPtr->typePtr == NULL) {
 	goto noSuchImage;
     }
-    if (modelPtr->deleted) {
+    if (masterPtr->deleted) {
 	goto noSuchImage;
     }
-    imagePtr = (Image *)ckalloc(sizeof(Image));
+    imagePtr = (Image *) ckalloc(sizeof(Image));
     imagePtr->tkwin = tkwin;
     imagePtr->display = Tk_Display(tkwin);
-    imagePtr->modelPtr = modelPtr;
+    imagePtr->masterPtr = masterPtr;
     imagePtr->instanceData =
-	    modelPtr->typePtr->getProc(tkwin, modelPtr->modelData);
+	    (*masterPtr->typePtr->getProc)(tkwin, masterPtr->masterData);
     imagePtr->changeProc = changeProc;
     imagePtr->widgetClientData = clientData;
-    imagePtr->nextPtr = modelPtr->instancePtr;
-    modelPtr->instancePtr = imagePtr;
+    imagePtr->nextPtr = masterPtr->instancePtr;
+    masterPtr->instancePtr = imagePtr;
     return (Tk_Image) imagePtr;
 
   noSuchImage:
     if (interp) {
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"image \"%s\" doesn't exist", name));
-	Tcl_SetErrorCode(interp, "TK", "LOOKUP", "IMAGE", name, NULL);
+	Tcl_AppendResult(interp, "image \"", name, "\" doesn't exist", NULL);
     }
     return NULL;
 }
@@ -667,39 +653,39 @@ Tk_FreeImage(
 				 * a widget. */
 {
     Image *imagePtr = (Image *) image;
-    ImageModel *modelPtr = imagePtr->modelPtr;
+    ImageMaster *masterPtr = imagePtr->masterPtr;
     Image *prevPtr;
 
     /*
      * Clean up the particular instance.
      */
 
-    if (modelPtr->typePtr != NULL) {
-	modelPtr->typePtr->freeProc(imagePtr->instanceData,
+    if (masterPtr->typePtr != NULL) {
+	(*masterPtr->typePtr->freeProc)(imagePtr->instanceData,
 		imagePtr->display);
     }
-    prevPtr = modelPtr->instancePtr;
+    prevPtr = masterPtr->instancePtr;
     if (prevPtr == imagePtr) {
-	modelPtr->instancePtr = imagePtr->nextPtr;
+	masterPtr->instancePtr = imagePtr->nextPtr;
     } else {
 	while (prevPtr->nextPtr != imagePtr) {
 	    prevPtr = prevPtr->nextPtr;
 	}
 	prevPtr->nextPtr = imagePtr->nextPtr;
     }
-    ckfree(imagePtr);
+    ckfree((char *) imagePtr);
 
     /*
-     * If there are no more instances left for the model, and if the model
-     * image has been deleted, then delete the model too.
+     * If there are no more instances left for the master, and if the master
+     * image has been deleted, then delete the master too.
      */
 
-    if ((modelPtr->typePtr == NULL) && (modelPtr->instancePtr == NULL)) {
-	if (modelPtr->hPtr != NULL) {
-	    Tcl_DeleteHashEntry(modelPtr->hPtr);
+    if ((masterPtr->typePtr == NULL) && (masterPtr->instancePtr == NULL)) {
+	if (masterPtr->hPtr != NULL) {
+	    Tcl_DeleteHashEntry(masterPtr->hPtr);
 	}
-	Tcl_Release(modelPtr->winPtr);
-	ckfree(modelPtr);
+	Tcl_Release((ClientData) masterPtr->winPtr);
+	ckfree((char *) masterPtr);
     }
 }
 
@@ -739,9 +725,9 @@ Tk_PostscriptImage(
     GC newGC;
     XGCValues gcValues;
 
-    if (imagePtr->modelPtr->typePtr == NULL) {
+    if (imagePtr->masterPtr->typePtr == NULL) {
 	/*
-	 * No model for image, so nothing to display on postscript.
+	 * No master for image, so nothing to display on postscript.
 	 */
 
 	return TCL_OK;
@@ -752,10 +738,10 @@ Tk_PostscriptImage(
      * otherwise go on with generic code.
      */
 
-    if (imagePtr->modelPtr->typePtr->postscriptProc != NULL) {
-	return imagePtr->modelPtr->typePtr->postscriptProc(
-		imagePtr->modelPtr->modelData, interp, tkwin, psinfo,
-		x, y, width, height, prepass);
+    if (imagePtr->masterPtr->typePtr->postscriptProc != NULL) {
+	return (*imagePtr->masterPtr->typePtr->postscriptProc)(
+	    imagePtr->masterPtr->masterData, interp, tkwin, psinfo,
+	    x, y, width, height, prepass);
     }
 
     if (prepass) {
@@ -774,15 +760,15 @@ Tk_PostscriptImage(
     gcValues.foreground = WhitePixelOfScreen(Tk_Screen(tkwin));
     newGC = Tk_GetGC(tkwin, GCForeground, &gcValues);
     if (newGC != NULL) {
-	XFillRectangle(Tk_Display(tkwin), pmap, newGC, 0, 0,
-		(unsigned) width, (unsigned) height);
+	XFillRectangle(Tk_Display(tkwin), pmap, newGC,
+		0, 0, (unsigned int)width, (unsigned int)height);
 	Tk_FreeGC(Tk_Display(tkwin), newGC);
     }
 
     Tk_RedrawImage(image, x, y, width, height, pmap, 0, 0);
 
     ximage = XGetImage(Tk_Display(tkwin), pmap, 0, 0,
-	    (unsigned) width, (unsigned) height, AllPlanes, ZPixmap);
+	    (unsigned int)width, (unsigned int)height, AllPlanes, ZPixmap);
 
     Tk_FreePixmap(Tk_Display(tkwin), pmap);
 
@@ -835,9 +821,9 @@ Tk_RedrawImage(
 {
     Image *imagePtr = (Image *) image;
 
-    if (imagePtr->modelPtr->typePtr == NULL) {
+    if (imagePtr->masterPtr->typePtr == NULL) {
 	/*
-	 * No model for image, so nothing to display.
+	 * No master for image, so nothing to display.
 	 */
 
 	return;
@@ -857,15 +843,15 @@ Tk_RedrawImage(
 	drawableY -= imageY;
 	imageY = 0;
     }
-    if ((imageX + width) > imagePtr->modelPtr->width) {
-	width = imagePtr->modelPtr->width - imageX;
+    if ((imageX + width) > imagePtr->masterPtr->width) {
+	width = imagePtr->masterPtr->width - imageX;
     }
-    if ((imageY + height) > imagePtr->modelPtr->height) {
-	height = imagePtr->modelPtr->height - imageY;
+    if ((imageY + height) > imagePtr->masterPtr->height) {
+	height = imagePtr->masterPtr->height - imageY;
     }
-    imagePtr->modelPtr->typePtr->displayProc(imagePtr->instanceData,
-	    imagePtr->display, drawable, imageX, imageY, width, height,
-	    drawableX, drawableY);
+    (*imagePtr->masterPtr->typePtr->displayProc)(
+	    imagePtr->instanceData, imagePtr->display, drawable,
+	    imageX, imageY, width, height, drawableX, drawableY);
 }
 
 /*
@@ -893,8 +879,8 @@ Tk_SizeOfImage(
 {
     Image *imagePtr = (Image *) image;
 
-    *widthPtr = imagePtr->modelPtr->width;
-    *heightPtr = imagePtr->modelPtr->height;
+    *widthPtr = imagePtr->masterPtr->width;
+    *heightPtr = imagePtr->masterPtr->height;
 }
 
 /*
@@ -918,7 +904,7 @@ void
 Tk_DeleteImage(
     Tcl_Interp *interp,		/* Interpreter in which the image was
 				 * created. */
-    const char *name)		/* Name of image. */
+    CONST char *name)		/* Name of image. */
 {
     Tcl_HashEntry *hPtr;
     TkWindow *winPtr;
@@ -931,7 +917,7 @@ Tk_DeleteImage(
     if (hPtr == NULL) {
 	return;
     }
-    DeleteImage((ImageModel *)Tcl_GetHashValue(hPtr));
+    DeleteImage((ImageMaster *)Tcl_GetHashValue(hPtr));
 }
 
 /*
@@ -946,7 +932,7 @@ Tk_DeleteImage(
  *
  * Side effects:
  *	The connection is dropped between instances of this image and an image
- *	model. Image instances will redisplay themselves as empty areas, but
+ *	master. Image instances will redisplay themselves as empty areas, but
  *	existing instances will not be deleted.
  *
  *----------------------------------------------------------------------
@@ -954,31 +940,32 @@ Tk_DeleteImage(
 
 static void
 DeleteImage(
-    ImageModel *modelPtr)	/* Pointer to main data structure for image. */
+    ImageMaster *masterPtr)	/* Pointer to main data structure for image. */
 {
     Image *imagePtr;
     Tk_ImageType *typePtr;
 
-    typePtr = modelPtr->typePtr;
-    modelPtr->typePtr = NULL;
+    typePtr = masterPtr->typePtr;
+    masterPtr->typePtr = NULL;
     if (typePtr != NULL) {
-	for (imagePtr = modelPtr->instancePtr; imagePtr != NULL;
+	for (imagePtr = masterPtr->instancePtr; imagePtr != NULL;
 		imagePtr = imagePtr->nextPtr) {
-	    typePtr->freeProc(imagePtr->instanceData, imagePtr->display);
-	    imagePtr->changeProc(imagePtr->widgetClientData, 0, 0,
-		    modelPtr->width, modelPtr->height, modelPtr->width,
-		    modelPtr->height);
+	    (*typePtr->freeProc)(imagePtr->instanceData,
+		    imagePtr->display);
+	    (*imagePtr->changeProc)(imagePtr->widgetClientData, 0, 0,
+		    masterPtr->width, masterPtr->height, masterPtr->width,
+		    masterPtr->height);
 	}
-	typePtr->deleteProc(modelPtr->modelData);
+	(*typePtr->deleteProc)(masterPtr->masterData);
     }
-    if (modelPtr->instancePtr == NULL) {
-	if (modelPtr->hPtr != NULL) {
-	    Tcl_DeleteHashEntry(modelPtr->hPtr);
+    if (masterPtr->instancePtr == NULL) {
+	if (masterPtr->hPtr != NULL) {
+	    Tcl_DeleteHashEntry(masterPtr->hPtr);
 	}
-	Tcl_Release(modelPtr->winPtr);
-	ckfree(modelPtr);
+	Tcl_Release((ClientData) masterPtr->winPtr);
+	ckfree((char *) masterPtr);
     } else {
-	modelPtr->deleted = 1;
+	masterPtr->deleted = 1;
     }
 }
 
@@ -1002,16 +989,17 @@ DeleteImage(
 
 static void
 EventuallyDeleteImage(
-    ImageModel *modelPtr,	/* Pointer to main data structure for image. */
+    ImageMaster *masterPtr,	/* Pointer to main data structure for image. */
     int forgetImageHashNow)	/* Flag to say whether the hash table is about
 				 * to vanish. */
 {
     if (forgetImageHashNow) {
-	modelPtr->hPtr = NULL;
+	masterPtr->hPtr = NULL;
     }
-    if (!modelPtr->deleted) {
-	modelPtr->deleted = 1;
-	Tcl_EventuallyFree(modelPtr, (Tcl_FreeProc *) DeleteImage);
+    if (!masterPtr->deleted) {
+	masterPtr->deleted = 1;
+	Tcl_EventuallyFree((ClientData) masterPtr,
+		(Tcl_FreeProc *)DeleteImage);
     }
 }
 
@@ -1043,7 +1031,7 @@ TkDeleteAllImages(
 
     for (hPtr = Tcl_FirstHashEntry(&mainPtr->imageTable, &search);
 	    hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
-	EventuallyDeleteImage((ImageModel *)Tcl_GetHashValue(hPtr), 1);
+	EventuallyDeleteImage((ImageMaster *) Tcl_GetHashValue(hPtr), 1);
     }
     Tcl_DeleteHashTable(&mainPtr->imageTable);
 }
@@ -1051,10 +1039,10 @@ TkDeleteAllImages(
 /*
  *----------------------------------------------------------------------
  *
- * Tk_GetImageModelData --
+ * Tk_GetImageMasterData --
  *
  *	Given the name of an image, this function returns the type of the
- *	image and the clientData associated with its model.
+ *	image and the clientData associated with its master.
  *
  * Results:
  *	If there is no image by the given name, then NULL is returned and a
@@ -1069,30 +1057,30 @@ TkDeleteAllImages(
  */
 
 ClientData
-Tk_GetImageModelData(
+Tk_GetImageMasterData(
     Tcl_Interp *interp,		/* Interpreter in which the image was
 				 * created. */
-    const char *name,		/* Name of image. */
-    const Tk_ImageType **typePtrPtr)
-				/* Points to location to fill in with pointer
+    CONST char *name,		/* Name of image. */
+    Tk_ImageType **typePtrPtr)	/* Points to location to fill in with pointer
 				 * to type information for image. */
 {
-    TkWindow *winPtr = (TkWindow *) Tk_MainWindow(interp);
     Tcl_HashEntry *hPtr;
-    ImageModel *modelPtr;
+    TkWindow *winPtr;
+    ImageMaster *masterPtr;
 
+    winPtr = (TkWindow *) Tk_MainWindow(interp);
     hPtr = Tcl_FindHashEntry(&winPtr->mainPtr->imageTable, name);
     if (hPtr == NULL) {
 	*typePtrPtr = NULL;
 	return NULL;
     }
-    modelPtr = (ImageModel *)Tcl_GetHashValue(hPtr);
-    if (modelPtr->deleted) {
+    masterPtr = (ImageMaster *) Tcl_GetHashValue(hPtr);
+    if (masterPtr->deleted) {
 	*typePtrPtr = NULL;
 	return NULL;
     }
-    *typePtrPtr = modelPtr->typePtr;
-    return modelPtr->modelData;
+    *typePtrPtr = masterPtr->typePtr;
+    return masterPtr->masterData;
 }
 
 /*
@@ -1116,6 +1104,7 @@ Tk_GetImageModelData(
  *----------------------------------------------------------------------
  */
 
+/*ARGSUSED*/
 void
 Tk_SetTSOrigin(
     Tk_Window tkwin,

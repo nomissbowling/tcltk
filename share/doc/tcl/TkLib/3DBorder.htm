@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_Alloc3DBorderFromObj manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> 3DBorder</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> 3DBorder</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="3DBorder.htm#M2" NAME="L2">NAME</A>
-<DL><DD>Tk_Alloc3DBorderFromObj, Tk_Get3DBorder, Tk_Get3DBorderFromObj, Tk_Draw3DRectangle, Tk_Fill3DRectangle, Tk_Draw3DPolygon, Tk_Fill3DPolygon, Tk_3DVerticalBevel, Tk_3DHorizontalBevel, Tk_SetBackgroundFromBorder, Tk_NameOf3DBorder, Tk_3DBorderColor, Tk_3DBorderGC, Tk_Free3DBorderFromObj, Tk_Free3DBorder &mdash; draw borders with three-dimensional appearance</DD></DL>
+<DL><DD>Tk_Alloc3DBorderFromObj, Tk_Get3DBorder, Tk_Get3DBorderFromObj, Tk_Draw3DRectangle, Tk_Fill3DRectangle, Tk_Draw3DPolygon, Tk_Fill3DPolygon, Tk_3DVerticalBevel, Tk_3DHorizontalBevel, Tk_SetBackgroundFromBorder, Tk_NameOf3DBorder, Tk_3DBorderColor, Tk_3DBorderGC, Tk_Free3DBorderFromObj, Tk_Free3DBorder - draw borders with three-dimensional appearance</DD></DL>
 <DD><A HREF="3DBorder.htm#M3" NAME="L3">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -47,7 +47,7 @@
 <DD><A HREF="3DBorder.htm#M6" NAME="L6">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_Alloc3DBorderFromObj, Tk_Get3DBorder, Tk_Get3DBorderFromObj, Tk_Draw3DRectangle, Tk_Fill3DRectangle, Tk_Draw3DPolygon, Tk_Fill3DPolygon, Tk_3DVerticalBevel, Tk_3DHorizontalBevel, Tk_SetBackgroundFromBorder, Tk_NameOf3DBorder, Tk_3DBorderColor, Tk_3DBorderGC, Tk_Free3DBorderFromObj, Tk_Free3DBorder &mdash; draw borders with three-dimensional appearance
+Tk_Alloc3DBorderFromObj, Tk_Get3DBorder, Tk_Get3DBorderFromObj, Tk_Draw3DRectangle, Tk_Fill3DRectangle, Tk_Draw3DPolygon, Tk_Fill3DPolygon, Tk_3DVerticalBevel, Tk_3DHorizontalBevel, Tk_SetBackgroundFromBorder, Tk_NameOf3DBorder, Tk_3DBorderColor, Tk_3DBorderGC, Tk_Free3DBorderFromObj, Tk_Free3DBorder - draw borders with three-dimensional appearance
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Tk_3DBorder<BR>
@@ -82,16 +82,16 @@ GC *<BR>
 <DL class="arguments">
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter to use for error reporting.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window (for all procedures except <B>Tk_Get3DBorder</B>,
 must be the window for which the border was allocated).
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*objPtr</B> (in)<DD>
-Pointer to value whose value describes color corresponding to
+<P><DT>Tcl_Obj <B>*objPtr</B> (in)<DD>
+Pointer to object whose value describes color corresponding to
 background (flat areas).  Illuminated edges will be brighter than
 this and shadowed edges will be darker than this.
 <P><DT>char <B>*colorName</B> (in)<DD>
 Same as <I>objPtr</I> except value is supplied as a string rather
-than a value.
+than an object.
 <P><DT>Drawable <B>drawable</B> (in)<DD>
 X token for window or pixmap;  indicates where graphics are to be drawn.
 Must either be the X window for <I>tkwin</I> or a pixmap with the
@@ -113,7 +113,7 @@ Width of border in pixels. Positive means border is inside rectangle
 given by <I>x</I>, <I>y</I>, <I>width</I>, <I>height</I>, negative means
 border is outside rectangle.
 <P><DT>int <B>relief</B> (in)<DD>
-Indicates 3-D position of interior of value relative to exterior;
+Indicates 3-D position of interior of object relative to exterior;
 should be <B>TK_RELIEF_RAISED</B>, <B>TK_RELIEF_SUNKEN</B>, <B>TK_RELIEF_GROOVE</B>,
 <B>TK_RELIEF_SOLID</B>, or <B>TK_RELIEF_RIDGE</B> (may also be <B>TK_RELIEF_FLAT</B>
 for <B>Tk_Fill3DRectangle</B>).
@@ -136,7 +136,7 @@ should appear higher;
 For <B>Tk_Fill3DPolygon</B>, <B>TK_RELIEF_FLAT</B> may also be specified to
 indicate no difference in height.
 <P><DT>int <B>leftBevel</B> (in)<DD>
-Non-zero means this bevel forms the left side of the value;  zero means
+Non-zero means this bevel forms the left side of the object;  zero means
 it forms the right side.
 <P><DT>int <B>leftIn</B> (in)<DD>
 Non-zero means that the left edge of the horizontal bevel angles in,
@@ -150,7 +150,7 @@ so that the bottom of the edge is farther to the left than the top.
 Zero means the edge angles out, so that the bottom is farther to the
 right than the top.
 <P><DT>int <B>topBevel</B> (in)<DD>
-Non-zero means this bevel forms the top side of the value;  zero means
+Non-zero means this bevel forms the top side of the object;  zero means
 it forms the bottom side.
 <P><DT>int <B>which</B> (in)<DD>
 Specifies which of the border's graphics contexts is desired.
@@ -173,15 +173,14 @@ darker than <I>objPtr</I>.
 <B>Tk_Alloc3DBorderFromObj</B> returns a token that may be used in later calls
 to <B>Tk_Draw3DRectangle</B>.  If an error occurs in allocating information
 for the border (e.g. a bogus color name was given)
-then NULL is returned and an error message is left as the result of
-interpreter <I>interp</I>.
+then NULL is returned and an error message is left in <I>interp-&gt;result</I>.
 If it returns successfully, <B>Tk_Alloc3DBorderFromObj</B> caches
 information about the return value in <I>objPtr</I>, which speeds up
 future calls to <B>Tk_Alloc3DBorderFromObj</B> with the same <I>objPtr</I>
 and <I>tkwin</I>.
 <P>
 <B>Tk_Get3DBorder</B> is identical to <B>Tk_Alloc3DBorderFromObj</B> except
-that the color is specified with a string instead of a value.  This
+that the color is specified with a string instead of an object.  This
 prevents <B>Tk_Get3DBorder</B> from caching the return value, so
 <B>Tk_Get3DBorder</B> is less efficient than <B>Tk_Alloc3DBorderFromObj</B>.
 <P>
@@ -259,8 +258,8 @@ arguments that describe the rectangular area of the beveled edge
 The <I>leftBorder</I> and <I>topBorder</I> arguments indicate the
 position of the border relative to the
 &#8220;inside&#8221;
-of the value, and
-<I>relief</I> indicates the relief of the inside of the value relative
+of the object, and
+<I>relief</I> indicates the relief of the inside of the object relative
 to the outside.
 <B>Tk_3DVerticalBevel</B> just draws a rectangular region.
 <B>Tk_3DHorizontalBevel</B> draws a trapezoidal region to generate
@@ -311,9 +310,11 @@ with the Tk_3DBorder token for the border.
 There should be exactly one call to <B>Tk_Free3DBorderFromObj</B> or
 <B>Tk_Free3DBorder</B> for each call to <B>Tk_Alloc3DBorderFromObj</B>
 or <B>Tk_Get3DBorder</B>.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
-<A href="../Keywords/3.htm#3D">3D</A>, <A href="../Keywords/B.htm#background">background</A>, <A href="../Keywords/B.htm#border">border</A>, <A href="../Keywords/C.htm#color">color</A>, <A href="../Keywords/D.htm#depressed">depressed</A>, <A href="../Keywords/I.htm#illumination">illumination</A>, <A href="../Keywords/V.htm#value">value</A>, <A href="../Keywords/P.htm#polygon">polygon</A>, <A href="../Keywords/R.htm#raised">raised</A>, <A href="../Keywords/S.htm#shadow">shadow</A>, <A href="../Keywords/T.htm#three-dimensional effect">three-dimensional effect</A>
-<div class="copy">Copyright &copy; 1990-1993 The Regents of the University of California.
+<A href="../Keywords/3.htm#3D">3D</A>, <A href="../Keywords/B.htm#background">background</A>, <A href="../Keywords/B.htm#border">border</A>, <A href="../Keywords/C.htm#color">color</A>, <A href="../Keywords/D.htm#depressed">depressed</A>, <A href="../Keywords/I.htm#illumination">illumination</A>, <A href="../Keywords/O.htm#object">object</A>, <A href="../Keywords/P.htm#polygon">polygon</A>, <A href="../Keywords/R.htm#raised">raised</A>, <A href="../Keywords/S.htm#shadow">shadow</A>, <A href="../Keywords/T.htm#three-dimensional effect">three-dimensional effect</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1993 The Regents of the University of California.
 Copyright &copy; 1994-1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -10,9 +10,9 @@
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "tkInt.h"
 #include "tkCanvas.h"
-#include "default.h"
 
 /*
  * The structure below defines the record for each arc item.
@@ -79,42 +79,48 @@ typedef struct ArcItem {
  */
 
 static int	StyleParseProc(ClientData clientData, Tcl_Interp *interp,
-		    Tk_Window tkwin, const char *value,
+		    Tk_Window tkwin, CONST char *value,
 		    char *widgRec, int offset);
-static const char * StylePrintProc(ClientData clientData, Tk_Window tkwin,
+static char *	StylePrintProc(ClientData clientData, Tk_Window tkwin,
 		    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr);
 
-static const Tk_CustomOption stateOption = {
-    TkStateParseProc, TkStatePrintProc, INT2PTR(2)
+static Tk_CustomOption stateOption = {
+    (Tk_OptionParseProc *) TkStateParseProc,
+    TkStatePrintProc, (ClientData) 2
 };
-static const Tk_CustomOption styleOption = {
-    StyleParseProc, StylePrintProc, NULL
+static Tk_CustomOption styleOption = {
+    (Tk_OptionParseProc *) StyleParseProc,
+    StylePrintProc, (ClientData) NULL
 };
-static const Tk_CustomOption tagsOption = {
-    Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+static Tk_CustomOption tagsOption = {
+    (Tk_OptionParseProc *) Tk_CanvasTagsParseProc,
+    Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
-static const Tk_CustomOption dashOption = {
-    TkCanvasDashParseProc, TkCanvasDashPrintProc, NULL
+static Tk_CustomOption dashOption = {
+    (Tk_OptionParseProc *) TkCanvasDashParseProc,
+    TkCanvasDashPrintProc, (ClientData) NULL
 };
-static const Tk_CustomOption offsetOption = {
-    TkOffsetParseProc, TkOffsetPrintProc, INT2PTR(TK_OFFSET_RELATIVE)
+static Tk_CustomOption offsetOption = {
+    (Tk_OptionParseProc *) TkOffsetParseProc,
+    TkOffsetPrintProc, (ClientData) (TK_OFFSET_RELATIVE)
 };
-static const Tk_CustomOption pixelOption = {
-    TkPixelParseProc, TkPixelPrintProc, NULL
+static Tk_CustomOption pixelOption = {
+    (Tk_OptionParseProc *) TkPixelParseProc,
+    TkPixelPrintProc, (ClientData) NULL
 };
 
-static const Tk_ConfigSpec configSpecs[] = {
+static Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_CUSTOM, "-activedash", NULL, NULL,
 	NULL, Tk_Offset(ArcItem, outline.activeDash),
 	TK_CONFIG_NULL_OK, &dashOption},
     {TK_CONFIG_COLOR, "-activefill", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, activeFillColor), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, activeFillColor), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_COLOR, "-activeoutline", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, outline.activeColor), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, outline.activeColor), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_BITMAP, "-activeoutlinestipple", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, outline.activeStipple), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, outline.activeStipple), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_BITMAP, "-activestipple", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, activeFillStipple), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, activeFillStipple), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_CUSTOM, "-activewidth", NULL, NULL,
 	"0.0", Tk_Offset(ArcItem, outline.activeWidth),
 	TK_CONFIG_DONT_SET_DEFAULT, &pixelOption},
@@ -122,41 +128,41 @@ static const Tk_ConfigSpec configSpecs[] = {
 	NULL, Tk_Offset(ArcItem, outline.dash),
 	TK_CONFIG_NULL_OK, &dashOption},
     {TK_CONFIG_PIXELS, "-dashoffset", NULL, NULL,
-	"0", Tk_Offset(ArcItem, outline.offset), TK_CONFIG_DONT_SET_DEFAULT, NULL},
+	"0", Tk_Offset(ArcItem, outline.offset), TK_CONFIG_DONT_SET_DEFAULT, 0},
     {TK_CONFIG_CUSTOM, "-disableddash", NULL, NULL,
 	NULL, Tk_Offset(ArcItem, outline.disabledDash),
 	TK_CONFIG_NULL_OK, &dashOption},
     {TK_CONFIG_COLOR, "-disabledfill", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, disabledFillColor), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, disabledFillColor), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_COLOR, "-disabledoutline", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, outline.disabledColor), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, outline.disabledColor), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_BITMAP, "-disabledoutlinestipple", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, outline.disabledStipple), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, outline.disabledStipple), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_BITMAP, "-disabledstipple", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, disabledFillStipple), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, disabledFillStipple), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_CUSTOM, "-disabledwidth", NULL, NULL,
 	"0.0", Tk_Offset(ArcItem, outline.disabledWidth),
 	TK_CONFIG_DONT_SET_DEFAULT, &pixelOption},
     {TK_CONFIG_DOUBLE, "-extent", NULL, NULL,
-	"90", Tk_Offset(ArcItem, extent), TK_CONFIG_DONT_SET_DEFAULT, NULL},
+	"90", Tk_Offset(ArcItem, extent), TK_CONFIG_DONT_SET_DEFAULT, 0},
     {TK_CONFIG_COLOR, "-fill", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, fillColor), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, fillColor), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_CUSTOM, "-offset", NULL, NULL,
 	"0,0", Tk_Offset(ArcItem, tsoffset),
 	TK_CONFIG_DONT_SET_DEFAULT, &offsetOption},
     {TK_CONFIG_COLOR, "-outline", NULL, NULL,
-	DEF_CANVITEM_OUTLINE, Tk_Offset(ArcItem, outline.color), TK_CONFIG_NULL_OK, NULL},
+	"black", Tk_Offset(ArcItem, outline.color), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_CUSTOM, "-outlineoffset", NULL, NULL,
 	"0,0", Tk_Offset(ArcItem, outline.tsoffset),
 	TK_CONFIG_DONT_SET_DEFAULT, &offsetOption},
     {TK_CONFIG_BITMAP, "-outlinestipple", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, outline.stipple), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, outline.stipple), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_DOUBLE, "-start", NULL, NULL,
-	"0", Tk_Offset(ArcItem, start), TK_CONFIG_DONT_SET_DEFAULT, NULL},
+	"0", Tk_Offset(ArcItem, start), TK_CONFIG_DONT_SET_DEFAULT, 0},
     {TK_CONFIG_CUSTOM, "-state", NULL, NULL,
 	NULL, Tk_Offset(Tk_Item, state), TK_CONFIG_NULL_OK, &stateOption},
     {TK_CONFIG_BITMAP, "-stipple", NULL, NULL,
-	NULL, Tk_Offset(ArcItem, fillStipple), TK_CONFIG_NULL_OK, NULL},
+	NULL, Tk_Offset(ArcItem, fillStipple), TK_CONFIG_NULL_OK, 0},
     {TK_CONFIG_CUSTOM, "-style", NULL, NULL,
 	NULL, Tk_Offset(ArcItem, style), TK_CONFIG_DONT_SET_DEFAULT,
 	&styleOption},
@@ -165,7 +171,7 @@ static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_CUSTOM, "-width", NULL, NULL,
 	"1.0", Tk_Offset(ArcItem, outline.width), TK_CONFIG_DONT_SET_DEFAULT,
 	&pixelOption},
-    {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, NULL}
+    {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, 0}
 };
 
 /*
@@ -175,17 +181,17 @@ static const Tk_ConfigSpec configSpecs[] = {
 static void		ComputeArcBbox(Tk_Canvas canvas, ArcItem *arcPtr);
 static int		ConfigureArc(Tcl_Interp *interp,
 			    Tk_Canvas canvas, Tk_Item *itemPtr, int objc,
-			    Tcl_Obj *const objv[], int flags);
+			    Tcl_Obj *CONST objv[], int flags);
 static int		CreateArc(Tcl_Interp *interp,
 			    Tk_Canvas canvas, struct Tk_Item *itemPtr,
-			    int objc, Tcl_Obj *const objv[]);
+			    int objc, Tcl_Obj *CONST objv[]);
 static void		DeleteArc(Tk_Canvas canvas,
 			    Tk_Item *itemPtr, Display *display);
 static void		DisplayArc(Tk_Canvas canvas,
 			    Tk_Item *itemPtr, Display *display, Drawable dst,
 			    int x, int y, int width, int height);
 static int		ArcCoords(Tcl_Interp *interp, Tk_Canvas canvas,
-			    Tk_Item *itemPtr, int objc, Tcl_Obj *const objv[]);
+			    Tk_Item *itemPtr, int objc, Tcl_Obj *CONST objv[]);
 static int		ArcToArea(Tk_Canvas canvas,
 			    Tk_Item *itemPtr, double *rectPtr);
 static double		ArcToPoint(Tk_Canvas canvas,
@@ -233,8 +239,11 @@ Tk_ItemType tkArcType = {
     NULL,			/* insertProc */
     NULL,			/* dTextProc */
     NULL,			/* nextPtr */
-    NULL, 0, NULL, NULL
 };
+
+#ifndef PI
+#define PI	3.14159265358979323846
+#endif
 
 /*
  *--------------------------------------------------------------
@@ -262,13 +271,13 @@ CreateArc(
     Tk_Item *itemPtr,		/* Record to hold new item; header has been
 				 * initialized by caller. */
     int objc,			/* Number of arguments in objv. */
-    Tcl_Obj *const objv[])	/* Arguments describing arc. */
+    Tcl_Obj *CONST objv[])	/* Arguments describing arc. */
 {
     ArcItem *arcPtr = (ArcItem *) itemPtr;
     int i;
 
     if (objc == 0) {
-	Tcl_Panic("canvas did not pass any coords");
+	Tcl_Panic("canvas did not pass any coords\n");
     }
 
     /*
@@ -298,7 +307,7 @@ CreateArc(
      */
 
     for (i = 1; i < objc; i++) {
-	const char *arg = Tcl_GetString(objv[i]);
+	char *arg = Tcl_GetString(objv[i]);
 
 	if ((arg[0] == '-') && (arg[1] >= 'a') && (arg[1] <= 'z')) {
 	    break;
@@ -340,28 +349,32 @@ ArcCoords(
     Tk_Item *itemPtr,		/* Item whose coordinates are to be read or
 				 * modified. */
     int objc,			/* Number of coordinates supplied in objv. */
-    Tcl_Obj *const objv[])	/* Array of coordinates: x1, y1, x2, y2, ... */
+    Tcl_Obj *CONST objv[])	/* Array of coordinates: x1, y1, x2, y2, ... */
 {
     ArcItem *arcPtr = (ArcItem *) itemPtr;
 
     if (objc == 0) {
-	Tcl_Obj *objs[4];
+	Tcl_Obj *obj = Tcl_NewObj();
+	Tcl_Obj *subobj = Tcl_NewDoubleObj(arcPtr->bbox[0]);
 
-	objs[0] = Tcl_NewDoubleObj(arcPtr->bbox[0]);
-	objs[1] = Tcl_NewDoubleObj(arcPtr->bbox[1]);
-	objs[2] = Tcl_NewDoubleObj(arcPtr->bbox[2]);
-	objs[3] = Tcl_NewDoubleObj(arcPtr->bbox[3]);
-	Tcl_SetObjResult(interp, Tcl_NewListObj(4, objs));
-    } else if ((objc == 1) || (objc == 4)) {
-	if (objc == 1) {
+	Tcl_ListObjAppendElement(interp, obj, subobj);
+	subobj = Tcl_NewDoubleObj(arcPtr->bbox[1]);
+	Tcl_ListObjAppendElement(interp, obj, subobj);
+	subobj = Tcl_NewDoubleObj(arcPtr->bbox[2]);
+	Tcl_ListObjAppendElement(interp, obj, subobj);
+	subobj = Tcl_NewDoubleObj(arcPtr->bbox[3]);
+	Tcl_ListObjAppendElement(interp, obj, subobj);
+	Tcl_SetObjResult(interp, obj);
+    } else if ((objc == 1)||(objc == 4)) {
+	if (objc==1) {
 	    if (Tcl_ListObjGetElements(interp, objv[0], &objc,
 		    (Tcl_Obj ***) &objv) != TCL_OK) {
 		return TCL_ERROR;
 	    } else if (objc != 4) {
-		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-			"wrong # coordinates: expected 4, got %d", objc));
-		Tcl_SetErrorCode(interp, "TK", "CANVAS", "COORDS", "ARC",
-			NULL);
+		char buf[64 + TCL_INTEGER_SPACE];
+
+		sprintf(buf, "wrong # coordinates: expected 4, got %d", objc);
+		Tcl_SetResult(interp, buf, TCL_VOLATILE);
 		return TCL_ERROR;
 	    }
 	}
@@ -377,9 +390,10 @@ ArcCoords(
 	}
 	ComputeArcBbox(canvas, arcPtr);
     } else {
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"wrong # coordinates: expected 0 or 4, got %d", objc));
-	Tcl_SetErrorCode(interp, "TK", "CANVAS", "COORDS", "ARC", NULL);
+	char buf[64 + TCL_INTEGER_SPACE];
+
+	sprintf(buf, "wrong # coordinates: expected 0 or 4, got %d", objc);
+	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	return TCL_ERROR;
     }
     return TCL_OK;
@@ -410,7 +424,7 @@ ConfigureArc(
     Tk_Canvas canvas,		/* Canvas containing itemPtr. */
     Tk_Item *itemPtr,		/* Arc item to reconfigure. */
     int objc,			/* Number of elements in objv. */
-    Tcl_Obj *const objv[],	/* Arguments describing things to configure. */
+    Tcl_Obj *CONST objv[],	/* Arguments describing things to configure. */
     int flags)			/* Flags to pass to Tk_ConfigureWidget. */
 {
     ArcItem *arcPtr = (ArcItem *) itemPtr;
@@ -426,7 +440,7 @@ ConfigureArc(
 
     tkwin = Tk_CanvasTkwin(canvas);
     if (TCL_OK != Tk_ConfigureWidget(interp, tkwin, configSpecs, objc,
-	    (const char **) objv, (char *) arcPtr, flags|TK_CONFIG_OBJS)) {
+	    (CONST char **) objv, (char *) arcPtr, flags|TK_CONFIG_OBJS)) {
 	return TCL_ERROR;
     }
 
@@ -487,7 +501,7 @@ ConfigureArc(
     arcPtr->outline.gc = newGC;
 
     if(state == TK_STATE_NULL) {
-	state = Canvas(canvas)->canvas_state;
+	state = ((TkCanvas *)canvas)->canvas_state;
     }
     if (state==TK_STATE_HIDDEN) {
 	ComputeArcBbox(canvas, arcPtr);
@@ -496,7 +510,7 @@ ConfigureArc(
 
     color = arcPtr->fillColor;
     stipple = arcPtr->fillStipple;
-    if (Canvas(canvas)->currentItemPtr == itemPtr) {
+    if (((TkCanvas *)canvas)->currentItemPtr == itemPtr) {
 	if (arcPtr->activeFillColor!=NULL) {
 	    color = arcPtr->activeFillColor;
 	}
@@ -510,7 +524,7 @@ ConfigureArc(
 	if (arcPtr->disabledFillStipple!=None) {
 	    stipple = arcPtr->disabledFillStipple;
 	}
-    }
+      }
 
     if (arcPtr->style == ARC_STYLE) {
 	newGC = NULL;
@@ -576,15 +590,15 @@ ConfigureArc(
 
 static void
 DeleteArc(
-    TCL_UNUSED(Tk_Canvas),		/* Info about overall canvas. */
+    Tk_Canvas canvas,		/* Info about overall canvas. */
     Tk_Item *itemPtr,		/* Item that is being deleted. */
     Display *display)		/* Display containing window for canvas. */
 {
-    ArcItem *arcPtr = (ArcItem *)itemPtr;
+    ArcItem *arcPtr = (ArcItem *) itemPtr;
 
     Tk_DeleteOutline(display, &(arcPtr->outline));
     if (arcPtr->numOutlinePoints != 0) {
-	ckfree(arcPtr->outlinePtr);
+	ckfree((char *) arcPtr->outlinePtr);
     }
     if (arcPtr->fillColor != NULL) {
 	Tk_FreeColor(arcPtr->fillColor);
@@ -626,6 +640,7 @@ DeleteArc(
  *--------------------------------------------------------------
  */
 
+	/* ARGSUSED */
 static void
 ComputeArcBbox(
     Tk_Canvas canvas,		/* Canvas that contains item. */
@@ -636,7 +651,7 @@ ComputeArcBbox(
     Tk_State state = arcPtr->header.state;
 
     if (state == TK_STATE_NULL) {
-	state = Canvas(canvas)->canvas_state;
+	state = ((TkCanvas *)canvas)->canvas_state;
     }
 
     width = arcPtr->outline.width;
@@ -647,7 +662,7 @@ ComputeArcBbox(
 	arcPtr->header.x1 = arcPtr->header.x2 =
 	arcPtr->header.y1 = arcPtr->header.y2 = -1;
 	return;
-    } else if (Canvas(canvas)->currentItemPtr == (Tk_Item *) arcPtr) {
+    } else if (((TkCanvas *)canvas)->currentItemPtr == (Tk_Item *) arcPtr) {
 	if (arcPtr->outline.activeWidth>width) {
 	    width = arcPtr->outline.activeWidth;
 	}
@@ -662,13 +677,13 @@ ComputeArcBbox(
      */
 
     if (arcPtr->bbox[1] > arcPtr->bbox[3]) {
-	tmp = arcPtr->bbox[3];
+	double tmp = arcPtr->bbox[3];
 
 	arcPtr->bbox[3] = arcPtr->bbox[1];
 	arcPtr->bbox[1] = tmp;
     }
     if (arcPtr->bbox[0] > arcPtr->bbox[2]) {
-	tmp = arcPtr->bbox[2];
+	double tmp = arcPtr->bbox[2];
 
 	arcPtr->bbox[2] = arcPtr->bbox[0];
 	arcPtr->bbox[0] = tmp;
@@ -677,7 +692,7 @@ ComputeArcBbox(
     ComputeArcOutline(canvas,arcPtr);
 
     /*
-     * To compute the bounding box, start with the bbox formed by the two
+     * To compute the bounding box, start with the the bbox formed by the two
      * endpoints of the arc. Then add in the center of the arc's oval (if
      * relevant) and the 3-o'clock, 6-o'clock, 9-o'clock, and 12-o'clock
      * positions, if they are relevant.
@@ -768,10 +783,8 @@ DisplayArc(
     Tk_Item *itemPtr,		/* Item to be displayed. */
     Display *display,		/* Display on which to draw item. */
     Drawable drawable,		/* Pixmap or window in which to draw item. */
-    TCL_UNUSED(int),		/* Describes region of canvas that must be */
-    TCL_UNUSED(int),	/* redisplayed (not used). */
-    TCL_UNUSED(int),
-    TCL_UNUSED(int))
+    int x, int y,		/* Describes region of canvas that must be */
+    int width, int height)	/* redisplayed (not used). */
 {
     ArcItem *arcPtr = (ArcItem *) itemPtr;
     short x1, y1, x2, y2;
@@ -781,7 +794,7 @@ DisplayArc(
     Pixmap stipple;
 
     if (state == TK_STATE_NULL) {
-	state = Canvas(canvas)->canvas_state;
+	state = ((TkCanvas *)canvas)->canvas_state;
     }
     lineWidth = arcPtr->outline.width;
     if (lineWidth < 1.0) {
@@ -789,7 +802,7 @@ DisplayArc(
     }
     dashnumber = arcPtr->outline.dash.number;
     stipple = arcPtr->fillStipple;
-    if (Canvas(canvas)->currentItemPtr == itemPtr) {
+    if (((TkCanvas *)canvas)->currentItemPtr == itemPtr) {
 	if (arcPtr->outline.activeWidth>lineWidth) {
 	    lineWidth = arcPtr->outline.activeWidth;
 	}
@@ -943,6 +956,7 @@ DisplayArc(
  *--------------------------------------------------------------
  */
 
+	/* ARGSUSED */
 static double
 ArcToPoint(
     Tk_Canvas canvas,		/* Canvas containing item. */
@@ -956,11 +970,11 @@ ArcToPoint(
     Tk_State state = itemPtr->state;
 
     if (state == TK_STATE_NULL) {
-	state = Canvas(canvas)->canvas_state;
+	state = ((TkCanvas *)canvas)->canvas_state;
     }
 
     width = (double) arcPtr->outline.width;
-    if (Canvas(canvas)->currentItemPtr == itemPtr) {
+    if (((TkCanvas *)canvas)->currentItemPtr == itemPtr) {
 	if (arcPtr->outline.activeWidth>width) {
 	    width = (double) arcPtr->outline.activeWidth;
 	}
@@ -1107,6 +1121,7 @@ ArcToPoint(
  *--------------------------------------------------------------
  */
 
+	/* ARGSUSED */
 static int
 ArcToArea(
     Tk_Canvas canvas,		/* Canvas containing item. */
@@ -1131,10 +1146,10 @@ ArcToArea(
     Tk_State state = itemPtr->state;
 
     if(state == TK_STATE_NULL) {
-	state = Canvas(canvas)->canvas_state;
+	state = ((TkCanvas *)canvas)->canvas_state;
     }
     width = (double) arcPtr->outline.width;
-    if (Canvas(canvas)->currentItemPtr == itemPtr) {
+    if (((TkCanvas *)canvas)->currentItemPtr == itemPtr) {
 	if (arcPtr->outline.activeWidth>width) {
 	    width = (double) arcPtr->outline.activeWidth;
 	}
@@ -1446,13 +1461,14 @@ ComputeArcOutline(
      */
 
     if (arcPtr->numOutlinePoints == 0) {
-	arcPtr->outlinePtr = (double *)ckalloc(26 * sizeof(double));
+	arcPtr->outlinePtr = (double *) ckalloc((unsigned)
+		(26 * sizeof(double)));
 	arcPtr->numOutlinePoints = 22;
     }
     outlinePtr = arcPtr->outlinePtr;
 
     if (state == TK_STATE_NULL) {
-	state = Canvas(canvas)->canvas_state;
+	state = ((TkCanvas *)canvas)->canvas_state;
     }
 
     /*
@@ -1460,7 +1476,7 @@ ComputeArcOutline(
      * curved arc segment, which are marked with X's in the figure below:
      *
      *
-     *			          * * *
+     *				  * * *
      *			      *          *
      *			   *      * *      *
      *			 *    *         *    *
@@ -1510,7 +1526,7 @@ ComputeArcOutline(
      */
 
     width = arcPtr->outline.width;
-    if (Canvas(canvas)->currentItemPtr == (Tk_Item *) arcPtr) {
+    if (((TkCanvas *)canvas)->currentItemPtr == (Tk_Item *) arcPtr) {
 	if (arcPtr->outline.activeWidth>arcPtr->outline.width) {
 	    width = arcPtr->outline.activeWidth;
 	}
@@ -1813,19 +1829,18 @@ ArcToPostscript(
     Tcl_Interp *interp,		/* Leave Postscript or error message here. */
     Tk_Canvas canvas,		/* Information about overall canvas. */
     Tk_Item *itemPtr,		/* Item for which Postscript is wanted. */
-    TCL_UNUSED(int))		/* 1 means this is a prepass to collect font
+    int prepass)		/* 1 means this is a prepass to collect font
 				 * information; 0 means final Postscript is
 				 * being created. */
 {
     ArcItem *arcPtr = (ArcItem *) itemPtr;
+    char buffer[400];
     double y1, y2, ang1, ang2;
     XColor *color;
     Pixmap stipple;
     XColor *fillColor;
     Pixmap fillStipple;
     Tk_State state = itemPtr->state;
-    Tcl_Obj *psObj;
-    Tcl_InterpState interpState;
 
     y1 = Tk_CanvasPsY(canvas, arcPtr->bbox[1]);
     y2 = Tk_CanvasPsY(canvas, arcPtr->bbox[3]);
@@ -1837,13 +1852,13 @@ ArcToPostscript(
     }
 
     if (state == TK_STATE_NULL) {
-	state = Canvas(canvas)->canvas_state;
+	state = ((TkCanvas *)canvas)->canvas_state;
     }
     color = arcPtr->outline.color;
     stipple = arcPtr->outline.stipple;
     fillColor = arcPtr->fillColor;
     fillStipple = arcPtr->fillStipple;
-    if (Canvas(canvas)->currentItemPtr == itemPtr) {
+    if (((TkCanvas *)canvas)->currentItemPtr == itemPtr) {
 	if (arcPtr->outline.activeColor!=NULL) {
 	    color = arcPtr->outline.activeColor;
 	}
@@ -1872,51 +1887,37 @@ ArcToPostscript(
     }
 
     /*
-     * Make our working space.
-     */
-
-    psObj = Tcl_NewObj();
-    interpState = Tcl_SaveInterpState(interp, TCL_OK);
-
-    /*
      * If the arc is filled, output Postscript for the interior region of the
      * arc.
      */
 
     if (arcPtr->fillGC != NULL) {
-	Tcl_AppendPrintfToObj(psObj,
-		"matrix currentmatrix\n"
-		"%.15g %.15g translate %.15g %.15g scale\n",
+	sprintf(buffer, "matrix currentmatrix\n%.15g %.15g translate %.15g %.15g scale\n",
 		(arcPtr->bbox[0] + arcPtr->bbox[2])/2, (y1 + y2)/2,
 		(arcPtr->bbox[2] - arcPtr->bbox[0])/2, (y1 - y2)/2);
-
-	if (arcPtr->style != CHORD_STYLE) {
-	    Tcl_AppendToObj(psObj, "0 0 moveto ", -1);
+	Tcl_AppendResult(interp, buffer, NULL);
+	if (arcPtr->style == CHORD_STYLE) {
+	    sprintf(buffer, "0 0 1 %.15g %.15g arc closepath\nsetmatrix\n",
+		    ang1, ang2);
+	} else {
+	    sprintf(buffer,
+		    "0 0 moveto 0 0 1 %.15g %.15g arc closepath\nsetmatrix\n",
+		    ang1, ang2);
 	}
-	Tcl_AppendPrintfToObj(psObj,
-		"0 0 1 %.15g %.15g arc closepath\nsetmatrix\n",
-		ang1, ang2);
-
-	Tcl_ResetResult(interp);
+	Tcl_AppendResult(interp, buffer, NULL);
 	if (Tk_CanvasPsColor(interp, canvas, fillColor) != TCL_OK) {
-	    goto error;
+	    return TCL_ERROR;
 	}
-	Tcl_AppendObjToObj(psObj, Tcl_GetObjResult(interp));
-
 	if (fillStipple != None) {
-	    Tcl_AppendToObj(psObj, "clip ", -1);
-
-	    Tcl_ResetResult(interp);
+	    Tcl_AppendResult(interp, "clip ", NULL);
 	    if (Tk_CanvasPsStipple(interp, canvas, fillStipple) != TCL_OK) {
-		goto error;
+		return TCL_ERROR;
 	    }
-	    Tcl_AppendObjToObj(psObj, Tcl_GetObjResult(interp));
-
 	    if (arcPtr->outline.gc != NULL) {
-		Tcl_AppendToObj(psObj, "grestore gsave\n", -1);
+		Tcl_AppendResult(interp, "grestore gsave\n", NULL);
 	    }
 	} else {
-	    Tcl_AppendToObj(psObj, "fill\n", -1);
+	    Tcl_AppendResult(interp, "fill\n", NULL);
 	}
     }
 
@@ -1925,86 +1926,57 @@ ArcToPostscript(
      */
 
     if (arcPtr->outline.gc != NULL) {
-	Tcl_AppendPrintfToObj(psObj,
-		"matrix currentmatrix\n"
-		"%.15g %.15g translate %.15g %.15g scale\n",
+	sprintf(buffer, "matrix currentmatrix\n%.15g %.15g translate %.15g %.15g scale\n",
 		(arcPtr->bbox[0] + arcPtr->bbox[2])/2, (y1 + y2)/2,
 		(arcPtr->bbox[2] - arcPtr->bbox[0])/2, (y1 - y2)/2);
-	Tcl_AppendPrintfToObj(psObj,
-		"0 0 1 %.15g %.15g arc\nsetmatrix\n0 setlinecap\n",
-		ang1, ang2);
-
-	Tcl_ResetResult(interp);
-	if (Tk_CanvasPsOutline(canvas, itemPtr, &arcPtr->outline) != TCL_OK) {
-	    goto error;
+	Tcl_AppendResult(interp, buffer, NULL);
+	sprintf(buffer, "0 0 1 %.15g %.15g", ang1, ang2);
+	Tcl_AppendResult(interp, buffer,
+		" arc\nsetmatrix\n0 setlinecap\n", NULL);
+	if (Tk_CanvasPsOutline(canvas, itemPtr, &(arcPtr->outline)) != TCL_OK){
+	    return TCL_ERROR;
 	}
-	Tcl_AppendObjToObj(psObj, Tcl_GetObjResult(interp));
-
 	if (arcPtr->style != ARC_STYLE) {
-	    Tcl_AppendToObj(psObj, "grestore gsave\n", -1);
-
-	    Tcl_ResetResult(interp);
+	    Tcl_AppendResult(interp, "grestore gsave\n", NULL);
 	    if (arcPtr->style == CHORD_STYLE) {
 		Tk_CanvasPsPath(interp, canvas, arcPtr->outlinePtr,
 			CHORD_OUTLINE_PTS);
 	    } else {
 		Tk_CanvasPsPath(interp, canvas, arcPtr->outlinePtr,
 			PIE_OUTLINE1_PTS);
-		if (Tk_CanvasPsColor(interp, canvas, color) != TCL_OK) {
-		    goto error;
+		if (Tk_CanvasPsColor(interp, canvas, color)
+			!= TCL_OK) {
+		    return TCL_ERROR;
 		}
-		Tcl_AppendObjToObj(psObj, Tcl_GetObjResult(interp));
-
 		if (stipple != None) {
-		    Tcl_AppendToObj(psObj, "clip ", -1);
-
-		    Tcl_ResetResult(interp);
-		    if (Tk_CanvasPsStipple(interp, canvas, stipple) !=TCL_OK){
-			goto error;
+		    Tcl_AppendResult(interp, "clip ", NULL);
+		    if (Tk_CanvasPsStipple(interp, canvas, stipple) != TCL_OK){
+			return TCL_ERROR;
 		    }
-		    Tcl_AppendObjToObj(psObj, Tcl_GetObjResult(interp));
 		} else {
-		    Tcl_AppendToObj(psObj, "fill\n", -1);
+		    Tcl_AppendResult(interp, "fill\n", NULL);
 		}
-		Tcl_AppendToObj(psObj, "grestore gsave\n", -1);
-
-		Tcl_ResetResult(interp);
+		Tcl_AppendResult(interp, "grestore gsave\n", NULL);
 		Tk_CanvasPsPath(interp, canvas,
 			arcPtr->outlinePtr + 2*PIE_OUTLINE1_PTS,
 			PIE_OUTLINE2_PTS);
 	    }
-	    if (Tk_CanvasPsColor(interp, canvas, color) != TCL_OK) {
-		goto error;
+	    if (Tk_CanvasPsColor(interp, canvas, color)
+		    != TCL_OK) {
+		return TCL_ERROR;
 	    }
-	    Tcl_AppendObjToObj(psObj, Tcl_GetObjResult(interp));
-
 	    if (stipple != None) {
-		Tcl_AppendToObj(psObj, "clip ", -1);
-
-		Tcl_ResetResult(interp);
+		Tcl_AppendResult(interp, "clip ", NULL);
 		if (Tk_CanvasPsStipple(interp, canvas, stipple) != TCL_OK) {
-		    goto error;
+		    return TCL_ERROR;
 		}
-		Tcl_AppendObjToObj(psObj, Tcl_GetObjResult(interp));
 	    } else {
-		Tcl_AppendToObj(psObj, "fill\n", -1);
+		Tcl_AppendResult(interp, "fill\n", NULL);
 	    }
 	}
     }
 
-    /*
-     * Plug the accumulated postscript back into the result.
-     */
-
-    (void) Tcl_RestoreInterpState(interp, interpState);
-    Tcl_AppendObjToObj(Tcl_GetObjResult(interp), psObj);
-    Tcl_DecrRefCount(psObj);
     return TCL_OK;
-
-  error:
-    Tcl_DiscardInterpState(interpState);
-    Tcl_DecrRefCount(psObj);
-    return TCL_ERROR;
 }
 
 /*
@@ -2027,16 +1999,17 @@ ArcToPostscript(
 
 static int
 StyleParseProc(
-    TCL_UNUSED(void *),
+    ClientData clientData,	/* some flags.*/
     Tcl_Interp *interp,		/* Used for reporting errors. */
-    TCL_UNUSED(Tk_Window),		/* Window containing canvas widget. */
-    const char *value,		/* Value of option. */
+    Tk_Window tkwin,		/* Window containing canvas widget. */
+    CONST char *value,		/* Value of option. */
     char *widgRec,		/* Pointer to record for item. */
     int offset)			/* Offset into item. */
 {
     int c;
     size_t length;
-    Style *stylePtr = (Style *) (widgRec + offset);
+
+    register Style *stylePtr = (Style *) (widgRec + offset);
 
     if (value == NULL || *value == 0) {
 	*stylePtr = PIESLICE_STYLE;
@@ -2059,10 +2032,8 @@ StyleParseProc(
 	return TCL_OK;
     }
 
-    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-	    "bad -style option \"%s\": must be arc, chord, or pieslice",
-	    value));
-    Tcl_SetErrorCode(interp, "TK", "CANVAS", "ARC_STYLE", NULL);
+    Tcl_AppendResult(interp, "bad -style option \"", value,
+	    "\": must be arc, chord, or pieslice", NULL);
     *stylePtr = PIESLICE_STYLE;
     return TCL_ERROR;
 }
@@ -2088,17 +2059,17 @@ StyleParseProc(
  *--------------------------------------------------------------
  */
 
-static const char *
+static char *
 StylePrintProc(
-    TCL_UNUSED(void *),	/* Ignored. */
-    TCL_UNUSED(Tk_Window),		/* Ignored. */
+    ClientData clientData,	/* Ignored. */
+    Tk_Window tkwin,		/* Ignored. */
     char *widgRec,		/* Pointer to record for item. */
     int offset,			/* Offset into item. */
-    TCL_UNUSED(Tcl_FreeProc **))	/* Pointer to variable to fill in with
+    Tcl_FreeProc **freeProcPtr)	/* Pointer to variable to fill in with
 				 * information about how to reclaim storage
 				 * for return string. */
 {
-    Style *stylePtr = (Style *) (widgRec + offset);
+    register Style *stylePtr = (Style *) (widgRec + offset);
 
     if (*stylePtr == ARC_STYLE) {
 	return "arc";

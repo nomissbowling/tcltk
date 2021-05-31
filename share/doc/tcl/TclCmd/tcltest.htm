@@ -3,213 +3,208 @@
 <HEAD><TITLE>tcltest manual page - Tcl Bundled Packages</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> tcltest</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> tcltest</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="tcltest.htm#M2" NAME="L1860">NAME</A>
-<DL><DD>tcltest &mdash; Test harness support code and utilities</DD></DL>
-<DD><A HREF="tcltest.htm#M3" NAME="L1861">SYNOPSIS</A>
+<DD><A HREF="tcltest.htm#M2" NAME="L1634">NAME</A>
+<DL><DD>tcltest - Test harness support code and utilities</DD></DL>
+<DD><A HREF="tcltest.htm#M3" NAME="L1635">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="tcltest.htm#M4" NAME="L1862">DESCRIPTION</A>
-<DD><A HREF="tcltest.htm#M5" NAME="L1863">COMMANDS</A>
+<DD><A HREF="tcltest.htm#M4" NAME="L1636">DESCRIPTION</A>
+<DD><A HREF="tcltest.htm#M5" NAME="L1637">COMMANDS</A>
 <DL class="commands">
-<DD><A HREF="tcltest.htm#M6" NAME="L1864"><B>test</B> <I>name description</I> ?<I>-option value ...</I>?</A>
-<DD><A HREF="tcltest.htm#M7" NAME="L1865"><B>test</B> <I>name description</I> ?<I>constraints</I>? <I>body result</I></A>
-<DD><A HREF="tcltest.htm#M8" NAME="L1866"><B>loadTestedCommands</B></A>
-<DD><A HREF="tcltest.htm#M9" NAME="L1867"><B>makeFile</B> <I>contents name</I> ?<I>directory</I>?</A>
-<DD><A HREF="tcltest.htm#M10" NAME="L1868"><B>removeFile</B> <I>name</I> ?<I>directory</I>?</A>
-<DD><A HREF="tcltest.htm#M11" NAME="L1869"><B>makeDirectory</B> <I>name</I> ?<I>directory</I>?</A>
-<DD><A HREF="tcltest.htm#M12" NAME="L1870"><B>removeDirectory</B> <I>name</I> ?<I>directory</I>?</A>
-<DD><A HREF="tcltest.htm#M13" NAME="L1871"><B>viewFile</B> <I>file</I> ?<I>directory</I>?</A>
-<DD><A HREF="tcltest.htm#M14" NAME="L1872"><B>cleanupTests</B></A>
-<DD><A HREF="tcltest.htm#M15" NAME="L1873"><B>runAllTests</B></A>
+<DD><A HREF="tcltest.htm#M6" NAME="L1638"><B>test</B> <I>name description ?option value ...?</I></A>
+<DD><A HREF="tcltest.htm#M7" NAME="L1639"><B>test</B> <I>name description ?constraints? body result</I></A>
+<DD><A HREF="tcltest.htm#M8" NAME="L1640"><B>loadTestedCommands</B></A>
+<DD><A HREF="tcltest.htm#M9" NAME="L1641"><B>makeFile</B> <I>contents name ?directory?</I></A>
+<DD><A HREF="tcltest.htm#M10" NAME="L1642"><B>removeFile</B> <I>name ?directory?</I></A>
+<DD><A HREF="tcltest.htm#M11" NAME="L1643"><B>makeDirectory</B> <I>name ?directory?</I></A>
+<DD><A HREF="tcltest.htm#M12" NAME="L1644"><B>removeDirectory</B> <I>name ?directory?</I></A>
+<DD><A HREF="tcltest.htm#M13" NAME="L1645"><B>viewFile</B> <I>file ?directory?</I></A>
+<DD><A HREF="tcltest.htm#M14" NAME="L1646"><B>cleanupTests</B></A>
+<DD><A HREF="tcltest.htm#M15" NAME="L1647"><B>runAllTests</B></A>
 </DL>
-<DD><A HREF="tcltest.htm#M16" NAME="L1874">CONFIGURATION COMMANDS</A>
+<DD><A HREF="tcltest.htm#M16" NAME="L1648">CONFIGURATION COMMANDS</A>
 <DL class="configuration commands">
-<DD><A HREF="tcltest.htm#M17" NAME="L1875"><B>configure</B></A>
-<DD><A HREF="tcltest.htm#M18" NAME="L1876"><B>configure </B><I>option</I></A>
-<DD><A HREF="tcltest.htm#M19" NAME="L1877"><B>configure </B><I>option value</I> ?<I>-option value ...</I>?</A>
-<DD><A HREF="tcltest.htm#M20" NAME="L1878"><B>customMatch </B><I>mode script</I></A>
-<DD><A HREF="tcltest.htm#M21" NAME="L1879"><B>testConstraint </B><I>constraint</I> ?<I>boolean</I>?</A>
-<DD><A HREF="tcltest.htm#M22" NAME="L1880"><B>interpreter</B> ?<I>executableName</I>?</A>
-<DD><A HREF="tcltest.htm#M23" NAME="L1881"><B>outputChannel</B> ?<I>channelID</I>?</A>
-<DD><A HREF="tcltest.htm#M24" NAME="L1882"><B>errorChannel</B> ?<I>channelID</I>?</A>
+<DD><A HREF="tcltest.htm#M17" NAME="L1649"><B>configure</B></A>
+<DD><A HREF="tcltest.htm#M18" NAME="L1650"><B>configure </B><I>option</I></A>
+<DD><A HREF="tcltest.htm#M19" NAME="L1651"><B>configure </B><I>option value ?option value ...?</I></A>
+<DD><A HREF="tcltest.htm#M20" NAME="L1652"><B>customMatch </B><I>mode script</I></A>
+<DD><A HREF="tcltest.htm#M21" NAME="L1653"><B>testConstraint </B><I>constraint ?boolean?</I></A>
+<DD><A HREF="tcltest.htm#M22" NAME="L1654"><B>interpreter</B> <I>?executableName?</I></A>
+<DD><A HREF="tcltest.htm#M23" NAME="L1655"><B>outputChannel</B> <I>?channelID?</I></A>
+<DD><A HREF="tcltest.htm#M24" NAME="L1656"><B>errorChannel</B> <I>?channelID?</I></A>
 </DL>
-<DD><A HREF="tcltest.htm#M25" NAME="L1883">SHORTCUT CONFIGURATION COMMANDS</A>
-<DL class="shortcut configuration commands">
-<DD><A HREF="tcltest.htm#M26" NAME="L1884"><B>debug</B> ?<I>level</I>?</A>
-<DD><A HREF="tcltest.htm#M27" NAME="L1885"><B>errorFile</B> ?<I>filename</I>?</A>
-<DD><A HREF="tcltest.htm#M28" NAME="L1886"><B>limitConstraints</B> ?<I>boolean</I>?</A>
-<DD><A HREF="tcltest.htm#M29" NAME="L1887"><B>loadFile</B> ?<I>filename</I>?</A>
-<DD><A HREF="tcltest.htm#M30" NAME="L1888"><B>loadScript</B> ?<I>script</I>?</A>
-<DD><A HREF="tcltest.htm#M31" NAME="L1889"><B>match</B> ?<I>patternList</I>?</A>
-<DD><A HREF="tcltest.htm#M32" NAME="L1890"><B>matchDirectories</B> ?<I>patternList</I>?</A>
-<DD><A HREF="tcltest.htm#M33" NAME="L1891"><B>matchFiles</B> ?<I>patternList</I>?</A>
-<DD><A HREF="tcltest.htm#M34" NAME="L1892"><B>outputFile</B> ?<I>filename</I>?</A>
-<DD><A HREF="tcltest.htm#M35" NAME="L1893"><B>preserveCore</B> ?<I>level</I>?</A>
-<DD><A HREF="tcltest.htm#M36" NAME="L1894"><B>singleProcess</B> ?<I>boolean</I>?</A>
-<DD><A HREF="tcltest.htm#M37" NAME="L1895"><B>skip</B> ?<I>patternList</I>?</A>
-<DD><A HREF="tcltest.htm#M38" NAME="L1896"><B>skipDirectories</B> ?<I>patternList</I>?</A>
-<DD><A HREF="tcltest.htm#M39" NAME="L1897"><B>skipFiles</B> ?<I>patternList</I>?</A>
-<DD><A HREF="tcltest.htm#M40" NAME="L1898"><B>temporaryDirectory</B> ?<I>directory</I>?</A>
-<DD><A HREF="tcltest.htm#M41" NAME="L1899"><B>testsDirectory</B> ?<I>directory</I>?</A>
-<DD><A HREF="tcltest.htm#M42" NAME="L1900"><B>verbose</B> ?<I>level</I>?</A>
+<DD><A HREF="tcltest.htm#M25" NAME="L1657">SHORTCUT COMMANDS</A>
+<DL class="shortcut commands">
+<DD><A HREF="tcltest.htm#M26" NAME="L1658"><B>debug </B><I>?level?</I></A>
+<DD><A HREF="tcltest.htm#M27" NAME="L1659"><B>errorFile </B><I>?filename?</I></A>
+<DD><A HREF="tcltest.htm#M28" NAME="L1660"><B>limitConstraints </B><I>?boolean?</I></A>
+<DD><A HREF="tcltest.htm#M29" NAME="L1661"><B>loadFile </B><I>?filename?</I></A>
+<DD><A HREF="tcltest.htm#M30" NAME="L1662"><B>loadScript </B><I>?script?</I></A>
+<DD><A HREF="tcltest.htm#M31" NAME="L1663"><B>match </B><I>?patternList?</I></A>
+<DD><A HREF="tcltest.htm#M32" NAME="L1664"><B>matchDirectories </B><I>?patternList?</I></A>
+<DD><A HREF="tcltest.htm#M33" NAME="L1665"><B>matchFiles </B><I>?patternList?</I></A>
+<DD><A HREF="tcltest.htm#M34" NAME="L1666"><B>outputFile </B><I>?filename?</I></A>
+<DD><A HREF="tcltest.htm#M35" NAME="L1667"><B>preserveCore </B><I>?level?</I></A>
+<DD><A HREF="tcltest.htm#M36" NAME="L1668"><B>singleProcess </B><I>?boolean?</I></A>
+<DD><A HREF="tcltest.htm#M37" NAME="L1669"><B>skip </B><I>?patternList?</I></A>
+<DD><A HREF="tcltest.htm#M38" NAME="L1670"><B>skipDirectories </B><I>?patternList?</I></A>
+<DD><A HREF="tcltest.htm#M39" NAME="L1671"><B>skipFiles </B><I>?patternList?</I></A>
+<DD><A HREF="tcltest.htm#M40" NAME="L1672"><B>temporaryDirectory </B><I>?directory?</I></A>
+<DD><A HREF="tcltest.htm#M41" NAME="L1673"><B>testsDirectory </B><I>?directory?</I></A>
+<DD><A HREF="tcltest.htm#M42" NAME="L1674"><B>verbose </B><I>?level?</I></A>
 </DL>
-<DD><A HREF="tcltest.htm#M43" NAME="L1901">OTHER COMMANDS</A>
+<DD><A HREF="tcltest.htm#M43" NAME="L1675">OTHER COMMANDS</A>
 <DL class="other commands">
-<DD><A HREF="tcltest.htm#M44" NAME="L1902"><B>test</B> <I>name description optionList</I></A>
-<DD><A HREF="tcltest.htm#M45" NAME="L1903"><B>workingDirectory</B> ?<I>directoryName</I>?</A>
-<DD><A HREF="tcltest.htm#M46" NAME="L1904"><B>normalizeMsg </B><I>msg</I></A>
-<DD><A HREF="tcltest.htm#M47" NAME="L1905"><B>normalizePath </B><I>pathVar</I></A>
-<DD><A HREF="tcltest.htm#M48" NAME="L1906"><B>bytestring </B><I>string</I></A>
+<DD><A HREF="tcltest.htm#M44" NAME="L1676"><B>test</B> <I>name description optionList</I></A>
+<DD><A HREF="tcltest.htm#M45" NAME="L1677"><B>workingDirectory</B> <I>?directoryName?</I></A>
+<DD><A HREF="tcltest.htm#M46" NAME="L1678"><B>normalizeMsg</B> <I>msg</I></A>
+<DD><A HREF="tcltest.htm#M47" NAME="L1679"><B>normalizePath</B> <I>pathVar</I></A>
+<DD><A HREF="tcltest.htm#M48" NAME="L1680"><B>bytestring</B> <I>string</I></A>
 </DL>
-<DD><A HREF="tcltest.htm#M49" NAME="L1907">TESTS</A>
+<DD><A HREF="tcltest.htm#M49" NAME="L1681">TESTS</A>
 <DL class="tests">
-<DD><A HREF="tcltest.htm#M50" NAME="L1908"><B>-constraints </B><I>keywordList</I>|<I>expression</I></A>
-<DD><A HREF="tcltest.htm#M51" NAME="L1909"><B>-setup </B><I>script</I></A>
-<DD><A HREF="tcltest.htm#M52" NAME="L1910"><B>-body </B><I>script</I></A>
-<DD><A HREF="tcltest.htm#M53" NAME="L1911"><B>-cleanup </B><I>script</I></A>
-<DD><A HREF="tcltest.htm#M54" NAME="L1912"><B>-match </B><I>mode</I></A>
-<DD><A HREF="tcltest.htm#M55" NAME="L1913"><B>-result </B><I>expectedValue</I></A>
-<DD><A HREF="tcltest.htm#M56" NAME="L1914"><B>-output </B><I>expectedValue</I></A>
-<DD><A HREF="tcltest.htm#M57" NAME="L1915"><B>-errorOutput </B><I>expectedValue</I></A>
-<DD><A HREF="tcltest.htm#M58" NAME="L1916"><B>-returnCodes </B><I>expectedCodeList</I></A>
+<DD><A HREF="tcltest.htm#M50" NAME="L1682"><B>-constraints </B><I>keywordList|expression</I></A>
+<DD><A HREF="tcltest.htm#M51" NAME="L1683"><B>-setup </B><I>script</I></A>
+<DD><A HREF="tcltest.htm#M52" NAME="L1684"><B>-body </B><I>script</I></A>
+<DD><A HREF="tcltest.htm#M53" NAME="L1685"><B>-cleanup </B><I>script</I></A>
+<DD><A HREF="tcltest.htm#M54" NAME="L1686"><B>-match </B><I>mode</I></A>
+<DD><A HREF="tcltest.htm#M55" NAME="L1687"><B>-result </B><I>expectedValue</I></A>
+<DD><A HREF="tcltest.htm#M56" NAME="L1688"><B>-output </B><I>expectedValue</I></A>
+<DD><A HREF="tcltest.htm#M57" NAME="L1689"><B>-errorOutput </B><I>expectedValue</I></A>
+<DD><A HREF="tcltest.htm#M58" NAME="L1690"><B>-returnCodes </B><I>expectedCodeList</I></A>
 </DL>
-<DD><A HREF="tcltest.htm#M59" NAME="L1917">TEST CONSTRAINTS</A>
+<DD><A HREF="tcltest.htm#M59" NAME="L1691">TEST CONSTRAINTS</A>
 <DL class="test constraints">
-<DD><A HREF="tcltest.htm#M60" NAME="L1918"><I>singleTestInterp</I></A>
-<DD><A HREF="tcltest.htm#M61" NAME="L1919"><I>unix</I></A>
-<DD><A HREF="tcltest.htm#M62" NAME="L1920"><I>win</I></A>
-<DD><A HREF="tcltest.htm#M63" NAME="L1921"><I>nt</I></A>
-<DD><A HREF="tcltest.htm#M64" NAME="L1922"><I>95</I></A>
-<DD><A HREF="tcltest.htm#M65" NAME="L1923"><I>98</I></A>
-<DD><A HREF="tcltest.htm#M66" NAME="L1924"><I>mac</I></A>
-<DD><A HREF="tcltest.htm#M67" NAME="L1925"><I>unixOrWin</I></A>
-<DD><A HREF="tcltest.htm#M68" NAME="L1926"><I>macOrWin</I></A>
-<DD><A HREF="tcltest.htm#M69" NAME="L1927"><I>macOrUnix</I></A>
-<DD><A HREF="tcltest.htm#M70" NAME="L1928"><I>tempNotWin</I></A>
-<DD><A HREF="tcltest.htm#M71" NAME="L1929"><I>tempNotMac</I></A>
-<DD><A HREF="tcltest.htm#M72" NAME="L1930"><I>unixCrash</I></A>
-<DD><A HREF="tcltest.htm#M73" NAME="L1931"><I>winCrash</I></A>
-<DD><A HREF="tcltest.htm#M74" NAME="L1932"><I>macCrash</I></A>
-<DD><A HREF="tcltest.htm#M75" NAME="L1933"><I>emptyTest</I></A>
-<DD><A HREF="tcltest.htm#M76" NAME="L1934"><I>knownBug</I></A>
-<DD><A HREF="tcltest.htm#M77" NAME="L1935"><I>nonPortable</I></A>
-<DD><A HREF="tcltest.htm#M78" NAME="L1936"><I>userInteraction</I></A>
-<DD><A HREF="tcltest.htm#M79" NAME="L1937"><I>interactive</I></A>
-<DD><A HREF="tcltest.htm#M80" NAME="L1938"><I>nonBlockFiles</I></A>
-<DD><A HREF="tcltest.htm#M81" NAME="L1939"><I>asyncPipeClose</I></A>
-<DD><A HREF="tcltest.htm#M82" NAME="L1940"><I>unixExecs</I></A>
-<DD><A HREF="tcltest.htm#M83" NAME="L1941"><I>hasIsoLocale</I></A>
-<DD><A HREF="tcltest.htm#M84" NAME="L1942"><I>root</I></A>
-<DD><A HREF="tcltest.htm#M85" NAME="L1943"><I>notRoot</I></A>
-<DD><A HREF="tcltest.htm#M86" NAME="L1944"><I>eformat</I></A>
-<DD><A HREF="tcltest.htm#M87" NAME="L1945"><I>stdio</I></A>
+<DD><A HREF="tcltest.htm#M60" NAME="L1692"><I>singleTestInterp</I></A>
+<DD><A HREF="tcltest.htm#M61" NAME="L1693"><I>unix</I></A>
+<DD><A HREF="tcltest.htm#M62" NAME="L1694"><I>win</I></A>
+<DD><A HREF="tcltest.htm#M63" NAME="L1695"><I>nt</I></A>
+<DD><A HREF="tcltest.htm#M64" NAME="L1696"><I>95</I></A>
+<DD><A HREF="tcltest.htm#M65" NAME="L1697"><I>98</I></A>
+<DD><A HREF="tcltest.htm#M66" NAME="L1698"><I>mac</I></A>
+<DD><A HREF="tcltest.htm#M67" NAME="L1699"><I>unixOrWin</I></A>
+<DD><A HREF="tcltest.htm#M68" NAME="L1700"><I>macOrWin</I></A>
+<DD><A HREF="tcltest.htm#M69" NAME="L1701"><I>macOrUnix</I></A>
+<DD><A HREF="tcltest.htm#M70" NAME="L1702"><I>tempNotWin</I></A>
+<DD><A HREF="tcltest.htm#M71" NAME="L1703"><I>tempNotMac</I></A>
+<DD><A HREF="tcltest.htm#M72" NAME="L1704"><I>unixCrash</I></A>
+<DD><A HREF="tcltest.htm#M73" NAME="L1705"><I>winCrash</I></A>
+<DD><A HREF="tcltest.htm#M74" NAME="L1706"><I>macCrash</I></A>
+<DD><A HREF="tcltest.htm#M75" NAME="L1707"><I>emptyTest</I></A>
+<DD><A HREF="tcltest.htm#M76" NAME="L1708"><I>knownBug</I></A>
+<DD><A HREF="tcltest.htm#M77" NAME="L1709"><I>nonPortable</I></A>
+<DD><A HREF="tcltest.htm#M78" NAME="L1710"><I>userInteraction</I></A>
+<DD><A HREF="tcltest.htm#M79" NAME="L1711"><I>interactive</I></A>
+<DD><A HREF="tcltest.htm#M80" NAME="L1712"><I>nonBlockFiles</I></A>
+<DD><A HREF="tcltest.htm#M81" NAME="L1713"><I>asyncPipeClose</I></A>
+<DD><A HREF="tcltest.htm#M82" NAME="L1714"><I>unixExecs</I></A>
+<DD><A HREF="tcltest.htm#M83" NAME="L1715"><I>hasIsoLocale</I></A>
+<DD><A HREF="tcltest.htm#M84" NAME="L1716"><I>root</I></A>
+<DD><A HREF="tcltest.htm#M85" NAME="L1717"><I>notRoot</I></A>
+<DD><A HREF="tcltest.htm#M86" NAME="L1718"><I>eformat</I></A>
+<DD><A HREF="tcltest.htm#M87" NAME="L1719"><I>stdio</I></A>
 </DL>
-<DD><A HREF="tcltest.htm#M88" NAME="L1946">RUNNING ALL TESTS</A>
-<DD><A HREF="tcltest.htm#M89" NAME="L1947">CONFIGURABLE OPTIONS</A>
+<DD><A HREF="tcltest.htm#M88" NAME="L1720">RUNNING ALL TESTS</A>
+<DD><A HREF="tcltest.htm#M89" NAME="L1721">CONFIGURABLE OPTIONS</A>
 <DL class="configurable options">
-<DD><A HREF="tcltest.htm#M90" NAME="L1948"><B>-singleproc </B><I>boolean</I></A>
-<DD><A HREF="tcltest.htm#M91" NAME="L1949"><B>-debug </B><I>level</I></A>
+<DD><A HREF="tcltest.htm#M90" NAME="L1722"><B>-singleproc </B><I>boolean</I></A>
+<DD><A HREF="tcltest.htm#M91" NAME="L1723"><B>-debug </B><I>level</I></A>
 <DL class="configurable options">
-<DD><A HREF="tcltest.htm#M92" NAME="L1950">0</A>
-<DD><A HREF="tcltest.htm#M93" NAME="L1951">1</A>
-<DD><A HREF="tcltest.htm#M94" NAME="L1952">2</A>
-<DD><A HREF="tcltest.htm#M95" NAME="L1953">3</A>
+<DD><A HREF="tcltest.htm#M92" NAME="L1724">0</A>
+<DD><A HREF="tcltest.htm#M93" NAME="L1725">1</A>
+<DD><A HREF="tcltest.htm#M94" NAME="L1726">2</A>
+<DD><A HREF="tcltest.htm#M95" NAME="L1727">3</A>
 </DL>
-<DD><A HREF="tcltest.htm#M96" NAME="L1954"><B>-verbose </B><I>level</I></A>
+<DD><A HREF="tcltest.htm#M96" NAME="L1728"><B>-verbose </B><I>level</I></A>
 <DL class="configurable options">
-<DD><A HREF="tcltest.htm#M97" NAME="L1955">body (<B>b</B>)</A>
-<DD><A HREF="tcltest.htm#M98" NAME="L1956">pass (<B>p</B>)</A>
-<DD><A HREF="tcltest.htm#M99" NAME="L1957">skip (<B>s</B>)</A>
-<DD><A HREF="tcltest.htm#M100" NAME="L1958">start (<B>t</B>)</A>
-<DD><A HREF="tcltest.htm#M101" NAME="L1959">error (<B>e</B>)</A>
-<DD><A HREF="tcltest.htm#M102" NAME="L1960">line (<B>l</B>)</A>
+<DD><A HREF="tcltest.htm#M97" NAME="L1729">body (b)</A>
+<DD><A HREF="tcltest.htm#M98" NAME="L1730">pass (p)</A>
+<DD><A HREF="tcltest.htm#M99" NAME="L1731">skip (s)</A>
+<DD><A HREF="tcltest.htm#M100" NAME="L1732">start (t)</A>
+<DD><A HREF="tcltest.htm#M101" NAME="L1733">error (e)</A>
+<DD><A HREF="tcltest.htm#M102" NAME="L1734">line (l)</A>
 </DL>
-<DD><A HREF="tcltest.htm#M103" NAME="L1961"><B>-preservecore </B><I>level</I></A>
+<DD><A HREF="tcltest.htm#M103" NAME="L1735"><B>-preservecore </B><I>level</I></A>
 <DL class="configurable options">
-<DD><A HREF="tcltest.htm#M104" NAME="L1962">0</A>
-<DD><A HREF="tcltest.htm#M105" NAME="L1963">1</A>
-<DD><A HREF="tcltest.htm#M106" NAME="L1964">2</A>
+<DD><A HREF="tcltest.htm#M104" NAME="L1736">0</A>
+<DD><A HREF="tcltest.htm#M105" NAME="L1737">1</A>
+<DD><A HREF="tcltest.htm#M106" NAME="L1738">2</A>
 </DL>
-<DD><A HREF="tcltest.htm#M107" NAME="L1965"><B>-limitconstraints </B><I>boolean</I></A>
-<DD><A HREF="tcltest.htm#M108" NAME="L1966"><B>-constraints </B><I>list</I></A>
-<DD><A HREF="tcltest.htm#M109" NAME="L1967"><B>-tmpdir </B><I>directory</I></A>
-<DD><A HREF="tcltest.htm#M110" NAME="L1968"><B>-testdir </B><I>directory</I></A>
-<DD><A HREF="tcltest.htm#M111" NAME="L1969"><B>-file </B><I>patternList</I></A>
-<DD><A HREF="tcltest.htm#M112" NAME="L1970"><B>-notfile </B><I>patternList</I></A>
-<DD><A HREF="tcltest.htm#M113" NAME="L1971"><B>-relateddir </B><I>patternList</I></A>
-<DD><A HREF="tcltest.htm#M114" NAME="L1972"><B>-asidefromdir </B><I>patternList</I></A>
-<DD><A HREF="tcltest.htm#M115" NAME="L1973"><B>-match </B><I>patternList</I></A>
-<DD><A HREF="tcltest.htm#M116" NAME="L1974"><B>-skip </B><I>patternList</I></A>
-<DD><A HREF="tcltest.htm#M117" NAME="L1975"><B>-load </B><I>script</I></A>
-<DD><A HREF="tcltest.htm#M118" NAME="L1976"><B>-loadfile </B><I>filename</I></A>
-<DD><A HREF="tcltest.htm#M119" NAME="L1977"><B>-outfile </B><I>filename</I></A>
-<DD><A HREF="tcltest.htm#M120" NAME="L1978"><B>-errfile </B><I>filename</I></A>
+<DD><A HREF="tcltest.htm#M107" NAME="L1739"><B>-limitconstraints </B><I>boolean</I></A>
+<DD><A HREF="tcltest.htm#M108" NAME="L1740"><B>-constraints </B><I>list</I></A>
+<DD><A HREF="tcltest.htm#M109" NAME="L1741"><B>-tmpdir </B><I>directory</I></A>
+<DD><A HREF="tcltest.htm#M110" NAME="L1742"><B>-testdir </B><I>directory</I></A>
+<DD><A HREF="tcltest.htm#M111" NAME="L1743"><B>-file </B><I>patternList</I></A>
+<DD><A HREF="tcltest.htm#M112" NAME="L1744"><B>-notfile </B><I>patternList</I></A>
+<DD><A HREF="tcltest.htm#M113" NAME="L1745"><B>-relateddir </B><I>patternList</I></A>
+<DD><A HREF="tcltest.htm#M114" NAME="L1746"><B>-asidefromdir </B><I>patternList</I></A>
+<DD><A HREF="tcltest.htm#M115" NAME="L1747"><B>-match </B><I>patternList</I></A>
+<DD><A HREF="tcltest.htm#M116" NAME="L1748"><B>-skip </B><I>patternList</I></A>
+<DD><A HREF="tcltest.htm#M117" NAME="L1749"><B>-load </B><I>script</I></A>
+<DD><A HREF="tcltest.htm#M118" NAME="L1750"><B>-loadfile </B><I>filename</I></A>
+<DD><A HREF="tcltest.htm#M119" NAME="L1751"><B>-outfile </B><I>filename</I></A>
+<DD><A HREF="tcltest.htm#M120" NAME="L1752"><B>-errfile </B><I>filename</I></A>
 </DL>
-<DD><A HREF="tcltest.htm#M121" NAME="L1979">CREATING TEST SUITES WITH TCLTEST</A>
-<OL class="creating test suites with tcltest">
-</OL>
-<OL class="creating test suites with tcltest">
-</OL>
-<OL class="creating test suites with tcltest">
-</OL>
-<OL class="creating test suites with tcltest">
-</OL>
-<DD><A HREF="tcltest.htm#M122" NAME="L1980">COMPATIBILITY</A>
-<DD><A HREF="tcltest.htm#M123" NAME="L1981">KNOWN ISSUES</A>
-<DD><A HREF="tcltest.htm#M124" NAME="L1982">KEYWORDS</A>
+<DD><A HREF="tcltest.htm#M121" NAME="L1753">CREATING TEST SUITES WITH TCLTEST</A>
+<DL class="creating test suites with tcltest">
+</DL>
+<DL class="creating test suites with tcltest">
+</DL>
+<DL class="creating test suites with tcltest">
+</DL>
+<DL class="creating test suites with tcltest">
+</DL>
+<DD><A HREF="tcltest.htm#M122" NAME="L1754">COMPATIBILITY</A>
+<DD><A HREF="tcltest.htm#M123" NAME="L1755">KNOWN ISSUES</A>
+<DD><A HREF="tcltest.htm#M124" NAME="L1756">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-tcltest &mdash; Test harness support code and utilities
+tcltest - Test harness support code and utilities
 <H3><A NAME="M3">SYNOPSIS</A></H3>
-<B>package require tcltest</B> ?<B>2.3</B>?<BR>
-<BR>
-<B>tcltest::test </B><I>name description</I> ?<I>-option value ...</I>?<BR>
-<B>tcltest::test </B><I>name description</I> ?<I>constraints</I>? <I>body result</I><BR>
-<BR>
+<B>package require tcltest ?2.3?</B><BR>
+<B>tcltest::test </B><I>name description ?option value ...?</I><BR>
+<B>tcltest::test </B><I>name description ?constraints? body result</I><BR>
 <B>tcltest::loadTestedCommands</B><BR>
-<B>tcltest::makeDirectory </B><I>name</I> ?<I>directory</I>?<BR>
-<B>tcltest::removeDirectory </B><I>name</I> ?<I>directory</I>?<BR>
-<B>tcltest::makeFile </B><I>contents name</I> ?<I>directory</I>?<BR>
-<B>tcltest::removeFile </B><I>name</I> ?<I>directory</I>?<BR>
-<B>tcltest::viewFile </B><I>name</I> ?<I>directory</I>?<BR>
-<B>tcltest::cleanupTests </B>?<I>runningMultipleTests</I>?<BR>
+<B>tcltest::makeDirectory </B><I>name ?directory?</I><BR>
+<B>tcltest::removeDirectory </B><I>name ?directory?</I><BR>
+<B>tcltest::makeFile </B><I>contents name ?directory?</I><BR>
+<B>tcltest::removeFile </B><I>name ?directory?</I><BR>
+<B>tcltest::viewFile </B><I>name ?directory?</I><BR>
+<B>tcltest::cleanupTests </B><I>?runningMultipleTests?</I><BR>
 <B>tcltest::runAllTests</B><BR>
-<BR>
 <B>tcltest::configure</B><BR>
-<B>tcltest::configure </B><I>-option</I><BR>
-<B>tcltest::configure </B><I>-option value</I> ?<I>-option value ...</I>?<BR>
+<B>tcltest::configure </B><I>option</I><BR>
+<B>tcltest::configure </B><I>option value ?option value ...?</I><BR>
 <B>tcltest::customMatch </B><I>mode command</I><BR>
-<B>tcltest::testConstraint </B><I>constraint</I> ?<I>value</I>?<BR>
-<B>tcltest::outputChannel </B>?<I>channelID</I>?<BR>
-<B>tcltest::errorChannel </B>?<I>channelID</I>?<BR>
-<B>tcltest::interpreter </B>?<I>interp</I>?<BR>
-<BR>
-<B>tcltest::debug </B>?<I>level</I>?<BR>
-<B>tcltest::errorFile </B>?<I>filename</I>?<BR>
-<B>tcltest::limitConstraints </B>?<I>boolean</I>?<BR>
-<B>tcltest::loadFile </B>?<I>filename</I>?<BR>
-<B>tcltest::loadScript </B>?<I>script</I>?<BR>
-<B>tcltest::match </B>?<I>patternList</I>?<BR>
-<B>tcltest::matchDirectories </B>?<I>patternList</I>?<BR>
-<B>tcltest::matchFiles </B>?<I>patternList</I>?<BR>
-<B>tcltest::outputFile </B>?<I>filename</I>?<BR>
-<B>tcltest::preserveCore </B>?<I>level</I>?<BR>
-<B>tcltest::singleProcess </B>?<I>boolean</I>?<BR>
-<B>tcltest::skip </B>?<I>patternList</I>?<BR>
-<B>tcltest::skipDirectories </B>?<I>patternList</I>?<BR>
-<B>tcltest::skipFiles </B>?<I>patternList</I>?<BR>
-<B>tcltest::temporaryDirectory </B>?<I>directory</I>?<BR>
-<B>tcltest::testsDirectory </B>?<I>directory</I>?<BR>
-<B>tcltest::verbose </B>?<I>level</I>?<BR>
-<BR>
+<B>tcltest::testConstraint </B><I>constraint ?value?</I><BR>
+<B>tcltest::outputChannel </B><I>?channelID?</I><BR>
+<B>tcltest::errorChannel </B><I>?channelID?</I><BR>
+<B>tcltest::interpreter </B><I>?interp?</I><BR>
+<B>tcltest::debug </B><I>?level?</I><BR>
+<B>tcltest::errorFile </B><I>?filename?</I><BR>
+<B>tcltest::limitConstraints </B><I>?boolean?</I><BR>
+<B>tcltest::loadFile </B><I>?filename?</I><BR>
+<B>tcltest::loadScript </B><I>?script?</I><BR>
+<B>tcltest::match </B><I>?patternList?</I><BR>
+<B>tcltest::matchDirectories </B><I>?patternList?</I><BR>
+<B>tcltest::matchFiles </B><I>?patternList?</I><BR>
+<B>tcltest::outputFile </B><I>?filename?</I><BR>
+<B>tcltest::preserveCore </B><I>?level?</I><BR>
+<B>tcltest::singleProcess </B><I>?boolean?</I><BR>
+<B>tcltest::skip </B><I>?patternList?</I><BR>
+<B>tcltest::skipDirectories </B><I>?patternList?</I><BR>
+<B>tcltest::skipFiles </B><I>?patternList?</I><BR>
+<B>tcltest::temporaryDirectory </B><I>?directory?</I><BR>
+<B>tcltest::testsDirectory </B><I>?directory?</I><BR>
+<B>tcltest::verbose </B><I>?level?</I><BR>
 <B>tcltest::test </B><I>name description optionList</I><BR>
 <B>tcltest::bytestring </B><I>string</I><BR>
 <B>tcltest::normalizeMsg </B><I>msg</I><BR>
 <B>tcltest::normalizePath </B><I>pathVar</I><BR>
-<B>tcltest::workingDirectory </B>?<I>dir</I>?<BR>
+<B>tcltest::workingDirectory </B><I>?dir?</I><BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 The <B>tcltest</B> package provides several utility commands useful
 in the construction of test suites for code instrumented to be
@@ -219,7 +214,7 @@ tcltest package.
 <P>
 All the commands provided by the <B>tcltest</B> package are defined
 in and exported from the <B>::tcltest</B> namespace, as indicated in
-the <B><A HREF="#M3">SYNOPSIS</A></B> above.  In the following sections, all commands
+the <B>SYNOPSIS</B> above.  In the following sections, all commands
 will be described by their simple names, in the interest of brevity.
 <P>
 The central command of <B>tcltest</B> is <B>test</B> that defines
@@ -230,12 +225,12 @@ commands provided by <B>tcltest</B> govern the configuration of
 <B>test</B> and the collection of many <B>test</B> commands into
 test suites.
 <P>
-See <B><A HREF="#M121">CREATING TEST SUITES WITH TCLTEST</A></B> below for an extended example
+See <B>CREATING TEST SUITES WITH TCLTEST</B> below for an extended example
 of how to use the commands of <B>tcltest</B> to produce test suites
 for your Tcl-enabled code.
 <H3><A NAME="M5">COMMANDS</A></H3>
 <DL class="commands">
-<DT><A NAME="M6"><B>test</B> <I>name description</I> ?<I>-option value ...</I>?</A><DD>
+<DT><A NAME="M6"><B>test</B> <I>name description ?option value ...?</I></A><DD>
 Defines and possibly runs a test with the name <I>name</I> and
 description <I>description</I>.  The name and description of a test
 are used in messages reported by <B>test</B> during the
@@ -244,10 +239,10 @@ remaining <I>option value</I> arguments to <B>test</B>
 define the test, including the scripts to run, the conditions
 under which to run them, the expected result, and the means
 by which the expected and actual results should be compared.
-See <B><A HREF="#M49">TESTS</A></B> below for a complete description of the valid
+See <B>TESTS</B> below for a complete description of the valid
 options and how they define a test.  The <B>test</B> command
 returns an empty string.
-<P><DT><A NAME="M7"><B>test</B> <I>name description</I> ?<I>constraints</I>? <I>body result</I></A><DD>
+<P><DT><A NAME="M7"><B>test</B> <I>name description ?constraints? body result</I></A><DD>
 This form of <B>test</B> is provided to support test suites written
 for version 1 of the <B>tcltest</B> package, and also a simpler
 interface for a common usage.  It is the same as
@@ -264,10 +259,10 @@ Returns the result of that script evaluation, including any error
 raised by the script.  Use this command and the related
 configuration options to provide the commands to be tested to
 the interpreter running the test suite.
-<P><DT><A NAME="M9"><B>makeFile</B> <I>contents name</I> ?<I>directory</I>?</A><DD>
+<P><DT><A NAME="M9"><B>makeFile</B> <I>contents name ?directory?</I></A><DD>
 Creates a file named <I>name</I> relative to
 directory <I>directory</I> and write <I>contents</I>
-to that file using the encoding <B><A HREF="../TclCmd/encoding.htm">encoding system</A></B>.
+to that file using the encoding <B>encoding system</B>.
 If <I>contents</I> does not end with a newline, a newline
 will be appended so that the file named <I>name</I>
 does end with a newline.  Because the system encoding is used,
@@ -278,13 +273,13 @@ of <B>cleanupTests</B>, unless it is removed by
 <I>directory</I> is the directory <B>configure -tmpdir</B>.
 Returns the full path of the file created.  Use this command
 to create any text file required by a test with contents as needed.
-<P><DT><A NAME="M10"><B>removeFile</B> <I>name</I> ?<I>directory</I>?</A><DD>
+<P><DT><A NAME="M10"><B>removeFile</B> <I>name ?directory?</I></A><DD>
 Forces the file referenced by <I>name</I> to be removed.  This file name
 should be relative to <I>directory</I>.   The default value of
 <I>directory</I> is the directory <B>configure -tmpdir</B>.
 Returns an empty string.  Use this command to delete files
 created by <B>makeFile</B>.
-<P><DT><A NAME="M11"><B>makeDirectory</B> <I>name</I> ?<I>directory</I>?</A><DD>
+<P><DT><A NAME="M11"><B>makeDirectory</B> <I>name ?directory?</I></A><DD>
 Creates a directory named <I>name</I> relative to directory <I>directory</I>.
 The directory will be removed by the next evaluation of <B>cleanupTests</B>,
 unless it is removed by <B>removeDirectory</B> first.
@@ -292,14 +287,14 @@ The default value of <I>directory</I> is the directory
 <B>configure -tmpdir</B>.
 Returns the full path of the directory created.  Use this command
 to create any directories that are required to exist by a test.
-<P><DT><A NAME="M12"><B>removeDirectory</B> <I>name</I> ?<I>directory</I>?</A><DD>
+<P><DT><A NAME="M12"><B>removeDirectory</B> <I>name ?directory?</I></A><DD>
 Forces the directory referenced by <I>name</I> to be removed. This
 directory should be relative to <I>directory</I>.
 The default value of <I>directory</I> is the directory
 <B>configure -tmpdir</B>.
 Returns an empty string.  Use this command to delete any directories
 created by <B>makeDirectory</B>.
-<P><DT><A NAME="M13"><B>viewFile</B> <I>file</I> ?<I>directory</I>?</A><DD>
+<P><DT><A NAME="M13"><B>viewFile</B> <I>file ?directory?</I></A><DD>
 Returns the contents of <I>file</I>, except for any
 final newline, just as <B>read -nonewline</B> would return.
 This file name should be relative to <I>directory</I>.
@@ -324,25 +319,25 @@ in the directory <B>configure -tmpdir</B> created since
 the last <B>cleanupTests</B>, but not created by
 <B>makeFile</B> or <B>makeDirectory</B> are printed
 to <B>outputChannel</B>.  This command also restores the original
-shell environment, as described by the global <B><A HREF="../TclCmd/tclvars.htm">env</A></B>
+shell environment, as described by the <B>::env</B>
 array. Returns an empty string.
 <P><DT><A NAME="M15"><B>runAllTests</B></A><DD>
 This is a master command meant to run an entire suite of tests,
 spanning multiple files and/or directories, as governed by
-the configurable options of <B>tcltest</B>.  See <B><A HREF="#M88">RUNNING ALL TESTS</A></B>
+the configurable options of <B>tcltest</B>.  See <B>RUNNING ALL TESTS</B>
 below for a complete description of the many variations possible
 with <B>runAllTests</B>.
 <P></DL>
-<H4><A NAME="M16">CONFIGURATION COMMANDS</A></H4>
+<H3><A NAME="M16">CONFIGURATION COMMANDS</A></H3>
 <DL class="configuration commands">
 <DT><A NAME="M17"><B>configure</B></A><DD>
 Returns the list of configurable options supported by <B>tcltest</B>.
-See <B><A HREF="#M89">CONFIGURABLE OPTIONS</A></B> below for the full list of options,
+See <B>CONFIGURABLE OPTIONS</B> below for the full list of options,
 their valid values, and their effect on <B>tcltest</B> operations.
 <P><DT><A NAME="M18"><B>configure </B><I>option</I></A><DD>
 Returns the current value of the supported configurable option <I>option</I>.
 Raises an error if <I>option</I> is not a supported configurable option.
-<P><DT><A NAME="M19"><B>configure </B><I>option value</I> ?<I>-option value ...</I>?</A><DD>
+<P><DT><A NAME="M19"><B>configure </B><I>option value ?option value ...?</I></A><DD>
 Sets the value of each configurable option <I>option</I> to the
 corresponding value <I>value</I>, in order.  Raises an error if
 an <I>option</I> is not a supported configurable option, or if
@@ -352,7 +347,7 @@ operation of <B>configure</B> is halted, and subsequent <I>option value</I>
 arguments are not processed.
 <P>
 If the environment variable <B>::env(TCLTEST_OPTIONS)</B> exists when
-the <B>tcltest</B> package is loaded (by <B><A HREF="../TclCmd/package.htm">package require</A></B> <B>tcltest</B>)
+the <B>tcltest</B> package is loaded (by <B>package require tcltest</B>)
 then its value is taken as a list of arguments to pass to <B>configure</B>.
 This allows the default values of the configuration options to be
 set by the environment.
@@ -368,81 +363,64 @@ is evaluated in the global namespace.
 The completed script is expected to return a boolean value indicating
 whether or not the results match.  The built-in matching modes of
 <B>test</B> are <B>exact</B>, <B><A HREF="../TclCmd/glob.htm">glob</A></B>, and <B><A HREF="../TclCmd/regexp.htm">regexp</A></B>.
-<P><DT><A NAME="M21"><B>testConstraint </B><I>constraint</I> ?<I>boolean</I>?</A><DD>
+<P><DT><A NAME="M21"><B>testConstraint </B><I>constraint ?boolean?</I></A><DD>
 Sets or returns the boolean value associated with the named <I>constraint</I>.
-See <B><A HREF="#M59">TEST CONSTRAINTS</A></B> below for more information.
-<P><DT><A NAME="M22"><B>interpreter</B> ?<I>executableName</I>?</A><DD>
+See <B>TEST CONSTRAINTS</B> below for more information.
+<P><DT><A NAME="M22"><B>interpreter</B> <I>?executableName?</I></A><DD>
 Sets or returns the name of the executable to be <B><A HREF="../TclCmd/exec.htm">exec</A></B>ed by
 <B>runAllTests</B> to run each test file when
 <B>configure -singleproc</B> is false.
 The default value for <B>interpreter</B> is the name of the
 currently running program as returned by <B><A HREF="../TclCmd/info.htm">info nameofexecutable</A></B>.
-<P><DT><A NAME="M23"><B>outputChannel</B> ?<I>channelID</I>?</A><DD>
-Sets or returns the output channel ID.  This defaults to <B><A HREF="../TclLib/GetStdChan.htm">stdout</A></B>.
+<P><DT><A NAME="M23"><B>outputChannel</B> <I>?channelID?</I></A><DD>
+Sets or returns the output channel ID.  This defaults to stdout.
 Any test that prints test related output should send
 that output to <B>outputChannel</B> rather than letting
-that output default to <B><A HREF="../TclLib/GetStdChan.htm">stdout</A></B>.
-<P><DT><A NAME="M24"><B>errorChannel</B> ?<I>channelID</I>?</A><DD>
-Sets or returns the error channel ID.  This defaults to <B><A HREF="../TclLib/GetStdChan.htm">stderr</A></B>.
+that output default to stdout.
+<P><DT><A NAME="M24"><B>errorChannel</B> <I>?channelID?</I></A><DD>
+Sets or returns the error channel ID.  This defaults to stderr.
 Any test that prints error messages should send
 that output to <B>errorChannel</B> rather than printing
-directly to <B><A HREF="../TclLib/GetStdChan.htm">stderr</A></B>.
+directly to stderr.
 <P></DL>
-<H4><A NAME="M25">SHORTCUT CONFIGURATION COMMANDS</A></H4>
-<DL class="shortcut configuration commands">
-<DT><A NAME="M26"><B>debug</B> ?<I>level</I>?</A><DD>
-Same as
-&#8220;<B>configure -debug</B> ?<I>level</I>?&#8221;.
-<P><DT><A NAME="M27"><B>errorFile</B> ?<I>filename</I>?</A><DD>
-Same as
-&#8220;<B>configure -errfile</B> ?<I>filename</I>?&#8221;.
-<P><DT><A NAME="M28"><B>limitConstraints</B> ?<I>boolean</I>?</A><DD>
-Same as
-&#8220;<B>configure -limitconstraints</B> ?<I>boolean</I>?&#8221;.
-<P><DT><A NAME="M29"><B>loadFile</B> ?<I>filename</I>?</A><DD>
-Same as
-&#8220;<B>configure -loadfile</B> ?<I>filename</I>?&#8221;.
-<P><DT><A NAME="M30"><B>loadScript</B> ?<I>script</I>?</A><DD>
-Same as
-&#8220;<B>configure -load</B> ?<I>script</I>?&#8221;.
-<P><DT><A NAME="M31"><B>match</B> ?<I>patternList</I>?</A><DD>
-Same as
-&#8220;<B>configure -match</B> ?<I>patternList</I>?&#8221;.
-<P><DT><A NAME="M32"><B>matchDirectories</B> ?<I>patternList</I>?</A><DD>
-Same as
-&#8220;<B>configure -relateddir</B> ?<I>patternList</I>?&#8221;.
-<P><DT><A NAME="M33"><B>matchFiles</B> ?<I>patternList</I>?</A><DD>
-Same as
-&#8220;<B>configure -file</B> ?<I>patternList</I>?&#8221;.
-<P><DT><A NAME="M34"><B>outputFile</B> ?<I>filename</I>?</A><DD>
-Same as
-&#8220;<B>configure -outfile</B> ?<I>filename</I>?&#8221;.
-<P><DT><A NAME="M35"><B>preserveCore</B> ?<I>level</I>?</A><DD>
-Same as
-&#8220;<B>configure -preservecore</B> ?<I>level</I>?&#8221;.
-<P><DT><A NAME="M36"><B>singleProcess</B> ?<I>boolean</I>?</A><DD>
-Same as
-&#8220;<B>configure -singleproc</B> ?<I>boolean</I>?&#8221;.
-<P><DT><A NAME="M37"><B>skip</B> ?<I>patternList</I>?</A><DD>
-Same as
-&#8220;<B>configure -skip</B> ?<I>patternList</I>?&#8221;.
-<P><DT><A NAME="M38"><B>skipDirectories</B> ?<I>patternList</I>?</A><DD>
-Same as
-&#8220;<B>configure -asidefromdir</B> ?<I>patternList</I>?&#8221;.
-<P><DT><A NAME="M39"><B>skipFiles</B> ?<I>patternList</I>?</A><DD>
-Same as
-&#8220;<B>configure -notfile</B> ?<I>patternList</I>?&#8221;.
-<P><DT><A NAME="M40"><B>temporaryDirectory</B> ?<I>directory</I>?</A><DD>
-Same as
-&#8220;<B>configure -tmpdir</B> ?<I>directory</I>?&#8221;.
-<P><DT><A NAME="M41"><B>testsDirectory</B> ?<I>directory</I>?</A><DD>
-Same as
-&#8220;<B>configure -testdir</B> ?<I>directory</I>?&#8221;.
-<P><DT><A NAME="M42"><B>verbose</B> ?<I>level</I>?</A><DD>
-Same as
-&#8220;<B>configure -verbose</B> ?<I>level</I>?&#8221;.
+<H3><A NAME="M25">SHORTCUT COMMANDS</A></H3>
+<DL class="shortcut commands">
+<DT><A NAME="M26"><B>debug </B><I>?level?</I></A><DD>
+Same as <B>configure -debug </B><I>?level?</I>.
+<P><DT><A NAME="M27"><B>errorFile </B><I>?filename?</I></A><DD>
+Same as <B>configure -errfile </B><I>?filename?</I>.
+<P><DT><A NAME="M28"><B>limitConstraints </B><I>?boolean?</I></A><DD>
+Same as <B>configure -limitconstraints </B><I>?boolean?</I>.
+<P><DT><A NAME="M29"><B>loadFile </B><I>?filename?</I></A><DD>
+Same as <B>configure -loadfile </B><I>?filename?</I>.
+<P><DT><A NAME="M30"><B>loadScript </B><I>?script?</I></A><DD>
+Same as <B>configure -load </B><I>?script?</I>.
+<P><DT><A NAME="M31"><B>match </B><I>?patternList?</I></A><DD>
+Same as <B>configure -match </B><I>?patternList?</I>.
+<P><DT><A NAME="M32"><B>matchDirectories </B><I>?patternList?</I></A><DD>
+Same as <B>configure -relateddir </B><I>?patternList?</I>.
+<P><DT><A NAME="M33"><B>matchFiles </B><I>?patternList?</I></A><DD>
+Same as <B>configure -file </B><I>?patternList?</I>.
+<P><DT><A NAME="M34"><B>outputFile </B><I>?filename?</I></A><DD>
+Same as <B>configure -outfile </B><I>?filename?</I>.
+<P><DT><A NAME="M35"><B>preserveCore </B><I>?level?</I></A><DD>
+Same as <B>configure -preservecore </B><I>?level?</I>.
+<P><DT><A NAME="M36"><B>singleProcess </B><I>?boolean?</I></A><DD>
+Same as <B>configure -singleproc </B><I>?boolean?</I>.
+<P><DT><A NAME="M37"><B>skip </B><I>?patternList?</I></A><DD>
+Same as <B>configure -skip </B><I>?patternList?</I>.
+<P><DT><A NAME="M38"><B>skipDirectories </B><I>?patternList?</I></A><DD>
+Same as <B>configure -asidefromdir </B><I>?patternList?</I>.
+<P><DT><A NAME="M39"><B>skipFiles </B><I>?patternList?</I></A><DD>
+Same as <B>configure -notfile </B><I>?patternList?</I>.
+<P><DT><A NAME="M40"><B>temporaryDirectory </B><I>?directory?</I></A><DD>
+Same as <B>configure -tmpdir </B><I>?directory?</I>.
+<P><DT><A NAME="M41"><B>testsDirectory </B><I>?directory?</I></A><DD>
+Same as <B>configure -testdir </B><I>?directory?</I>.
+<P><DT><A NAME="M42"><B>verbose </B><I>?level?</I></A><DD>
+Same as <B>configure -verbose </B><I>?level?</I>.
 <P></DL>
-<H4><A NAME="M43">OTHER COMMANDS</A></H4>
+<H3><A NAME="M43">OTHER COMMANDS</A></H3>
 The remaining commands provided by <B>tcltest</B> have better
 alternatives provided by <B>tcltest</B> or <B><A HREF="../TclCmd/Tcl.htm">Tcl</A></B> itself.  They
 are retained to support existing test suites, but should be avoided
@@ -466,18 +444,18 @@ interpretation of a brace-enclosed
 &#8220;block&#8221;.
 The result is nearly impossible to document clearly, and
 for that reason this form is not recommended.  See the examples in
-<B><A HREF="#M121">CREATING TEST SUITES WITH TCLTEST</A></B> below to see that this
+<B>CREATING TEST SUITES WITH TCLTEST</B> below to see that this
 form is really not necessary to avoid backslash-quoted newlines.
 If you insist on using this form, examine
 the source code of <B>tcltest</B> if you want to know the substitution
 details, or just enclose the third through last argument
 to <B>test</B> in braces and hope for the best.
-<P><DT><A NAME="M45"><B>workingDirectory</B> ?<I>directoryName</I>?</A><DD>
+<P><DT><A NAME="M45"><B>workingDirectory</B> <I>?directoryName?</I></A><DD>
 Sets or returns the current working directory when the test suite is
 running.  The default value for workingDirectory is the directory in
 which the test suite was launched.  The Tcl commands <B><A HREF="../TclCmd/cd.htm">cd</A></B> and
 <B><A HREF="../TclCmd/pwd.htm">pwd</A></B> are sufficient replacements.
-<P><DT><A NAME="M46"><B>normalizeMsg </B><I>msg</I></A><DD>
+<P><DT><A NAME="M46"><B>normalizeMsg</B> <I>msg</I></A><DD>
 Returns the result of removing the
 &#8220;extra&#8221;
 newlines from <I>msg</I>, where
@@ -486,20 +464,19 @@ is rather imprecise.  Tcl offers plenty of string
 processing commands to modify strings as you wish, and
 <B>customMatch</B> allows flexible matching of actual and expected
 results.
-<P><DT><A NAME="M47"><B>normalizePath </B><I>pathVar</I></A><DD>
+<P><DT><A NAME="M47"><B>normalizePath</B> <I>pathVar</I></A><DD>
 Resolves symlinks in a path, thus creating a path without internal
 redirection.  It is assumed that <I>pathVar</I> is absolute.
 <I>pathVar</I> is modified in place.  The Tcl command <B><A HREF="../TclCmd/file.htm">file normalize</A></B>
 is a sufficient replacement.
-<P><DT><A NAME="M48"><B>bytestring </B><I>string</I></A><DD>
+<P><DT><A NAME="M48"><B>bytestring</B> <I>string</I></A><DD>
 Construct a string that consists of the requested sequence of bytes,
 as opposed to a string of properly formed UTF-8 characters using the
 value supplied in <I>string</I>.  This allows the tester to create
 denormalized or improperly formed strings to pass to C procedures that
 are supposed to accept strings with embedded NULL types and confirm
 that a string result has a certain pattern of bytes.  This is
-exactly equivalent to the Tcl command <B><A HREF="../TclCmd/encoding.htm">encoding convertfrom</A></B>
-<B>identity</B>.
+exactly equivalent to the Tcl command <B>encoding convertfrom identity</B>.
 <P></DL>
 <H3><A NAME="M49">TESTS</A></H3>
 The <B>test</B> command is the heart of the <B>tcltest</B> package.
@@ -513,15 +490,15 @@ also influence how <B>test</B> operates.
 The valid options for <B>test</B> are summarized:
 <P>
 <PRE><B>test</B> <I>name</I> <I>description</I>
-        ?<B>-constraints </B><I>keywordList|expression</I>?
-        ?<B>-setup </B><I>setupScript</I>?
-        ?<B>-body </B><I>testScript</I>?
-        ?<B>-cleanup </B><I>cleanupScript</I>?
-        ?<B>-result </B><I>expectedAnswer</I>?
-        ?<B>-output </B><I>expectedOutput</I>?
-        ?<B>-errorOutput </B><I>expectedError</I>?
-        ?<B>-returnCodes </B><I>codeList</I>?
-        ?<B>-match </B><I>mode</I>?</PRE>
+        ?-constraints <I>keywordList|expression</I>?
+        ?-setup <I>setupScript</I>?
+        ?-body <I>testScript</I>?
+        ?-cleanup <I>cleanupScript</I>?
+        ?-result <I>expectedAnswer</I>?
+        ?-output <I>expectedOutput</I>?
+        ?-errorOutput <I>expectedError</I>?
+        ?-returnCodes <I>codeList</I>?
+        ?-match <I>mode</I>?</PRE>
 <P>
 The <I>name</I> may be any string.  It is conventional to choose
 a <I>name</I> according to the pattern:
@@ -555,7 +532,7 @@ a bug, include the bug ID in the description.
 Valid attributes and associated values are:
 <P>
 <DL class="tests">
-<DT><A NAME="M50"><B>-constraints </B><I>keywordList</I>|<I>expression</I></A><DD>
+<DT><A NAME="M50"><B>-constraints </B><I>keywordList|expression</I></A><DD>
 The optional <B>-constraints</B> attribute can be list of one or more
 keywords or an expression.  If the <B>-constraints</B> value is a list of
 keywords, each of these keywords should be the name of a constraint
@@ -573,7 +550,7 @@ conditional evaluation of <B>test</B>.  In that way, the same
 number of tests are always reported by the test suite, though
 the number skipped may change based on the testing environment.
 The default value is an empty list.  
-See <B><A HREF="#M59">TEST CONSTRAINTS</A></B> below for a list of built-in constraints 
+See <B>TEST CONSTRAINTS</B> below for a list of built-in constraints 
 and information on how to add your own constraints.
 <P><DT><A NAME="M51"><B>-setup </B><I>script</I></A><DD>
 The optional <B>-setup</B> attribute indicates a <I>script</I> that will be run
@@ -582,10 +559,8 @@ of <I>script</I> raises an error, the test will fail.  The default value
 is an empty script.
 <P><DT><A NAME="M52"><B>-body </B><I>script</I></A><DD>
 The <B>-body</B> attribute indicates the <I>script</I> to run to carry out the 
-test, which must return a result that can be checked for correctness.
-If evaluation of <I>script</I> raises an error, the test will fail
-(unless the <B>-returnCodes</B> option is used to state that an error
-is expected).
+test.  It must return a result that can be checked for correctness.
+If evaluation of <I>script</I> raises an error, the test will fail.
 The default value is an empty script.
 <P><DT><A NAME="M53"><B>-cleanup </B><I>script</I></A><DD>
 The optional <B>-cleanup</B> attribute indicates a <I>script</I> that will be
@@ -604,18 +579,18 @@ the return value from script will be compared. The default value is
 an empty string.
 <P><DT><A NAME="M56"><B>-output </B><I>expectedValue</I></A><DD>
 The <B>-output</B> attribute supplies the <I>expectedValue</I> against which
-any output sent to <B><A HREF="../TclLib/GetStdChan.htm">stdout</A></B> or <B>outputChannel</B> during evaluation
+any output sent to <B>stdout</B> or <B>outputChannel</B> during evaluation
 of the script(s) will be compared.  Note that only output printed using
-the global <B><A HREF="../TclCmd/puts.htm">puts</A></B> command is used for comparison.  If <B>-output</B> is
-not specified, output sent to <B><A HREF="../TclLib/GetStdChan.htm">stdout</A></B> and <B>outputChannel</B> is not
-processed for comparison.
+<B>::puts</B> is used for comparison.  If <B>-output</B> is not specified,
+output sent to <B>stdout</B> and <B>outputChannel</B> is not processed for
+comparison.
 <P><DT><A NAME="M57"><B>-errorOutput </B><I>expectedValue</I></A><DD>
 The <B>-errorOutput</B> attribute supplies the <I>expectedValue</I> against
-which any output sent to <B><A HREF="../TclLib/GetStdChan.htm">stderr</A></B> or <B>errorChannel</B> during 
+which any output sent to <B>stderr</B> or <B>errorChannel</B> during 
 evaluation of the script(s) will be compared. Note that only output
-printed using the global <B><A HREF="../TclCmd/puts.htm">puts</A></B> command is used for comparison.  If
-<B>-errorOutput</B> is not specified, output sent to <B><A HREF="../TclLib/GetStdChan.htm">stderr</A></B> and
-<B>errorChannel</B> is not processed for comparison.
+printed using <B>::puts</B> is used for comparison.  If <B>-errorOutput</B>
+is not specified, output sent to <B>stderr</B> and <B>errorChannel</B> is
+not processed for comparison.
 <P><DT><A NAME="M58"><B>-returnCodes </B><I>expectedCodeList</I></A><DD>
 The optional <B>-returnCodes</B> attribute supplies <I>expectedCodeList</I>,
 a list of return codes that may be accepted from evaluation of the
@@ -624,7 +599,7 @@ a code not in the <I>expectedCodeList</I>, the test fails.  All
 return codes known to <B><A HREF="../TclCmd/return.htm">return</A></B>, in both numeric and symbolic
 form, including extended return codes, are acceptable elements in
 the <I>expectedCodeList</I>.  Default value is
-&#8220;<B>ok return</B>&#8221;.
+&#8220;<B>ok&#8221;return</B>.
 <P></DL>
 <P>
 To pass, a test must successfully evaluate its <B>-setup</B>, <B>-body</B>,
@@ -640,14 +615,14 @@ values for all attributes, it will not raise an error.  Test
 failures are instead reported as output written to <B>outputChannel</B>.
 In default operation, a successful test produces no output.  The output
 messages produced by <B>test</B> are controlled by the
-<B>configure -verbose</B> option as described in <B><A HREF="#M89">CONFIGURABLE OPTIONS</A></B>
+<B>configure -verbose</B> option as described in <B>CONFIGURABLE OPTIONS</B>
 below.  Any output produced by the test scripts themselves should be
-produced using <B><A HREF="../TclCmd/puts.htm">puts</A></B> to <B>outputChannel</B> or
+produced using <B>::puts</B> to <B>outputChannel</B> or
 <B>errorChannel</B>, so that users of the test suite may
 easily capture output with the <B>configure -outfile</B> and
 <B>configure -errfile</B> options, and so that the <B>-output</B>
 and <B>-errorOutput</B> attributes work properly.
-<H4><A NAME="M59">TEST CONSTRAINTS</A></H4>
+<H3><A NAME="M59">TEST CONSTRAINTS</A></H3>
 Constraints are used to determine whether or not a test should be skipped.
 Each constraint has a name, which may be any string, and a boolean
 value.  Each <B>test</B> has a <B>-constraints</B> value which is a
@@ -675,86 +650,85 @@ The following is a list of constraints pre-defined by the
 <P>
 <DL class="test constraints">
 <DT><A NAME="M60"><I>singleTestInterp</I></A><DD>
-This test can only be run if all test files are sourced into a single
-interpreter.
+test can only be run if all test files are sourced into a single interpreter
 <P><DT><A NAME="M61"><I>unix</I></A><DD>
-This test can only be run on any Unix platform.
+test can only be run on any Unix platform
 <P><DT><A NAME="M62"><I>win</I></A><DD>
-This test can only be run on any Windows platform.
+test can only be run on any Windows platform
 <P><DT><A NAME="M63"><I>nt</I></A><DD>
-This test can only be run on any Windows NT platform.
+test can only be run on any Windows NT platform
 <P><DT><A NAME="M64"><I>95</I></A><DD>
-This test can only be run on any Windows 95 platform.
+test can only be run on any Windows 95 platform
 <P><DT><A NAME="M65"><I>98</I></A><DD>
-This test can only be run on any Windows 98 platform.
+test can only be run on any Windows 98 platform
 <P><DT><A NAME="M66"><I>mac</I></A><DD>
-This test can only be run on any Mac platform.
+test can only be run on any Mac platform
 <P><DT><A NAME="M67"><I>unixOrWin</I></A><DD>
-This test can only be run on a Unix or Windows platform.
+test can only be run on a Unix or Windows platform
 <P><DT><A NAME="M68"><I>macOrWin</I></A><DD>
-This test can only be run on a Mac or Windows platform.
+test can only be run on a Mac or Windows platform
 <P><DT><A NAME="M69"><I>macOrUnix</I></A><DD>
-This test can only be run on a Mac or Unix platform.
+test can only be run on a Mac or Unix platform
 <P><DT><A NAME="M70"><I>tempNotWin</I></A><DD>
-This test can not be run on Windows.  This flag is used to temporarily
+test can not be run on Windows.  This flag is used to temporarily
 disable a test. 
 <P><DT><A NAME="M71"><I>tempNotMac</I></A><DD>
-This test can not be run on a Mac.  This flag is used
+test can not be run on a Mac.  This flag is used
 to temporarily disable a test.
 <P><DT><A NAME="M72"><I>unixCrash</I></A><DD>
-This test crashes if it is run on Unix.  This flag is used to temporarily
+test crashes if it is run on Unix.  This flag is used to temporarily
 disable a test. 
 <P><DT><A NAME="M73"><I>winCrash</I></A><DD>
-This test crashes if it is run on Windows.  This flag is used to temporarily
+test crashes if it is run on Windows.  This flag is used to temporarily
 disable a test. 
 <P><DT><A NAME="M74"><I>macCrash</I></A><DD>
-This test crashes if it is run on a Mac.  This flag is used to temporarily
+test crashes if it is run on a Mac.  This flag is used to temporarily
 disable a test. 
 <P><DT><A NAME="M75"><I>emptyTest</I></A><DD>
-This test is empty, and so not worth running, but it remains as a
+test is empty, and so not worth running, but it remains as a
 place-holder for a test to be written in the future.  This constraint
 has value false to cause tests to be skipped unless the user specifies
 otherwise.
 <P><DT><A NAME="M76"><I>knownBug</I></A><DD>
-This test is known to fail and the bug is not yet fixed.  This constraint
+test is known to fail and the bug is not yet fixed.  This constraint
 has value false to cause tests to be skipped unless the user specifies
 otherwise.
 <P><DT><A NAME="M77"><I>nonPortable</I></A><DD>
-This test can only be run in some known development environment.
+test can only be run in some known development environment.
 Some tests are inherently non-portable because they depend on things
 like word length, file system configuration, window manager, etc.
 This constraint has value false to cause tests to be skipped unless
 the user specifies otherwise.  
 <P><DT><A NAME="M78"><I>userInteraction</I></A><DD>
-This test requires interaction from the user.  This constraint has
+test requires interaction from the user.  This constraint has
 value false to causes tests to be skipped unless the user specifies
 otherwise.  
 <P><DT><A NAME="M79"><I>interactive</I></A><DD>
-This test can only be run in if the interpreter is in interactive mode 
+test can only be run in if the interpreter is in interactive mode 
 (when the global tcl_interactive variable is set to 1).
 <P><DT><A NAME="M80"><I>nonBlockFiles</I></A><DD>
-This test can only be run if platform supports setting files into
-nonblocking mode.
+test can only be run if platform supports setting files into
+nonblocking mode 
 <P><DT><A NAME="M81"><I>asyncPipeClose</I></A><DD>
-This test can only be run if platform supports async flush and async close
-on a pipe.
+test can only be run if platform supports async flush and async close
+on a pipe 
 <P><DT><A NAME="M82"><I>unixExecs</I></A><DD>
-This test can only be run if this machine has Unix-style commands
+test can only be run if this machine has Unix-style commands
 <B>cat</B>, <B>echo</B>, <B>sh</B>, <B>wc</B>, <B>rm</B>, <B>sleep</B>,
-<B>fgrep</B>, <B>ps</B>, <B>chmod</B>, and <B>mkdir</B> available.
+<B>fgrep</B>, <B>ps</B>, <B>chmod</B>, and <B>mkdir</B> available
 <P><DT><A NAME="M83"><I>hasIsoLocale</I></A><DD>
-This test can only be run if can switch to an ISO locale.
+test can only be run if can switch to an ISO locale
 <P><DT><A NAME="M84"><I>root</I></A><DD>
-This test can only run if Unix user is root.
+test can only run if Unix user is root
 <P><DT><A NAME="M85"><I>notRoot</I></A><DD>
-This test can only run if Unix user is not root.
+test can only run if Unix user is not root
 <P><DT><A NAME="M86"><I>eformat</I></A><DD>
-This test can only run if app has a working version of sprintf with respect
+test can only run if app has a working version of sprintf with respect
 to the
 &#8220;e&#8221;
 format of floating-point numbers.
 <P><DT><A NAME="M87"><I>stdio</I></A><DD>
-This test can only be run if <B>interpreter</B> can be <B><A HREF="../TclCmd/open.htm">open</A></B>ed
+test can only be run if <B>interpreter</B> can be <B><A HREF="../TclCmd/open.htm">open</A></B>ed
 as a pipe.
 <P></DL>
 <P>
@@ -776,7 +750,7 @@ up a configuration with
 <P>
 to run exactly those tests that exercise known bugs, and discover
 whether any of them pass, indicating the bug had been fixed.
-<H4><A NAME="M88">RUNNING ALL TESTS</A></H4>
+<H3><A NAME="M88">RUNNING ALL TESTS</A></H3>
 The single command <B>runAllTests</B> is evaluated to run an entire
 test suite, spanning many files and directories.  The configuration
 options of <B>tcltest</B> control the precise operations.  The
@@ -844,8 +818,8 @@ each test file.  No spawning when <I>boolean</I> is true.  Default
 value is false.
 <P><DT><A NAME="M91"><B>-debug </B><I>level</I></A><DD>
 Sets the debug level to <I>level</I>, an integer value indicating how
-much debugging information should be printed to <B><A HREF="../TclLib/GetStdChan.htm">stdout</A></B>.  Note that
-debug messages always go to <B><A HREF="../TclLib/GetStdChan.htm">stdout</A></B>, independent of the value of
+much debugging information should be printed to stdout.  Note that
+debug messages always go to stdout, independent of the value of
 <B>configure -outfile</B>.  Default value is 0.  Levels are defined as:
 <P>
 <DL class="configurable options">
@@ -860,8 +834,8 @@ print warnings about possible lack of cleanup or balance in test files.
 Also print warnings about any re-use of test names.
 <P><DT><A NAME="M94">2</A><DD>
 Display the flag array parsed by the command line processor, the
-contents of the global <B><A HREF="../TclCmd/tclvars.htm">env</A></B> array, and all user-defined variables
-that exist in the current namespace as they are used.
+contents of the ::env array, and all user-defined variables that exist
+in the current namespace as they are used.
 <P><DT><A NAME="M95">3</A><DD>
 Display information regarding what individual procs in the test
 harness are doing.
@@ -869,31 +843,30 @@ harness are doing.
 <P><DT><A NAME="M96"><B>-verbose </B><I>level</I></A><DD>
 Sets the type of output verbosity desired to <I>level</I>,
 a list of zero or more of the elements <B>body</B>, <B>pass</B>,
-<B>skip</B>, <B>start</B>, <B>error</B> and <B>line</B>.  Default value
-is
-&#8220;<B>body error</B>&#8221;.
+<B>skip</B>, <B>start</B>, <B><A HREF="../TclCmd/error.htm">error</A></B> and <B>line</B>.  Default value
+is <B>{body error}</B>.
 Levels are defined as: 
 <P>
 <DL class="configurable options">
-<DT><A NAME="M97">body (<B>b</B>)</A><DD>
+<DT><A NAME="M97">body (b)</A><DD>
 Display the body of failed tests
-<P><DT><A NAME="M98">pass (<B>p</B>)</A><DD>
+<P><DT><A NAME="M98">pass (p)</A><DD>
 Print output when a test passes
-<P><DT><A NAME="M99">skip (<B>s</B>)</A><DD>
+<P><DT><A NAME="M99">skip (s)</A><DD>
 Print output when a test is skipped
-<P><DT><A NAME="M100">start (<B>t</B>)</A><DD>
+<P><DT><A NAME="M100">start (t)</A><DD>
 Print output whenever a test starts
-<P><DT><A NAME="M101">error (<B>e</B>)</A><DD>
+<P><DT><A NAME="M101">error (e)</A><DD>
 Print errorInfo and errorCode, if they exist, when a test return code
 does not match its expected return code
-<P><DT><A NAME="M102">line (<B>l</B>)</A><DD>
+<P><DT><A NAME="M102">line (l)</A><DD>
 Print source file line information of failed tests
-</DL><P>The single letter abbreviations noted above are also recognized
+<P></DL>
+The single letter abbreviations noted above are also recognized
 so that
 &#8220;<B>configure -verbose pt</B>&#8221;
 is the same as
-&#8220;<B>configure -verbose {pass start}</B>&#8221;.<DL class="configurable options">
-</DL>
+&#8220;<B>configure -verbose {pass start}</B>&#8221;.
 <P><DT><A NAME="M103"><B>-preservecore </B><I>level</I></A><DD>
 Sets the core preservation level to <I>level</I>.  This level
 determines how stringent checks for core files are.  Default
@@ -912,11 +885,11 @@ copy of each core file produced in <B>configure -tmpdir</B>.
 <P></DL>
 <P><DT><A NAME="M107"><B>-limitconstraints </B><I>boolean</I></A><DD>
 Sets the mode by which <B>test</B> honors constraints as described
-in <B><A HREF="#M49">TESTS</A></B> above.  Default value is false.
+in <B>TESTS</B> above.  Default value is false.
 <P><DT><A NAME="M108"><B>-constraints </B><I>list</I></A><DD>
 Sets all the constraints in <I>list</I> to true.  Also used in
 combination with <B>configure -limitconstraints true</B> to control an
-alternative constraint mode as described in <B><A HREF="#M49">TESTS</A></B> above.
+alternative constraint mode as described in <B>TESTS</B> above.
 Default value is an empty list.
 <P><DT><A NAME="M109"><B>-tmpdir </B><I>directory</I></A><DD>
 Sets the temporary directory to be used by <B>makeFile</B>,
@@ -973,14 +946,14 @@ of <B>errorChannel</B>.
 The fundamental element of a test suite is the individual <B>test</B>
 command.  We begin with several examples.
 <P>
-<OL class="creating test suites with tcltest">
-<LI value="1">
+<DL class="creating test suites with tcltest">
+<DT>[1]<DD>
 Test of a script that returns normally.
 <P>
 <PRE><B>test</B> example-1.0 {normal return} {
     format %s value
 } value</PRE>
-<P><LI value="2">
+<P><DT>[2]<DD>
 Test of a script that requires context setup and cleanup.  Note the
 bracing and indenting style that avoids any need for line continuation.
 <P>
@@ -991,13 +964,13 @@ bracing and indenting style that avoids any need for line continuation.
 } -cleanup {
     removeFile test
 } -result 1</PRE>
-<P><LI value="3">
+<P><DT>[3]<DD>
 Test of a script that raises an error.
 <P>
 <PRE><B>test</B> example-1.2 {error return} -body {
     error message
 } -returnCodes error -result message</PRE>
-<P><LI value="4">
+<P><DT>[4]<DD>
 Test with a constraint.
 <P>
 <PRE><B>test</B> example-1.3 {user owns created files} -constraints {
@@ -1009,13 +982,11 @@ Test with a constraint.
 } -cleanup {
     removeFile test
 } -result $::tcl_platform(user)</PRE>
-<P></OL>
+<P></DL>
 <P>
 At the next higher layer of organization, several <B>test</B> commands
 are gathered together into a single test file.  Test files should have
-names with the
-&#8220;<B>.test</B>&#8221;
-extension, because that is the default pattern
+names with the <B>.test</B> extension, because that is the default pattern
 used by <B>runAllTests</B> to find test files.  It is a good rule of
 thumb to have one test file for each source code file of your project.
 It is good practice to edit the test file and the source code file
@@ -1025,8 +996,8 @@ Most of the code in the test file should be the <B>test</B> commands.
 Use constraints to skip tests, rather than conditional evaluation
 of <B>test</B>.
 <P>
-<OL class="creating test suites with tcltest">
-<LI value="5">
+<DL class="creating test suites with tcltest">
+<DT>[5]<DD>
 Recommended system for writing conditional tests, using constraints to
 guard:
 <P>
@@ -1034,16 +1005,16 @@ guard:
 <B>test</B> goodConditionalTest {} X {
     # body
 } result</PRE>
-<P><LI value="6">
+<P><DT>[6]<DD>
 Discouraged system for writing conditional tests, using <B><A HREF="../TclCmd/if.htm">if</A></B> to
 guard:
 <P>
 <PRE>if $myRequirement {
-    <B>test</B> badConditionalTest {} {
+    test badConditionalTest {} {
         #body
     } result
 }</PRE>
-<P></OL>
+<P></DL>
 <P>
 Use the <B>-setup</B> and <B>-cleanup</B> options to establish and release
 all context requirements of the test body.  Do not make tests depend on
@@ -1071,8 +1042,8 @@ the tester all the configuration control that <B>tcltest</B> provides.
 After all <B>test</B>s in a test file, the command <B>cleanupTests</B>
 should be called.
 <P>
-<OL class="creating test suites with tcltest">
-<LI value="7">
+<DL class="creating test suites with tcltest">
+<DT>[7]<DD>
 Here is a sketch of a sample test file illustrating those points:
 <P>
 <PRE>package require tcltest 2.2
@@ -1095,7 +1066,7 @@ namespace eval ::example::test {
     <B>cleanupTests</B>
 }
 namespace delete ::example::test</PRE>
-<P></OL>
+<P></DL>
 <P>
 The next level of organization is a full test suite, made up of several
 test files.  One script is used to control the entire suite.  The
@@ -1104,8 +1075,8 @@ doing any necessary setup.  This script is usually named <B>all.tcl</B>
 because that is the default name used by <B>runAllTests</B> when combining
 multiple test suites into one testing run.
 <P>
-<OL class="creating test suites with tcltest">
-<LI value="8">
+<DL class="creating test suites with tcltest">
+<DT>[8]<DD>
 Here is a sketch of a sample test suite master script:
 <P>
 <PRE>package require Tcl 8.4
@@ -1115,7 +1086,7 @@ package require example
         [file dirname [file normalize [info script]]]
 eval <B>::tcltest::configure</B> $argv
 <B>::tcltest::runAllTests</B></PRE>
-<P></OL>
+<P></DL>
 <H3><A NAME="M122">COMPATIBILITY</A></H3>
 A number of commands and variables in the <B>::tcltest</B> namespace
 provided by earlier releases of <B>tcltest</B> have not been documented
@@ -1125,17 +1096,13 @@ to continue to support existing test suites written to the older
 interface specifications, many of those deprecated commands and
 variables still work as before.  For example, in many circumstances,
 <B>configure</B> will be automatically called shortly after
-<B><A HREF="../TclCmd/package.htm">package require</A></B> <B>tcltest 2.1</B> succeeds with arguments
+<B>package require tcltest 2.1</B> succeeds with arguments
 from the variable <B>::argv</B>.  This is to support test suites
 that depend on the old behavior that <B>tcltest</B> was automatically
 configured from command line arguments.  New test files should not
 depend on this, but should explicitly include
 <P>
 <PRE>eval <B>::tcltest::configure</B> $::argv</PRE>
-<P>
-or
-<P>
-<PRE><B>::tcltest::configure</B> {*}$::argv</PRE>
 <P>
 to establish a configuration from command line arguments.
 <H3><A NAME="M123">KNOWN ISSUES</A></H3>
@@ -1176,16 +1143,17 @@ and
 refer to tests that were run at the same test level as test level-1.1.
 <P>
 Implementation of output and error comparison in the test command
-depends on usage of <B><A HREF="../TclCmd/puts.htm">puts</A></B> in your application code.  Output is
-intercepted by redefining the global <B><A HREF="../TclCmd/puts.htm">puts</A></B> command while the defined test
+depends on usage of ::puts in your application code.  Output is
+intercepted by redefining the ::puts command while the defined test
 script is being run.  Errors thrown by C procedures or printed
-directly from C applications will not be caught by the <B>test</B> command.
+directly from C applications will not be caught by the test command.
 Therefore, usage of the <B>-output</B> and <B>-errorOutput</B>
 options to <B>test</B> is useful only for pure Tcl applications
-that use <B><A HREF="../TclCmd/puts.htm">puts</A></B> to produce output. 
+that use <B>::puts</B> to produce output. 
 <H3><A NAME="M124">KEYWORDS</A></H3>
 <A href="../Keywords/T.htm#test">test</A>, <A href="../Keywords/T.htm#test harness">test harness</A>, <A href="../Keywords/T.htm#test suite">test suite</A>
-<div class="copy">Copyright &copy; 1990-1994 The Regents of the University of California
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1994 The Regents of the University of California
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 Copyright &copy; 1998-1999 Scriptics Corporation
 Copyright &copy; 2000 Ajuba Solutions

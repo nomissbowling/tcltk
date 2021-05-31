@@ -3,10 +3,10 @@
 <HEAD><TITLE>append manual page - Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> append</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> append</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-append &mdash; Append to variable
+append - Append to variable
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>append </B><I>varName </I>?<I>value value value ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -25,10 +25,9 @@ is much more efficient than
 if <B>$a</B> is long.
 <H3><A NAME="M5">EXAMPLE</A></H3>
 Building a string of comma-separated numbers piecemeal using a loop.
-<P>
 <PRE>set var 0
 for {set i 1} {$i&lt;=10} {incr i} {
-    <B>append</B> var &quot;,&quot; $i
+   <B>append</B> var &quot;,&quot; $i
 }
 puts $var
 # Prints 0,1,2,3,4,5,6,7,8,9,10</PRE>
@@ -36,7 +35,8 @@ puts $var
 <B><A HREF="../TclCmd/concat.htm">concat</A></B>, <B><A HREF="../TclCmd/lappend.htm">lappend</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#append">append</A>, <A href="../Keywords/V.htm#variable">variable</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

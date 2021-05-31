@@ -1,0 +1,123 @@
+This is the pgtcl-ng Windows Binary Release README
+Last updated for pgtclng-2.1.1 on 2014-09-12
+The project home page is: http://sourceforge.net/projects/pgtclng/
+-----------------------------------------------------------------------------
+
+OVERVIEW:
+
+Pgtcl is the Tcl interface for the PostgreSQL Database Management System.
+It is a loadable Tcl module implementing commands which allow an
+application to interact with a PostgreSQL database. Pgtcl-ng is the "next
+generation" implementation of Pgtcl.
+
+This is a binary release for Windows. Provided your system meets the
+requirements below, you can use this without compiling or building.
+
+This release uses the Tcl "stubs" mechanism, which should allow it to be
+used with any version of Tcl 8.x. It was built with Tcl 8.5.15, and tested
+with ActiveState ActiveTcl 8.6.1 and 8.5.15. See REQUIREMENTS below.
+
+This release includes only the MinGW built version of libpgtcl.dll.
+To use the MinGW build, you need EnterpriseDB PostgreSQL from
+(www.enterprisedb.com). You can use their free Windows build of PostgreSQL.
+
+This release was built with the PostgreSQL-9.3.4 run-time client system,
+and was was tested on Windows XP SP3, connecting to PostgreSQL-9.3.5 and
+PostgreSQL-9.2.9 servers running on Linux.
+
+The source release and full documentation for pgtcl-ng are available at the
+site listed in the header of this file. Even though you may freely use
+and redistribute this binary release in accordance with the open-source
+license in COPYING, we suggest you also download the source release - just
+because you can.
+
+
+REQUIREMENTS:
+
+ +  ActiveState ActiveTcl 8.6.1 or 8.5.15 (see http://www.activestate.com )
+       These are the tested versions. Other patch levels of 8.4.x, 8.5.x,
+       and 8.6.x should work.
+       NOTE: The Pgtcl-ng binary release for Windows uses the
+       Tcl "stubs" mechanism which provides independence from specific
+       versions of Tcl. The same release of Pgtcl-ng should work with all
+       Tcl-8.6, 8.5, and 8.4 versions, and perhaps older versions too.
+
+ +  A PostgreSQL database server somewhere on your network.  This has been
+       tested with PostgreSQL-9.3.5 and PostgreSQL-9.2.9 servers.
+       It should also work with older versions.
+
+ +  To use the MinGW-built pgtclng, you need the EnterpriseDB PostgreSQL
+       installation on the client side, or at least the DLL files from the
+       "bin" directory. The MinGW build uses multiple PostgreSQL DLLs which
+       are not included in the release.
+
+ + EnterpriseDB PostgreSQL requires a version of the Microsoft Visual C++
+       Redistributable libraries. This includes "msvcr*.dll". If you
+       use the EnterpriseDB Installer, it will install this (if necessary).
+       If you do not use the installer, you need to make sure the correct
+       version of the Visual C++ libraries is installed. These are
+       downloadable from Microsoft.
+
+
+CONTENTS:
+
+    README.txt  ..............  This file
+    COPYING ..................  License file (Open Source)
+    libpgtcl.dll .............  The pgtcl loadable library
+    pkgIndex.tcl .............  Tcl package index file
+
+
+KNOWN BUGS and LIMITATIONS - Windows Release:
+
++ This release was built for 32-bit Windows systems, and tested only
+  on 32-bit Windows.
+
++ Changes to the connection control environment variables (such as PGHOST,
+  PGDATABASE) are not seen once the DLL is loaded. This is either a Windows
+  DLL environment variable issue, a Tcl environment variable issue, or both.
+  This should not be a problem, since environment variables are mostly for
+  setting outside your application.
+
++ Only TCP/IP is supported, not Unix Domain Sockets. So a hostname (or IP
+  address) must be provided when connecting. If you are trying to connect
+  to a PostgreSQL server running on your Windows PC, you need to specify
+  host=localhost or host=127.0.0.1 to connect to it.
+
+
+RELEASE ISSUES:
+
++ Refer to the NEWS file which can be found in the source release and on
+  the pgtclng web site for important changes and compatibility issues in
+  this release and previous releases.
+
+
+INSTALLATION and USAGE:
+
+Refer to the reference manual for more details. Here is a quick summary
+of the two most common ways to install and use this release:
+
+You must have the EnterpriseDB PostgreSQL installation on the client PC
+(or at least the "bin" directory), and its "bin" directory must be on your
+PATH. This is necessary so the multiple dependent DLLs can be found.
+
+Option 1) Package Require
+
+ (a) Create a new directory "Pgtcl2.1" under the Tcl library directory.
+     For example, this might be: "c:\Program Files\Active Tcl\tcl8.5\lib".
+     Note: you can use the 3-part version if you prefer: "Pgtcl2.1.1".
+
+ (b) Copy the files: libpgtcl.dll and pkgIndex.tcl into that directory.
+
+ (c) You application uses: "package require Pgtcl"
+
+Option 2) Direct Loading:
+
+ (a) Copy libpgtcl.dll into any directory where it is convenient for
+     your application, or into a directory on your PATH, or into the Tcl
+     "bin" directory.
+
+ (b) Your application uses:  "load .../libpgtcl.dll"
+     where ".../" is a path prefix which you need to supply if libpgtcl is
+     not installed on PATH or in the Tcl "bin" directory.
+
+-----------------------------------------------------------------------------

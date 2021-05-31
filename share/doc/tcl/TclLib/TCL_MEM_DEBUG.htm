@@ -3,10 +3,10 @@
 <HEAD><TITLE>TCL_MEM_DEBUG manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> TCL_MEM_DEBUG</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> TCL_MEM_DEBUG</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-TCL_MEM_DEBUG &mdash; Compile-time flag to enable Tcl memory debugging
+TCL_MEM_DEBUG - Compile-time flag to enable Tcl memory debugging
 <H3><A NAME="M3">DESCRIPTION</A></H3>
 When Tcl is compiled with <B>TCL_MEM_DEBUG</B> defined, a powerful set
 of memory debugging aids is included in the compiled binary.  This
@@ -23,7 +23,7 @@ version of <B><A HREF="../TclLib/DumpActiveMemory.htm">Tcl_InitMemory</A></B> to
 <B>TCL_MEM_DEBUG</B> must be either left defined for all modules or undefined
 for all modules that are going to be linked together.  If they are not, link
 errors will occur, with either <B>Tcl_DbCkfree</B> and <B>Tcl_DbCkalloc</B> or
-<B><A HREF="../TclLib/Alloc.htm">Tcl_Alloc</A></B> and <B><A HREF="../TclLib/Alloc.htm">Tcl_Free</A></B> being undefined.
+<B>Tcl_Ckalloc</B> and <B>Tcl_Ckfree</B> being undefined.
 <P>
 Once memory debugging support has been compiled into Tcl, the C
 functions <B><A HREF="../TclLib/DumpActiveMemory.htm">Tcl_ValidateAllMemory</A></B>, and <B><A HREF="../TclLib/DumpActiveMemory.htm">Tcl_DumpActiveMemory</A></B>,
@@ -73,7 +73,8 @@ to remove the calls after you find the problem.
 <B><A HREF="../TclLib/Alloc.htm">ckalloc</A></B>, <B><A HREF="../TclCmd/memory.htm">memory</A></B>, <B><A HREF="../TclLib/DumpActiveMemory.htm">Tcl_ValidateAllMemory</A></B>, <B><A HREF="../TclLib/DumpActiveMemory.htm">Tcl_DumpActiveMemory</A></B>
 <H3><A NAME="M8">KEYWORDS</A></H3>
 <A href="../Keywords/M.htm#memory">memory</A>, <A href="../Keywords/D.htm#debug">debug</A>
-<div class="copy">Copyright &copy; 1992-1999 Karl Lehenbauer and Mark Diekhans.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1992-1999 Karl Lehenbauer and Mark Diekhans.
 Copyright &copy; 2000 by Scriptics Corporation.
 </div>
 </BODY></HTML>

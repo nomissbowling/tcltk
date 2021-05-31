@@ -3,10 +3,10 @@
 <HEAD><TITLE>upvar manual page - Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> upvar</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> upvar</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-upvar &mdash; Create link to variable in a different stack frame
+upvar - Create link to variable in a different stack frame
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>upvar </B>?<I>level</I>? <I>otherVar myVar </I>?<I>otherVar myVar </I>...?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -14,7 +14,8 @@ This command arranges for one or more local variables in the current
 procedure to refer to variables in an enclosing procedure call or
 to global variables.
 <I>Level</I> may have any of the forms permitted for the <B><A HREF="../TclCmd/uplevel.htm">uplevel</A></B>
-command, and may be omitted (it defaults to <B>1</B>).
+command, and may be omitted if the first letter of the first <I>otherVar</I>
+is not <B>#</B> or a digit (it defaults to <B>1</B>).
 For each <I>otherVar</I> argument, <B>upvar</B> makes the variable
 by that name in the procedure frame given by <I>level</I> (or at
 global level, if <I>level</I> is <B>#0</B>) accessible
@@ -35,26 +36,24 @@ The <B>upvar</B> command simplifies the implementation of call-by-name
 procedure calling and also makes it easier to build new control constructs
 as Tcl procedures.
 For example, consider the following procedure:
-<P>
 <PRE>proc <I>add2</I> name {
-    <B>upvar</B> $name x
-    set x [expr {$x + 2}]
+   <B>upvar</B> $name x
+   set x [expr {$x + 2}]
 }</PRE>
-<P>
 If <I>add2</I> is invoked with an argument giving the name of a variable,
 it adds two to the value of that variable.
 Although <I>add2</I> could have been implemented using <B><A HREF="../TclCmd/uplevel.htm">uplevel</A></B>
-instead of <B>upvar</B>, <B>upvar</B> makes it simpler for <I>add2</I>
+instead of <B>upvar</B>, <B>upvar</B> makes it simpler for <B>add2</B>
 to access the variable in the caller's procedure frame.
 <P>
-<B><A HREF="../TclCmd/namespace.htm">namespace eval</A></B> is another way (besides procedure calls)
+<B>namespace eval</B> is another way (besides procedure calls)
 that the Tcl naming context can change.
 It adds a call frame to the stack to represent the namespace context.
-This means each <B><A HREF="../TclCmd/namespace.htm">namespace eval</A></B> command
+This means each <B>namespace eval</B> command
 counts as another call level for <B><A HREF="../TclCmd/uplevel.htm">uplevel</A></B> and <B>upvar</B> commands.
-For example, <B><A HREF="../TclCmd/info.htm">info level</A></B> <B>1</B> will return a list
+For example, <B>info level 1</B> will return a list
 describing a command that is either
-the outermost procedure call or the outermost <B><A HREF="../TclCmd/namespace.htm">namespace eval</A></B> command.
+the outermost procedure call or the outermost <B>namespace eval</B> command.
 Also, <B>uplevel #0</B> evaluates a script
 at top-level in the outermost namespace (the global namespace).
 <P>
@@ -74,13 +73,12 @@ will be
 &#8220;<I>localVar</I>&#8221;
 rather than
 &#8220;<I>originalVar</I>&#8221;:
-<P>
 <PRE>proc <I>traceproc</I> { name index op } {
-    puts $name
+   puts $name
 }
 proc <I>setByUpvar</I> { name value } {
-    <B>upvar</B> $name localVar
-    set localVar $value
+   <B>upvar</B> $name localVar
+   set localVar $value
 }
 set originalVar 1
 trace variable originalVar w <I>traceproc</I>
@@ -89,12 +87,11 @@ trace variable originalVar w <I>traceproc</I>
 If <I>otherVar</I> refers to an element of an array, then variable
 traces set for the entire array will not be invoked when <I>myVar</I>
 is accessed (but traces on the particular element will still be
-invoked).  In particular, if the array is <B><A HREF="../TclCmd/tclvars.htm">env</A></B>, then changes
+invoked).  In particular, if the array is <B>env</B>, then changes
 made to <I>myVar</I> will not be passed to subprocesses correctly.
 <H3><A NAME="M6">EXAMPLE</A></H3>
 A <B>decr</B> command that works like <B><A HREF="../TclCmd/incr.htm">incr</A></B> except it subtracts
 the value from the variable instead of adding it:
-<P>
 <PRE>proc decr {varName {decrement 1}} {
     <B>upvar</B> 1 $varName var
     incr var [expr {-$decrement}]
@@ -102,8 +99,9 @@ the value from the variable instead of adding it:
 <H3><A NAME="M7">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/global.htm">global</A></B>, <B><A HREF="../TclCmd/namespace.htm">namespace</A></B>, <B><A HREF="../TclCmd/uplevel.htm">uplevel</A></B>, <B><A HREF="../TclCmd/variable.htm">variable</A></B>
 <H3><A NAME="M8">KEYWORDS</A></H3>
-<A href="../Keywords/C.htm#context">context</A>, <A href="../Keywords/F.htm#frame">frame</A>, <A href="../Keywords/G.htm#global">global</A>, <A href="../Keywords/L.htm#level">level</A>, <A href="../Keywords/N.htm#namespace">namespace</A>, <A href="../Keywords/P.htm#procedure">procedure</A>, <A href="../Keywords/U.htm#upvar">upvar</A>, <A href="../Keywords/V.htm#variable">variable</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<A href="../Keywords/C.htm#context">context</A>, <A href="../Keywords/F.htm#frame">frame</A>, <A href="../Keywords/G.htm#global">global</A>, <A href="../Keywords/L.htm#level">level</A>, <A href="../Keywords/N.htm#namespace">namespace</A>, <A href="../Keywords/P.htm#procedure">procedure</A>, <A href="../Keywords/V.htm#variable">variable</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

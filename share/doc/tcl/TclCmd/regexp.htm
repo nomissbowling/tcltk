@@ -3,34 +3,34 @@
 <HEAD><TITLE>regexp manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> regexp</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> regexp</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="regexp.htm#M2" NAME="L1552">NAME</A>
-<DL><DD>regexp &mdash; Match a regular expression against a string</DD></DL>
-<DD><A HREF="regexp.htm#M3" NAME="L1553">SYNOPSIS</A>
+<DD><A HREF="regexp.htm#M2" NAME="L1357">NAME</A>
+<DL><DD>regexp - Match a regular expression against a string</DD></DL>
+<DD><A HREF="regexp.htm#M3" NAME="L1358">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="regexp.htm#M4" NAME="L1554">DESCRIPTION</A>
+<DD><A HREF="regexp.htm#M4" NAME="L1359">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="regexp.htm#M5" NAME="L1555"><B>-about</B></A>
-<DD><A HREF="regexp.htm#M6" NAME="L1556"><B>-expanded</B></A>
-<DD><A HREF="regexp.htm#M7" NAME="L1557"><B>-indices</B></A>
-<DD><A HREF="regexp.htm#M8" NAME="L1558"><B>-line</B></A>
-<DD><A HREF="regexp.htm#M9" NAME="L1559"><B>-linestop</B></A>
-<DD><A HREF="regexp.htm#M10" NAME="L1560"><B>-lineanchor</B></A>
-<DD><A HREF="regexp.htm#M11" NAME="L1561"><B>-nocase</B></A>
-<DD><A HREF="regexp.htm#M12" NAME="L1562"><B>-all</B></A>
-<DD><A HREF="regexp.htm#M13" NAME="L1563"><B>-inline</B></A>
-<DD><A HREF="regexp.htm#M14" NAME="L1564"><B>-start</B> <I>index</I></A>
-<DD><A HREF="regexp.htm#M15" NAME="L1565"><B>--</B></A>
+<DD><A HREF="regexp.htm#M5" NAME="L1360"><B>-about</B></A>
+<DD><A HREF="regexp.htm#M6" NAME="L1361"><B>-expanded</B></A>
+<DD><A HREF="regexp.htm#M7" NAME="L1362"><B>-indices</B></A>
+<DD><A HREF="regexp.htm#M8" NAME="L1363"><B>-line</B></A>
+<DD><A HREF="regexp.htm#M9" NAME="L1364"><B>-linestop</B></A>
+<DD><A HREF="regexp.htm#M10" NAME="L1365"><B>-lineanchor</B></A>
+<DD><A HREF="regexp.htm#M11" NAME="L1366"><B>-nocase</B></A>
+<DD><A HREF="regexp.htm#M12" NAME="L1367"><B>-all</B></A>
+<DD><A HREF="regexp.htm#M13" NAME="L1368"><B>-inline</B></A>
+<DD><A HREF="regexp.htm#M14" NAME="L1369"><B>-start</B> <I>index</I></A>
+<DD><A HREF="regexp.htm#M15" NAME="L1370"><B>--</B></A>
 </DL>
-<DD><A HREF="regexp.htm#M16" NAME="L1566">EXAMPLES</A>
-<DD><A HREF="regexp.htm#M17" NAME="L1567">SEE ALSO</A>
-<DD><A HREF="regexp.htm#M18" NAME="L1568">KEYWORDS</A>
+<DD><A HREF="regexp.htm#M16" NAME="L1371">EXAMPLES</A>
+<DD><A HREF="regexp.htm#M17" NAME="L1372">SEE ALSO</A>
+<DD><A HREF="regexp.htm#M18" NAME="L1373">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-regexp &mdash; Match a regular expression against a string
+regexp - Match a regular expression against a string
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>regexp </B>?<I>switches</I>? <I>exp string </I>?<I>matchVar</I>? ?<I>subMatchVar subMatchVar ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -123,7 +123,6 @@ list will be concatenated at each iteration, such that a flat list is
 always returned.  For each match iteration, the command will append the
 overall match data, plus one element for each subexpression in the
 regular expression.  Examples are:
-<P>
 <PRE><B>regexp</B> -inline -- {&#92;w(&#92;w)} &quot; inlined &quot;
       <I><font size="+1">&#8594;</font> in n</I>
 <B>regexp</B> -all -inline -- {&#92;w(&#92;w)} &quot; inlined &quot;
@@ -156,9 +155,7 @@ if <B>-indices</B> has been specified or to an empty string otherwise.
 Find the first occurrence of a word starting with <B>foo</B> in a
 string that is not actually an instance of <B>foobar</B>, and get the
 letters following it up to the end of the word into a variable:
-<P>
 <PRE><B>regexp</B> {&#92;mfoo(?!bar&#92;M)(&#92;w*)} $string -&gt; restOfWord</PRE>
-<P>
 Note that the whole matched substring has been placed in the variable
 &#8220;<B>-&gt;</B>&#8221;,
 which is a name chosen to look nice given that we are not
@@ -166,28 +163,24 @@ actually interested in its contents.
 <P>
 Find the index of the word <B>badger</B> (in any case) within a string
 and store that in the variable <B>location</B>:
-<P>
 <PRE><B>regexp</B> -indices {(?i)&#92;mbadger&#92;M} $string location</PRE>
-<P>
 This could also be written as a <I>basic</I> regular expression (as opposed
 to using the default syntax of <I>advanced</I> regular expressions) match by
 prefixing the expression with a suitable flag:
-<P>
 <PRE><B>regexp</B> -indices {(?ib)&#92;&lt;badger&#92;&gt;} $string location</PRE>
 <P>
 This counts the number of octal digits in a string:
-<P>
 <PRE><B>regexp</B> -all {[0-7]} $string</PRE>
 <P>
 This lists all words (consisting of all sequences of non-whitespace
 characters) in a string, and is useful as a more powerful version of the
 <B><A HREF="../TclCmd/split.htm">split</A></B> command:
-<P>
 <PRE><B>regexp</B> -all -inline {&#92;S+} $string</PRE>
 <H3><A NAME="M17">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/re_syntax.htm">re_syntax</A></B>, <B><A HREF="../TclCmd/regsub.htm">regsub</A></B>, <B><A HREF="../TclCmd/string.htm">string</A></B>
+<B><A HREF="../TclCmd/re_syntax.htm">re_syntax</A></B>, <B><A HREF="../TclCmd/regsub.htm">regsub</A></B>, <B>string</B>
 <H3><A NAME="M18">KEYWORDS</A></H3>
 <A href="../Keywords/M.htm#match">match</A>, <A href="../Keywords/P.htm#parsing">parsing</A>, <A href="../Keywords/P.htm#pattern">pattern</A>, <A href="../Keywords/R.htm#regular expression">regular expression</A>, <A href="../Keywords/S.htm#splitting">splitting</A>, <A href="../Keywords/S.htm#string">string</A>
-<div class="copy">Copyright &copy; 1998 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

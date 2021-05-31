@@ -1,8 +1,9 @@
 
-package require Tk
-package require tcltest 2.2
-namespace import -force tcltest::*
+package require Tk 8.5
+package require tcltest ; namespace import -force tcltest::*
 loadTestedCommands
+
+testConstraint failsOnQuarz [expr {![info exists ::env(MAC_CI)]}]
 
 proc skip args {}
 proc ok {} { return }
@@ -203,11 +204,10 @@ test ttk-2.7 "instate scripts, true" -body {
     set x
 } -result 1
 
-test ttk-2.8 "bug 3223850: button state disabled during click" -setup {
+test ttk-2.8 "bug 3223850: button state disabled during click" -constraints failsOnQuarz -setup {
     destroy .b
     set ttk28 {}
     pack [ttk::button .b -command {set ::ttk28 failed}]
-    update
 } -body {
     bind .b <ButtonPress-1> {after 0 {.b configure -state disabled}}
     after 1 {event generate .b <ButtonPress-1>}
@@ -224,11 +224,15 @@ test ttk-2.8 "bug 3223850: button state disabled during click" -setup {
 foreach wc $widgetClasses {
     test ttk-coreoptions-$wc "$wc has all core options" -body {
 	ttk::$wc .w
-	foreach option {-class -style -cursor -takefocus} {
+	foreach option {
+	    -class
+	    -style
+	    -cursor
+	    -takefocus
+	} {
 	    .w cget $option
 	}
-    } -cleanup {
-	catch {destroy .w}
+	destroy .w
     }
 }
 
@@ -271,7 +275,7 @@ test ttk-3.4 "SF#2009213" -body {
 test ttk-4.0 "Setup" -body {
     catch { destroy .t }
     pack [ttk::label .t -text "Button 1"]
-    testConstraint fontOption [expr {![catch { set prevFont [.t cget -font] }]}]
+    testConstraint fontOption [expr ![catch { set prevFont [.t cget -font] }]]
     ok
 }
 
@@ -507,19 +511,6 @@ test ttk-12.2 "-cursor option" -body {
     .b configure -cursor arrow
     .b cget -cursor
 } -result arrow
-
-test ttk-12.2.1 "-cursor option, widget doesn't overwrite it" -setup {
-    ttk::treeview .tr
-    pack .tr
-    update
-} -body {
-    .tr configure -cursor X_cursor
-    event generate .tr <Motion>
-    update
-    .tr cget -cursor
-} -cleanup {
-    destroy .tr
-} -result {X_cursor}
 
 test ttk-12.3 "-borderwidth frame option" -body {
     destroy .t

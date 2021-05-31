@@ -13,7 +13,7 @@
 #include "tkInt.h"
 #include "tkMenu.h"
 
-typedef struct {
+typedef struct ThreadSpecificData {
     int postCommandGeneration;
 } ThreadSpecificData;
 static Tcl_ThreadDataKey dataKey;
@@ -43,10 +43,10 @@ PreprocessMenu(
     TkMenu *menuPtr)
 {
     int index, result, finished;
-    ThreadSpecificData *tsdPtr =
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-    Tcl_Preserve(menuPtr);
+    Tcl_Preserve((ClientData) menuPtr);
 
     /*
      * First, let's process the post command on ourselves. If this command
@@ -67,7 +67,7 @@ PreprocessMenu(
     do {
 	finished = 1;
 	for (index = 0; index < menuPtr->numEntries; index++) {
-	    TkMenuEntry *entryPtr = menuPtr->entries[index];
+	    register TkMenuEntry *entryPtr = menuPtr->entries[index];
 
 	    if ((entryPtr->type == CASCADE_ENTRY)
 		    && (entryPtr->namePtr != NULL)
@@ -91,7 +91,7 @@ PreprocessMenu(
     } while (!finished);
 
   done:
-    Tcl_Release(menuPtr);
+    Tcl_Release((ClientData) menuPtr);
     return result;
 }
 
@@ -129,7 +129,7 @@ int
 TkPreprocessMenu(
     TkMenu *menuPtr)
 {
-    ThreadSpecificData *tsdPtr =
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     tsdPtr->postCommandGeneration++;

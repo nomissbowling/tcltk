@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_SetVar manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> SetVar</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> SetVar</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="SetVar.htm#M2" NAME="L715">NAME</A>
-<DL><DD>Tcl_SetVar2Ex, Tcl_SetVar, Tcl_SetVar2, Tcl_ObjSetVar2, Tcl_GetVar2Ex, Tcl_GetVar, Tcl_GetVar2, Tcl_ObjGetVar2, Tcl_UnsetVar, Tcl_UnsetVar2 &mdash; manipulate Tcl variables</DD></DL>
-<DD><A HREF="SetVar.htm#M3" NAME="L716">SYNOPSIS</A>
+<DD><A HREF="SetVar.htm#M2" NAME="L656">NAME</A>
+<DL><DD>Tcl_SetVar2Ex, Tcl_SetVar, Tcl_SetVar2, Tcl_ObjSetVar2, Tcl_GetVar2Ex, Tcl_GetVar, Tcl_GetVar2, Tcl_ObjGetVar2, Tcl_UnsetVar, Tcl_UnsetVar2 - manipulate Tcl variables</DD></DL>
+<DD><A HREF="SetVar.htm#M3" NAME="L657">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>Tcl_Obj *
@@ -32,41 +32,41 @@
 <DD>int
 <DD><B>Tcl_UnsetVar2</B>(<I>interp, name1, name2, flags</I>)
 </DL>
-<DD><A HREF="SetVar.htm#M4" NAME="L717">ARGUMENTS</A>
+<DD><A HREF="SetVar.htm#M4" NAME="L658">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="SetVar.htm#M5" NAME="L718">DESCRIPTION</A>
-<OL class="description">
-</OL>
+<DD><A HREF="SetVar.htm#M5" NAME="L659">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="SetVar.htm#M6" NAME="L719"><B>TCL_GLOBAL_ONLY</B></A>
-<DD><A HREF="SetVar.htm#M7" NAME="L720"><B>TCL_NAMESPACE_ONLY</B></A>
-<DD><A HREF="SetVar.htm#M8" NAME="L721"><B>TCL_LEAVE_ERR_MSG</B></A>
-<DD><A HREF="SetVar.htm#M9" NAME="L722"><B>TCL_APPEND_VALUE</B></A>
-<DD><A HREF="SetVar.htm#M10" NAME="L723"><B>TCL_LIST_ELEMENT</B></A>
 </DL>
-<DD><A HREF="SetVar.htm#M11" NAME="L724">SEE ALSO</A>
-<DD><A HREF="SetVar.htm#M12" NAME="L725">KEYWORDS</A>
+<DL class="description">
+<DD><A HREF="SetVar.htm#M6" NAME="L660"><B>TCL_GLOBAL_ONLY</B></A>
+<DD><A HREF="SetVar.htm#M7" NAME="L661"><B>TCL_NAMESPACE_ONLY</B></A>
+<DD><A HREF="SetVar.htm#M8" NAME="L662"><B>TCL_LEAVE_ERR_MSG</B></A>
+<DD><A HREF="SetVar.htm#M9" NAME="L663"><B>TCL_APPEND_VALUE</B></A>
+<DD><A HREF="SetVar.htm#M10" NAME="L664"><B>TCL_LIST_ELEMENT</B></A>
+</DL>
+<DD><A HREF="SetVar.htm#M11" NAME="L665">SEE ALSO</A>
+<DD><A HREF="SetVar.htm#M12" NAME="L666">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_SetVar2Ex, Tcl_SetVar, Tcl_SetVar2, Tcl_ObjSetVar2, Tcl_GetVar2Ex, Tcl_GetVar, Tcl_GetVar2, Tcl_ObjGetVar2, Tcl_UnsetVar, Tcl_UnsetVar2 &mdash; manipulate Tcl variables
+Tcl_SetVar2Ex, Tcl_SetVar, Tcl_SetVar2, Tcl_ObjSetVar2, Tcl_GetVar2Ex, Tcl_GetVar, Tcl_GetVar2, Tcl_ObjGetVar2, Tcl_UnsetVar, Tcl_UnsetVar2 - manipulate Tcl variables
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tcl_SetVar2Ex</B>(<I>interp, name1, name2, newValuePtr, flags</I>)<BR>
 const char *<BR>
 <B>Tcl_SetVar</B>(<I>interp, varName, newValue, flags</I>)<BR>
 const char *<BR>
 <B>Tcl_SetVar2</B>(<I>interp, name1, name2, newValue, flags</I>)<BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tcl_ObjSetVar2</B>(<I>interp, part1Ptr, part2Ptr, newValuePtr, flags</I>)<BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tcl_GetVar2Ex</B>(<I>interp, name1, name2, flags</I>)<BR>
 const char *<BR>
 <B>Tcl_GetVar</B>(<I>interp, varName, flags</I>)<BR>
 const char *<BR>
 <B>Tcl_GetVar2</B>(<I>interp, name1, name2, flags</I>)<BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tcl_ObjGetVar2</B>(<I>interp, part1Ptr, part2Ptr, flags</I>)<BR>
 int<BR>
 <B>Tcl_UnsetVar</B>(<I>interp, varName, flags</I>)<BR>
@@ -85,8 +85,8 @@ to specify a variable in a particular namespace.
 <P><DT>const char <B>*name2</B> (in)<DD>
 If non-NULL, gives name of element within array; in this
 case <I>name1</I> must refer to an array variable.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*newValuePtr</B> (in)<DD>
-Points to a Tcl value containing the new value for the variable.
+<P><DT>Tcl_Obj <B>*newValuePtr</B> (in)<DD>
+Points to a Tcl object containing the new value for the variable.
 <P><DT>int <B>flags</B> (in)<DD>
 OR-ed combination of bits providing additional information. See below
 for valid values.
@@ -99,13 +99,13 @@ an array.
 <P><DT>const char <B>*newValue</B> (in)<DD>
 New value for variable, specified as a null-terminated string.
 A copy of this value is stored in the variable.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*part1Ptr</B> (in)<DD>
-Points to a Tcl value containing the variable's name.
+<P><DT>Tcl_Obj <B>*part1Ptr</B> (in)<DD>
+Points to a Tcl object containing the variable's name.
 The name may include a series of <B>::</B> namespace qualifiers
 to specify a variable in a particular namespace.
 May refer to a scalar variable or an element of an array variable.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*part2Ptr</B> (in)<DD>
-If non-NULL, points to a value containing the name of an element
+<P><DT>Tcl_Obj <B>*part2Ptr</B> (in)<DD>
+If non-NULL, points to an object containing the name of an element
 within an array and <I>part1Ptr</I> must refer to an array variable.
 <P></DL>
 <H3><A NAME="M5">DESCRIPTION</A></H3>
@@ -120,8 +120,8 @@ given by <I>newValuePtr</I> or <I>newValue</I> and return a
 pointer to the variable's new value, which is stored in Tcl's
 variable structure.
 <B>Tcl_SetVar2Ex</B> and <B>Tcl_ObjSetVar2</B> take the new value as a
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> and return
-a pointer to a <A HREF="../TclLib/Object.htm">Tcl_Obj</A>.  <B>Tcl_SetVar</B> and <B>Tcl_SetVar2</B>
+Tcl_Obj and return
+a pointer to a Tcl_Obj.  <B>Tcl_SetVar</B> and <B>Tcl_SetVar2</B>
 take the new value as a string and return a string; they are
 usually less efficient than <B>Tcl_ObjSetVar2</B>.  Note that the
 return value may be different than the <I>newValuePtr</I> or
@@ -139,7 +139,7 @@ as the arguments to the procedures described above.
 Under normal circumstances, the return value is a pointer
 to the variable's value.  For <B>Tcl_GetVar2Ex</B> and
 <B>Tcl_ObjGetVar2</B> the value is
-returned as a pointer to a <A HREF="../TclLib/Object.htm">Tcl_Obj</A>.  For <B>Tcl_GetVar</B> and
+returned as a pointer to a Tcl_Obj.  For <B>Tcl_GetVar</B> and
 <B>Tcl_GetVar2</B> the value is returned as a string; this is
 usually less efficient, so <B>Tcl_GetVar2Ex</B> or <B>Tcl_ObjGetVar2</B>
 are preferred.
@@ -154,9 +154,9 @@ a variable, so that future attempts to read the variable will return
 an error.
 The arguments to these procedures are treated in the same way
 as the arguments to the procedures above.
-If the variable is successfully removed then <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> is returned.
+If the variable is successfully removed then <B>TCL_OK</B> is returned.
 If the variable cannot be removed because it does not exist then
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and an error message is left
+<B>TCL_ERROR</B> is returned and an error message is left
 in <I>interp</I>'s result if the <B>TCL_LEAVE_ERR_MSG</B> <I>flag</I>
 bit is set.
 If an array element is specified, the given element is removed
@@ -167,8 +167,8 @@ array is removed.
 The name of a variable may be specified to these procedures in
 four ways:
 <P>
-<OL class="description">
-<LI value="1">
+<DL class="description">
+<DT>[1]<DD>
 If <B>Tcl_SetVar</B>, <B>Tcl_GetVar</B>, or <B>Tcl_UnsetVar</B>
 is invoked, the variable name is given as
 a single string, <I>varName</I>.
@@ -179,7 +179,7 @@ the characters before the first open
 parenthesis are treated as the name of an array variable.
 If <I>varName</I> does not have parentheses as described above, then
 the entire string is treated as the name of a scalar variable.
-<P><LI value="2">
+<P><DT>[2]<DD>
 If the <I>name1</I> and <I>name2</I> arguments are provided and
 <I>name2</I> is non-NULL, then an array element is specified and
 the array name and index have
@@ -187,11 +187,11 @@ already been separated by the caller: <I>name1</I> contains the
 name and <I>name2</I> contains the index.  An error is generated
 if <I>name1</I>  contains an open parenthesis and ends with a
 close parenthesis (array element) and <I>name2</I> is non-NULL.
-<P><LI value="3">
+<P><DT>[3]<DD>
 If <I>name2</I> is NULL, <I>name1</I> is treated just like
 <I>varName</I> in case [1] above (it can be either a scalar or an array
 element variable name).
-<P></OL>
+<P></DL>
 <P>
 The <I>flags</I> argument may be used to specify any of several
 options to the procedures.
@@ -262,9 +262,9 @@ a variable, so that future calls to <B>Tcl_GetVar</B> or <B>Tcl_GetVar2</B>
 for the variable will return an error.
 The arguments to these procedures are treated in the same way
 as the arguments to <B>Tcl_GetVar</B> and <B>Tcl_GetVar2</B>.
-If the variable is successfully removed then <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> is returned.
+If the variable is successfully removed then <B>TCL_OK</B> is returned.
 If the variable cannot be removed because it does not exist then
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned.
+<B>TCL_ERROR</B> is returned.
 If an array element is specified, the given element is removed
 but the array remains.
 If an array name is specified without an index, then the entire
@@ -273,8 +273,9 @@ array is removed.
 <H3><A NAME="M11">SEE ALSO</A></H3>
 <B><A HREF="../TclLib/SetResult.htm">Tcl_GetObjResult</A></B>, <B><A HREF="../TclLib/SetResult.htm">Tcl_GetStringResult</A></B>, <B><A HREF="../TclLib/TraceVar.htm">Tcl_TraceVar</A></B>
 <H3><A NAME="M12">KEYWORDS</A></H3>
-<A href="../Keywords/A.htm#array">array</A>, <A href="../Keywords/G.htm#get variable">get variable</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/S.htm#scalar">scalar</A>, <A href="../Keywords/S.htm#set">set</A>, <A href="../Keywords/U.htm#unset">unset</A>, <A href="../Keywords/V.htm#value">value</A>, <A href="../Keywords/V.htm#variable">variable</A>
-<div class="copy">Copyright &copy; 1989-1993 The Regents of the University of California.
+<A href="../Keywords/A.htm#array">array</A>, <A href="../Keywords/G.htm#get variable">get variable</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/O.htm#object">object</A>, <A href="../Keywords/S.htm#scalar">scalar</A>, <A href="../Keywords/S.htm#set">set</A>, <A href="../Keywords/U.htm#unset">unset</A>, <A href="../Keywords/V.htm#variable">variable</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1989-1993 The Regents of the University of California.
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

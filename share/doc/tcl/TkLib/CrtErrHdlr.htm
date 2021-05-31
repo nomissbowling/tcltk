@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_CreateErrorHandler manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> CrtErrHdlr</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> CrtErrHdlr</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="CrtErrHdlr.htm#M2" NAME="L110">NAME</A>
-<DL><DD>Tk_CreateErrorHandler, Tk_DeleteErrorHandler &mdash; handle X protocol errors</DD></DL>
+<DL><DD>Tk_CreateErrorHandler, Tk_DeleteErrorHandler - handle X protocol errors</DD></DL>
 <DD><A HREF="CrtErrHdlr.htm#M3" NAME="L111">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -19,12 +19,12 @@
 <DL class="arguments">
 </DL>
 <DD><A HREF="CrtErrHdlr.htm#M5" NAME="L113">DESCRIPTION</A>
-<OL class="description">
-</OL>
+<DL class="description">
+</DL>
 <DD><A HREF="CrtErrHdlr.htm#M6" NAME="L114">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CreateErrorHandler, Tk_DeleteErrorHandler &mdash; handle X protocol errors
+Tk_CreateErrorHandler, Tk_DeleteErrorHandler - handle X protocol errors
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Tk_ErrorHandler<BR>
@@ -63,31 +63,31 @@ for more information on the kinds of errors that can occur.
 For <I>proc</I> to be invoked
 to handle a particular error, five things must occur:
 <P>
-<OL class="description">
-<LI value="1">
+<DL class="description">
+<DT>[1]<DD>
 The error must pertain to <I>display</I>.
-<P><LI value="2">
+<P><DT>[2]<DD>
 Either the <I>error</I> argument to <B>Tk_CreateErrorHandler</B>
 must have been -1, or the <I>error</I> argument must match
 the <I>error_code</I> field from the error event.
-<P><LI value="3">
+<P><DT>[3]<DD>
 Either the <I>request</I> argument to <B>Tk_CreateErrorHandler</B>
 must have been -1, or the <I>request</I> argument must match
 the <I>request_code</I> field from the error event.
-<P><LI value="4">
+<P><DT>[4]<DD>
 Either the <I>minor</I> argument to <B>Tk_CreateErrorHandler</B>
 must have been -1, or the <I>minor</I> argument must match
 the <I>minor_code</I> field from the error event.
-<P><LI value="5">
+<P><DT>[5]<DD>
 The protocol request to which the error pertains must have been
 made when the handler was active (see below for more information).
-<P></OL>
+<P></DL>
 <P>
 <I>Proc</I> should have arguments and result that match the
 following type:
-<PRE>typedef int <B>Tk_ErrorProc</B>(
-        ClientData <I>clientData</I>,
-        XErrorEvent *<I>errEventPtr</I>);</PRE>
+<PRE>typedef int Tk_ErrorProc(
+    ClientData <I>clientData</I>,
+    XErrorEvent *<I>errEventPtr</I>);</PRE>
 The <I>clientData</I> parameter to <I>proc</I> is a copy of the <I>clientData</I>
 argument given to <B>Tcl_CreateErrorHandler</B> when the callback
 was created.  Typically, <I>clientData</I> points to a data
@@ -148,9 +148,11 @@ handlers deleted before the <B>XSync</B> call.
 For the Tk error handling mechanism to work properly, it is essential
 that application code never calls <B>XSetErrorHandler</B> directly;
 applications should use only <B>Tk_CreateErrorHandler</B>.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#callback">callback</A>, <A href="../Keywords/E.htm#error">error</A>, <A href="../Keywords/E.htm#event">event</A>, <A href="../Keywords/H.htm#handler">handler</A>
-<div class="copy">Copyright &copy; 1990 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -3,46 +3,46 @@
 <HEAD><TITLE>ttk::style manual page - Tk Themed Widget</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> ttk_style</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> ttk_style</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="ttk_style.htm#M2" NAME="L2090">NAME</A>
-<DL><DD>ttk::style &mdash; Manipulate style database</DD></DL>
-<DD><A HREF="ttk_style.htm#M3" NAME="L2091">SYNOPSIS</A>
+<DD><A HREF="ttk_style.htm#M2" NAME="L1986">NAME</A>
+<DL><DD>ttk::style - Manipulate style database</DD></DL>
+<DD><A HREF="ttk_style.htm#M3" NAME="L1987">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="ttk_style.htm#M4" NAME="L2092">NOTES</A>
-<DD><A HREF="ttk_style.htm#M5" NAME="L2093">DEFINITIONS</A>
-<DD><A HREF="ttk_style.htm#M6" NAME="L2094">DESCRIPTION</A>
+<DD><A HREF="ttk_style.htm#M4" NAME="L1988">NOTES</A>
+<DD><A HREF="ttk_style.htm#M5" NAME="L1989">DEFINITIONS</A>
+<DD><A HREF="ttk_style.htm#M6" NAME="L1990">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="ttk_style.htm#M7" NAME="L2095"><B>ttk::style configure </B><I>style</I> ?<I>-option</I> ?<I>value option value...</I>? ?</A>
-<DD><A HREF="ttk_style.htm#M8" NAME="L2096"><B>ttk::style map </B><I>style</I> ?<I>-option</I><B> { </B><I>statespec value...</I><B> }</B>?</A>
-<DD><A HREF="ttk_style.htm#M9" NAME="L2097"><B>ttk::style lookup </B><I>style</I> <I>-option </I>?<I>state </I>?<I>default</I>??</A>
-<DD><A HREF="ttk_style.htm#M10" NAME="L2098"><B>ttk::style layout </B><I>style</I> ?<I>layoutSpec</I>?</A>
-<DD><A HREF="ttk_style.htm#M11" NAME="L2099"><B>ttk::style element create</B> <I>elementName</I> <I>type</I> ?<I>args...</I>?</A>
-<DD><A HREF="ttk_style.htm#M12" NAME="L2100"><B>ttk::style element names</B></A>
-<DD><A HREF="ttk_style.htm#M13" NAME="L2101"><B>ttk::style element options </B><I>element</I></A>
-<DD><A HREF="ttk_style.htm#M14" NAME="L2102"><B>ttk::style theme create</B> <I>themeName</I> ?<B>-parent </B><I>basedon</I>? ?<B>-settings </B><I>script...</I> ?</A>
-<DD><A HREF="ttk_style.htm#M15" NAME="L2103"><B>ttk::style theme settings </B><I>themeName</I> <I>script</I></A>
-<DD><A HREF="ttk_style.htm#M16" NAME="L2104"><B>ttk::style theme names</B></A>
-<DD><A HREF="ttk_style.htm#M17" NAME="L2105"><B>ttk::style theme use</B> ?<I>themeName</I>?</A>
+<DD><A HREF="ttk_style.htm#M7" NAME="L1991"><B>ttk::style configure </B><I>style</I> ?<I>-option</I> ?<I>value option value...</I>? ?</A>
+<DD><A HREF="ttk_style.htm#M8" NAME="L1992"><B>ttk::style map </B><I>style</I> ?<I>-option</I><B> { </B><I>statespec value...</I><B> }</B>?</A>
+<DD><A HREF="ttk_style.htm#M9" NAME="L1993"><B>ttk::style lookup </B><I>style</I> <I>-option </I>?<I>state </I>?<I>default</I>??</A>
+<DD><A HREF="ttk_style.htm#M10" NAME="L1994"><B>ttk::style layout </B><I>style</I> ?<I>layoutSpec</I>?</A>
+<DD><A HREF="ttk_style.htm#M11" NAME="L1995"><B>ttk::style element create</B> <I>elementName</I> <I>type</I> ?<I>args...</I>?</A>
+<DD><A HREF="ttk_style.htm#M12" NAME="L1996"><B>ttk::style element names</B></A>
+<DD><A HREF="ttk_style.htm#M13" NAME="L1997"><B>ttk::style element options </B><I>element</I></A>
+<DD><A HREF="ttk_style.htm#M14" NAME="L1998"><B>ttk::style theme create</B> <I>themeName</I> ?<B>-parent </B><I>basedon</I>? ?<B>-settings </B><I>script...</I> ?</A>
+<DD><A HREF="ttk_style.htm#M15" NAME="L1999"><B>ttk::style theme settings </B><I>themeName</I> <I>script</I></A>
+<DD><A HREF="ttk_style.htm#M16" NAME="L2000"><B>ttk::style theme names</B></A>
+<DD><A HREF="ttk_style.htm#M17" NAME="L2001"><B>ttk::style theme use</B> ?<I>themeName</I>?</A>
 </DL>
-<DD><A HREF="ttk_style.htm#M18" NAME="L2106">LAYOUTS</A>
+<DD><A HREF="ttk_style.htm#M18" NAME="L2002">LAYOUTS</A>
 <DL class="layouts">
-<DD><A HREF="ttk_style.htm#M19" NAME="L2107"><B>-side </B><I>side</I></A>
-<DD><A HREF="ttk_style.htm#M20" NAME="L2108"><B>-sticky</B> <B>[</B><I>nswe</I><B>]</B></A>
-<DD><A HREF="ttk_style.htm#M21" NAME="L2109"><B>-children { </B><I>sublayout... </I><B>}</B></A>
+<DD><A HREF="ttk_style.htm#M19" NAME="L2003"><B>-side </B><I>side</I></A>
+<DD><A HREF="ttk_style.htm#M20" NAME="L2004"><B>-sticky</B> <B>[</B><I>nswe</I><B>]</B></A>
+<DD><A HREF="ttk_style.htm#M21" NAME="L2005"><B>-children { </B><I>sublayout... </I><B>}</B></A>
 </DL>
-<DD><A HREF="ttk_style.htm#M22" NAME="L2110">SEE ALSO</A>
-<DD><A HREF="ttk_style.htm#M23" NAME="L2111">KEYWORDS</A>
+<DD><A HREF="ttk_style.htm#M22" NAME="L2006">SEE ALSO</A>
+<DD><A HREF="ttk_style.htm#M23" NAME="L2007">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-ttk::style &mdash; Manipulate style database
+ttk::style - Manipulate style database
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>ttk::style</B> <I>option</I> ?<I>args</I>?<BR>
 <H3><A NAME="M4">NOTES</A></H3>
 See also the Tcl'2004 conference presentation,
-available at <A HREF="http://tktable.sourceforge.net/tile/tile">http://tktable.sourceforge.net/tile/tile</A>-tcl2004.pdf
+available at http://tktable.sourceforge.net/tile/tile-tcl2004.pdf
 <H3><A NAME="M5">DEFINITIONS</A></H3>
 Each widget is assigned a <I>style</I>,
 which specifies the set of elements making up the widget
@@ -75,7 +75,7 @@ If the <I>default</I> argument is present, it is used as a fallback
 value in case no specification for <I>-option</I> is found.
 <P><DT><A NAME="M10"><B>ttk::style layout </B><I>style</I> ?<I>layoutSpec</I>?</A><DD>
 Define the widget layout for style <I>style</I>.  
-See <B><A HREF="#M18">LAYOUTS</A></B> below for the format of <I>layoutSpec</I>.
+See <B>LAYOUTS</B> below for the format of <I>layoutSpec</I>.
 If <I>layoutSpec</I> is omitted, return the layout specification
 for style <I>style</I>.
 <P><DT><A NAME="M11"><B>ttk::style element create</B> <I>elementName</I> <I>type</I> ?<I>args...</I>?</A><DD>
@@ -138,6 +138,7 @@ For example:
 <B><A HREF="../TkCmd/ttk_intro.htm">ttk::intro</A></B>, <B><A HREF="../TkCmd/ttk_widget.htm">ttk::widget</A></B>, <B><A HREF="../TkCmd/photo.htm">photo</A></B>, <B><A HREF="../TkCmd/ttk_image.htm">ttk_image</A></B>
 <H3><A NAME="M23">KEYWORDS</A></H3>
 <A href="../Keywords/S.htm#style">style</A>, <A href="../Keywords/T.htm#theme">theme</A>, <A href="../Keywords/A.htm#appearance">appearance</A>
-<div class="copy">Copyright &copy; 2004 Joe English
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2004 Joe English
 </div>
 </BODY></HTML>

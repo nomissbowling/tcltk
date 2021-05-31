@@ -3,31 +3,31 @@
 <HEAD><TITLE>regsub manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> regsub</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> regsub</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="regsub.htm#M2" NAME="L1592">NAME</A>
-<DL><DD>regsub &mdash; Perform substitutions based on regular expression pattern matching</DD></DL>
-<DD><A HREF="regsub.htm#M3" NAME="L1593">SYNOPSIS</A>
+<DD><A HREF="regsub.htm#M2" NAME="L1397">NAME</A>
+<DL><DD>regsub - Perform substitutions based on regular expression pattern matching</DD></DL>
+<DD><A HREF="regsub.htm#M3" NAME="L1398">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="regsub.htm#M4" NAME="L1594">DESCRIPTION</A>
+<DD><A HREF="regsub.htm#M4" NAME="L1399">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="regsub.htm#M5" NAME="L1595"><B>-all</B></A>
-<DD><A HREF="regsub.htm#M6" NAME="L1596"><B>-expanded</B></A>
-<DD><A HREF="regsub.htm#M7" NAME="L1597"><B>-line</B></A>
-<DD><A HREF="regsub.htm#M8" NAME="L1598"><B>-linestop</B></A>
-<DD><A HREF="regsub.htm#M9" NAME="L1599"><B>-lineanchor</B></A>
-<DD><A HREF="regsub.htm#M10" NAME="L1600"><B>-nocase</B></A>
-<DD><A HREF="regsub.htm#M11" NAME="L1601"><B>-start</B> <I>index</I></A>
-<DD><A HREF="regsub.htm#M12" NAME="L1602"><B>--</B></A>
+<DD><A HREF="regsub.htm#M5" NAME="L1400"><B>-all</B></A>
+<DD><A HREF="regsub.htm#M6" NAME="L1401"><B>-expanded</B></A>
+<DD><A HREF="regsub.htm#M7" NAME="L1402"><B>-line</B></A>
+<DD><A HREF="regsub.htm#M8" NAME="L1403"><B>-linestop</B></A>
+<DD><A HREF="regsub.htm#M9" NAME="L1404"><B>-lineanchor</B></A>
+<DD><A HREF="regsub.htm#M10" NAME="L1405"><B>-nocase</B></A>
+<DD><A HREF="regsub.htm#M11" NAME="L1406"><B>-start</B> <I>index</I></A>
+<DD><A HREF="regsub.htm#M12" NAME="L1407"><B>--</B></A>
 </DL>
-<DD><A HREF="regsub.htm#M13" NAME="L1603">EXAMPLES</A>
-<DD><A HREF="regsub.htm#M14" NAME="L1604">SEE ALSO</A>
-<DD><A HREF="regsub.htm#M15" NAME="L1605">KEYWORDS</A>
+<DD><A HREF="regsub.htm#M13" NAME="L1408">EXAMPLES</A>
+<DD><A HREF="regsub.htm#M14" NAME="L1409">SEE ALSO</A>
+<DD><A HREF="regsub.htm#M15" NAME="L1410">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-regsub &mdash; Perform substitutions based on regular expression pattern matching
+regsub - Perform substitutions based on regular expression pattern matching
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>regsub </B>?<I>switches</I>? <I>exp string subSpec </I>?<I>varName</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -146,23 +146,18 @@ of regular expressions.
 <H3><A NAME="M13">EXAMPLES</A></H3>
 Replace (in the string in variable <I>string</I>) every instance of
 <B>foo</B> which is a word by itself with <B>bar</B>:
-<P>
 <PRE><B>regsub</B> -all {&#92;mfoo&#92;M} $string bar string</PRE>
-<P>
 or (using the
 &#8220;basic regular expression&#8221;
 syntax):
-<P>
 <PRE><B>regsub</B> -all {(?b)&#92;&lt;foo&#92;&gt;} $string bar string</PRE>
 <P>
 Insert double-quotes around the first instance of the word
 <B>interesting</B>, however it is capitalized.
-<P>
 <PRE><B>regsub</B> -nocase {&#92;yinteresting&#92;y} $string {&quot;&amp;&quot;} string</PRE>
 <P>
 Convert all non-ASCII and Tcl-significant characters into &#92;u escape
 sequences by using <B>regsub</B> and <B><A HREF="../TclCmd/subst.htm">subst</A></B> in combination:
-<P>
 <PRE># This RE is just a character class for almost everything &quot;bad&quot;
 set RE {[][{};#&#92;&#92;&#92;$ &#92;r&#92;t&#92;u0080-&#92;uffff]}
 
@@ -178,8 +173,9 @@ set quoted [subst [string map {&#92;n {&#92;&#92;u000a}} &#92;
 <H3><A NAME="M14">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/regexp.htm">regexp</A></B>, <B><A HREF="../TclCmd/re_syntax.htm">re_syntax</A></B>, <B><A HREF="../TclCmd/subst.htm">subst</A></B>, <B><A HREF="../TclCmd/string.htm">string</A></B>
 <H3><A NAME="M15">KEYWORDS</A></H3>
-<A href="../Keywords/M.htm#match">match</A>, <A href="../Keywords/P.htm#pattern">pattern</A>, <A href="../Keywords/Q.htm#quoting">quoting</A>, <A href="../Keywords/R.htm#regular expression">regular expression</A>, <A href="../Keywords/S.htm#substitution">substitution</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<A href="../Keywords/M.htm#match">match</A>, <A href="../Keywords/P.htm#pattern">pattern</A>, <A href="../Keywords/Q.htm#quoting">quoting</A>, <A href="../Keywords/R.htm#regular expression">regular expression</A>, <A href="../Keywords/S.htm#substitute">substitute</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 Copyright &copy; 2000 Scriptics Corporation.
 </div>

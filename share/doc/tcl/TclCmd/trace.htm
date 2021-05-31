@@ -3,62 +3,62 @@
 <HEAD><TITLE>trace manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> trace</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> trace</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="trace.htm#M2" NAME="L2070">NAME</A>
-<DL><DD>trace &mdash; Monitor variable accesses, command usages and command executions</DD></DL>
-<DD><A HREF="trace.htm#M3" NAME="L2071">SYNOPSIS</A>
+<DD><A HREF="trace.htm#M2" NAME="L1833">NAME</A>
+<DL><DD>trace - Monitor variable accesses, command usages and command executions</DD></DL>
+<DD><A HREF="trace.htm#M3" NAME="L1834">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="trace.htm#M4" NAME="L2072">DESCRIPTION</A>
+<DD><A HREF="trace.htm#M4" NAME="L1835">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="trace.htm#M5" NAME="L2073"><B>trace add </B><I>type name ops ?args?</I></A>
+<DD><A HREF="trace.htm#M5" NAME="L1836"><B>trace add </B><I>type name ops ?args?</I></A>
 <DL class="description">
-<DD><A HREF="trace.htm#M6" NAME="L2074"><B>trace add command</B> <I>name ops commandPrefix</I></A>
+<DD><A HREF="trace.htm#M6" NAME="L1837"><B>trace add command</B> <I>name ops commandPrefix</I></A>
 <DL class="description">
-<DD><A HREF="trace.htm#M7" NAME="L2075"><B>rename</B></A>
-<DD><A HREF="trace.htm#M8" NAME="L2076"><B>delete</B></A>
+<DD><A HREF="trace.htm#M7" NAME="L1838"><B>rename</B></A>
+<DD><A HREF="trace.htm#M8" NAME="L1839"><B>delete</B></A>
 </DL>
-<DD><A HREF="trace.htm#M9" NAME="L2077"><B>trace add execution</B> <I>name ops commandPrefix</I></A>
+<DD><A HREF="trace.htm#M9" NAME="L1840"><B>trace add execution</B> <I>name ops commandPrefix</I></A>
 <DL class="description">
-<DD><A HREF="trace.htm#M10" NAME="L2078"><B>enter</B></A>
-<DD><A HREF="trace.htm#M11" NAME="L2079"><B>leave</B></A>
-<DD><A HREF="trace.htm#M12" NAME="L2080"><B>enterstep</B></A>
-<DD><A HREF="trace.htm#M13" NAME="L2081"><B>leavestep</B></A>
+<DD><A HREF="trace.htm#M10" NAME="L1841"><B>enter</B></A>
+<DD><A HREF="trace.htm#M11" NAME="L1842"><B>leave</B></A>
+<DD><A HREF="trace.htm#M12" NAME="L1843"><B>enterstep</B></A>
+<DD><A HREF="trace.htm#M13" NAME="L1844"><B>leavestep</B></A>
 </DL>
-<DD><A HREF="trace.htm#M14" NAME="L2082"><B>trace add variable</B><I> name ops commandPrefix</I></A>
+<DD><A HREF="trace.htm#M14" NAME="L1845"><B>trace add variable</B><I> name ops commandPrefix</I></A>
 <DL class="description">
-<DD><A HREF="trace.htm#M15" NAME="L2083"><B>array</B></A>
-<DD><A HREF="trace.htm#M16" NAME="L2084"><B>read</B></A>
-<DD><A HREF="trace.htm#M17" NAME="L2085"><B>write</B></A>
-<DD><A HREF="trace.htm#M18" NAME="L2086"><B>unset</B></A>
-</DL>
-</DL>
-<DD><A HREF="trace.htm#M19" NAME="L2087"><B>trace remove </B><I>type name opList commandPrefix</I></A>
-<DL class="description">
-<DD><A HREF="trace.htm#M20" NAME="L2088"><B>trace remove command</B><I> name opList commandPrefix</I></A>
-<DD><A HREF="trace.htm#M21" NAME="L2089"><B>trace remove execution</B><I> name opList commandPrefix</I></A>
-<DD><A HREF="trace.htm#M22" NAME="L2090"><B>trace remove variable</B><I> name opList commandPrefix</I></A>
-</DL>
-<DD><A HREF="trace.htm#M23" NAME="L2091"><B>trace info </B><I>type name</I></A>
-<DL class="description">
-<DD><A HREF="trace.htm#M24" NAME="L2092"><B>trace info command</B><I> name</I></A>
-<DD><A HREF="trace.htm#M25" NAME="L2093"><B>trace info execution</B><I> name</I></A>
-<DD><A HREF="trace.htm#M26" NAME="L2094"><B>trace info variable</B><I> name</I></A>
+<DD><A HREF="trace.htm#M15" NAME="L1846"><B>array</B></A>
+<DD><A HREF="trace.htm#M16" NAME="L1847"><B>read</B></A>
+<DD><A HREF="trace.htm#M17" NAME="L1848"><B>write</B></A>
+<DD><A HREF="trace.htm#M18" NAME="L1849"><B>unset</B></A>
 </DL>
 </DL>
+<DD><A HREF="trace.htm#M19" NAME="L1850"><B>trace remove </B><I>type name opList commandPrefix</I></A>
 <DL class="description">
-<DD><A HREF="trace.htm#M27" NAME="L2095"><B>trace variable </B><I>name ops command</I></A>
-<DD><A HREF="trace.htm#M28" NAME="L2096"><B>trace vdelete </B><I>name ops command</I></A>
-<DD><A HREF="trace.htm#M29" NAME="L2097"><B>trace vinfo </B><I>name</I></A>
+<DD><A HREF="trace.htm#M20" NAME="L1851"><B>trace remove command</B><I> name opList commandPrefix</I></A>
+<DD><A HREF="trace.htm#M21" NAME="L1852"><B>trace remove execution</B><I> name opList commandPrefix</I></A>
+<DD><A HREF="trace.htm#M22" NAME="L1853"><B>trace remove variable</B><I> name opList commandPrefix</I></A>
 </DL>
-<DD><A HREF="trace.htm#M30" NAME="L2098">EXAMPLES</A>
-<DD><A HREF="trace.htm#M31" NAME="L2099">SEE ALSO</A>
-<DD><A HREF="trace.htm#M32" NAME="L2100">KEYWORDS</A>
+<DD><A HREF="trace.htm#M23" NAME="L1854"><B>trace info </B><I>type name</I></A>
+<DL class="description">
+<DD><A HREF="trace.htm#M24" NAME="L1855"><B>trace info command</B><I> name</I></A>
+<DD><A HREF="trace.htm#M25" NAME="L1856"><B>trace info execution</B><I> name</I></A>
+<DD><A HREF="trace.htm#M26" NAME="L1857"><B>trace info variable</B><I> name</I></A>
+</DL>
+</DL>
+<DL class="description">
+<DD><A HREF="trace.htm#M27" NAME="L1858"><B>trace variable </B><I>name ops command</I></A>
+<DD><A HREF="trace.htm#M28" NAME="L1859"><B>trace vdelete </B><I>name ops command</I></A>
+<DD><A HREF="trace.htm#M29" NAME="L1860"><B>trace vinfo </B><I>name</I></A>
+</DL>
+<DD><A HREF="trace.htm#M30" NAME="L1861">EXAMPLES</A>
+<DD><A HREF="trace.htm#M31" NAME="L1862">SEE ALSO</A>
+<DD><A HREF="trace.htm#M32" NAME="L1863">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-trace &mdash; Monitor variable accesses, command usages and command executions
+trace - Monitor variable accesses, command usages and command executions
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>trace </B><I>option</I> ?<I>arg arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -97,9 +97,8 @@ execute them.
 When the trace triggers, depending on the operations being traced, a number of
 arguments are appended to <I>commandPrefix</I> so that the actual command is as
 follows:
-<P>
 <PRE><I>commandPrefix oldName newName op</I></PRE>
-<P><I>OldName</I> and <I>newName</I> give the traced command's current (old) name,
+<I>OldName</I> and <I>newName</I> give the traced command's current (old) name,
 and the name to which it is being renamed (the empty string if this is a
 &#8220;delete&#8221;
 operation).
@@ -156,9 +155,7 @@ number of arguments are appended to <I>commandPrefix</I> so that the actual
 command is as follows:
 <P>
 For <B>enter</B> and <B>enterstep</B> operations:
-<P>
 <PRE><I>commandPrefix command-string op</I></PRE>
-<P>
 <I>Command-string</I> gives the complete current command being
 executed (the traced command for a <B>enter</B> operation, an
 arbitrary command for a <B>enterstep</B> operation), including
@@ -172,9 +169,7 @@ course when the command is subsequently executed, an
 error will occur.
 <P>
 For <B>leave</B> and <B>leavestep</B> operations:
-<P>
 <PRE><I>commandPrefix command-string code result op</I></PRE>
-<P>
 <I>Command-string</I> gives the complete current command being
 executed (the traced command for a <B>enter</B> operation, an
 arbitrary command for a <B>enterstep</B> operation), including
@@ -219,7 +214,7 @@ as a whole (i.e. <I>name</I> may be just the name of an array, with no
 parenthesized index).  If <I>name</I> refers to a whole array, then
 <I>commandPrefix</I> is invoked whenever any element of the array is
 manipulated.  If the variable does not exist, it will be created but
-will not be given a value, so it will be visible to <B><A HREF="../TclCmd/namespace.htm">namespace which</A></B>
+will not be given a value, so it will be visible to <B>namespace which</B>
 queries, but not to <B><A HREF="../TclCmd/info.htm">info exists</A></B> queries.
 <P>
 <I>Ops</I> indicates which operations are of interest, and is a list of
@@ -247,9 +242,7 @@ interpreter in which to execute them.
 <P>
 When the trace triggers, three arguments are appended to
 <I>commandPrefix</I> so that the actual command is as follows:
-<P>
 <PRE><I>commandPrefix name1 name2 op</I></PRE>
-<P>
 <I>Name1</I> and <I>name2</I> give the name(s) for the variable
 being accessed:  if the variable is a scalar then <I>name1</I>
 gives the variable's name and <I>name2</I> is an empty string;
@@ -392,7 +385,6 @@ list, but simply a string concatenation of the operations, such as
 Print a message whenever either of the global variables <B>foo</B> and
 <B>bar</B> are updated, even if they have a different local name at the
 time (which can be done with the <B><A HREF="../TclCmd/upvar.htm">upvar</A></B> command):
-<P>
 <PRE>proc tracer {varname args} {
     upvar #0 $varname var
     puts &quot;$varname was updated to be &#92;&quot;$var&#92;&quot;&quot;
@@ -402,7 +394,6 @@ time (which can be done with the <B><A HREF="../TclCmd/upvar.htm">upvar</A></B> 
 <P>
 Ensure that the global variable <B>foobar</B> always contains the
 product of the global variables <B>foo</B> and <B>bar</B>:
-<P>
 <PRE>proc doMult args {
     global foo bar foobar
     set foobar [expr {$foo * $bar}]
@@ -412,7 +403,6 @@ product of the global variables <B>foo</B> and <B>bar</B>:
 <P>
 Print a trace of what commands are executed during the processing of a Tcl
 procedure:
-<P>
 <PRE>proc x {} { y }
 proc y {} { z }
 proc z {} { puts hello }
@@ -427,7 +417,8 @@ x
 <B><A HREF="../TclCmd/set.htm">set</A></B>, <B><A HREF="../TclCmd/unset.htm">unset</A></B>
 <H3><A NAME="M32">KEYWORDS</A></H3>
 <A href="../Keywords/R.htm#read">read</A>, <A href="../Keywords/C.htm#command">command</A>, <A href="../Keywords/R.htm#rename">rename</A>, <A href="../Keywords/V.htm#variable">variable</A>, <A href="../Keywords/W.htm#write">write</A>, <A href="../Keywords/T.htm#trace">trace</A>, <A href="../Keywords/U.htm#unset">unset</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 Copyright &copy; 2000 Ajuba Solutions.
 </div>

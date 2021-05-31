@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_ConfigureWindow manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> ConfigWind</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> ConfigWind</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="ConfigWind.htm#M2" NAME="L87">NAME</A>
-<DL><DD>Tk_ConfigureWindow, Tk_MoveWindow, Tk_ResizeWindow, Tk_MoveResizeWindow, Tk_SetWindowBorderWidth, Tk_ChangeWindowAttributes, Tk_SetWindowBackground, Tk_SetWindowBackgroundPixmap, Tk_SetWindowBorder, Tk_SetWindowBorderPixmap, Tk_SetWindowColormap, Tk_DefineCursor, Tk_UndefineCursor &mdash; change window configuration or attributes</DD></DL>
+<DL><DD>Tk_ConfigureWindow, Tk_MoveWindow, Tk_ResizeWindow, Tk_MoveResizeWindow, Tk_SetWindowBorderWidth, Tk_ChangeWindowAttributes, Tk_SetWindowBackground, Tk_SetWindowBackgroundPixmap, Tk_SetWindowBorder, Tk_SetWindowBorderPixmap, Tk_SetWindowColormap, Tk_DefineCursor, Tk_UndefineCursor - change window configuration or attributes</DD></DL>
 <DD><A HREF="ConfigWind.htm#M3" NAME="L88">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -34,7 +34,7 @@
 <DD><A HREF="ConfigWind.htm#M8" NAME="L93">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_ConfigureWindow, Tk_MoveWindow, Tk_ResizeWindow, Tk_MoveResizeWindow, Tk_SetWindowBorderWidth, Tk_ChangeWindowAttributes, Tk_SetWindowBackground, Tk_SetWindowBackgroundPixmap, Tk_SetWindowBorder, Tk_SetWindowBorderPixmap, Tk_SetWindowColormap, Tk_DefineCursor, Tk_UndefineCursor &mdash; change window configuration or attributes
+Tk_ConfigureWindow, Tk_MoveWindow, Tk_ResizeWindow, Tk_MoveResizeWindow, Tk_SetWindowBorderWidth, Tk_ChangeWindowAttributes, Tk_SetWindowBackground, Tk_SetWindowBackgroundPixmap, Tk_SetWindowBorder, Tk_SetWindowBorderPixmap, Tk_SetWindowColormap, Tk_DefineCursor, Tk_UndefineCursor - change window configuration or attributes
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 <B>Tk_ConfigureWindow</B>(<I>tkwin, valueMask, valuePtr</I>)<BR>
@@ -52,7 +52,7 @@ Tk_ConfigureWindow, Tk_MoveWindow, Tk_ResizeWindow, Tk_MoveResizeWindow, Tk_SetW
 <B>Tk_UndefineCursor</B>(<I>tkwin</I>)<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
-<DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window.
 <P><DT>unsigned int <B>valueMask</B> (in)<DD>
 OR-ed mask of values like <B>CWX</B> or <B>CWBorderPixel</B>,
@@ -85,7 +85,7 @@ cannot necessarily be deleted immediately, as for Xlib calls.  See
 note below.
 <P><DT>Colormap <B>colormap</B> (in)<DD>
 New colormap to use for <I>tkwin</I>.
-<P><DT><A HREF="../TkLib/GetCursor.htm">Tk_Cursor</A> <B>cursor</B> (in)<DD>
+<P><DT>Tk_Cursor <B>cursor</B> (in)<DD>
 New cursor to use for <I>tkwin</I>.  If <B>None</B> is specified, then
 <I>tkwin</I> will not have its own cursor;  it will use the cursor
 of its parent.
@@ -154,7 +154,8 @@ call <B><A HREF="../TkLib/CrtWindow.htm">Tk_MakeWindowExist</A></B> before freei
 <B><A HREF="../TkLib/MoveToplev.htm">Tk_MoveToplevelWindow</A></B>, <B><A HREF="../TkLib/Restack.htm">Tk_RestackWindow</A></B>
 <H3><A NAME="M8">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#attributes">attributes</A>, <A href="../Keywords/B.htm#border">border</A>, <A href="../Keywords/C.htm#color">color</A>, <A href="../Keywords/C.htm#configure">configure</A>, <A href="../Keywords/H.htm#height">height</A>, <A href="../Keywords/P.htm#pixel">pixel</A>, <A href="../Keywords/P.htm#pixmap">pixmap</A>, <A href="../Keywords/W.htm#width">width</A>, <A href="../Keywords/W.htm#window">window</A>, <A href="../Keywords/X.htm#x">x</A>, <A href="../Keywords/Y.htm#y">y</A>
-<div class="copy">Copyright &copy; 1990-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

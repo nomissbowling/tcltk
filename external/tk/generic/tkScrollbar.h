@@ -161,7 +161,7 @@ typedef struct TkScrollbar {
  * and default scrollbar width, for use in configSpec.
  */
 
-MODULE_SCOPE const Tk_ClassProcs tkpScrollbarProcs;
+MODULE_SCOPE Tk_ClassProcs tkpScrollbarProcs;
 MODULE_SCOPE char tkDefScrollbarWidth[TCL_INTEGER_SPACE];
 
 /*

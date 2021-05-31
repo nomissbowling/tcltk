@@ -3,11 +3,11 @@
 <HEAD><TITLE>options manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> options</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> options</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="options.htm#M2" NAME="L2">NAME</A>
-<DL><DD>options &mdash; Standard options supported by widgets</DD></DL>
+<DL><DD>options - Standard options supported by widgets</DD></DL>
 <DD><A HREF="options.htm#M3" NAME="L3">DESCRIPTION</A>
 <DL>
 <DD><A HREF="options.htm#M-activebackground" NAME="L4">-activebackground, activeBackground, Foreground</A>
@@ -57,7 +57,7 @@
 <DD><A HREF="options.htm#M5" NAME="L47">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-options &mdash; Standard options supported by widgets
+options - Standard options supported by widgets
 <H3><A NAME="M3">DESCRIPTION</A></H3>
 This manual entry describes the common configuration options supported
 by widgets in the Tk toolkit.  Every widget does not necessarily support
@@ -128,20 +128,20 @@ widget.
 <DD>Specifies a bitmap to display in the widget, in any of the forms
 acceptable to <B><A HREF="../TkLib/GetBitmap.htm">Tk_GetBitmap</A></B>.
 The exact way in which the bitmap is displayed may be affected by
-other options such as <B>-anchor</B> or <B>-justify</B>.
+other options such as <B>anchor</B> or <B>justify</B>.
 Typically, if this option is specified then it overrides other
 options that specify a textual value to display in the widget
-but this is controlled by the <B>-compound</B> option;
-the <B>-bitmap</B> option may be reset to an empty string to re-enable
+but this is controlled by the <B>compound</B> option;
+the <B>bitmap</B> option may be reset to an empty string to re-enable
 a text display.
-In widgets that support both <B>-bitmap</B> and <B>-image</B> options,
-<B>-image</B> will usually override <B>-bitmap</B>.
+In widgets that support both <B>bitmap</B> and <B>image</B> options,
+<B>image</B> will usually override <B>bitmap</B>.
 <P><DT>Command-Line Name: <B><A NAME="M-borderwidth">-borderwidth or -bd</A></B>
 <DT>Database Name: <B>borderWidth</B>
 <DT>Database Class: <B>BorderWidth</B>
 <DD>Specifies a non-negative value indicating the width
 of the 3-D border to draw around the outside of the widget (if such a
-border is being drawn;  the <B>-relief</B> option typically determines
+border is being drawn;  the <B>relief</B> option typically determines
 this).  The value may also be used when drawing 3-D effects in the
 interior of the widget.
 The value may have any of the forms acceptable to <B><A HREF="../TkLib/GetPixels.htm">Tk_GetPixels</A></B>.
@@ -189,7 +189,7 @@ to export selections.
 <DT>Database Class: <B><A HREF="../TkCmd/font.htm">Font</A></B>
 <DD>Specifies the font to use when drawing text inside the widget.
 The value may have any of the forms described in the <B><A HREF="../TkCmd/font.htm">font</A></B> manual
-page under <B><A HREF="../TkCmd/font.htm">FONT DESCRIPTION</A></B>.
+page under <B>FONT DESCRIPTION</B>.
 <P><DT>Command-Line Name: <B><A NAME="M-foreground">-foreground or -fg</A></B>
 <DT>Database Name: <B>foreground</B>
 <DT>Database Class: <B>Foreground</B>
@@ -217,10 +217,10 @@ If the value is zero, no focus highlight is drawn around the widget.
 <DT>Database Class: <B>Image</B>
 <DD>Specifies an image to display in the widget, which must have been
 created with the <B><A HREF="../TkCmd/image.htm">image create</A></B> command.
-Typically, if the <B>-image</B> option is specified then it overrides other
+Typically, if the <B>image</B> option is specified then it overrides other
 options that specify a bitmap or textual value to display in the
-widget, though this is controlled by the <B>-compound</B> option;
-the <B>-image</B> option may be reset to an empty string to re-enable
+widget, though this is controlled by the <B>compound</B> option;
+the <B>image</B> option may be reset to an empty string to re-enable
 a bitmap or text display.
 <P><DT>Command-Line Name: <B><A NAME="M-insertbackground">-insertbackground</A></B>
 <DT>Database Name: <B>insertBackground</B>
@@ -257,8 +257,8 @@ in each blink cycle.
 <DD>Specifies a  value indicating the total width of the insertion cursor.
 The value may have any of the forms acceptable to <B><A HREF="../TkLib/GetPixels.htm">Tk_GetPixels</A></B>.
 If a border has been specified for the insertion
-cursor (using the <B>-insertborderwidth</B> option), the border
-will be drawn inside the width specified by the <B>-insertwidth</B>
+cursor (using the <B>insertBorderWidth</B> option), the border
+will be drawn inside the width specified by the <B>insertWidth</B>
 option.
 <P><DT>Command-Line Name: <B><A NAME="M-jump">-jump</A></B>
 <DT>Database Name: <B>jump</B>
@@ -339,7 +339,7 @@ up- and down-arrows in scrollbars.
 <P><DT>Command-Line Name: <B><A NAME="M-repeatinterval">-repeatinterval</A></B>
 <DT>Database Name: <B>repeatInterval</B>
 <DT>Database Class: <B>RepeatInterval</B>
-<DD>Used in conjunction with <B>-repeatdelay</B>:  once auto-repeat
+<DD>Used in conjunction with <B>repeatDelay</B>:  once auto-repeat
 begins, this option determines the number of milliseconds between
 auto-repeats.
 <P><DT>Command-Line Name: <B><A NAME="M-selectbackground">-selectbackground</A></B>
@@ -367,7 +367,7 @@ This option is typically used in text widgets, where the information
 in the widget has a natural size (the size of a character) and it makes
 sense for the window's dimensions to be integral numbers of these units.
 These natural window sizes form a grid.
-If the <B>-setgrid</B> option is set to true then the widget will
+If the <B>setGrid</B> option is set to true then the widget will
 communicate with the window manager so that when the user interactively
 resizes the top-level window that contains the widget, the dimensions of
 the window will be displayed to the user in grid units and the window
@@ -380,7 +380,7 @@ entry for more details.
 <DD>Determines whether the window accepts the focus during keyboard
 traversal (e.g., Tab and Shift-Tab).
 Before setting the focus to a window, the traversal scripts
-consult the value of the <B>-takefocus</B> option.
+consult the value of the <B>takeFocus</B> option.
 A value of <B>0</B> means that the window should be skipped entirely
 during keyboard traversal. 
 <B>1</B> means that the window should receive the input
@@ -405,7 +405,7 @@ redefine the keyboard traversal scripts.
 <DT>Database Class: <B><A HREF="../TkCmd/text.htm">Text</A></B>
 <DD>Specifies a string to be displayed inside the widget.  The way in which
 the string is displayed depends on the particular widget and may be
-determined by other options, such as <B>-anchor</B> or <B>-justify</B>.
+determined by other options, such as <B>anchor</B> or <B>justify</B>.
 <P><DT>Command-Line Name: <B><A NAME="M-textvariable">-textvariable</A></B>
 <DT>Database Name: <B>textVariable</B>
 <DT>Database Class: <B><A HREF="../TclCmd/variable.htm">Variable</A></B>
@@ -414,7 +414,7 @@ string to be displayed inside the widget;  if the variable value changes
 then the widget will automatically update itself to reflect the new value.
 The way in which the string is displayed in the widget depends on the
 particular widget and may be determined by other options, such as
-<B>-anchor</B> or <B>-justify</B>.
+<B>anchor</B> or <B>justify</B>.
 <P><DT>Command-Line Name: <B><A NAME="M-troughcolor">-troughcolor</A></B>
 <DT>Database Name: <B>troughColor</B>
 <DT>Database Class: <B>Background</B>
@@ -460,7 +460,7 @@ that is visible in the window, and the second fraction indicates
 the information just after the last portion that is visible.
 The command is
 then passed to the Tcl interpreter for execution.  Typically the
-<B>-xscrollcommand</B> option consists of the path name of a scrollbar
+<B>xScrollCommand</B> option consists of the path name of a scrollbar
 widget followed by
 &#8220;set&#8221;,
 e.g.
@@ -473,16 +473,18 @@ If this option is not specified, then no command will be executed.
 <DT>Database Class: <B>ScrollCommand</B>
 <DD>Specifies the prefix for a command used to communicate with vertical
 scrollbars.  This option is treated in the same way as the
-<B>-xscrollcommand</B> option, except that it is used for vertical
+<B>xScrollCommand</B> option, except that it is used for vertical
 scrollbars and is provided by widgets that support vertical scrolling.
-See the description of <B>-xscrollcommand</B> for details
+See the description of <B>xScrollCommand</B> for details
 on how this option is used.
+
 </DL>
 <H3><A NAME="M4">SEE ALSO</A></H3>
 <B><A HREF="../TkCmd/colors.htm">colors</A></B>, <B><A HREF="../TkCmd/cursors.htm">cursors</A></B>, <B><A HREF="../TkCmd/font.htm">font</A></B>
 <H3><A NAME="M5">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#class">class</A>, <A href="../Keywords/N.htm#name">name</A>, <A href="../Keywords/S.htm#standard option">standard option</A>, <A href="../Keywords/S.htm#switch">switch</A>
-<div class="copy">Copyright &copy; 1990-1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

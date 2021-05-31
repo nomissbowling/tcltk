@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_CreateWindow manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> CrtWindow</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> CrtWindow</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="CrtWindow.htm#M2" NAME="L183">NAME</A>
-<DL><DD>Tk_CreateWindow, Tk_CreateWindowFromPath, Tk_DestroyWindow, Tk_MakeWindowExist &mdash; create or delete window</DD></DL>
-<DD><A HREF="CrtWindow.htm#M3" NAME="L184">SYNOPSIS</A>
+<DD><A HREF="CrtWindow.htm#M2" NAME="L178">NAME</A>
+<DL><DD>Tk_CreateWindow, Tk_CreateWindowFromPath, Tk_DestroyWindow, Tk_MakeWindowExist - create or delete window</DD></DL>
+<DD><A HREF="CrtWindow.htm#M3" NAME="L179">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>Tk_Window
@@ -20,21 +20,21 @@
 <DD><B>Tk_DestroyWindow</B>(<I>tkwin</I>)
 <DD><B>Tk_MakeWindowExist</B>(<I>tkwin</I>)
 </DL>
-<DD><A HREF="CrtWindow.htm#M4" NAME="L185">ARGUMENTS</A>
+<DD><A HREF="CrtWindow.htm#M4" NAME="L180">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="CrtWindow.htm#M5" NAME="L186">DESCRIPTION</A>
-<DD><A HREF="CrtWindow.htm#M6" NAME="L187">KEYWORDS</A>
+<DD><A HREF="CrtWindow.htm#M5" NAME="L181">DESCRIPTION</A>
+<DD><A HREF="CrtWindow.htm#M6" NAME="L182">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CreateWindow, Tk_CreateWindowFromPath, Tk_DestroyWindow, Tk_MakeWindowExist &mdash; create or delete window
+Tk_CreateWindow, Tk_CreateWindowFromPath, Tk_DestroyWindow, Tk_MakeWindowExist - create or delete window
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
-<A HREF="../TkLib/WindowId.htm">Tk_Window</A><BR>
+Tk_Window<BR>
 <B>Tk_CreateWindow</B>(<I>interp, parent, name, topLevScreen</I>)<BR>
-<A HREF="../TkLib/WindowId.htm">Tk_Window</A><BR>
+Tk_Window<BR>
 <B>Tk_CreateAnonymousWindow</B>(<I>interp, parent, topLevScreen</I>)<BR>
-<A HREF="../TkLib/WindowId.htm">Tk_Window</A><BR>
+Tk_Window<BR>
 <B>Tk_CreateWindowFromPath</B>(<I>interp, tkwin, pathName, topLevScreen</I>)<BR>
 <B>Tk_DestroyWindow</B>(<I>tkwin</I>)<BR>
 <B>Tk_MakeWindowExist</B>(<I>tkwin</I>)<BR>
@@ -43,7 +43,7 @@ Tk_CreateWindow, Tk_CreateWindowFromPath, Tk_DestroyWindow, Tk_MakeWindowExist &
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (out)<DD>
 Tcl interpreter to use for error reporting.  If no error occurs,
 then <I>*interp</I> is not modified.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>parent</B> (in)<DD>
+<P><DT>Tk_Window <B>parent</B> (in)<DD>
 Token for the window that is to serve as the logical parent of
 the new window.
 <P><DT>const char <B>*name</B> (in)<DD>
@@ -56,7 +56,7 @@ a top-level window on screen <I>topLevScreen</I>.  If <I>topLevScreen</I>
 is an empty string
 (&#8220;&#8221;)
 then new window is created as top-level window of <I>parent</I>'s screen.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window.
 <P><DT>const char <B>*pathName</B> (in)<DD>
 Name of new window, specified as path name within application
@@ -69,8 +69,8 @@ are used to create new windows for
 use in Tk-based applications.  Each of the procedures returns a token
 that can be used to manipulate the window in other calls to the Tk
 library.  If the window could not be created successfully, then NULL
-is returned and the result of interpreter <I>interp</I> is modified to
-hold an error message.
+is returned and <I>interp-&gt;result</I> is modified to hold an error
+message.
 <P>
 Tk supports two different kinds of windows:  internal
 windows and top-level windows.
@@ -97,7 +97,7 @@ which would in turn be a child of the menu bar window.  A dialog box might
 have the application's main window as its parent.
 <P>
 <B>Tk_CreateAnonymousWindow</B> differs from <B>Tk_CreateWindow</B> in
-that it creates an unnamed window.  This window will be manipulatable
+that it creates an unnamed window.  This window will be manipulable
 only using C interfaces, and will not be visible to Tcl scripts.  Both
 interior windows and top-level windows may be created with
 <B>Tk_CreateAnonymousWindow</B>.
@@ -129,7 +129,7 @@ The value returned by a window-creation procedure is not the
 X token for the window (it cannot be, since X has not been
 asked to create the window yet).  Instead, it is a token
 for Tk's local data structure for the window.  Most
-of the Tk library procedures take <A HREF="../TkLib/WindowId.htm">Tk_Window</A> tokens, rather
+of the Tk library procedures take Tk_Window tokens, rather
 than X identifiers.  The actual
 X window identifier can be retrieved from the local
 data structure using the <B><A HREF="../TkLib/WindowId.htm">Tk_WindowId</A></B> macro;  see
@@ -152,9 +152,11 @@ but has not been mapped, so no X window exists, it is
 possible to force the creation of the X window by
 calling <B>Tk_MakeWindowExist</B>.  This procedure issues
 the X commands to instantiate the window given by <I>tkwin</I>.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#create">create</A>, <A href="../Keywords/D.htm#deferred creation">deferred creation</A>, <A href="../Keywords/D.htm#destroy">destroy</A>, <A href="../Keywords/D.htm#display">display</A>, <A href="../Keywords/I.htm#internal window">internal window</A>, <A href="../Keywords/S.htm#screen">screen</A>, <A href="../Keywords/T.htm#top-level window">top-level window</A>, <A href="../Keywords/W.htm#window">window</A>
-<div class="copy">Copyright &copy; 1990 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

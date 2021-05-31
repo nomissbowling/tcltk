@@ -16,7 +16,7 @@ tcltest::loadTestedCommands
 
 testConstraint xhost [llength [auto_execok xhost]]
 testConstraint failsOnUbuntu [expr {![info exists ::env(CI)] || ![string match Linux $::tcl_platform(os)]}]
-testConstraint failsOnXQuarz [expr {$tcl_platform(os) ne "Darwin" || [tk windowingsystem] ne "x11" }]
+testConstraint failsOnQuarz [expr {![info exists ::env(MAC_CI)]}]
 
 # Compute a script that will load Tk into a child interpreter.
 
@@ -199,8 +199,7 @@ test send-7.4 {Tk_SetAppName procedure, name in use} {secureserver testsend} {
     list [tk appname foo] [testsend prop root InterpRegistry]
 } "{foo #4} {$commId foo #4\n$id foo\n$id foo #2\n$id foo #3\n}"
 
-#macOS does not send to other processes
-test send-8.1 {Tk_SendCmd procedure, options} {secureserver notAqua} {
+test send-8.1 {Tk_SendCmd procedure, options} {secureserver} {
     setupbg
     set app [dobg {tk appname}]
     set a 66
@@ -225,19 +224,18 @@ test send-8.2 {Tk_SendCmd procedure, options} {secureserver altDisplay} {
     cleanupbg
     set result
 } {altDisplay homeDisplay}
-# Since macOS has no registry of interpreters, 8.3, 8.4 and 8.10 will fail.
-test send-8.3 {Tk_SendCmd procedure, options} {secureserver notAqua} {
+test send-8.3 {Tk_SendCmd procedure, options} {secureserver} {
     list [catch {send -- -async foo bar baz} msg] $msg
 } {1 {no application named "-async"}}
-test send-8.4 {Tk_SendCmd procedure, options} {secureserver notAqua} {
+test send-8.4 {Tk_SendCmd procedure, options} {secureserver} {
     list [catch {send -gorp foo bar baz} msg] $msg
-} {1 {no application named "-gorp"}}
+} {1 {bad option "-gorp": must be -async, -displayof, or --}}
 test send-8.5 {Tk_SendCmd procedure, options} {secureserver} {
     list [catch {send -async foo} msg] $msg
-} {1 {wrong # args: should be "send ?-option value ...? interpName arg ?arg ...?"}}
+} {1 {wrong # args: should be "send ?options? interpName arg ?arg ...?"}}
 test send-8.6 {Tk_SendCmd procedure, options} {secureserver} {
     list [catch {send foo} msg] $msg
-} {1 {wrong # args: should be "send ?-option value ...? interpName arg ?arg ...?"}}
+} {1 {wrong # args: should be "send ?options? interpName arg ?arg ...?"}}
 test send-8.7 {Tk_SendCmd procedure, local execution} {secureserver} {
     set a initial
     send [tk appname] {set a new}
@@ -257,7 +255,7 @@ test send-8.9 {Tk_SendCmd procedure, local execution} {secureserver} {
 "open bad_file"
     invoked from within
 "send [tk appname] open bad_file"} {posix enoent {no such file or directory}}}
-test send-8.10 {Tk_SendCmd procedure, no such interpreter} {secureserver notAqua} {
+test send-8.10 {Tk_SendCmd procedure, no such interpreter} {secureserver} {
     list [catch {send bogus_name bogus_command} msg] $msg
 } {1 {no application named "bogus_name"}}
 
@@ -298,7 +296,7 @@ test send-8.15 {Tk_SendCmd procedure, local interp, error info} {secureserver te
 "if 1 {open bogus_file_name}"
     invoked from within
 "send t_s_1 {if 1 {open bogus_file_name}}"} {POSIX ENOENT {no such file or directory}}}
-test send-8.16 {Tk_SendCmd procedure, bogusCommWindow} {secureserver testsend failsOnUbuntu failsOnXQuarz} {
+test send-8.16 {Tk_SendCmd procedure, bogusCommWindow} {secureserver testsend failsOnUbuntu failsOnQuarz} {
     testsend prop root InterpRegistry "10234 bogus\n"
     set result [list [catch {send bogus bogus command} msg] $msg]
     winfo interps
@@ -524,10 +522,10 @@ test send-10.19 {SendEventProc procedure, send exits} {secureserver testsend} {
     set x
 } {1 {target application died}}
 
-test send-11.1 {AppendPropCarefully and AppendErrorProc procedures} -constraints {secureserver testsend} -body {
+test send-11.1 {AppendPropCarefully and AppendErrorProc procedures} {secureserver testsend} {
     testsend prop root InterpRegistry "0x21447 dummy\n"
-    send dummy foo
-} -returnCodes 1 -match regexp -result {^(target application died|no application named "dummy")$}
+    list [catch {send dummy foo} msg] $msg
+} {1 {no application named "dummy"}}
 test send-11.2 {AppendPropCarefully and AppendErrorProc procedures} {secureserver testsend} {
     testsend prop comm Comm "c\n-r0x123 44\n-n tktest\n-s concat a b c\n"
     update
@@ -546,8 +544,7 @@ test send-12.1 {TimeoutProc procedure} {secureserver testsend} {
 
 catch {testsend prop root InterpRegistry ""}
 
-#macOS does not send to other processes
-test send-12.2 {TimeoutProc procedure} {secureserver notAqua} {
+test send-12.2 {TimeoutProc procedure} {secureserver} {
     winfo interps
     tk appname tktest
     update
@@ -562,17 +559,16 @@ test send-12.2 {TimeoutProc procedure} {secureserver notAqua} {
     set result
 } {1 {target application died}}
 
-#macOS does not send to other processes
 winfo interps
 tk appname tktest
-test send-13.1 {DeleteProc procedure} {secureserver notAqua} {
+test send-13.1 {DeleteProc procedure} {secureserver} {
     setupbg
     set app [dobg {rename send {}; tk appname}]
     set result [list [catch {send $app foo} msg] $msg [winfo interps]]
     cleanupbg
     set result
 } {1 {no application named "tktest #2"} tktest}
-test send-13.2 {DeleteProc procedure} {secureserver notAqua} {
+test send-13.2 {DeleteProc procedure} {secureserver} {
     winfo interps
     tk appname tktest
     rename send {}

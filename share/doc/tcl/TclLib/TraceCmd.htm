@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_TraceCommand manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> TraceCmd</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> TraceCmd</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="TraceCmd.htm#M2" NAME="L831">NAME</A>
-<DL><DD>Tcl_CommandTraceInfo, Tcl_TraceCommand, Tcl_UntraceCommand &mdash; monitor renames and deletes of a command</DD></DL>
-<DD><A HREF="TraceCmd.htm#M3" NAME="L832">SYNOPSIS</A>
+<DD><A HREF="TraceCmd.htm#M2" NAME="L758">NAME</A>
+<DL><DD>Tcl_CommandTraceInfo, Tcl_TraceCommand, Tcl_UntraceCommand - monitor renames and deletes of a command</DD></DL>
+<DD><A HREF="TraceCmd.htm#M3" NAME="L759">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>ClientData
@@ -18,23 +18,23 @@
 <DD>void
 <DD><B>Tcl_UntraceCommand(</B><I>interp, cmdName, flags, proc, clientData</I><B>)</B>
 </DL>
-<DD><A HREF="TraceCmd.htm#M4" NAME="L833">ARGUMENTS</A>
+<DD><A HREF="TraceCmd.htm#M4" NAME="L760">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="TraceCmd.htm#M5" NAME="L834">DESCRIPTION</A>
+<DD><A HREF="TraceCmd.htm#M5" NAME="L761">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="TraceCmd.htm#M6" NAME="L835"><B>TCL_TRACE_RENAME</B></A>
-<DD><A HREF="TraceCmd.htm#M7" NAME="L836"><B>TCL_TRACE_DELETE</B></A>
+<DD><A HREF="TraceCmd.htm#M6" NAME="L762"><B>TCL_TRACE_RENAME</B></A>
+<DD><A HREF="TraceCmd.htm#M7" NAME="L763"><B>TCL_TRACE_DELETE</B></A>
 </DL>
-<DD><A HREF="TraceCmd.htm#M8" NAME="L837">CALLING COMMANDS DURING TRACES</A>
-<DD><A HREF="TraceCmd.htm#M9" NAME="L838">MULTIPLE TRACES</A>
-<DD><A HREF="TraceCmd.htm#M10" NAME="L839">TCL_TRACE_DESTROYED FLAG</A>
-<DD><A HREF="TraceCmd.htm#M11" NAME="L840">TCL_INTERP_DESTROYED</A>
-<DD><A HREF="TraceCmd.htm#M12" NAME="L841">BUGS</A>
-<DD><A HREF="TraceCmd.htm#M13" NAME="L842">KEYWORDS</A>
+<DD><A HREF="TraceCmd.htm#M8" NAME="L764">CALLING COMMANDS DURING TRACES</A>
+<DD><A HREF="TraceCmd.htm#M9" NAME="L765">MULTIPLE TRACES</A>
+<DD><A HREF="TraceCmd.htm#M10" NAME="L766">TCL_TRACE_DESTROYED FLAG</A>
+<DD><A HREF="TraceCmd.htm#M11" NAME="L767">TCL_INTERP_DESTROYED</A>
+<DD><A HREF="TraceCmd.htm#M12" NAME="L768">BUGS</A>
+<DD><A HREF="TraceCmd.htm#M13" NAME="L769">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_CommandTraceInfo, Tcl_TraceCommand, Tcl_UntraceCommand &mdash; monitor renames and deletes of a command
+Tcl_CommandTraceInfo, Tcl_TraceCommand, Tcl_UntraceCommand - monitor renames and deletes of a command
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 ClientData<BR>
@@ -65,9 +65,9 @@ call will return information about first trace.
 <B>Tcl_TraceCommand</B> allows a C procedure to monitor operations
 performed on a Tcl command, so that the C procedure is invoked
 whenever the command is renamed or deleted.  If the trace is created
-successfully then <B>Tcl_TraceCommand</B> returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>. If an error
+successfully then <B>Tcl_TraceCommand</B> returns <B>TCL_OK</B>. If an error
 occurred (e.g. <I>cmdName</I> specifies a non-existent command) then
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and an error message is left in the
+<B>TCL_ERROR</B> is returned and an error message is left in the
 interpreter's result.
 <P>
 The <I>flags</I> argument to <B>Tcl_TraceCommand</B> indicates when the
@@ -84,14 +84,12 @@ Invoke <I>proc</I> when the command is deleted.
 Whenever one of the specified operations occurs to the command,
 <I>proc</I> will be invoked.  It should have arguments and result that
 match the type <B>Tcl_CommandTraceProc</B>:
-<P>
-<PRE>typedef void <B>Tcl_CommandTraceProc</B>(
+<PRE>typedef void Tcl_CommandTraceProc(
         ClientData <I>clientData</I>,
         <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
         const char *<I>oldName</I>,
         const char *<I>newName</I>,
         int <I>flags</I>);</PRE>
-<P>
 The <I>clientData</I> and <I>interp</I> parameters will have the same
 values as those passed to <B>Tcl_TraceCommand</B> when the trace was
 created.  <I>ClientData</I> typically points to an application-specific
@@ -175,6 +173,7 @@ from misusing the interpreter during traces with <B>TCL_INTERP_DESTROYED</B>
 set.
 <H3><A NAME="M13">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#clientData">clientData</A>, <A href="../Keywords/T.htm#trace">trace</A>, <A href="../Keywords/C.htm#command">command</A>
-<div class="copy">Copyright &copy; 2002 Donal K. Fellows
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2002 Donal K. Fellows
 </div>
 </BODY></HTML>

@@ -10,14 +10,14 @@ eval tcltest::configure $argv
 tcltest::loadTestedCommands
 namespace import -force tcltest::test
 
-testConstraint failsOnXQuarz [expr {$tcl_platform(os) ne "Darwin" || [tk windowingsystem] ne "x11" }]
+testConstraint failsOnQuarz [expr {![info exists ::env(MAC_CI)]}]
 
 test tk-1.1 {tk command: general} -body {
     tk
-} -returnCodes error -result {wrong # args: should be "tk subcommand ?arg ...?"}
+} -returnCodes error -result {wrong # args: should be "tk option ?arg?"}
 test tk-1.2 {tk command: general} -body {
     tk xyz
-} -returnCodes error -result {unknown or ambiguous subcommand "xyz": must be appname, busy, caret, fontchooser, inactive, scaling, useinputmethods, or windowingsystem}
+} -returnCodes error -result {bad option "xyz": must be appname, caret, scaling, useinputmethods, windowingsystem, or inactive}
 
 # Value stored to restore default settings after 2.* tests
 set appname [tk appname]
@@ -26,14 +26,14 @@ test tk-2.1 {tk command: appname} -body {
 } -returnCodes error -result {wrong # args: should be "tk appname ?newName?"}
 test tk-2.2 {tk command: appname} -body {
     tk appname foobazgarply
-} -result {foobazgarply}
+} -result foobazgarply
 test tk-2.3 {tk command: appname} -constraints unix -body {
     tk appname bazfoogarply
     expr {[lsearch -exact [winfo interps] [tk appname]] >= 0}
-} -result {1}
+} -result 1
 test tk-2.4 {tk command: appname} -body {
-    tk appname [tk appname]
-} -result [tk appname]
+    tk appname $appname
+} -result $appname
 tk appname $appname
 
 # Value stored to restore default settings after 3.* tests
@@ -44,11 +44,11 @@ test tk-3.1 {tk command: scaling} -body {
 test tk-3.2 {tk command: scaling: get current} -body {
     tk scaling 1
     format %.2g [tk scaling]
-}  -result 1
+} -result 1
 test tk-3.3 {tk command: scaling: get current} -body {
     tk scaling -displayof . 1.25
     format %.3g [tk scaling]
-}  -result 1.25
+} -result 1.25
 test tk-3.4 {tk command: scaling: set new} -body {
     tk scaling xyz
 } -returnCodes error -result {expected floating-point number but got "xyz"}
@@ -66,21 +66,21 @@ test tk-3.7 {tk command: scaling: set new} -body {
 test tk-3.8 {tk command: scaling: negative} -body {
     tk scaling -1
     expr {[tk scaling] > 0}
-} -result {1}
+} -result 1
 test tk-3.9 {tk command: scaling: too big} -body {
     tk scaling 1000000
     expr {[tk scaling] < 10000}
-} -result {1}
+} -result 1
 test tk-3.10 {tk command: scaling: widthmm} -body {
     tk scaling 1.25
     expr {int((25.4*[winfo screenwidth .])/(72*1.25) + 0.5) \
         - [winfo screenmmwidth .]}
-} -result {0}
+} -result 0
 test tk-3.11 {tk command: scaling: heightmm} -body {
     tk scaling 1.25
     expr {int((25.4*[winfo screenheight .])/(72*1.25) + 0.5) \
         - [winfo screenmmheight .]}
-} -result {0}
+} -result 0
 tk scaling $scaling
 
 # Value stored to restore default settings after 4.* tests
@@ -105,14 +105,14 @@ test tk-4.4 {tk command: useinputmethods: set new} -body {
 test tk-4.5 {tk command: useinputmethods: set new} -body {
     tk useinputmethods -displayof . xyz
 } -returnCodes error -result {expected boolean value but got "xyz"}
-test tk-4.6 {tk command: useinputmethods: set new} -body {
+test tk-4.6 {tk command: useinputmethods: set new} -constraints unix -body {
     # This isn't really a test, but more of a check... The answer is what was
     # given, because we may be on a Unix system that doesn't have the XIM
     # stuff
     if {[tk useinputmethods 1] == 0} {
 	puts "this wish doesn't have XIM (X Input Methods) support"
     }
-    return $useim
+    set useim
 } -result $useim
 test tk-4.7 {tk command: useinputmethods: set new} -constraints win -body {
     # Mac and Windows don't have X Input Methods, so this should always return
@@ -139,7 +139,7 @@ test tk-5.5 {tk caret} -body {
 } -result {-height 12 -x 10 -y 11}
 test tk-5.6 {tk caret} -body {
     tk caret . -x 20 -y 25 -h 30; tk caret . -hei
-} -result {30}
+} -result 30
 
 # tk inactive
 test tk-6.1 {tk inactive} -body {
@@ -147,14 +147,14 @@ test tk-6.1 {tk inactive} -body {
 } -result 1
 test tk-6.2 {tk inactive reset} -body {
     tk inactive reset
-} -returnCodes ok -match glob -result *
+} -match glob -result *
 test tk-6.3 {tk inactive wrong argument} -body {
     tk inactive foo
-} -returnCodes 1 -result {bad option "foo": must be reset}
+} -returnCodes error -result {bad option "foo": must be reset}
 test tk-6.4 {tk inactive too many arguments} -body {
     tk inactive reset foo
-} -returnCodes 1 -result {wrong # args: should be "tk inactive ?-displayof window? ?reset?"}
-test tk-6.5 {tk inactive} -constraints failsOnXQuarz -body {
+} -returnCodes error -result {wrong # args: should be "tk inactive ?-displayof window? ?reset?"}
+test tk-6.5 {tk inactive} -constraints failsOnQuarz -body {
     tk inactive reset
     update
     after 100
@@ -177,9 +177,7 @@ test tk-7.2 {tk inactive reset in a safe interpreter} -body {
     foo eval {tk inactive reset}
 } -cleanup {
     ::safe::interpDelete foo
-} -returnCodes 1 -result {resetting the user inactivity timer is not allowed in a safe interpreter}
-
-# tests of [tk busy] in busy.test
+} -returnCodes error -result {resetting the user inactivity timer is not allowed in a safe interpreter}
 
 # cleanup
 cleanupTests

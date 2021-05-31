@@ -3,131 +3,131 @@
 <HEAD><TITLE>re_syntax manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> re_syntax</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> re_syntax</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="re_syntax.htm#M2" NAME="L1423">NAME</A>
-<DL><DD>re_syntax &mdash; Syntax of Tcl regular expressions</DD></DL>
-<DD><A HREF="re_syntax.htm#M3" NAME="L1424">DESCRIPTION</A>
-<DD><A HREF="re_syntax.htm#M4" NAME="L1425">DIFFERENT FLAVORS OF REs</A>
-<DD><A HREF="re_syntax.htm#M5" NAME="L1426">REGULAR EXPRESSION SYNTAX</A>
-<DD><A HREF="re_syntax.htm#M6" NAME="L1427">QUANTIFIERS</A>
+<DD><A HREF="re_syntax.htm#M2" NAME="L1229">NAME</A>
+<DL><DD>re_syntax - Syntax of Tcl regular expressions</DD></DL>
+<DD><A HREF="re_syntax.htm#M3" NAME="L1230">DESCRIPTION</A>
+<DD><A HREF="re_syntax.htm#M4" NAME="L1231">DIFFERENT FLAVORS OF REs</A>
+<DD><A HREF="re_syntax.htm#M5" NAME="L1232">REGULAR EXPRESSION SYNTAX</A>
+<DD><A HREF="re_syntax.htm#M6" NAME="L1233">QUANTIFIERS</A>
 <DL class="quantifiers">
-<DD><A HREF="re_syntax.htm#M7" NAME="L1428"><B>*</B></A>
-<DD><A HREF="re_syntax.htm#M8" NAME="L1429"><B>+</B></A>
-<DD><A HREF="re_syntax.htm#M9" NAME="L1430"><B>?</B></A>
-<DD><A HREF="re_syntax.htm#M10" NAME="L1431"><B>{</B><I>m</I><B>}</B></A>
-<DD><A HREF="re_syntax.htm#M11" NAME="L1432"><B>{</B><I>m</I><B>,}</B></A>
-<DD><A HREF="re_syntax.htm#M12" NAME="L1433"><B>{</B><I>m</I><B>,</B><I>n</I><B>}</B></A>
-<DD><A HREF="re_syntax.htm#M13" NAME="L1434"><B>*?  +?  ??  {</B><I>m</I><B>}?  {</B><I>m</I><B>,}?  {</B><I>m</I><B>,</B><I>n</I><B>}?</B></A>
+<DD><A HREF="re_syntax.htm#M7" NAME="L1234"><B>*</B></A>
+<DD><A HREF="re_syntax.htm#M8" NAME="L1235"><B>+</B></A>
+<DD><A HREF="re_syntax.htm#M9" NAME="L1236"><B>?</B></A>
+<DD><A HREF="re_syntax.htm#M10" NAME="L1237"><B>{</B><I>m</I><B>}</B></A>
+<DD><A HREF="re_syntax.htm#M11" NAME="L1238"><B>{</B><I>m</I><B>,}</B></A>
+<DD><A HREF="re_syntax.htm#M12" NAME="L1239"><B>{</B><I>m</I><B>,</B><I>n</I><B>}</B></A>
+<DD><A HREF="re_syntax.htm#M13" NAME="L1240"><B>*?  +?  ??  {</B><I>m</I><B>}?  {</B><I>m</I><B>,}?  {</B><I>m</I><B>,</B><I>n</I><B>}?</B></A>
 </DL>
-<DD><A HREF="re_syntax.htm#M14" NAME="L1435">ATOMS</A>
+<DD><A HREF="re_syntax.htm#M14" NAME="L1241">ATOMS</A>
 <DL class="atoms">
-<DD><A HREF="re_syntax.htm#M15" NAME="L1436"><B>(</B><I>re</I><B>)</B></A>
-<DD><A HREF="re_syntax.htm#M16" NAME="L1437"><B>(?:</B><I>re</I><B>)</B></A>
-<DD><A HREF="re_syntax.htm#M17" NAME="L1438"><B>()</B></A>
-<DD><A HREF="re_syntax.htm#M18" NAME="L1439"><B>(?:)</B></A>
-<DD><A HREF="re_syntax.htm#M19" NAME="L1440"><B>[</B><I>chars</I><B>]</B></A>
-<DD><A HREF="re_syntax.htm#M20" NAME="L1441"><B>.</B></A>
-<DD><A HREF="re_syntax.htm#M21" NAME="L1442"><B>&#92;</B><I>k</I></A>
-<DD><A HREF="re_syntax.htm#M22" NAME="L1443"><B>&#92;</B><I>c</I></A>
-<DD><A HREF="re_syntax.htm#M23" NAME="L1444"><B>{</B></A>
-<DD><A HREF="re_syntax.htm#M24" NAME="L1445"><I>x</I></A>
+<DD><A HREF="re_syntax.htm#M15" NAME="L1242"><B>(</B><I>re</I><B>)</B></A>
+<DD><A HREF="re_syntax.htm#M16" NAME="L1243"><B>(?:</B><I>re</I><B>)</B></A>
+<DD><A HREF="re_syntax.htm#M17" NAME="L1244"><B>()</B></A>
+<DD><A HREF="re_syntax.htm#M18" NAME="L1245"><B>(?:)</B></A>
+<DD><A HREF="re_syntax.htm#M19" NAME="L1246"><B>[</B><I>chars</I><B>]</B></A>
+<DD><A HREF="re_syntax.htm#M20" NAME="L1247"><B>.</B></A>
+<DD><A HREF="re_syntax.htm#M21" NAME="L1248"><B>&#92;</B><I>k</I></A>
+<DD><A HREF="re_syntax.htm#M22" NAME="L1249"><B>&#92;</B><I>c</I></A>
+<DD><A HREF="re_syntax.htm#M23" NAME="L1250"><B>{</B></A>
+<DD><A HREF="re_syntax.htm#M24" NAME="L1251"><I>x</I></A>
 </DL>
-<DD><A HREF="re_syntax.htm#M25" NAME="L1446">CONSTRAINTS</A>
+<DD><A HREF="re_syntax.htm#M25" NAME="L1252">CONSTRAINTS</A>
 <DL class="constraints">
-<DD><A HREF="re_syntax.htm#M26" NAME="L1447"><B>^</B></A>
-<DD><A HREF="re_syntax.htm#M27" NAME="L1448"><B>$</B></A>
-<DD><A HREF="re_syntax.htm#M28" NAME="L1449"><B>(?=</B><I>re</I><B>)</B></A>
-<DD><A HREF="re_syntax.htm#M29" NAME="L1450"><B>(?!</B><I>re</I><B>)</B></A>
+<DD><A HREF="re_syntax.htm#M26" NAME="L1253"><B>^</B></A>
+<DD><A HREF="re_syntax.htm#M27" NAME="L1254"><B>$</B></A>
+<DD><A HREF="re_syntax.htm#M28" NAME="L1255"><B>(?=</B><I>re</I><B>)</B></A>
+<DD><A HREF="re_syntax.htm#M29" NAME="L1256"><B>(?!</B><I>re</I><B>)</B></A>
 </DL>
-<DD><A HREF="re_syntax.htm#M30" NAME="L1451">BRACKET EXPRESSIONS</A>
-<DD><A HREF="re_syntax.htm#M31" NAME="L1452">CHARACTER CLASSES</A>
+<DD><A HREF="re_syntax.htm#M30" NAME="L1257">BRACKET EXPRESSIONS</A>
+<DD><A HREF="re_syntax.htm#M31" NAME="L1258">CHARACTER CLASSES</A>
 <DL class="character classes">
-<DD><A HREF="re_syntax.htm#M32" NAME="L1453"><B>alpha</B></A>
-<DD><A HREF="re_syntax.htm#M33" NAME="L1454"><B>upper</B></A>
-<DD><A HREF="re_syntax.htm#M34" NAME="L1455"><B>lower</B></A>
-<DD><A HREF="re_syntax.htm#M35" NAME="L1456"><B>digit</B></A>
-<DD><A HREF="re_syntax.htm#M36" NAME="L1457"><B>xdigit</B></A>
-<DD><A HREF="re_syntax.htm#M37" NAME="L1458"><B>alnum</B></A>
-<DD><A HREF="re_syntax.htm#M38" NAME="L1459"><B>print</B></A>
-<DD><A HREF="re_syntax.htm#M39" NAME="L1460"><B>blank</B></A>
-<DD><A HREF="re_syntax.htm#M40" NAME="L1461"><B>space</B></A>
-<DD><A HREF="re_syntax.htm#M41" NAME="L1462"><B>punct</B></A>
-<DD><A HREF="re_syntax.htm#M42" NAME="L1463"><B>graph</B></A>
-<DD><A HREF="re_syntax.htm#M43" NAME="L1464"><B>cntrl</B></A>
+<DD><A HREF="re_syntax.htm#M32" NAME="L1259"><B>alpha</B></A>
+<DD><A HREF="re_syntax.htm#M33" NAME="L1260"><B>upper</B></A>
+<DD><A HREF="re_syntax.htm#M34" NAME="L1261"><B>lower</B></A>
+<DD><A HREF="re_syntax.htm#M35" NAME="L1262"><B>digit</B></A>
+<DD><A HREF="re_syntax.htm#M36" NAME="L1263"><B>xdigit</B></A>
+<DD><A HREF="re_syntax.htm#M37" NAME="L1264"><B>alnum</B></A>
+<DD><A HREF="re_syntax.htm#M38" NAME="L1265"><B>print</B></A>
+<DD><A HREF="re_syntax.htm#M39" NAME="L1266"><B>blank</B></A>
+<DD><A HREF="re_syntax.htm#M40" NAME="L1267"><B>space</B></A>
+<DD><A HREF="re_syntax.htm#M41" NAME="L1268"><B>punct</B></A>
+<DD><A HREF="re_syntax.htm#M42" NAME="L1269"><B>graph</B></A>
+<DD><A HREF="re_syntax.htm#M43" NAME="L1270"><B>cntrl</B></A>
 </DL>
-<DD><A HREF="re_syntax.htm#M44" NAME="L1465">BRACKETED CONSTRAINTS</A>
-<DD><A HREF="re_syntax.htm#M45" NAME="L1466">COLLATING ELEMENTS</A>
-<DD><A HREF="re_syntax.htm#M46" NAME="L1467">EQUIVALENCE CLASSES</A>
-<DD><A HREF="re_syntax.htm#M47" NAME="L1468">ESCAPES</A>
-<DD><A HREF="re_syntax.htm#M48" NAME="L1469">CHARACTER-ENTRY ESCAPES</A>
+<DD><A HREF="re_syntax.htm#M44" NAME="L1271">BRACKETED CONSTRAINTS</A>
+<DD><A HREF="re_syntax.htm#M45" NAME="L1272">COLLATING ELEMENTS</A>
+<DD><A HREF="re_syntax.htm#M46" NAME="L1273">EQUIVALENCE CLASSES</A>
+<DD><A HREF="re_syntax.htm#M47" NAME="L1274">ESCAPES</A>
+<DD><A HREF="re_syntax.htm#M48" NAME="L1275">CHARACTER-ENTRY ESCAPES</A>
 <DL class="character-entry escapes">
-<DD><A HREF="re_syntax.htm#M49" NAME="L1470"><B>&#92;a</B></A>
-<DD><A HREF="re_syntax.htm#M50" NAME="L1471"><B>&#92;b</B></A>
-<DD><A HREF="re_syntax.htm#M51" NAME="L1472"><B>&#92;B</B></A>
-<DD><A HREF="re_syntax.htm#M52" NAME="L1473"><B>&#92;c</B><I>X</I></A>
-<DD><A HREF="re_syntax.htm#M53" NAME="L1474"><B>&#92;e</B></A>
-<DD><A HREF="re_syntax.htm#M54" NAME="L1475"><B>&#92;f</B></A>
-<DD><A HREF="re_syntax.htm#M55" NAME="L1476"><B>&#92;n</B></A>
-<DD><A HREF="re_syntax.htm#M56" NAME="L1477"><B>&#92;r</B></A>
-<DD><A HREF="re_syntax.htm#M57" NAME="L1478"><B>&#92;t</B></A>
-<DD><A HREF="re_syntax.htm#M58" NAME="L1479"><B>&#92;u</B><I>wxyz</I></A>
-<DD><A HREF="re_syntax.htm#M59" NAME="L1480"><B>&#92;U</B><I>stuvwxyz</I></A>
-<DD><A HREF="re_syntax.htm#M60" NAME="L1481"><B>&#92;v</B></A>
-<DD><A HREF="re_syntax.htm#M61" NAME="L1482"><B>&#92;x</B><I>hh</I></A>
-<DD><A HREF="re_syntax.htm#M62" NAME="L1483"><B>&#92;0</B></A>
-<DD><A HREF="re_syntax.htm#M63" NAME="L1484"><B>&#92;</B><I>xyz</I></A>
-<DD><A HREF="re_syntax.htm#M64" NAME="L1485"><B>&#92;</B><I>xy</I></A>
+<DD><A HREF="re_syntax.htm#M49" NAME="L1276"><B>&#92;a</B></A>
+<DD><A HREF="re_syntax.htm#M50" NAME="L1277"><B>&#92;b</B></A>
+<DD><A HREF="re_syntax.htm#M51" NAME="L1278"><B>&#92;B</B></A>
+<DD><A HREF="re_syntax.htm#M52" NAME="L1279"><B>&#92;c</B><I>X</I></A>
+<DD><A HREF="re_syntax.htm#M53" NAME="L1280"><B>&#92;e</B></A>
+<DD><A HREF="re_syntax.htm#M54" NAME="L1281"><B>&#92;f</B></A>
+<DD><A HREF="re_syntax.htm#M55" NAME="L1282"><B>&#92;n</B></A>
+<DD><A HREF="re_syntax.htm#M56" NAME="L1283"><B>&#92;r</B></A>
+<DD><A HREF="re_syntax.htm#M57" NAME="L1284"><B>&#92;t</B></A>
+<DD><A HREF="re_syntax.htm#M58" NAME="L1285"><B>&#92;u</B><I>wxyz</I></A>
+<DD><A HREF="re_syntax.htm#M59" NAME="L1286"><B>&#92;U</B><I>stuvwxyz</I></A>
+<DD><A HREF="re_syntax.htm#M60" NAME="L1287"><B>&#92;v</B></A>
+<DD><A HREF="re_syntax.htm#M61" NAME="L1288"><B>&#92;x</B><I>hhh</I></A>
+<DD><A HREF="re_syntax.htm#M62" NAME="L1289"><B>&#92;0</B></A>
+<DD><A HREF="re_syntax.htm#M63" NAME="L1290"><B>&#92;</B><I>xy</I></A>
+<DD><A HREF="re_syntax.htm#M64" NAME="L1291"><B>&#92;</B><I>xyz</I></A>
 </DL>
-<DD><A HREF="re_syntax.htm#M65" NAME="L1486">CLASS-SHORTHAND ESCAPES</A>
+<DD><A HREF="re_syntax.htm#M65" NAME="L1292">CLASS-SHORTHAND ESCAPES</A>
 <DL class="class-shorthand escapes">
-<DD><A HREF="re_syntax.htm#M66" NAME="L1487"><B>&#92;d</B></A>
-<DD><A HREF="re_syntax.htm#M67" NAME="L1488"><B>&#92;s</B></A>
-<DD><A HREF="re_syntax.htm#M68" NAME="L1489"><B>&#92;w</B></A>
-<DD><A HREF="re_syntax.htm#M69" NAME="L1490"><B>&#92;D</B></A>
-<DD><A HREF="re_syntax.htm#M70" NAME="L1491"><B>&#92;S</B></A>
-<DD><A HREF="re_syntax.htm#M71" NAME="L1492"><B>&#92;W</B></A>
+<DD><A HREF="re_syntax.htm#M66" NAME="L1293"><B>&#92;d</B></A>
+<DD><A HREF="re_syntax.htm#M67" NAME="L1294"><B>&#92;s</B></A>
+<DD><A HREF="re_syntax.htm#M68" NAME="L1295"><B>&#92;w</B></A>
+<DD><A HREF="re_syntax.htm#M69" NAME="L1296"><B>&#92;D</B></A>
+<DD><A HREF="re_syntax.htm#M70" NAME="L1297"><B>&#92;S</B></A>
+<DD><A HREF="re_syntax.htm#M71" NAME="L1298"><B>&#92;W</B></A>
 </DL>
-<DD><A HREF="re_syntax.htm#M72" NAME="L1493">CONSTRAINT ESCAPES</A>
+<DD><A HREF="re_syntax.htm#M72" NAME="L1299">CONSTRAINT ESCAPES</A>
 <DL class="constraint escapes">
-<DD><A HREF="re_syntax.htm#M73" NAME="L1494"><B>&#92;A</B></A>
-<DD><A HREF="re_syntax.htm#M74" NAME="L1495"><B>&#92;m</B></A>
-<DD><A HREF="re_syntax.htm#M75" NAME="L1496"><B>&#92;M</B></A>
-<DD><A HREF="re_syntax.htm#M76" NAME="L1497"><B>&#92;y</B></A>
-<DD><A HREF="re_syntax.htm#M77" NAME="L1498"><B>&#92;Y</B></A>
-<DD><A HREF="re_syntax.htm#M78" NAME="L1499"><B>&#92;Z</B></A>
-<DD><A HREF="re_syntax.htm#M79" NAME="L1500"><B>&#92;</B><I>m</I></A>
-<DD><A HREF="re_syntax.htm#M80" NAME="L1501"><B>&#92;</B><I>mnn</I></A>
+<DD><A HREF="re_syntax.htm#M73" NAME="L1300"><B>&#92;A</B></A>
+<DD><A HREF="re_syntax.htm#M74" NAME="L1301"><B>&#92;m</B></A>
+<DD><A HREF="re_syntax.htm#M75" NAME="L1302"><B>&#92;M</B></A>
+<DD><A HREF="re_syntax.htm#M76" NAME="L1303"><B>&#92;y</B></A>
+<DD><A HREF="re_syntax.htm#M77" NAME="L1304"><B>&#92;Y</B></A>
+<DD><A HREF="re_syntax.htm#M78" NAME="L1305"><B>&#92;Z</B></A>
+<DD><A HREF="re_syntax.htm#M79" NAME="L1306"><B>&#92;</B><I>m</I></A>
+<DD><A HREF="re_syntax.htm#M80" NAME="L1307"><B>&#92;</B><I>mnn</I></A>
 </DL>
-<DD><A HREF="re_syntax.htm#M81" NAME="L1502">BACK REFERENCES</A>
-<DD><A HREF="re_syntax.htm#M82" NAME="L1503">METASYNTAX</A>
+<DD><A HREF="re_syntax.htm#M81" NAME="L1308">BACK REFERENCES</A>
+<DD><A HREF="re_syntax.htm#M82" NAME="L1309">METASYNTAX</A>
 <DL class="metasyntax">
-<DD><A HREF="re_syntax.htm#M83" NAME="L1504"><B>b</B></A>
-<DD><A HREF="re_syntax.htm#M84" NAME="L1505"><B>c</B></A>
-<DD><A HREF="re_syntax.htm#M85" NAME="L1506"><B>e</B></A>
-<DD><A HREF="re_syntax.htm#M86" NAME="L1507"><B>i</B></A>
-<DD><A HREF="re_syntax.htm#M87" NAME="L1508"><B>m</B></A>
-<DD><A HREF="re_syntax.htm#M88" NAME="L1509"><B>n</B></A>
-<DD><A HREF="re_syntax.htm#M89" NAME="L1510"><B>p</B></A>
-<DD><A HREF="re_syntax.htm#M90" NAME="L1511"><B>q</B></A>
-<DD><A HREF="re_syntax.htm#M91" NAME="L1512"><B>s</B></A>
-<DD><A HREF="re_syntax.htm#M92" NAME="L1513"><B>t</B></A>
-<DD><A HREF="re_syntax.htm#M93" NAME="L1514"><B>w</B></A>
-<DD><A HREF="re_syntax.htm#M94" NAME="L1515"><B>x</B></A>
+<DD><A HREF="re_syntax.htm#M83" NAME="L1310"><B>b</B></A>
+<DD><A HREF="re_syntax.htm#M84" NAME="L1311"><B>c</B></A>
+<DD><A HREF="re_syntax.htm#M85" NAME="L1312"><B>e</B></A>
+<DD><A HREF="re_syntax.htm#M86" NAME="L1313"><B>i</B></A>
+<DD><A HREF="re_syntax.htm#M87" NAME="L1314"><B>m</B></A>
+<DD><A HREF="re_syntax.htm#M88" NAME="L1315"><B>n</B></A>
+<DD><A HREF="re_syntax.htm#M89" NAME="L1316"><B>p</B></A>
+<DD><A HREF="re_syntax.htm#M90" NAME="L1317"><B>q</B></A>
+<DD><A HREF="re_syntax.htm#M91" NAME="L1318"><B>s</B></A>
+<DD><A HREF="re_syntax.htm#M92" NAME="L1319"><B>t</B></A>
+<DD><A HREF="re_syntax.htm#M93" NAME="L1320"><B>w</B></A>
+<DD><A HREF="re_syntax.htm#M94" NAME="L1321"><B>x</B></A>
 </DL>
-<UL class="metasyntax">
-</UL>
-<DD><A HREF="re_syntax.htm#M95" NAME="L1516">MATCHING</A>
-<DD><A HREF="re_syntax.htm#M96" NAME="L1517">LIMITS AND COMPATIBILITY</A>
-<UL class="limits and compatibility">
-</UL>
-<DD><A HREF="re_syntax.htm#M97" NAME="L1518">BASIC REGULAR EXPRESSIONS</A>
-<DD><A HREF="re_syntax.htm#M98" NAME="L1519">SEE ALSO</A>
-<DD><A HREF="re_syntax.htm#M99" NAME="L1520">KEYWORDS</A>
+<DL class="metasyntax">
+</DL>
+<DD><A HREF="re_syntax.htm#M95" NAME="L1322">MATCHING</A>
+<DD><A HREF="re_syntax.htm#M96" NAME="L1323">LIMITS AND COMPATIBILITY</A>
+<DL class="limits and compatibility">
+</DL>
+<DD><A HREF="re_syntax.htm#M97" NAME="L1324">BASIC REGULAR EXPRESSIONS</A>
+<DD><A HREF="re_syntax.htm#M98" NAME="L1325">SEE ALSO</A>
+<DD><A HREF="re_syntax.htm#M99" NAME="L1326">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-re_syntax &mdash; Syntax of Tcl regular expressions
+re_syntax - Syntax of Tcl regular expressions
 <H3><A NAME="M3">DESCRIPTION</A></H3>
 A <I>regular expression</I> describes strings of characters.
 It's a pattern that matches certain strings and does not match others.
@@ -187,7 +187,7 @@ a sequence of <I>m</I> through <I>n</I> (inclusive) matches of the atom;
 <P><DT><A NAME="M13"><B>*?  +?  ??  {</B><I>m</I><B>}?  {</B><I>m</I><B>,}?  {</B><I>m</I><B>,</B><I>n</I><B>}?</B></A><DD>
 <I>non-greedy</I> quantifiers, which match the same possibilities,
 but prefer the smallest number rather than the largest number
-of matches (see <B><A HREF="#M95">MATCHING</A></B>)
+of matches (see <B>MATCHING</B>)
 <P></DL>
 <P>
 The forms using <B>{</B> and <B>}</B> are known as <I>bound</I>s. The
@@ -210,7 +210,7 @@ matches an empty string, noted for possible reporting
 matches an empty string, without reporting
 <P><DT><A NAME="M19"><B>[</B><I>chars</I><B>]</B></A><DD>
 a <I>bracket expression</I>, matching any one of the <I>chars</I> (see
-<B><A HREF="#M30">BRACKET EXPRESSIONS</A></B> for more detail)
+<B>BRACKET EXPRESSIONS</B> for more detail)
 <P><DT><A NAME="M20"><B>.</B></A><DD>
 matches any single character
 <P><DT><A NAME="M21"><B>&#92;</B><I>k</I></A><DD>
@@ -219,7 +219,7 @@ taken as an ordinary character, e.g. <B>&#92;&#92;</B> matches a backslash
 character
 <P><DT><A NAME="M22"><B>&#92;</B><I>c</I></A><DD>
 where <I>c</I> is alphanumeric (possibly followed by other characters),
-an <I>escape</I> (AREs only), see <B><A HREF="#M47">ESCAPES</A></B> below
+an <I>escape</I> (AREs only), see <B>ESCAPES</B> below
 <P><DT><A NAME="M23"><B>{</B></A><DD>
 when followed by a character other than a digit, matches the
 left-brace character
@@ -233,7 +233,7 @@ matches that character.
 A <I>constraint</I> matches an empty string when specific conditions
 are met. A constraint may not be followed by a quantifier. The
 simple constraints are as follows; some more constraints are described
-later, under <B><A HREF="#M47">ESCAPES</A></B>.
+later, under <B>ESCAPES</B>.
 <P>
 <DL class="constraints">
 <DT><A NAME="M26"><B>^</B></A><DD>
@@ -272,7 +272,7 @@ endpoint, so e.g.
 &#8220;<B>a-c-e</B>&#8221;
 is illegal. Ranges in Tcl always use the
 Unicode collating sequence, but other programs may use other collating
-sequences and this can be a source of incompatibility between programs.
+sequences and this can be a source of incompatability between programs.
 <P>
 To include a literal <B>]</B> or <B>-</B> in the list, the simplest
 method is to enclose it in <B>[.</B> and <B>.]</B> to make it a
@@ -319,8 +319,7 @@ A character producing white space in displayed text.
 <P><DT><A NAME="M41"><B>punct</B></A><DD>
 A punctuation character.
 <P><DT><A NAME="M42"><B>graph</B></A><DD>
-A character with a visible representation (includes both <B>alnum</B>
-and <B>punct</B>).
+A character with a visible representation (includes both alnum and punct).
 <P><DT><A NAME="M43"><B>cntrl</B></A><DD>
 A control character.
 <P></DL>
@@ -389,12 +388,12 @@ treatment is as if the enclosing delimiters were
 &#8220;<B>[.</B>&#8221;	
 and
 &#8220;<B>.]</B>&#8221;.)
-For example, if <B>o</B> and <B>&ocirc;</B> are the members of an
+For example, if <B>o</B> and <B>&#244;</B> are the members of an
 equivalence class, then
 &#8220;<B>[[=o=]]</B>&#8221;,
-&#8220;<B>[[=&ocirc;=]]</B>&#8221;,
+&#8220;<B>[[=&#244;=]]</B>&#8221;,
 and
-&#8220;<B>[o&ocirc;]</B>&#8221;	
+&#8220;<B>[o&#244;]</B>&#8221;	
 are all synonymous. An equivalence class may not be an endpoint of a range.
 <DL><DD>
 <P>
@@ -439,39 +438,36 @@ carriage return, as in C
 <P><DT><A NAME="M57"><B>&#92;t</B></A><DD>
 horizontal tab, as in C
 <P><DT><A NAME="M58"><B>&#92;u</B><I>wxyz</I></A><DD>
-(where <I>wxyz</I> is one up to four hexadecimal digits) the Unicode
+(where <I>wxyz</I> is exactly four hexadecimal digits) the Unicode
 character <B>U+</B><I>wxyz</I> in the local byte ordering
 <P><DT><A NAME="M59"><B>&#92;U</B><I>stuvwxyz</I></A><DD>
-(where <I>stuvwxyz</I> is one up to eight hexadecimal digits) reserved
-for a Unicode extension up to 21 bits. The digits are parsed until the
-first non-hexadecimal character is encountered, the maximun of eight
-hexadecimal digits are reached, or an overflow would occur in the maximum
-value of <B>U+</B><I>10ffff</I>.
+(where <I>stuvwxyz</I> is exactly eight hexadecimal digits) reserved
+for a somewhat-hypothetical Unicode extension to 32 bits
 <P><DT><A NAME="M60"><B>&#92;v</B></A><DD>
 vertical tab, as in C are all available.
-<P><DT><A NAME="M61"><B>&#92;x</B><I>hh</I></A><DD>
-(where <I>hh</I> is one or two hexadecimal digits) the character
-whose hexadecimal value is <B>0x</B><I>hh</I>.
+<P><DT><A NAME="M61"><B>&#92;x</B><I>hhh</I></A><DD>
+(where <I>hhh</I> is any sequence of hexadecimal digits) the character
+whose hexadecimal value is <B>0x</B><I>hhh</I> (a single character no
+matter how many hexadecimal digits are used).
 <P><DT><A NAME="M62"><B>&#92;0</B></A><DD>
 the character whose value is <B>0</B>
-<P><DT><A NAME="M63"><B>&#92;</B><I>xyz</I></A><DD>
-(where <I>xyz</I> is exactly three octal digits, and is not a <I>back
-reference</I> (see below)) the character whose octal value is
-<B>0</B><I>xyz</I>. The first digit must be in the range 0-3, otherwise
-the two-digit form is assumed.
-<P><DT><A NAME="M64"><B>&#92;</B><I>xy</I></A><DD>
+<P><DT><A NAME="M63"><B>&#92;</B><I>xy</I></A><DD>
 (where <I>xy</I> is exactly two octal digits, and is not a <I>back
 reference</I> (see below)) the character whose octal value is
 <B>0</B><I>xy</I>
+<P><DT><A NAME="M64"><B>&#92;</B><I>xyz</I></A><DD>
+(where <I>xyz</I> is exactly three octal digits, and is not a back
+reference (see below)) the character whose octal value is
+<B>0</B><I>xyz</I>
 <P></DL>
 <P>
 Hexadecimal digits are
-&#8220;<B>0</B>&ndash;<B>9</B>&#8221;,
-&#8220;<B>a</B>&ndash;<B>f</B>&#8221;,
+&#8220;<B>0</B>-<B>9</B>&#8221;,
+&#8220;<B>a</B>-<B>f</B>&#8221;,
 and
-&#8220;<B>A</B>&ndash;<B>F</B>&#8221;.
+&#8220;<B>A</B>-<B>F</B>&#8221;.
 Octal digits are
-&#8220;<B>0</B>&ndash;<B>7</B>&#8221;.
+&#8220;<B>0</B>-<B>7</B>&#8221;.
 <P>
 The character-entry escapes are always taken as ordinary characters.
 For example, <B>&#92;135</B> is <B>]</B> in Unicode, but <B>&#92;135</B> does
@@ -525,7 +521,7 @@ string if specific conditions are met, written as an escape:
 <P>
 <DL class="constraint escapes">
 <DT><A NAME="M73"><B>&#92;A</B></A><DD>
-matches only at the beginning of the string (see <B><A HREF="#M95">MATCHING</A></B>,
+matches only at the beginning of the string (see <B>MATCHING</B>,
 below, for how this differs from
 &#8220;<B>^</B>&#8221;)
 <P><DT><A NAME="M74"><B>&#92;m</B></A><DD>
@@ -537,7 +533,7 @@ matches only at the beginning or end of a word
 <P><DT><A NAME="M77"><B>&#92;Y</B></A><DD>
 matches only at a point that is not the beginning or end of a word
 <P><DT><A NAME="M78"><B>&#92;Z</B></A><DD>
-matches only at the end of the string (see <B><A HREF="#M95">MATCHING</A></B>, below, for
+matches only at the end of the string (see <B>MATCHING</B>, below, for
 how this differs from
 &#8220;<B>$</B>&#8221;)
 <P><DT><A NAME="M79"><B>&#92;</B><I>m</I></A><DD>
@@ -603,13 +599,13 @@ case-sensitive matching (usual default)
 <P><DT><A NAME="M85"><B>e</B></A><DD>
 rest of RE is an ERE
 <P><DT><A NAME="M86"><B>i</B></A><DD>
-case-insensitive matching (see <B><A HREF="#M95">MATCHING</A></B>, below)
+case-insensitive matching (see <B>MATCHING</B>, below)
 <P><DT><A NAME="M87"><B>m</B></A><DD>
 historical synonym for <B>n</B>
 <P><DT><A NAME="M88"><B>n</B></A><DD>
-newline-sensitive matching (see <B><A HREF="#M95">MATCHING</A></B>, below)
+newline-sensitive matching (see <B>MATCHING</B>, below)
 <P><DT><A NAME="M89"><B>p</B></A><DD>
-partial newline-sensitive matching (see <B><A HREF="#M95">MATCHING</A></B>, below)
+partial newline-sensitive matching (see <B>MATCHING</B>, below)
 <P><DT><A NAME="M90"><B>q</B></A><DD>
 rest of RE is a literal
 (&#8220;quoted&#8221;)
@@ -621,7 +617,7 @@ tight syntax (usual default; see below)
 <P><DT><A NAME="M93"><B>w</B></A><DD>
 inverse partial newline-sensitive
 (&#8220;weird&#8221;)
-matching (see <B><A HREF="#M95">MATCHING</A></B>, below)
+matching (see <B>MATCHING</B>, below)
 <P><DT><A NAME="M94"><B>x</B></A><DD>
 expanded syntax (see below)
 <P></DL>
@@ -639,24 +635,24 @@ following newline (or the end of the RE) are ignored, permitting
 paragraphing and commenting a complex RE. There are three exceptions
 to that basic rule:
 <P>
-<UL class="metasyntax">
-<LI>
+<DL class="metasyntax">
+<DT><DD>&#8226;&nbsp;
 a white-space character or
 &#8220;<B>#</B>&#8221;
 preceded by
 &#8220;<B>&#92;</B>&#8221;
 is retained
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 white space or
 &#8220;<B>#</B>&#8221;
 within a bracket expression is retained
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 white space and comments are illegal within multi-character symbols
 like the ARE
 &#8220;<B>(?:</B>&#8221;
 or the BRE
 &#8220;<B>&#92;(</B>&#8221;
-<P></UL>
+<P></DL>
 <P>
 Expanded-syntax white-space characters are blank, tab, newline, and
 any character that belongs to the <I>space</I> character class.
@@ -794,25 +790,25 @@ between <I>regexp</I>'s near-EREs
 (&#8220;RREs&#8221; for short)
 and AREs. In roughly increasing order of significance:
 <P>
-<UL class="limits and compatibility">
-<LI>
+<DL class="limits and compatibility">
+<DT><DD>&#8226;&nbsp;
 In AREs, <B>&#92;</B> followed by an alphanumeric character is either an
 escape or an error, while in RREs, it was just another way of writing
 the alphanumeric. This should not be a problem because there was no
 reason to write such a sequence in RREs.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 <B>{</B> followed by a digit in an ARE is the beginning of a bound,
 while in RREs, <B>{</B> was always an ordinary character. Such
 sequences should be rare, and will often result in an error because
 following characters will not look like a valid bound.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 In AREs, <B>&#92;</B> remains a special character within
 &#8220;<B>[&nbsp;]</B>&#8221;,
 so a literal <B>&#92;</B> within <B>[&nbsp;]</B> must be written
 &#8220;<B>&#92;&#92;</B>&#8221;.
 <B>&#92;&#92;</B> also gives a literal <B>&#92;</B> within <B>[&nbsp;]</B> in RREs,
 but only truly paranoid programmers routinely doubled the backslash.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 AREs report the longest/shortest match for the RE, rather than the
 first found in a specified search order. This may affect some RREs
 which were written in the expectation that the first match would be
@@ -822,7 +818,7 @@ parallel, and their performance is largely insensitive to their
 complexity) but cases where the search order was exploited to
 deliberately find a match which was <I>not</I> the longest/shortest
 will need rewriting.)
-<P></UL>
+<P></DL>
 <H3><A NAME="M97">BASIC REGULAR EXPRESSIONS</A></H3>
 BREs differ from EREs in several respects.
 &#8220;<B>|</B>&#8221;,
@@ -851,7 +847,8 @@ respectively; no other escapes are available.
 <B><A HREF="../TclCmd/regexp.htm">RegExp</A></B>, <B><A HREF="../TclCmd/regexp.htm">regexp</A></B>, <B><A HREF="../TclCmd/regsub.htm">regsub</A></B>, <B><A HREF="../TclCmd/lsearch.htm">lsearch</A></B>, <B><A HREF="../TclCmd/switch.htm">switch</A></B>, <B><A HREF="../TkCmd/text.htm">text</A></B>
 <H3><A NAME="M99">KEYWORDS</A></H3>
 <A href="../Keywords/M.htm#match">match</A>, <A href="../Keywords/R.htm#regular expression">regular expression</A>, <A href="../Keywords/S.htm#string">string</A>
-<div class="copy">Copyright &copy; 1998 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1998 Sun Microsystems, Inc.
 Copyright &copy; 1999 Scriptics Corporation
 </div>
 </BODY></HTML>

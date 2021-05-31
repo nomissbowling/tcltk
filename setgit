@@ -81,4 +81,3 @@ git config user.email $GEMAIL
 if [ "$(lsb_release -sc)" == "trusty" ]; then
     git config push.default simple
 fi
-

@@ -1,6 +1,7 @@
---- tkListbox.c.orig	2013-09-29 18:00:55 +0200
-+++ tkListbox.c	2014-01-24 16:28:19 +0100
-@@ -165,6 +165,8 @@
+diff -r -up tk8.5.6/generic/tkListbox.c tk8.5.6_lbjust/generic/tkListbox.c
+--- generic/tkListbox.c	2008-10-09 15:20:45.000000000 -0600
++++ tk_lbjust/generic/tkListbox.c	2010-05-04 10:40:23.248365433 -0600
+@@ -167,6 +167,8 @@ typedef struct {
      Pixmap gray;		/* Pixmap for displaying disabled text. */
      int flags;			/* Various flag bits: see below for
  				 * definitions. */
@@ -9,7 +10,7 @@
  } Listbox;
  
  /*
-@@ -308,6 +310,8 @@
+@@ -303,6 +305,8 @@ static const Tk_OptionSpec optionSpecs[]
      {TK_OPTION_STRING, "-listvariable", "listVariable", "Variable",
  	 DEF_LISTBOX_LIST_VARIABLE, -1, Tk_Offset(Listbox, listVarName),
  	 TK_OPTION_NULL_OK, 0, 0},
@@ -18,15 +19,15 @@
      {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, -1, 0, 0, 0}
  };
  
-@@ -435,6 +439,7 @@
+@@ -430,6 +434,7 @@ static char *		ListboxListVarProc(Client
  			    const char *name2, int flags);
  static void		MigrateHashEntries(Tcl_HashTable *table,
  			    int first, int last, int offset);
-+static int      GetMaxOffset(Listbox *listPtr);
++static int              GetMaxOffset(Listbox *listPtr);
  
  /*
   * The structure below defines button class behavior by means of procedures
-@@ -545,6 +550,8 @@
+@@ -542,6 +547,8 @@ Tk_ListboxObjCmd(
      listPtr->cursor		 = None;
      listPtr->state		 = STATE_NORMAL;
      listPtr->gray		 = None;
@@ -35,7 +36,7 @@
  
      /*
       * Keep a hold of the associated tkwin until we destroy the listbox,
-@@ -571,6 +578,13 @@
+@@ -568,6 +575,13 @@ Tk_ListboxObjCmd(
  	return TCL_ERROR;
      }
  
@@ -46,19 +47,28 @@
 +        listPtr->xOffset -= listPtr->xOffset % listPtr->xScrollUnit;
 +    }
 +
-     Tcl_SetObjResult(interp, TkNewWindowObj(listPtr->tkwin));
+     Tcl_SetResult(interp, Tk_PathName(listPtr->tkwin), TCL_STATIC);
      return TCL_OK;
  }
-@@ -1110,7 +1124,7 @@
+@@ -1112,8 +1126,7 @@ ListboxBboxSubCmd(
+ 	stringRep = Tcl_GetStringFromObj(el, &stringLen);
  	Tk_GetFontMetrics(listPtr->tkfont, &fm);
  	pixelWidth = Tk_TextWidth(listPtr->tkfont, stringRep, stringLen);
- 
+-
 -	x = listPtr->inset + listPtr->selBorderWidth - listPtr->xOffset;
-+    x = listPtr->inset + listPtr->selBorderWidth - listPtr->xOffset;
++        x = listPtr->inset + listPtr->selBorderWidth - listPtr->xOffset;
  	y = ((index - listPtr->topIndex)*listPtr->lineHeight)
  		+ listPtr->inset + listPtr->selBorderWidth;
- 	results[0] = Tcl_NewIntObj(x);
-@@ -1837,6 +1851,7 @@
+ 	sprintf(buf, "%d %d %d %d", x, y, pixelWidth, fm.linespace);
+@@ -1549,7 +1562,6 @@ ConfigureListbox(
+     Tcl_Obj *oldListObj = NULL;
+     Tcl_Obj *errorResult = NULL;
+     int oldExport, error;
+-
+     oldExport = listPtr->exportSelection;
+     if (listPtr->listVarName != NULL) {
+ 	Tcl_UntraceVar(interp, listPtr->listVarName,
+@@ -1843,6 +1855,7 @@ DisplayListbox(
  				 * or right edge of the listbox is
  				 * off-screen. */
      Pixmap pixmap;
@@ -66,15 +76,15 @@
  
      listPtr->flags &= ~REDRAW_PENDING;
      if (listPtr->flags & LISTBOX_DELETED) {
-@@ -2055,12 +2070,22 @@
+@@ -2062,12 +2075,22 @@ DisplayListbox(
  	/*
  	 * Draw the actual text of this item.
  	 */
-+    Tcl_ListObjIndex(listPtr->interp, listPtr->listObj, i, &curElement);
-+    stringRep = Tcl_GetStringFromObj(curElement, &stringLen);
-+    Tk_ComputeTextLayout(listPtr->tkfont,
-+            stringRep, stringLen, 0,
-+            listPtr->justify, TK_IGNORE_NEWLINES, &totalLength, &height);
++        Tcl_ListObjIndex(listPtr->interp, listPtr->listObj, i, &curElement);
++        stringRep = Tcl_GetStringFromObj(curElement, &stringLen);
++        Tk_ComputeTextLayout(listPtr->tkfont,
++                stringRep, stringLen, 0,
++                listPtr->justify, TK_IGNORE_NEWLINES, &totalLength, &height);
  
  	Tk_GetFontMetrics(listPtr->tkfont, &fm);
  	y += fm.ascent + listPtr->selBorderWidth;
@@ -82,25 +92,25 @@
 -	Tcl_ListObjIndex(listPtr->interp, listPtr->listObj, i, &curElement);
 -	stringRep = Tcl_GetStringFromObj(curElement, &stringLen);
 +
-+    if (listPtr->justify == TK_JUSTIFY_LEFT) {
-+        x = listPtr->inset + listPtr->selBorderWidth - listPtr->xOffset;
-+    } else if (listPtr->justify == TK_JUSTIFY_RIGHT) {
-+        x = width - totalLength - listPtr->inset - listPtr->selBorderWidth - listPtr->xOffset + GetMaxOffset(listPtr) - 1;
-+    } else {
-+        x = (width + GetMaxOffset(listPtr))/2 - totalLength/2 - listPtr->xOffset;
-+    }
++        if (listPtr->justify == TK_JUSTIFY_LEFT) {
++            x = listPtr->inset + listPtr->selBorderWidth - listPtr->xOffset;
++        } else if (listPtr->justify == TK_JUSTIFY_RIGHT) {
++            x = width - totalLength - listPtr->inset - listPtr->selBorderWidth - listPtr->xOffset + GetMaxOffset(listPtr) - 1;
++        } else {
++            x = (width + GetMaxOffset(listPtr))/2 - totalLength/2 - listPtr->xOffset;
++        }
  	Tk_DrawChars(listPtr->display, pixmap, gc, listPtr->tkfont,
  		stringRep, stringLen, x, y);
  
-@@ -2581,6 +2606,7 @@
+@@ -2588,6 +2611,7 @@ ListboxEventProc(
      ClientData clientData,	/* Information about window. */
      XEvent *eventPtr)		/* Information about event. */
  {
 +    int tmpOffset, tmpOffset2, maxOffset;
-     Listbox *listPtr = clientData;
+     Listbox *listPtr = (Listbox *) clientData;
  
      if (eventPtr->type == Expose) {
-@@ -2612,6 +2638,53 @@
+@@ -2619,8 +2643,54 @@ ListboxEventProc(
  	}
  	listPtr->flags |= UPDATE_V_SCROLLBAR|UPDATE_H_SCROLLBAR;
  	ChangeListboxView(listPtr, listPtr->topIndex);
@@ -152,9 +162,27 @@
 +            listPtr->oldMaxOffset = maxOffset;
 +        }
  	ChangeListboxOffset(listPtr, listPtr->xOffset);
- 
+-
  	/*
-@@ -3549,6 +3622,33 @@
+ 	 * Redraw the whole listbox. It's hard to tell what needs to be
+ 	 * redrawn (e.g. if the listbox has shrunk then we may only need to
+@@ -2853,7 +2923,6 @@ ChangeListboxOffset(
+      * Add half a scroll unit to do entry/text-like synchronization. [Bug
+      * #225025]
+      */
+-
+     offset += listPtr->xScrollUnit / 2;
+     maxOffset = listPtr->maxWidth - (Tk_Width(listPtr->tkwin) -
+ 	    2*listPtr->inset - 2*listPtr->selBorderWidth)
+@@ -3322,6 +3391,7 @@ ListboxUpdateHScrollbar(
+     }
+     windowWidth = Tk_Width(listPtr->tkwin) - 2*(listPtr->inset
+ 	    + listPtr->selBorderWidth);
++
+     if (listPtr->maxWidth == 0) {
+ 	first = 0;
+ 	last = 1.0;
+@@ -3552,6 +3622,33 @@ MigrateHashEntries(
  }
  
  /*

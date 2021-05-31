@@ -19,17 +19,18 @@ function printHelp {
     echo ""
     echo "Syntax:"
     echo " compile-<module>.sh [<options>]"
-    echo "Options (optional):"
-    echo " -debug: Compile using debug symbols."
+    echo "Options:"
+    echo " -debug: Compile using debug symbols and no optimizations."
+    echo " -symbols: Include debug symbols."
     echo " -clean: Delete old module compile directory before copying."
     echo " -forcecopy: Copy module sources to compile directory even if the directory already exists."
-    echo " -help: Print this help text."
+    echo " -h(elp): Print this help text."
 }
 ##
 ## helper functions
 
 ## module
-TCL_EXECREL=86
+TCL_EXECREL=85
 WISH=wish$TCL_EXECREL
 TCLSH=tclsh$TCL_EXECREL
 
@@ -39,6 +40,9 @@ while [ $INDEX -le $# ]; do
     case ${!INDEX} in
         "-debug")
             SW_DEBUG=1
+            ;;
+        "-symbols")
+            SW_SYMBOLS=1
             ;;
         "-nochlog")
             SW_NOCHLOG=1
@@ -53,7 +57,7 @@ while [ $INDEX -le $# ]; do
             let INDEX+=1
             SW_DUMMY=${!INDEX}
             ;;
-        "-help")
+        "-h"*)
             printHelp
             exit 1
             ;;
@@ -79,6 +83,7 @@ EXTSRCDIR=$SCRIPTDIR/external
 PATCHDIR=$SCRIPTDIR/patch
 TCLLIBDIR=$COMPILEDIR/tcllib
 TCLDIR=$COMPILEDIR/tcl
+TKDIR=$COMPILEDIR/tk
 SHAREDIR=$SCRIPTDIR/share
 LICENCEDIR=$SHAREDIR/licence
 CHANGELOGDIR=$SHAREDIR/changelog
@@ -101,7 +106,7 @@ else
     ## windows platform
     LIBEXT=.dll
     ## find location of postgres
-    for PGDIR in "D:/Programs/PostgreSQL" "C:/Program Files/PostgreSQL/9.2"; do
+    for PGDIR in "C:/Program Files/PostgreSQL/11" "C:/Program Files/PostgreSQL/9.5" "D:/Programs/PostgreSQL" "C:/Program Files/PostgreSQL/9.4" "C:/Program Files/PostgreSQL/9.3" "C:/Program Files/PostgreSQL/9.2"; do
         if [ -e "$PGDIR" ]; then break; fi
     done
     OSSLDIR="D:/Programs/OpenSSL-Win32"
@@ -113,7 +118,7 @@ else
     if [ ${PIPESTATUS[1]} -eq 0 ]; then
         BARCH="x86_64"
     else
-BARCH=$(uname -m)
+        BARCH=$(uname -m)
     fi
 fi
 

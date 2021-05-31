@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_AsyncCreate manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Async</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Async</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Async.htm#M2" NAME="L36">NAME</A>
-<DL><DD>Tcl_AsyncCreate, Tcl_AsyncMark, Tcl_AsyncInvoke, Tcl_AsyncDelete, Tcl_AsyncReady &mdash; handle asynchronous events</DD></DL>
-<DD><A HREF="Async.htm#M3" NAME="L37">SYNOPSIS</A>
+<DD><A HREF="Async.htm#M2" NAME="L33">NAME</A>
+<DL><DD>Tcl_AsyncCreate, Tcl_AsyncMark, Tcl_AsyncInvoke, Tcl_AsyncDelete, Tcl_AsyncReady - handle asynchronous events</DD></DL>
+<DD><A HREF="Async.htm#M3" NAME="L34">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>Tcl_AsyncHandler
@@ -20,15 +20,15 @@
 <DD>int
 <DD><B>Tcl_AsyncReady</B>()
 </DL>
-<DD><A HREF="Async.htm#M4" NAME="L38">ARGUMENTS</A>
+<DD><A HREF="Async.htm#M4" NAME="L35">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Async.htm#M5" NAME="L39">DESCRIPTION</A>
-<DD><A HREF="Async.htm#M6" NAME="L40">WARNING</A>
-<DD><A HREF="Async.htm#M7" NAME="L41">KEYWORDS</A>
+<DD><A HREF="Async.htm#M5" NAME="L36">DESCRIPTION</A>
+<DD><A HREF="Async.htm#M6" NAME="L37">WARNING</A>
+<DD><A HREF="Async.htm#M7" NAME="L38">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_AsyncCreate, Tcl_AsyncMark, Tcl_AsyncInvoke, Tcl_AsyncDelete, Tcl_AsyncReady &mdash; handle asynchronous events
+Tcl_AsyncCreate, Tcl_AsyncMark, Tcl_AsyncInvoke, Tcl_AsyncDelete, Tcl_AsyncReady - handle asynchronous events
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 Tcl_AsyncHandler<BR>
@@ -92,12 +92,10 @@ the world is in a safe state, and <I>proc</I> can then carry out
 the actions associated with the asynchronous event.
 <I>Proc</I> should have arguments and result that match the
 type <B>Tcl_AsyncProc</B>:
-<P>
-<PRE>typedef int <B>Tcl_AsyncProc</B>(
+<PRE>typedef int Tcl_AsyncProc(
         ClientData <I>clientData</I>,
         <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
         int <I>code</I>);</PRE>
-<P>
 The <I>clientData</I> will be the same as the <I>clientData</I>
 argument passed to <B>Tcl_AsyncCreate</B> when the handler was
 created.
@@ -167,7 +165,8 @@ and then returning the <I>code</I> argument.
 
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#asynchronous event">asynchronous event</A>, <A href="../Keywords/H.htm#handler">handler</A>, <A href="../Keywords/S.htm#signal">signal</A>, <A href="../Keywords/T.htm#Tcl_SaveInterpState">Tcl_SaveInterpState</A>, <A href="../Keywords/T.htm#thread">thread</A>
-<div class="copy">Copyright &copy; 1989-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1989-1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -3,45 +3,45 @@
 <HEAD><TITLE>registry manual page - Tcl Bundled Packages</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> registry</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> registry</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="registry.htm#M2" NAME="L1569">NAME</A>
-<DL><DD>registry &mdash; Manipulate the Windows registry</DD></DL>
-<DD><A HREF="registry.htm#M3" NAME="L1570">SYNOPSIS</A>
+<DD><A HREF="registry.htm#M2" NAME="L1374">NAME</A>
+<DL><DD>registry - Manipulate the Windows registry</DD></DL>
+<DD><A HREF="registry.htm#M3" NAME="L1375">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="registry.htm#M4" NAME="L1571">DESCRIPTION</A>
+<DD><A HREF="registry.htm#M4" NAME="L1376">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="registry.htm#M5" NAME="L1572"><B>registry broadcast </B><I>keyName</I> ?<B>-timeout </B><I>milliseconds</I>?</A>
-<DD><A HREF="registry.htm#M6" NAME="L1573"><B>registry delete </B><I>keyName</I> ?<I>valueName</I>?</A>
-<DD><A HREF="registry.htm#M7" NAME="L1574"><B>registry get </B><I>keyName valueName</I></A>
-<DD><A HREF="registry.htm#M8" NAME="L1575"><B>registry keys </B><I>keyName</I> ?<I>pattern</I>?</A>
-<DD><A HREF="registry.htm#M9" NAME="L1576"><B>registry set </B><I>keyName</I> ?<I>valueName data </I>?<I>type</I>??</A>
-<DD><A HREF="registry.htm#M10" NAME="L1577"><B>registry type </B><I>keyName valueName</I></A>
-<DD><A HREF="registry.htm#M11" NAME="L1578"><B>registry values </B><I>keyName</I> ?<I>pattern</I>?</A>
+<DD><A HREF="registry.htm#M5" NAME="L1377"><B>registry broadcast </B><I>keyName</I> ?<B>-timeout </B><I>milliseconds</I>?</A>
+<DD><A HREF="registry.htm#M6" NAME="L1378"><B>registry delete </B><I>keyName</I> ?<I>valueName</I>?</A>
+<DD><A HREF="registry.htm#M7" NAME="L1379"><B>registry get </B><I>keyName valueName</I></A>
+<DD><A HREF="registry.htm#M8" NAME="L1380"><B>registry keys </B><I>keyName</I> ?<I>pattern</I>?</A>
+<DD><A HREF="registry.htm#M9" NAME="L1381"><B>registry set </B><I>keyName</I> ?<I>valueName data </I>?<I>type</I>??</A>
+<DD><A HREF="registry.htm#M10" NAME="L1382"><B>registry type </B><I>keyName valueName</I></A>
+<DD><A HREF="registry.htm#M11" NAME="L1383"><B>registry values </B><I>keyName</I> ?<I>pattern</I>?</A>
 </DL>
-<DD><A HREF="registry.htm#M12" NAME="L1579">SUPPORTED TYPES</A>
+<DD><A HREF="registry.htm#M12" NAME="L1384">SUPPORTED TYPES</A>
 <DL class="supported types">
-<DD><A HREF="registry.htm#M13" NAME="L1580"><B>binary</B></A>
-<DD><A HREF="registry.htm#M14" NAME="L1581"><B>none</B></A>
-<DD><A HREF="registry.htm#M15" NAME="L1582"><B>sz</B></A>
-<DD><A HREF="registry.htm#M16" NAME="L1583"><B>expand_sz</B></A>
-<DD><A HREF="registry.htm#M17" NAME="L1584"><B>dword</B></A>
-<DD><A HREF="registry.htm#M18" NAME="L1585"><B>dword_big_endian</B></A>
-<DD><A HREF="registry.htm#M19" NAME="L1586"><B>link</B></A>
-<DD><A HREF="registry.htm#M20" NAME="L1587"><B>multi_sz</B></A>
-<DD><A HREF="registry.htm#M21" NAME="L1588"><B>resource_list</B></A>
+<DD><A HREF="registry.htm#M13" NAME="L1385"><B>binary</B></A>
+<DD><A HREF="registry.htm#M14" NAME="L1386"><B>none</B></A>
+<DD><A HREF="registry.htm#M15" NAME="L1387"><B>sz</B></A>
+<DD><A HREF="registry.htm#M16" NAME="L1388"><B>expand_sz</B></A>
+<DD><A HREF="registry.htm#M17" NAME="L1389"><B>dword</B></A>
+<DD><A HREF="registry.htm#M18" NAME="L1390"><B>dword_big_endian</B></A>
+<DD><A HREF="registry.htm#M19" NAME="L1391"><B>link</B></A>
+<DD><A HREF="registry.htm#M20" NAME="L1392"><B>multi_sz</B></A>
+<DD><A HREF="registry.htm#M21" NAME="L1393"><B>resource_list</B></A>
 </DL>
-<DD><A HREF="registry.htm#M22" NAME="L1589">PORTABILITY ISSUES</A>
-<DD><A HREF="registry.htm#M23" NAME="L1590">EXAMPLE</A>
-<DD><A HREF="registry.htm#M24" NAME="L1591">KEYWORDS</A>
+<DD><A HREF="registry.htm#M22" NAME="L1394">PORTABILITY ISSUES</A>
+<DD><A HREF="registry.htm#M23" NAME="L1395">EXAMPLE</A>
+<DD><A HREF="registry.htm#M24" NAME="L1396">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-registry &mdash; Manipulate the Windows registry
+registry - Manipulate the Windows registry
 <H3><A NAME="M3">SYNOPSIS</A></H3>
-<B>package require registry 1.3</B><BR>
-<B>registry </B>?<I>-mode</I>? <I>option</I> <I>keyName</I> ?<I>arg arg ...</I>?<BR>
+<B>package require registry 1.1</B><BR>
+<B>registry </B><I>option</I> <I>keyName</I> ?<I>arg arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 The <B>registry</B> package provides a general set of operations for
 manipulating the Windows registry.  The package implements the
@@ -67,12 +67,6 @@ one of <B>HKEY_LOCAL_MACHINE</B>, <B>HKEY_USERS</B>,
 <B>HKEY_CURRENT_CONFIG</B>, <B>HKEY_PERFORMANCE_DATA</B>, or
 <B>HKEY_DYN_DATA</B>.  The <I>keypath</I> can be one or more
 registry key names separated by backslash (<B>&#92;</B>) characters.
-<P>
-The optional <I>-mode</I> argument indicates which registry to work
-with; when it is <B>-32bit</B> the 32-bit registry will be used, and
-when it is <B>-64bit</B> the 64-bit registry will be used. If this
-argument is omitted, the system's default registry will be the subject
-of the requested operation.
 <P>
 <I>Option</I> indicates what to do with the registry key name.  Any
 unique abbreviation for <I>option</I> is acceptable.  The valid options
@@ -110,12 +104,12 @@ did not exist, the command has no effect.
 Returns the data associated with the value <I>valueName</I> under the key
 <I>keyName</I>.  If either the key or the value does not exist, then an
 error is generated.  For more details on the format of the returned
-data, see <B><A HREF="#M12">SUPPORTED TYPES</A></B>, below.
+data, see <B>SUPPORTED TYPES</B>, below.
 <P><DT><A NAME="M8"><B>registry keys </B><I>keyName</I> ?<I>pattern</I>?</A><DD>
 If <I>pattern</I> is not specified, returns a list of names of all the
 subkeys of <I>keyName</I>.  If <I>pattern</I> is specified, only those
 names matching <I>pattern</I> are returned.  Matching is determined
-using the same rules as for <B><A HREF="../TclCmd/string.htm">string match</A></B>.  If the
+using the same rules as for <B><A HREF="../TclCmd/string.htm">string</A></B> <B>match</B>.  If the
 specified <I>keyName</I> does not exist, then an error is generated.
 <P><DT><A NAME="M9"><B>registry set </B><I>keyName</I> ?<I>valueName data </I>?<I>type</I>??</A><DD>
 If <I>valueName</I> is not specified, creates the key <I>keyName</I> if
@@ -124,16 +118,16 @@ the key <I>keyName</I> and value <I>valueName</I> if necessary.  The
 contents of <I>valueName</I> are set to <I>data</I> with the type
 indicated by <I>type</I>.  If <I>type</I> is not specified, the type
 <B>sz</B> is assumed.  For more details on the data and type arguments,
-see <B><A HREF="#M12">SUPPORTED TYPES</A></B> below.
+see <B>SUPPORTED TYPES</B> below.
 <P><DT><A NAME="M10"><B>registry type </B><I>keyName valueName</I></A><DD>
 Returns the type of the value <I>valueName</I> in the key
 <I>keyName</I>.  For more information on the possible types, see
-<B><A HREF="#M12">SUPPORTED TYPES</A></B>, below.
+<B>SUPPORTED TYPES</B>, below.
 <P><DT><A NAME="M11"><B>registry values </B><I>keyName</I> ?<I>pattern</I>?</A><DD>
 If <I>pattern</I> is not specified, returns a list of names of all the
 values of <I>keyName</I>.  If <I>pattern</I> is specified, only those
 names matching <I>pattern</I> are returned.  Matching is determined
-using the same rules as for <B><A HREF="../TclCmd/string.htm">string match</A></B>.
+using the same rules as for <B><A HREF="../TclCmd/string.htm">string</A></B> <B>match</B>.
 <P></DL>
 <H3><A NAME="M12">SUPPORTED TYPES</A></H3>
 Each value under a key in the registry contains some data of a
@@ -203,7 +197,8 @@ set command [<B>registry get</B> $path {}]
 puts &quot;$ext opens with $command&quot;</PRE>
 <H3><A NAME="M24">KEYWORDS</A></H3>
 <A href="../Keywords/R.htm#registry">registry</A>
-<div class="copy">Copyright &copy; 1997 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1997 Sun Microsystems, Inc.
 Copyright &copy; 2002 ActiveState Corporation.
 </div>
 </BODY></HTML>

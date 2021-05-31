@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+   <TITLE>TclExcept - throw</TITLE>
+</HEAD>
+<BODY>
+
+<H3>
+NAME</H3>
+throw - Throw an exception
+<H3>
+SYNOPSIS</H3>
+
+<PRE><B>throw</B><I> type message</I></PRE>
+<PRE><B>throw</B></PRE>
+
+<H3>
+DESCRIPTION</H3>
+The <B>throw</B> command is used to report exceptional conditions (<I>exceptions</I>)
+from within a Tcl script. It is intended to be used in conjunction with
+the <B><A HREF="try.htm">try</A></B> command.
+
+<P>This command is similar to the Tcl built-in <B>error</B> command. It
+generates an error that is propagated through the call stack, until it
+is caught by a <B>catch</B> or <B><A HREF="try.htm">try</A></B> statement.
+The use of <B>throw</B> is compatible with standard Tcl error handling.
+Exceptions are regular Tcl errors, thus are compatible with existing code
+that uses standard <B>error</B> and <B>catch</B> mechanism.
+
+<P>In its first form, <B>throw</B> takes 2 arguments:
+<DL>
+<DT>
+<B>type</B></DT>
+
+<DD>
+the exception type. This is an arbitrary Tcl string that indicates the
+type of the thrown exception. You can also declare the exception type
+to be a subtype of another by mean of the 
+<A HREF="exception.htm"><B>exception</B></A> command</DD>.
+
+<DT>
+<B>message</B></DT>
+
+<DD>
+a human-readable description of the exception.</DD>
+</DL>
+For example:
+<UL>
+<PRE><B>throw MyException "something very strange just happened..."</B></PRE>
+</UL>
+will throw an exception of type <B>MyException</B>, and the description
+of the exception will be <B>"something very strange just happened..."</B>.
+
+<P>
+The second form is used to re-throw the currently caught exception from within
+<B>try</B> blocks. It can be very useful when <B>catch</B> clauses want to 
+further propagate the caught exception while keeping the original exception
+information (ie the <B>errorInfo</B> variable). A re-thrown exception looks like
+it wasn't caught by the <B>try</B> block. Invoking this form when no
+exception is currently being caught raises an error.
+
+<P><B>Throw</B> uses the standard error handling mechanism by positionning
+the <B>errorCode</B> Tcl global variable and returning an error status.
+More precisely, it uses the <B>return</B> command with <B>-code</B> and
+<B>-errorcode</B> options. The return value uses the following format:
+<UL>
+<PRE><I>exceptionType</I><B> exception thrown: </B><I>msg</I></PRE>
+</UL>
+The <B>errorCode</B> variable uses this format:
+<UL>
+<PRE><B>EXCEPTION </B><I>exceptionType msg</I></PRE>
+</UL>
+This format is very similar to those used by the Tcl core, such as POSIX
+or ARITH errors (see <B>tclvars</B>).
+
+<P>When thrown, the exception will be propagated until it reaches a <B>catch</B>
+or <B><A HREF="try.htm">try</A></B> statement. In the latter case, if the
+exception type matches one that is handled by the <B>try</B> statement,
+then the exception is caught, else its propagation goes on.
+<H3>
+SEE ALSO</H3>
+catch(n), error(n), return(n), <A HREF="try.htm">try</A>, 
+<A HREF="exception.htm">exception</A>
+<H3>
+KEYWORDS</H3>
+error, exception
+</BODY>
+</HTML>

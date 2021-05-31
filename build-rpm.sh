@@ -7,9 +7,6 @@ VERSION=1.4
 MANUFACT="(c) 2018 ATOS"
 AUTHORS="Thomas Perschak"
 
-## defaults
-SCRIPTDIR=$(cd $(dirname $0); pwd)
-
 ## helper functions
 ##
 function printHelp {
@@ -19,14 +16,18 @@ function printHelp {
     echo ""
     echo "Syntax:"
     echo " build-rpm.sh [<options>]"
-    echo "Options (optional):"
+    echo "Options:"
     echo " -title <name>: Additional title to be added to the filename."
     echo " -skey <key>: Key to sign the package."
     echo " -changelog: Update changelog file."
-    echo " -help: Print this help text."
+    echo " -h(elp): Print this help text."
 }
 ##
 ## helper functions
+
+## switch into script directory
+SCRIPTDIR=$(cd $(dirname $0); pwd)
+cd $SCRIPTDIR
 
 ## forward options
 FOPTIONS=""
@@ -50,7 +51,10 @@ while [ $INDEX -le $# ]; do
             let INDEX+=1
             FOPTIONS="$FOPTIONS -skey ${!INDEX}"
             ;;
-        "-help")
+        "-changelog")
+            ACTIONCHANGELOG=1
+            ;;
+        "-h"*)
             printHelp
             exit 1
             ;;
@@ -62,10 +66,16 @@ while [ $INDEX -le $# ]; do
 done
 
 ## check if gse4-service directory exists
-if [ ! -d $SCRIPTDIR/../gse4-service ]; then
+if [ ! -d ../gse4-service ]; then
     echo "Missing ../gse4-service" >&2
     echo "Clone /cmdata/git/products/gse4-service.git into ../gse4-service to get the build environment." >&2
     exit 1
+fi
+
+## update the changelog file
+if [ -n "$ACTIONCHANGELOG" ]; then
+    echo "Updating changelog file ..."
+    ../gse4-service/scripts/git-change.sh -dir .
 fi
 
 ## create a new rpmspec from template
@@ -79,12 +89,12 @@ RPMRELEASE=$(./$BINFOLDER/bin/tclsh ./temp)
 rm ./temp
 
 ## get TCL pointer size which indicates 32bit or 64bit builds
-echo "puts \$tcl_platform(pointerSize)" > $SCRIPTDIR/temp
-POINTSIZE=$($SCRIPTDIR/$BINFOLDER/bin/tclsh $SCRIPTDIR/temp)
-rm $SCRIPTDIR/temp
+echo "puts \$tcl_platform(pointerSize)" > ./temp
+POINTSIZE=$(./$BINFOLDER/bin/tclsh ./temp)
+rm ./temp
 
 ## get installed libraries
-TCLLIBS=$(cd $SCRIPTDIR/$BINFOLDER/lib; for i in $(ls -d */); do echo -n "${i%%/} "; done)
+TCLLIBS=$(cd ./$BINFOLDER/lib; for i in $(ls -d */); do echo -n "${i%%/} "; done)
 
 ## get build information
 BUILDKERNELNAME=$(uname)
@@ -138,41 +148,29 @@ sed -i "s|%postfix%|$POSTFIX|g" ./rpmspec
 ## done collecting build infos
 echo done
 
-## create changelog
-## do this in braces to avoid stuff from common.sh
-(
-    ## load defaults
-    . ./common.sh
-    ## update the changelog file
-    $SCRIPTDIR/../gse4-service/scripts/git-change.sh -dir $SCRIPTDIR
-    ## make a local copy
-    cp $SCRIPTDIR/debian/changelog $CHANGELOGDIR/${DEBNAME}.changelog
-)
 ## do some cleanup
-echo -n "Doing some cleanup ... "
-find $SCRIPTDIR/$BINFOLDER -name "*~" | xargs rm -f
-echo done
+find ./$BINFOLDER -name "*~" | xargs rm -f
 
 ## plattform specific
 if [ -z "$WINDIR" ]; then
     ## execute build
-    mkdir -p $SCRIPTDIR/../rpm
-    cp -r $SCRIPTDIR/config $SCRIPTDIR/$BINFOLDER/share/
-    $SCRIPTDIR/../gse4-service/scripts/build-rpm.sh -indir $SCRIPTDIR/$BINFOLDER -outdir $SCRIPTDIR/../rpm -rpm $SCRIPTDIR/rpmspec -file $RPMFILE -prefix $PREFIX -postfix $POSTFIX $FOPTIONS
+    mkdir -p ../rpm
+    cp -r ./config ./$BINFOLDER/share/
+    ../gse4-service/scripts/build-rpm.sh -indir ./$BINFOLDER -outdir ../rpm -rpm ./rpmspec -file $RPMFILE -prefix $PREFIX -postfix $POSTFIX $FOPTIONS
 else
     POSTFIX=$RPMNAME-$RPMVERSION-$RPMRELEASE
     ## name folder to release version
-    mv -f $SCRIPTDIR/$BINFOLDER $SCRIPTDIR/$POSTFIX | true
+    mv -f ./$BINFOLDER ./$POSTFIX | true
     
     ## compress to tgz file
     echo -n "Compressing ../rpm/$RPMFILE.tgz ... "
-    mkdir -p $SCRIPTDIR/../rpm
-    (cd $SCRIPTDIR; tar -czf ../rpm/$RPMFILE.tgz ./$POSTFIX | true)
+    mkdir -p ../rpm
+    tar -czf ../rpm/$RPMFILE.tgz ./$POSTFIX | true
     echo done
 
     ## undo folder renaming
-    mv -f $SCRIPTDIR/$POSTFIX $SCRIPTDIR/$BINFOLDER
+    mv -f ./$POSTFIX ./$BINFOLDER
 fi
 
 ## delete old rpmspec
-rm $SCRIPTDIR/rpmspec
+rm ./rpmspec

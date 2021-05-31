@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_LimitCheck manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Limit</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Limit</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Limit.htm#M2" NAME="L436">NAME</A>
-<DL><DD>Tcl_LimitAddHandler, Tcl_LimitCheck, Tcl_LimitExceeded, Tcl_LimitGetCommands, Tcl_LimitGetGranularity, Tcl_LimitGetTime, Tcl_LimitReady, Tcl_LimitRemoveHandler, Tcl_LimitSetCommands, Tcl_LimitSetGranularity, Tcl_LimitSetTime, Tcl_LimitTypeEnabled, Tcl_LimitTypeExceeded, Tcl_LimitTypeReset, Tcl_LimitTypeSet &mdash; manage and check resource limits on interpreters</DD></DL>
-<DD><A HREF="Limit.htm#M3" NAME="L437">SYNOPSIS</A>
+<DD><A HREF="Limit.htm#M2" NAME="L407">NAME</A>
+<DL><DD>Tcl_LimitAddHandler, Tcl_LimitCheck, Tcl_LimitExceeded, Tcl_LimitGetCommands, Tcl_LimitGetGranularity, Tcl_LimitGetTime, Tcl_LimitReady, Tcl_LimitRemoveHandler, Tcl_LimitSetCommands, Tcl_LimitSetGranularity, Tcl_LimitSetTime, Tcl_LimitTypeEnabled, Tcl_LimitTypeExceeded, Tcl_LimitTypeReset, Tcl_LimitTypeSet - manage and check resource limits on interpreters</DD></DL>
+<DD><A HREF="Limit.htm#M3" NAME="L408">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>int
@@ -42,17 +42,17 @@
 <DD>void
 <DD><B>Tcl_LimitRemoveHandler</B>(<I>interp, type, handlerProc, clientData</I>)
 </DL>
-<DD><A HREF="Limit.htm#M4" NAME="L438">ARGUMENTS</A>
+<DD><A HREF="Limit.htm#M4" NAME="L409">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Limit.htm#M5" NAME="L439">DESCRIPTION</A>
-<DD><A HREF="Limit.htm#M6" NAME="L440">LIMIT CHECKING API</A>
-<DD><A HREF="Limit.htm#M7" NAME="L441">LIMIT CONFIGURATION</A>
-<DD><A HREF="Limit.htm#M8" NAME="L442">LIMIT CALLBACKS</A>
-<DD><A HREF="Limit.htm#M9" NAME="L443">KEYWORDS</A>
+<DD><A HREF="Limit.htm#M5" NAME="L410">DESCRIPTION</A>
+<DD><A HREF="Limit.htm#M6" NAME="L411">LIMIT CHECKING API</A>
+<DD><A HREF="Limit.htm#M7" NAME="L412">LIMIT CONFIGURATION</A>
+<DD><A HREF="Limit.htm#M8" NAME="L413">LIMIT CALLBACKS</A>
+<DD><A HREF="Limit.htm#M9" NAME="L414">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_LimitAddHandler, Tcl_LimitCheck, Tcl_LimitExceeded, Tcl_LimitGetCommands, Tcl_LimitGetGranularity, Tcl_LimitGetTime, Tcl_LimitReady, Tcl_LimitRemoveHandler, Tcl_LimitSetCommands, Tcl_LimitSetGranularity, Tcl_LimitSetTime, Tcl_LimitTypeEnabled, Tcl_LimitTypeExceeded, Tcl_LimitTypeReset, Tcl_LimitTypeSet &mdash; manage and check resource limits on interpreters
+Tcl_LimitAddHandler, Tcl_LimitCheck, Tcl_LimitExceeded, Tcl_LimitGetCommands, Tcl_LimitGetGranularity, Tcl_LimitGetTime, Tcl_LimitReady, Tcl_LimitRemoveHandler, Tcl_LimitSetCommands, Tcl_LimitSetGranularity, Tcl_LimitSetTime, Tcl_LimitTypeEnabled, Tcl_LimitTypeExceeded, Tcl_LimitTypeReset, Tcl_LimitTypeSet - manage and check resource limits on interpreters
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 int<BR>
@@ -96,7 +96,7 @@ The type of limit that the operation refers to.  This must be either
 <P><DT>int <B>commandLimit</B> (in)<DD>
 The maximum number of commands (as reported by <B><A HREF="../TclCmd/info.htm">info cmdcount</A></B>)
 that may be executed in the interpreter.
-<P><DT><A HREF="../TclLib/GetTime.htm">Tcl_Time</A> <B>*timeLimitPtr</B> (in/out)<DD>
+<P><DT>Tcl_Time <B>*timeLimitPtr</B> (in/out)<DD>
 A pointer to a structure that will either have the new time limit read
 from (<B>Tcl_LimitSetTime</B>) or the current time limit written to
 (<B>Tcl_LimitGetTime</B>).
@@ -146,8 +146,8 @@ that error.  It is up to the context that started execution in that
 interpreter (typically a master interpreter) to handle the error.
 <H3><A NAME="M6">LIMIT CHECKING API</A></H3>
 To check the resource limits for an interpreter, call
-<B>Tcl_LimitCheck</B>, which returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> if the limit was not
-exceeded (after processing callbacks) and <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> if the limit was
+<B>Tcl_LimitCheck</B>, which returns <B>TCL_OK</B> if the limit was not
+exceeded (after processing callbacks) and <B>TCL_ERROR</B> if the limit was
 exceeded (in which case an error message is also placed in the
 interpreter result).  That function should only be called when
 <B>Tcl_LimitReady</B> returns non-zero so that granularity policy is
@@ -171,7 +171,7 @@ The level of a command limit may be set using
 <B>Tcl_LimitSetCommands</B>, and retrieved using
 <B>Tcl_LimitGetCommands</B>.  Similarly for a time limit with
 <B>Tcl_LimitSetTime</B> and <B>Tcl_LimitGetTime</B> respectively, but
-with that API the time limit is copied from and to the <A HREF="../TclLib/GetTime.htm">Tcl_Time</A>
+with that API the time limit is copied from and to the Tcl_Time
 structure that the <I>timeLimitPtr</I> argument points to.
 <P>
 The checking granularity for a particular limit may be set using
@@ -184,7 +184,7 @@ To add a handler callback to be invoked when a limit is exceeded, call
 the function that will actually be called; it should have the
 following prototype:
 <P>
-<PRE>typedef void <B>Tcl_LimitHandlerProc</B>(
+<PRE>typedef void Tcl_LimitHandlerProc(
         ClientData <I>clientData</I>,
         <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>);</PRE>
 <P>
@@ -199,7 +199,7 @@ function to call to delete the <I>clientData</I> value.  It may be
 <B><A HREF="../TclLib/Alloc.htm">Tcl_Free</A></B>.  Otherwise, it should refer to a function with the
 following prototype:
 <P>
-<PRE>typedef void <B>Tcl_LimitHandlerDeleteProc</B>(
+<PRE>typedef void Tcl_LimitHandlerDeleteProc(
         ClientData <I>clientData</I>);</PRE>
 <P>
 A limit handler may be deleted using <B>Tcl_LimitRemoveHandler</B>; the
@@ -208,8 +208,10 @@ with <B>Tcl_LimitAddHandler</B>) with exactly matching <I>type</I>,
 <I>handlerProc</I> and <I>clientData</I> arguments.  This function
 always invokes the <I>deleteProc</I> on the <I>clientData</I> (unless
 the <I>deleteProc</I> was NULL or <B>TCL_STATIC</B>).
+
 <H3><A NAME="M9">KEYWORDS</A></H3>
 <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/R.htm#resource">resource</A>, <A href="../Keywords/L.htm#limit">limit</A>, <A href="../Keywords/C.htm#commands">commands</A>, <A href="../Keywords/T.htm#time">time</A>, <A href="../Keywords/C.htm#callback">callback</A>
-<div class="copy">Copyright &copy; 2004 Donal K. Fellows
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2004 Donal K. Fellows
 </div>
 </BODY></HTML>

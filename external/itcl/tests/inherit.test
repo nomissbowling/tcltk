@@ -13,8 +13,8 @@
 
 package require tcltest 2.1
 namespace import ::tcltest::test
+
 ::tcltest::loadTestedCommands
-package require itcl
 
 # ----------------------------------------------------------------------
 #  Test construction/destruction with inheritance
@@ -123,8 +123,7 @@ test inherit-1.7 {destruction ok if destructors are missing} {
     list [itcl::delete object test_cd_skip0] [set ::test_cd_watch]
 } {{} {{skip destruct} {bar destruct} {geek destruct}}}
 
-
-test inherit-1.8 {errors during construction are cleaned up and reported} knownBug {
+test inherit-1.8 {errors during construction are cleaned up and reported} {
     global errorInfo test_cd_watch
     set test_cd_watch ""
     itcl::body test_cd_bar::constructor {args} {error "bar: failed"}
@@ -141,8 +140,6 @@ test inherit-1.8 {errors during construction are cleaned up and reported} knownB
     invoked from within
 "eval test_cd_foobar::constructor 1 2 fred $x"
     while constructing object "::test_cd_mongrel1" in ::test_cd_mongrel::constructor (body line 2)
-    invoked from within
-"::itcl::parser::handleClass test_cd_mongrel ::test_cd_mongrel #auto bob"
     invoked from within
 "test_cd_mongrel #auto bob"} {{foo: 1 2} {mongrel destruct} {foobar destruct} {foo destruct} {bar destruct} {geek destruct}}}
 
@@ -328,19 +325,19 @@ test inherit-4.3 {"info class" should be virtual} {
     list [test_cd_mongrel0 info class] \
          [test_cd_mongrel0 test_cd_foo::do info class] \
          [test_cd_mongrel0 test_cd_geek::do info class]
-} {test_cd_mongrel ::test_cd_mongrel ::test_cd_mongrel}
+} {::test_cd_mongrel ::test_cd_mongrel ::test_cd_mongrel}
 
 test inherit-4.4 {"info inherit" depends on class scope} {
     list [test_cd_mongrel0 info inherit] \
          [test_cd_mongrel0 test_cd_foo::do info inherit] \
          [test_cd_mongrel0 test_cd_foobar::do info inherit]
-} {{test_cd_foobar test_cd_geek} {} {::test_cd_foo ::test_cd_bar}}
+} {{::test_cd_foobar ::test_cd_geek} {} {::test_cd_foo ::test_cd_bar}}
 
 test inherit-4.5 {"info heritage" depends on class scope} {
     list [test_cd_mongrel0 info heritage] \
          [test_cd_mongrel0 test_cd_foo::do info heritage] \
          [test_cd_mongrel0 test_cd_foobar::do info heritage]
-} {{test_cd_mongrel test_cd_foobar test_cd_foo test_cd_bar test_cd_geek} ::test_cd_foo {::test_cd_foobar ::test_cd_foo ::test_cd_bar}}
+} {{::test_cd_mongrel ::test_cd_foobar ::test_cd_foo ::test_cd_bar ::test_cd_geek} ::test_cd_foo {::test_cd_foobar ::test_cd_foo ::test_cd_bar}}
 
 test inherit-4.6 {built-in "isa" method works} {
     set status ""
@@ -566,8 +563,6 @@ test inherit-7.4 {cannot have more than one inherit statement} {
         }
     } msg] $msg
 } {1 {inheritance "test_inherit_base1 " already defined for class "::bogus"}}
-
-::itcl::delete class test_inherit_base1 test_inherit_base2
 
 # ----------------------------------------------------------------------
 #  Multiple base class error detection

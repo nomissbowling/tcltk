@@ -3,48 +3,48 @@
 <HEAD><TITLE>Tk_ParseArgv manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> ParseArgv</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> ParseArgv</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="ParseArgv.htm#M2" NAME="L488">NAME</A>
-<DL><DD>Tk_ParseArgv &mdash; process command-line options</DD></DL>
-<DD><A HREF="ParseArgv.htm#M3" NAME="L489">SYNOPSIS</A>
+<DD><A HREF="ParseArgv.htm#M2" NAME="L486">NAME</A>
+<DL><DD>Tk_ParseArgv - process command-line options</DD></DL>
+<DD><A HREF="ParseArgv.htm#M3" NAME="L487">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>int
 <DD><B>Tk_ParseArgv</B>(<I>interp, tkwin, argcPtr, argv, argTable, flags</I>)
 </DL>
-<DD><A HREF="ParseArgv.htm#M4" NAME="L490">ARGUMENTS</A>
+<DD><A HREF="ParseArgv.htm#M4" NAME="L488">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="ParseArgv.htm#M5" NAME="L491">DESCRIPTION</A>
+<DD><A HREF="ParseArgv.htm#M5" NAME="L489">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="ParseArgv.htm#M6" NAME="L492"><B>TK_ARGV_END</B></A>
-<DD><A HREF="ParseArgv.htm#M7" NAME="L493"><B>TK_ARGV_CONSTANT</B></A>
-<DD><A HREF="ParseArgv.htm#M8" NAME="L494"><B>TK_ARGV_INT</B></A>
-<DD><A HREF="ParseArgv.htm#M9" NAME="L495"><B>TK_ARGV_FLOAT</B></A>
-<DD><A HREF="ParseArgv.htm#M10" NAME="L496"><B>TK_ARGV_STRING</B></A>
-<DD><A HREF="ParseArgv.htm#M11" NAME="L497"><B>TK_ARGV_UID</B></A>
-<DD><A HREF="ParseArgv.htm#M12" NAME="L498"><B>TK_ARGV_CONST_OPTION</B></A>
-<DD><A HREF="ParseArgv.htm#M13" NAME="L499"><B>TK_ARGV_OPTION_VALUE</B></A>
-<DD><A HREF="ParseArgv.htm#M14" NAME="L500"><B>TK_ARGV_OPTION_NAME_VALUE</B></A>
-<DD><A HREF="ParseArgv.htm#M15" NAME="L501"><B>TK_ARGV_HELP</B></A>
-<DD><A HREF="ParseArgv.htm#M16" NAME="L502"><B>TK_ARGV_REST</B></A>
-<DD><A HREF="ParseArgv.htm#M17" NAME="L503"><B>TK_ARGV_FUNC</B></A>
-<DD><A HREF="ParseArgv.htm#M18" NAME="L504"><B>TK_ARGV_GENFUNC</B></A>
+<DD><A HREF="ParseArgv.htm#M6" NAME="L490"><B>TK_ARGV_END</B></A>
+<DD><A HREF="ParseArgv.htm#M7" NAME="L491"><B>TK_ARGV_CONSTANT</B></A>
+<DD><A HREF="ParseArgv.htm#M8" NAME="L492"><B>TK_ARGV_INT</B></A>
+<DD><A HREF="ParseArgv.htm#M9" NAME="L493"><B>TK_ARGV_FLOAT</B></A>
+<DD><A HREF="ParseArgv.htm#M10" NAME="L494"><B>TK_ARGV_STRING</B></A>
+<DD><A HREF="ParseArgv.htm#M11" NAME="L495"><B>TK_ARGV_UID</B></A>
+<DD><A HREF="ParseArgv.htm#M12" NAME="L496"><B>TK_ARGV_CONST_OPTION</B></A>
+<DD><A HREF="ParseArgv.htm#M13" NAME="L497"><B>TK_ARGV_OPTION_VALUE</B></A>
+<DD><A HREF="ParseArgv.htm#M14" NAME="L498"><B>TK_ARGV_OPTION_NAME_VALUE</B></A>
+<DD><A HREF="ParseArgv.htm#M15" NAME="L499"><B>TK_ARGV_HELP</B></A>
+<DD><A HREF="ParseArgv.htm#M16" NAME="L500"><B>TK_ARGV_REST</B></A>
+<DD><A HREF="ParseArgv.htm#M17" NAME="L501"><B>TK_ARGV_FUNC</B></A>
+<DD><A HREF="ParseArgv.htm#M18" NAME="L502"><B>TK_ARGV_GENFUNC</B></A>
 </DL>
-<DD><A HREF="ParseArgv.htm#M19" NAME="L505">FLAGS</A>
+<DD><A HREF="ParseArgv.htm#M19" NAME="L503">FLAGS</A>
 <DL class="flags">
-<DD><A HREF="ParseArgv.htm#M20" NAME="L506"><B>TK_ARGV_DONT_SKIP_FIRST_ARG</B></A>
-<DD><A HREF="ParseArgv.htm#M21" NAME="L507"><B>TK_ARGV_NO_ABBREV</B></A>
-<DD><A HREF="ParseArgv.htm#M22" NAME="L508"><B>TK_ARGV_NO_LEFTOVERS</B></A>
-<DD><A HREF="ParseArgv.htm#M23" NAME="L509"><B>TK_ARGV_NO_DEFAULTS</B></A>
+<DD><A HREF="ParseArgv.htm#M20" NAME="L504"><B>TK_ARGV_DONT_SKIP_FIRST_ARG</B></A>
+<DD><A HREF="ParseArgv.htm#M21" NAME="L505"><B>TK_ARGV_NO_ABBREV</B></A>
+<DD><A HREF="ParseArgv.htm#M22" NAME="L506"><B>TK_ARGV_NO_LEFTOVERS</B></A>
+<DD><A HREF="ParseArgv.htm#M23" NAME="L507"><B>TK_ARGV_NO_DEFAULTS</B></A>
 </DL>
-<DD><A HREF="ParseArgv.htm#M24" NAME="L510">EXAMPLE</A>
-<DD><A HREF="ParseArgv.htm#M25" NAME="L511">KEYWORDS</A>
+<DD><A HREF="ParseArgv.htm#M24" NAME="L508">EXAMPLE</A>
+<DD><A HREF="ParseArgv.htm#M25" NAME="L509">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_ParseArgv &mdash; process command-line options
+Tk_ParseArgv - process command-line options
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 int<BR>
@@ -53,7 +53,7 @@ int<BR>
 <DL class="arguments">
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter to use for returning error messages.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Window to use when arguments specify Tk options.  If NULL, then
 no Tk options will be processed.
 <P><DT>int <B>argcPtr</B> (in/out)<DD>
@@ -90,10 +90,10 @@ caller;  however, if the <B>TK_ARGV_DONT_SKIP_FIRST_ARG</B> bit is set in
 <I>flags</I> then <I>argv[0]</I> will be processed just like the other
 elements of <I>argv</I>.
 <P>
-<B>Tk_ParseArgv</B> normally returns the value <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.  If an error
-occurs while parsing the arguments, then <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and
-<B>Tk_ParseArgv</B> will leave an error message in the result of
-interpreter <I>interp</I> in the standard Tcl fashion.  In
+<B>Tk_ParseArgv</B> normally returns the value <B>TCL_OK</B>.  If an error
+occurs while parsing the arguments, then <B>TCL_ERROR</B> is returned and
+<B>Tk_ParseArgv</B> will leave an error message in <I>interp-&gt;result</I>
+in the standard Tcl fashion.  In
 the event of an error return, <I>*argvPtr</I> will not have been
 modified, but <I>argv</I> could have been partially modified.  The
 possible causes of errors are explained below.
@@ -101,12 +101,12 @@ possible causes of errors are explained below.
 The <I>argTable</I> array specifies the kinds of arguments that are
 expected;  each of its entries has the following structure:
 <PRE>typedef struct {
-    const char *<I>key</I>;
+    char *<I>key</I>;
     int <I>type</I>;
     char *<I>src</I>;
     char *<I>dst</I>;
-    const char *<I>help</I>;
-} <B>Tk_ArgvInfo</B>;</PRE>
+    char *<I>help</I>;
+} Tk_ArgvInfo;</PRE>
 The <I>key</I> field is a string such as
 &#8220;-display&#8221;
 or
@@ -208,9 +208,8 @@ specifiers of this type are ignored (as if they did not exist).
 <P><DT><A NAME="M15"><B>TK_ARGV_HELP</B></A><DD>
 When this kind of option is encountered, <B>Tk_ParseArgv</B> uses the
 <I>help</I> fields of <I>argTable</I> to format a message describing
-all the valid arguments.  The message is placed in interpreter
-<I>interp</I>'s result
-and <B>Tk_ParseArgv</B> returns <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>.  When this happens, the
+all the valid arguments.  The message is placed in <I>interp-&gt;result</I>
+and <B>Tk_ParseArgv</B> returns <B>TCL_ERROR</B>.  When this happens, the
 caller normally prints the help message and aborts.  If the <I>key</I>
 field of a <B>TK_ARGV_HELP</B> specifier is NULL, then the specifier will
 never match any arguments;  in this case the specifier simply provides
@@ -272,12 +271,11 @@ then return any that are left by compacting them to the beginning of
 <I>argv</I> (starting at <I>argv</I>[0]).  <I>Genfunc</I>
 should return a count of how many arguments are left in <I>argv</I>;
 <B>Tk_ParseArgv</B> will process them.  If <I>genfunc</I> encounters
-an error then it should leave an error message in interpreter
-<I>interp</I>'s result,
+an error then it should leave an error message in <I>interp-&gt;result</I>,
 in the usual Tcl fashion, and return -1;  when this happens
-<B>Tk_ParseArgv</B> will abort its processing and return <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>.
+<B>Tk_ParseArgv</B> will abort its processing and return <B>TCL_ERROR</B>.
 <P></DL>
-<H4><A NAME="M19">FLAGS</A></H4>
+<H3><A NAME="M19">FLAGS</A></H3>
 <DL class="flags">
 <DT><A NAME="M20"><B>TK_ARGV_DONT_SKIP_FIRST_ARG</B></A><DD>
 <B>Tk_ParseArgv</B> normally treats <I>argv[0]</I> as a program
@@ -339,7 +337,7 @@ main(argc, argv)
     	...
 
     if (Tk_ParseArgv(interp, tkwin, &amp;argc, argv, argTable, 0) != TCL_OK) {
-        fprintf(stderr, &quot;%s&#92;n&quot;, <A HREF="../TclLib/StringObj.htm">Tcl_GetString</A>(<A HREF="../TclLib/SetResult.htm">Tcl_GetObjResult</A>(interp)));
+        fprintf(stderr, &quot;%s&#92;n&quot;, interp-&gt;result);
         exit(1);
     }
 
@@ -363,7 +361,8 @@ In all of the above examples, <I>argc</I> will be set by <B>Tk_ParseArgv</B> to 
 and <I>argv</I>[2] will be NULL.
 <H3><A NAME="M25">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#arguments">arguments</A>, <A href="../Keywords/C.htm#command line">command line</A>, <A href="../Keywords/O.htm#options">options</A>
-<div class="copy">Copyright &copy; 1990-1992 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1992 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

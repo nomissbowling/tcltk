@@ -3,35 +3,39 @@
 <HEAD><TITLE>Tk_GetVisual manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> GetVisual</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> GetVisual</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="GetVisual.htm#M2" NAME="L386">NAME</A>
-<DL><DD>Tk_GetVisual &mdash; translate from string to visual</DD></DL>
-<DD><A HREF="GetVisual.htm#M3" NAME="L387">SYNOPSIS</A>
+<DD><A HREF="GetVisual.htm#M2" NAME="L380">NAME</A>
+<DL><DD>Tk_GetVisual - translate from string to visual</DD></DL>
+<DD><A HREF="GetVisual.htm#M3" NAME="L381">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>Visual *
 <DD><B>Tk_GetVisual(</B><I>interp, tkwin, string, depthPtr, colormapPtr</I><B>)</B>
 </DL>
-<DD><A HREF="GetVisual.htm#M4" NAME="L388">ARGUMENTS</A>
+<DD><A HREF="GetVisual.htm#M4" NAME="L382">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="GetVisual.htm#M5" NAME="L389">DESCRIPTION</A>
+<DD><A HREF="GetVisual.htm#M5" NAME="L383">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="GetVisual.htm#M6" NAME="L390"><I>class depth</I></A>
-<DD><A HREF="GetVisual.htm#M7" NAME="L391"><B>default</B></A>
-<DD><A HREF="GetVisual.htm#M8" NAME="L392"><I>pathName</I></A>
-<DD><A HREF="GetVisual.htm#M9" NAME="L393"><I>number</I></A>
-<DD><A HREF="GetVisual.htm#M10" NAME="L394"><B>best</B> ?<I>depth</I>?</A>
-<OL class="description">
-</OL>
+<DD><A HREF="GetVisual.htm#M6" NAME="L384"><I>class depth</I></A>
+<DD><A HREF="GetVisual.htm#M7" NAME="L385"><B>default</B></A>
+<DD><A HREF="GetVisual.htm#M8" NAME="L386"><I>pathName</I></A>
+<DD><A HREF="GetVisual.htm#M9" NAME="L387"><I>number</I></A>
+<DD><A HREF="GetVisual.htm#M10" NAME="L388"><B>best</B> ?<I>depth</I>?</A>
+<DL class="description">
+<DD><A HREF="GetVisual.htm#M11" NAME="L389">(a)</A>
+<DD><A HREF="GetVisual.htm#M12" NAME="L390">(b)</A>
+<DD><A HREF="GetVisual.htm#M13" NAME="L391">(c)</A>
+<DD><A HREF="GetVisual.htm#M14" NAME="L392">(d)</A>
 </DL>
-<DD><A HREF="GetVisual.htm#M11" NAME="L395">CREDITS</A>
-<DD><A HREF="GetVisual.htm#M12" NAME="L396">KEYWORDS</A>
+</DL>
+<DD><A HREF="GetVisual.htm#M15" NAME="L393">CREDITS</A>
+<DD><A HREF="GetVisual.htm#M16" NAME="L394">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_GetVisual &mdash; translate from string to visual
+Tk_GetVisual - translate from string to visual
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Visual *<BR>
@@ -40,7 +44,7 @@ Visual *<BR>
 <DL class="arguments">
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter to use for error reporting.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window in which the visual will be used.
 <P><DT>const char <B>*string</B> (in)<DD>
 String that identifies the desired visual.  See below for
@@ -58,7 +62,7 @@ It returns a pointer to the X Visual structure for the visual
 and stores the number of bits per pixel for it at <I>*depthPtr</I>.
 If <I>string</I> is unrecognizable or if no suitable visual could
 be found, then NULL is returned and <B>Tk_GetVisual</B> leaves
-an error message in interpreter <I>interp</I>'s result.
+an error message in <I>interp-&gt;result</I>.
 If <I>colormap</I> is non-NULL then <B>Tk_GetVisual</B>
 also locates an appropriate colormap for use with the result visual
 and stores its X identifier at <I>*colormapPtr</I>.
@@ -93,29 +97,30 @@ Choose the
 &#8220;best possible&#8221;
 visual, using the following rules, in decreasing order of priority:
 <P>
-<OL class="description">
-<LI value="a">
+<DL class="description">
+<DT><A NAME="M11">(a)</A><DD>
 a visual that has exactly the desired depth is best, followed
 by a visual with greater depth than requested (but as little extra
 as possible), followed by a visual with less depth than requested
 (but as great a depth as possible);
-<P><LI value="b">
+<P><DT><A NAME="M12">(b)</A><DD>
 if no <I>depth</I> is specified, then the deepest available visual
 is chosen;
-<P><LI value="c">
+<P><DT><A NAME="M13">(c)</A><DD>
 <B>pseudocolor</B> is better than <B>truecolor</B> or <B>directcolor</B>,
 which are better than <B>staticcolor</B>, which is better than
 <B>staticgray</B> or <B>grayscale</B>;
-<P><LI value="d">
+<P><DT><A NAME="M14">(d)</A><DD>
 the default visual for the screen is better than any other visual.
-<P></OL>
 <P></DL>
-<H3><A NAME="M11">CREDITS</A></H3>
+<P></DL>
+<H3><A NAME="M15">CREDITS</A></H3>
 The idea for <B>Tk_GetVisual</B>, and the first implementation, came
 from Paul Mackerras.
-<H3><A NAME="M12">KEYWORDS</A></H3>
+<H3><A NAME="M16">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#colormap">colormap</A>, <A href="../Keywords/S.htm#screen">screen</A>, <A href="../Keywords/V.htm#visual">visual</A>
-<div class="copy">Copyright &copy; 1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_CanvasPs manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> CanvPsY</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> CanvPsY</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="CanvPsY.htm#M2" NAME="L21">NAME</A>
-<DL><DD>Tk_CanvasPsY, Tk_CanvasPsBitmap, Tk_CanvasPsColor, Tk_CanvasPsFont, Tk_CanvasPsPath, Tk_CanvasPsStipple &mdash; utility procedures for generating Postscript for canvases</DD></DL>
+<DL><DD>Tk_CanvasPsY, Tk_CanvasPsBitmap, Tk_CanvasPsColor, Tk_CanvasPsFont, Tk_CanvasPsPath, Tk_CanvasPsStipple - utility procedures for generating Postscript for canvases</DD></DL>
 <DD><A HREF="CanvPsY.htm#M3" NAME="L22">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -30,7 +30,7 @@
 <DD><A HREF="CanvPsY.htm#M6" NAME="L25">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CanvasPsY, Tk_CanvasPsBitmap, Tk_CanvasPsColor, Tk_CanvasPsFont, Tk_CanvasPsPath, Tk_CanvasPsStipple &mdash; utility procedures for generating Postscript for canvases
+Tk_CanvasPsY, Tk_CanvasPsBitmap, Tk_CanvasPsColor, Tk_CanvasPsFont, Tk_CanvasPsPath, Tk_CanvasPsStipple - utility procedures for generating Postscript for canvases
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 double<BR>
@@ -66,7 +66,7 @@ Width of region of bitmap to output, in pixels.
 Height of region of bitmap to output, in pixels.
 <P><DT>XColor <B>*colorPtr</B> (in)<DD>
 Information about color value to set in Postscript.
-<P><DT><A HREF="../TkLib/GetFont.htm">Tk_Font</A> <B>tkFont</B> (in)<DD>
+<P><DT>Tk_Font <B>tkFont</B> (in)<DD>
 Font for which Postscript is to be generated.
 <P><DT>double <B>*coordPtr</B> (in)<DD>
 Pointer to an array of coordinates for one or more
@@ -96,43 +96,42 @@ transformation.
 of a bitmap.
 The Postscript is generated in proper image data format for Postscript,
 i.e., as data between angle brackets, one bit per pixel.
-The Postscript is appended to the result of interpreter <I>interp</I>
-and <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> is returned unless an error occurs, in which case
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and the interpreter result is overwritten
-with an error message.
+The Postscript is appended to <I>interp-&gt;result</I> and <B>TCL_OK</B> is returned
+unless an error occurs, in which case <B>TCL_ERROR</B> is returned and
+<I>interp-&gt;result</I> is overwritten with an error message.
 <P>
 <B>Tk_CanvasPsColor</B> generates Postscript to set the current color
 to correspond to its <I>colorPtr</I> argument, taking into account any
 color map specified in the <B>postscript</B> command.
-It appends the Postscript to the interpreter <I>interp</I>'s result and returns
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> unless an error occurs, in which case <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is
-returned and the interpreter's result is overwritten with an error message.
+It appends the Postscript to <I>interp-&gt;result</I> and returns
+<B>TCL_OK</B> unless an error occurs, in which case <B>TCL_ERROR</B> is returned and
+<I>interp-&gt;result</I> is overwritten with an error message.
 <P>
 <B>Tk_CanvasPsFont</B> generates Postscript that sets the current font
 to match <I>tkFont</I> as closely as possible.
 <B>Tk_CanvasPsFont</B> takes into account any font map specified
 in the <B>postscript</B> command, and it does
 the best it can at mapping X fonts to Postscript fonts.
-It appends the Postscript to interpreter <I>interp</I>'s result and
-returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> unless an error occurs, in which case
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and the interpreter's result is
-overwritten with an error message.
+It appends the Postscript to <I>interp-&gt;result</I> and returns <B>TCL_OK</B>
+unless an error occurs, in which case <B>TCL_ERROR</B> is returned and
+<I>interp-&gt;result</I> is overwritten with an error message.
 <P>
 <B>Tk_CanvasPsPath</B> generates Postscript to set the current path
 to the set of points given by <I>coordPtr</I> and <I>numPoints</I>.
-It appends the resulting Postscript to the result of interpreter <I>interp</I>.
+It appends the resulting Postscript to <I>interp-&gt;result</I>.
 <P>
 <B>Tk_CanvasPsStipple</B> generates Postscript that will fill the
 current path in stippled fashion.
 It uses <I>bitmap</I> as the stipple pattern and the current Postscript
 color;  ones in the stipple bitmap are drawn in the current color, and
 zeroes are not drawn at all.
-The Postscript is appended to interpreter <I>interp</I>'s result and
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> is returned, unless an error occurs, in which case
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and the interpreter's result is
-overwritten with an error message.
+The Postscript is appended to <I>interp-&gt;result</I> and <B>TCL_OK</B> is
+returned, unless an error occurs, in which case <B>TCL_ERROR</B> is returned and
+<I>interp-&gt;result</I> is overwritten with an error message.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#bitmap">bitmap</A>, <A href="../Keywords/C.htm#canvas">canvas</A>, <A href="../Keywords/C.htm#color">color</A>, <A href="../Keywords/F.htm#font">font</A>, <A href="../Keywords/P.htm#path">path</A>, <A href="../Keywords/P.htm#Postscript">Postscript</A>, <A href="../Keywords/S.htm#stipple">stipple</A>
-<div class="copy">Copyright &copy; 1994-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

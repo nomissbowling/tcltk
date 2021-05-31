@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_LinkVar manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> LinkVar</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> LinkVar</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="LinkVar.htm#M2" NAME="L444">NAME</A>
-<DL><DD>Tcl_LinkVar, Tcl_UnlinkVar, Tcl_UpdateLinkedVar &mdash; link Tcl variable to C variable</DD></DL>
-<DD><A HREF="LinkVar.htm#M3" NAME="L445">SYNOPSIS</A>
+<DD><A HREF="LinkVar.htm#M2" NAME="L415">NAME</A>
+<DL><DD>Tcl_LinkVar, Tcl_UnlinkVar, Tcl_UpdateLinkedVar - link Tcl variable to C variable</DD></DL>
+<DD><A HREF="LinkVar.htm#M3" NAME="L416">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>int
@@ -16,31 +16,30 @@
 <DD><B>Tcl_UnlinkVar</B>(<I>interp, varName</I>)
 <DD><B>Tcl_UpdateLinkedVar</B>(<I>interp, varName</I>)
 </DL>
-<DD><A HREF="LinkVar.htm#M4" NAME="L446">ARGUMENTS</A>
+<DD><A HREF="LinkVar.htm#M4" NAME="L417">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="LinkVar.htm#M5" NAME="L447">DESCRIPTION</A>
+<DD><A HREF="LinkVar.htm#M5" NAME="L418">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="LinkVar.htm#M6" NAME="L448"><B>TCL_LINK_INT</B></A>
-<DD><A HREF="LinkVar.htm#M7" NAME="L449"><B>TCL_LINK_UINT</B></A>
-<DD><A HREF="LinkVar.htm#M8" NAME="L450"><B>TCL_LINK_CHAR</B></A>
-<DD><A HREF="LinkVar.htm#M9" NAME="L451"><B>TCL_LINK_UCHAR</B></A>
-<DD><A HREF="LinkVar.htm#M10" NAME="L452"><B>TCL_LINK_SHORT</B></A>
-<DD><A HREF="LinkVar.htm#M11" NAME="L453"><B>TCL_LINK_USHORT</B></A>
-<DD><A HREF="LinkVar.htm#M12" NAME="L454"><B>TCL_LINK_LONG</B></A>
-<DD><A HREF="LinkVar.htm#M13" NAME="L455"><B>TCL_LINK_ULONG</B></A>
-<DD><A HREF="LinkVar.htm#M14" NAME="L456"><B>TCL_LINK_DOUBLE</B></A>
-<DD><A HREF="LinkVar.htm#M15" NAME="L457"><B>TCL_LINK_FLOAT</B></A>
-<DD><A HREF="LinkVar.htm#M16" NAME="L458"><B>TCL_LINK_WIDE_INT</B></A>
-<DD><A HREF="LinkVar.htm#M17" NAME="L459"><B>TCL_LINK_WIDE_UINT</B></A>
-<DD><A HREF="LinkVar.htm#M18" NAME="L460"><B>TCL_LINK_BOOLEAN</B></A>
-<DD><A HREF="LinkVar.htm#M19" NAME="L461"><B>TCL_LINK_STRING</B></A>
+<DD><A HREF="LinkVar.htm#M6" NAME="L419"><B>TCL_LINK_INT</B></A>
+<DD><A HREF="LinkVar.htm#M7" NAME="L420"><B>TCL_LINK_UINT</B></A>
+<DD><A HREF="LinkVar.htm#M8" NAME="L421"><B>TCL_LINK_CHAR</B></A>
+<DD><A HREF="LinkVar.htm#M9" NAME="L422"><B>TCL_LINK_UCHAR</B></A>
+<DD><A HREF="LinkVar.htm#M10" NAME="L423"><B>TCL_LINK_SHORT</B></A>
+<DD><A HREF="LinkVar.htm#M11" NAME="L424"><B>TCL_LINK_USHORT</B></A>
+<DD><A HREF="LinkVar.htm#M12" NAME="L425"><B>TCL_LINK_LONG</B></A>
+<DD><A HREF="LinkVar.htm#M13" NAME="L426"><B>TCL_LINK_ULONG</B></A>
+<DD><A HREF="LinkVar.htm#M14" NAME="L427"><B>TCL_LINK_DOUBLE</B></A>
+<DD><A HREF="LinkVar.htm#M15" NAME="L428"><B>TCL_LINK_FLOAT</B></A>
+<DD><A HREF="LinkVar.htm#M16" NAME="L429"><B>TCL_LINK_WIDE_INT</B></A>
+<DD><A HREF="LinkVar.htm#M17" NAME="L430"><B>TCL_LINK_WIDE_UINT</B></A>
+<DD><A HREF="LinkVar.htm#M18" NAME="L431"><B>TCL_LINK_BOOLEAN</B></A>
+<DD><A HREF="LinkVar.htm#M19" NAME="L432"><B>TCL_LINK_STRING</B></A>
 </DL>
-<DD><A HREF="LinkVar.htm#M20" NAME="L462">SEE ALSO</A>
-<DD><A HREF="LinkVar.htm#M21" NAME="L463">KEYWORDS</A>
+<DD><A HREF="LinkVar.htm#M20" NAME="L433">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_LinkVar, Tcl_UnlinkVar, Tcl_UpdateLinkedVar &mdash; link Tcl variable to C variable
+Tcl_LinkVar, Tcl_UnlinkVar, Tcl_UpdateLinkedVar - link Tcl variable to C variable
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 int<BR>
@@ -60,7 +59,8 @@ Address of C variable that is to be linked to <I>varName</I>.
 Type of C variable.  Must be one of <B>TCL_LINK_INT</B>,
 <B>TCL_LINK_UINT</B>, <B>TCL_LINK_CHAR</B>, <B>TCL_LINK_UCHAR</B>,
 <B>TCL_LINK_SHORT</B>, <B>TCL_LINK_USHORT</B>, <B>TCL_LINK_LONG</B>,
-<B>TCL_LINK_ULONG</B>, <B>TCL_LINK_WIDE_INT</B>,
+<B>TCL_LINK_ULONG</B>,
+<B>TCL_LINK_WIDE_INT</B>,
 <B>TCL_LINK_WIDE_UINT</B>, <B>TCL_LINK_FLOAT</B>,
 <B>TCL_LINK_DOUBLE</B>, <B>TCL_LINK_BOOLEAN</B>, or
 <B>TCL_LINK_STRING</B>, optionally OR'ed with <B>TCL_LINK_READ_ONLY</B>
@@ -73,9 +73,9 @@ given by <I>addr</I>.
 Whenever the Tcl variable is read the value of the C variable will
 be returned, and whenever the Tcl variable is written the C
 variable will be updated to have the same value.
-<B>Tcl_LinkVar</B> normally returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>;  if an error occurs
+<B>Tcl_LinkVar</B> normally returns <B>TCL_OK</B>;  if an error occurs
 while setting up the link (e.g. because <I>varName</I> is the
-name of array) then <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and the interpreter's result
+name of array) then <B>TCL_ERROR</B> is returned and the interpreter's result
 contains an error message.
 <P>
 The <I>type</I> argument specifies the type of the C variable,
@@ -149,7 +149,7 @@ range acceptable for a <B>float</B>; attempts to
 write non-real values (or values outside the range) into
 <I>varName</I> will be rejected with Tcl errors.
 <P><DT><A NAME="M16"><B>TCL_LINK_WIDE_INT</B></A><DD>
-The C variable is of type <B><A HREF="../TclLib/IntObj.htm">Tcl_WideInt</A></B> (which is an integer type
+The C variable is of type <B>Tcl_WideInt</B> (which is an integer type
 at least 64-bits wide on all platforms that can support it.)
 Any value written into the Tcl variable must have a proper integer
 form acceptable to <B><A HREF="../TclLib/IntObj.htm">Tcl_GetWideIntFromObj</A></B>;  attempts to write
@@ -206,20 +206,11 @@ Tk widget that wishes to display the value of the variable), the
 trace will not trigger when the C variable has changed.
 <B>Tcl_UpdateLinkedVar</B> ensures that any traces on the Tcl
 variable are invoked.
-<P>
-Note that, as with any call to a Tcl interpreter, <B>Tcl_UpdateLinkedVar</B>
-must be called from the same thread that created the interpreter. The safest
-mechanism is to ensure that the C variable is only ever updated from the same
-thread that created the interpreter (possibly in response to an event posted
-with <B><A HREF="../TclLib/Notifier.htm">Tcl_ThreadQueueEvent</A></B>), but when it is necessary to update the
-variable in a separate thread, it is advised that <B><A HREF="../TclLib/Async.htm">Tcl_AsyncMark</A></B> be used
-to indicate to the thread hosting the interpreter that it is ready to run
-<B>Tcl_UpdateLinkedVar</B>.
-<H3><A NAME="M20">SEE ALSO</A></H3>
-<B><A HREF="../TclLib/TraceVar.htm">Tcl_TraceVar</A></B>
-<H3><A NAME="M21">KEYWORDS</A></H3>
-<A href="../Keywords/B.htm#boolean">boolean</A>, <A href="../Keywords/I.htm#integer">integer</A>, <A href="../Keywords/L.htm#link">link</A>, <A href="../Keywords/R.htm#read-only">read-only</A>, <A href="../Keywords/R.htm#real">real</A>, <A href="../Keywords/S.htm#string">string</A>, <A href="../Keywords/T.htm#trace">trace</A>, <A href="../Keywords/V.htm#variable">variable</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+
+<H3><A NAME="M20">KEYWORDS</A></H3>
+<A href="../Keywords/B.htm#boolean">boolean</A>, <A href="../Keywords/I.htm#integer">integer</A>, <A href="../Keywords/L.htm#link">link</A>, <A href="../Keywords/R.htm#read-only">read-only</A>, <A href="../Keywords/R.htm#real">real</A>, <A href="../Keywords/S.htm#string">string</A>, <A href="../Keywords/T.htm#traces">traces</A>, <A href="../Keywords/V.htm#variable">variable</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

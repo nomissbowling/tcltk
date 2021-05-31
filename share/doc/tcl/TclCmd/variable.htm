@@ -3,16 +3,15 @@
 <HEAD><TITLE>variable manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> variable</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> variable</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-variable &mdash; create and initialize a namespace variable
+variable - create and initialize a namespace variable
 <H3><A NAME="M3">SYNOPSIS</A></H3>
-<B>variable </B><I>name</I><BR>
-<B>variable </B>?<I>name value...</I>?<BR>
+<B>variable </B>?<I>name value...</I>? <I>name </I>?<I>value</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 This command is normally used within a
-<B><A HREF="../TclCmd/namespace.htm">namespace eval</A></B> command to create one or more variables
+<B>namespace eval</B> command to create one or more variables
 within a namespace.
 Each variable <I>name</I> is initialized with <I>value</I>.
 The <I>value</I> for the last variable is optional.
@@ -29,7 +28,7 @@ Normally, <I>name</I> is unqualified
 and the variable is created in the current namespace.
 If <I>name</I> includes any namespace qualifiers,
 the variable is created in the specified namespace.  If the variable
-is not defined, it will be visible to the <B><A HREF="../TclCmd/namespace.htm">namespace which</A></B>
+is not defined, it will be visible to the <B>namespace which</B>
 command, but not to the <B><A HREF="../TclCmd/info.htm">info exists</A></B> command.
 <P>
 If the <B>variable</B> command is executed inside a Tcl procedure,
@@ -52,13 +51,11 @@ elements within the array can be set using ordinary
 <B><A HREF="../TclCmd/set.htm">set</A></B> or <B><A HREF="../TclCmd/array.htm">array</A></B> commands.
 <H3><A NAME="M5">EXAMPLES</A></H3>
 Create a variable in a namespace:
-<P>
 <PRE>namespace eval foo {
     <B>variable</B> bar 12345
 }</PRE>
 <P>
 Create an array in a namespace:
-<P>
 <PRE>namespace eval someNS {
     <B>variable</B> someAry
     array set someAry {
@@ -68,7 +65,6 @@ Create an array in a namespace:
 }</PRE>
 <P>
 Access variables in namespaces from a procedure:
-<P>
 <PRE>namespace eval foo {
     proc spong {} {
         # Variable in this namespace
@@ -84,7 +80,8 @@ Access variables in namespaces from a procedure:
 <B><A HREF="../TclCmd/global.htm">global</A></B>, <B><A HREF="../TclCmd/namespace.htm">namespace</A></B>, <B><A HREF="../TclCmd/upvar.htm">upvar</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/G.htm#global">global</A>, <A href="../Keywords/N.htm#namespace">namespace</A>, <A href="../Keywords/P.htm#procedure">procedure</A>, <A href="../Keywords/V.htm#variable">variable</A>
-<div class="copy">Copyright &copy; 1993-1997 Bell Labs Innovations for Lucent Technologies
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993-1997 Bell Labs Innovations for Lucent Technologies
 Copyright &copy; 1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

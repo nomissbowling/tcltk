@@ -3,52 +3,55 @@
 <HEAD><TITLE>tk_getOpenFile manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> getOpenFile</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> getOpenFile</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="getOpenFile.htm#M2" NAME="L739">NAME</A>
-<DL><DD>tk_getOpenFile, tk_getSaveFile &mdash; pop up a dialog box for the user to select a file to open or save.</DD></DL>
-<DD><A HREF="getOpenFile.htm#M3" NAME="L740">SYNOPSIS</A>
+<DD><A HREF="getOpenFile.htm#M2" NAME="L675">NAME</A>
+<DL><DD>tk_getOpenFile, tk_getSaveFile - pop up a dialog box for the user to select a file to open or save.</DD></DL>
+<DD><A HREF="getOpenFile.htm#M3" NAME="L676">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="getOpenFile.htm#M4" NAME="L741">DESCRIPTION</A>
+<DD><A HREF="getOpenFile.htm#M4" NAME="L677">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="getOpenFile.htm#M5" NAME="L742"><B>-confirmoverwrite</B> <I>boolean</I></A>
-<DD><A HREF="getOpenFile.htm#M6" NAME="L743"><B>-defaultextension</B> <I>extension</I></A>
-<DD><A HREF="getOpenFile.htm#M7" NAME="L744"><B>-filetypes</B> <I>filePatternList</I></A>
-<DD><A HREF="getOpenFile.htm#M8" NAME="L745"><B>-initialdir</B> <I>directory</I></A>
-<DD><A HREF="getOpenFile.htm#M9" NAME="L746"><B>-initialfile</B> <I>filename</I></A>
-<DD><A HREF="getOpenFile.htm#M10" NAME="L747"><B>-message</B> <I>string</I></A>
-<DD><A HREF="getOpenFile.htm#M11" NAME="L748"><B>-multiple</B> <I>boolean</I></A>
-<DD><A HREF="getOpenFile.htm#M12" NAME="L749"><B>-parent</B> <I>window</I></A>
-<DD><A HREF="getOpenFile.htm#M13" NAME="L750"><B>-title</B> <I>titleString</I></A>
-<DD><A HREF="getOpenFile.htm#M14" NAME="L751"><B>-typevariable</B> <I>variableName</I></A>
+<DD><A HREF="getOpenFile.htm#M5" NAME="L678"><B>-confirmoverwrite</B> <I>boolean</I></A>
+<DD><A HREF="getOpenFile.htm#M6" NAME="L679"><B>-defaultextension</B> <I>extension</I></A>
+<DD><A HREF="getOpenFile.htm#M7" NAME="L680"><B>-filetypes</B> <I>filePatternList</I></A>
+<DD><A HREF="getOpenFile.htm#M8" NAME="L681"><B>-initialdir</B> <I>directory</I></A>
+<DD><A HREF="getOpenFile.htm#M9" NAME="L682"><B>-initialfile</B> <I>filename</I></A>
+<DD><A HREF="getOpenFile.htm#M10" NAME="L683"><B>-message</B> <I>string</I></A>
+<DD><A HREF="getOpenFile.htm#M11" NAME="L684"><B>-multiple</B> <I>boolean</I></A>
+<DD><A HREF="getOpenFile.htm#M12" NAME="L685"><B>-parent</B> <I>window</I></A>
+<DD><A HREF="getOpenFile.htm#M13" NAME="L686"><B>-title</B> <I>titleString</I></A>
+<DD><A HREF="getOpenFile.htm#M14" NAME="L687"><B>-typevariable</B> <I>variableName</I></A>
 </DL>
-<DD><A HREF="getOpenFile.htm#M15" NAME="L752">SPECIFYING FILE PATTERNS</A>
-<DD><A HREF="getOpenFile.htm#M16" NAME="L753">SPECIFYING EXTENSIONS</A>
-<OL class="specifying extensions">
-</OL>
-<DD><A HREF="getOpenFile.htm#M17" NAME="L754">EXAMPLE</A>
-<DD><A HREF="getOpenFile.htm#M18" NAME="L755">SEE ALSO</A>
-<DD><A HREF="getOpenFile.htm#M19" NAME="L756">KEYWORDS</A>
+<DD><A HREF="getOpenFile.htm#M15" NAME="L688">SPECIFYING FILE PATTERNS</A>
+<DD><A HREF="getOpenFile.htm#M16" NAME="L689">SPECIFYING EXTENSIONS</A>
+<DL class="specifying extensions">
+<DD><A HREF="getOpenFile.htm#M17" NAME="L690">(1)</A>
+<DD><A HREF="getOpenFile.htm#M18" NAME="L691">(2)</A>
+<DD><A HREF="getOpenFile.htm#M19" NAME="L692">(3)</A>
+</DL>
+<DD><A HREF="getOpenFile.htm#M20" NAME="L693">EXAMPLE</A>
+<DD><A HREF="getOpenFile.htm#M21" NAME="L694">SEE ALSO</A>
+<DD><A HREF="getOpenFile.htm#M22" NAME="L695">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-tk_getOpenFile, tk_getSaveFile &mdash; pop up a dialog box for the user to select a file to open or save.
+tk_getOpenFile, tk_getSaveFile - pop up a dialog box for the user to select a file to open or save.
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>tk_getOpenFile </B>?<I>option value ...</I>?<BR>
 <B>tk_getSaveFile </B>?<I>option value ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 The procedures <B>tk_getOpenFile</B> and <B>tk_getSaveFile</B> pop up a
 dialog box for the user to select a file to open or save. The
-<B>tk_getOpenFile</B> command is usually associated with the <B>Open</B>
-command in the <B>File</B> menu. Its purpose is for the user to select an
+<B>tk_getOpenFile</B> command is usually associated with the <B><A HREF="../TclCmd/open.htm">Open</A></B>
+command in the <B><A HREF="../TclCmd/file.htm">File</A></B> menu. Its purpose is for the user to select an
 existing file <I>only</I>. If the user enters a non-existent file, the
 dialog box gives the user an error prompt and requires the user to give
 an alternative selection. If an application allows the user to create
 new files, it should do so by providing a separate <B>New</B> menu command.
 <P>
 The <B>tk_getSaveFile</B> command is usually associated with the <B>Save
-as</B> command in the <B>File</B> menu. If the user enters a file that
+as</B> command in the <B><A HREF="../TclCmd/file.htm">File</A></B> menu. If the user enters a file that
 already exists, the dialog box prompts the user for confirmation
 whether the existing file should be overwritten or not.
 <P>
@@ -76,7 +79,7 @@ the user choose a filetype in the listbox, only the files of that type
 are listed. If this option is unspecified, or if it is set to the
 empty list, or if the <B><A HREF="../TclCmd/file.htm">File types</A></B> listbox is not supported by the
 particular platform then all files are listed regardless of their
-types. See the section <B><A HREF="#M15">SPECIFYING FILE PATTERNS</A></B> below for a
+types. See the section <B>SPECIFYING FILE PATTERNS</B> below for a
 discussion on the contents of <I>filePatternList</I>.
 <P><DT><A NAME="M8"><B>-initialdir</B> <I>directory</I></A><DD>
 Specifies that the files in <I>directory</I> should be displayed
@@ -137,7 +140,7 @@ name matches at least one of the <I>extension</I>(s) AND it
 belongs to at least one of the <I>macType</I>(s) of the
 file pattern. For example, the <B>C Source Files</B> file pattern in the
 sample code matches with files that have a <B>.c</B> extension AND
-belong to the <I>macType</I> <B>TEXT</B>. To use the OR rule instead,
+belong to the <I>macType</I> <B><A HREF="../TkCmd/text.htm">TEXT</A></B>. To use the OR rule instead,
 you can use two file patterns, one with the <I>extensions</I> only and
 the other with the <I>macType</I> only. The <B>GIF Files</B> file type
 in the sample code matches files that <I>either</I> have a <B>.gif</B>
@@ -152,20 +155,20 @@ glob-style pattern matching. On the Windows platform, extensions are
 matched by the underlying operating system. The types of possible
 extensions are:
 <P>
-<OL class="specifying extensions">
-<LI value="1">
+<DL class="specifying extensions">
+<DT><A NAME="M17">(1)</A><DD>
 the special extension
 &#8220;*&#8221;
 matches any file;
-<P><LI value="2">
+<P><DT><A NAME="M18">(2)</A><DD>
 the special extension
 &#8220;&#8221;
 matches any files that do not have an extension (i.e., the filename
 contains no full stop character);
-<P><LI value="3">
+<P><DT><A NAME="M19">(3)</A><DD>
 any character string that does not contain any wild card characters (*
 and ?).
-<P></OL>
+<P></DL>
 <P>
 Due to the different pattern matching rules on the various platforms,
 to ensure portability, wild card characters are not allowed in the
@@ -174,7 +177,7 @@ extensions, except as in the special extension
 Extensions without a full stop character (e.g.
 &#8220;~&#8221;)
 are allowed but may not work on all platforms.
-<H3><A NAME="M17">EXAMPLE</A></H3>
+<H3><A NAME="M20">EXAMPLE</A></H3>
 <PRE>set types {
     {{Text Files}       {.txt}        }
     {{TCL Scripts}      {.tcl}        }
@@ -183,15 +186,16 @@ are allowed but may not work on all platforms.
     {{GIF Files}        {}        GIFF}
     {{All Files}        *             }
 }
-set filename [<B>tk_getOpenFile</B> -filetypes $types]
+set filename [tk_getOpenFile -filetypes $types]
 
-if {$filename ne &quot;&quot;} {
+if {$filename != &quot;&quot;} {
     # Open the file ...
 }</PRE>
-<H3><A NAME="M18">SEE ALSO</A></H3>
+<H3><A NAME="M21">SEE ALSO</A></H3>
 <B>tk_chooseDirectory</B>
-<H3><A NAME="M19">KEYWORDS</A></H3>
+<H3><A NAME="M22">KEYWORDS</A></H3>
 <A href="../Keywords/F.htm#file selection dialog">file selection dialog</A>
-<div class="copy">Copyright &copy; 1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

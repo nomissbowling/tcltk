@@ -3,66 +3,59 @@
 <HEAD><TITLE>exec manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> exec</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> exec</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="exec.htm#M2" NAME="L426">NAME</A>
-<DL><DD>exec &mdash; Invoke subprocesses</DD></DL>
-<DD><A HREF="exec.htm#M3" NAME="L427">SYNOPSIS</A>
+<DD><A HREF="exec.htm#M2" NAME="L345">NAME</A>
+<DL><DD>exec - Invoke subprocesses</DD></DL>
+<DD><A HREF="exec.htm#M3" NAME="L346">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="exec.htm#M4" NAME="L428">DESCRIPTION</A>
+<DD><A HREF="exec.htm#M4" NAME="L347">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="exec.htm#M5" NAME="L429"><B>-ignorestderr</B></A>
-<DD><A HREF="exec.htm#M6" NAME="L430"><B>-keepnewline</B></A>
-<DD><A HREF="exec.htm#M7" NAME="L431"><B>--</B></A>
+<DD><A HREF="exec.htm#M5" NAME="L348"><B>-ignorestderr</B></A>
+<DD><A HREF="exec.htm#M6" NAME="L349"><B>-keepnewline</B></A>
+<DD><A HREF="exec.htm#M7" NAME="L350"><B>--</B></A>
 </DL>
 <DL class="description">
-<DD><A HREF="exec.htm#M8" NAME="L432"><B>|</B></A>
-<DD><A HREF="exec.htm#M9" NAME="L433"><B>|&amp;</B></A>
-<DD><A HREF="exec.htm#M10" NAME="L434"><B>&lt; </B><I>fileName</I></A>
-<DD><A HREF="exec.htm#M11" NAME="L435"><B>&lt;@ </B><I>fileId</I></A>
-<DD><A HREF="exec.htm#M12" NAME="L436"><B>&lt;&lt; </B><I>value</I></A>
-<DD><A HREF="exec.htm#M13" NAME="L437"><B>&gt; </B><I>fileName</I></A>
-<DD><A HREF="exec.htm#M14" NAME="L438"><B>2&gt; </B><I>fileName</I></A>
-<DD><A HREF="exec.htm#M15" NAME="L439"><B>&gt;&amp; </B><I>fileName</I></A>
-<DD><A HREF="exec.htm#M16" NAME="L440"><B>&gt;&gt; </B><I>fileName</I></A>
-<DD><A HREF="exec.htm#M17" NAME="L441"><B>2&gt;&gt; </B><I>fileName</I></A>
-<DD><A HREF="exec.htm#M18" NAME="L442"><B>&gt;&gt;&amp; </B><I>fileName</I></A>
-<DD><A HREF="exec.htm#M19" NAME="L443"><B>&gt;@ </B><I>fileId</I></A>
-<DD><A HREF="exec.htm#M20" NAME="L444"><B>2&gt;@ </B><I>fileId</I></A>
-<DD><A HREF="exec.htm#M21" NAME="L445"><B>2&gt;@1 </B></A>
-<DD><A HREF="exec.htm#M22" NAME="L446"><B>&gt;&amp;@ </B><I>fileId</I></A>
+<DD><A HREF="exec.htm#M8" NAME="L351"><B>|</B></A>
+<DD><A HREF="exec.htm#M9" NAME="L352"><B>|&amp;</B></A>
+<DD><A HREF="exec.htm#M10" NAME="L353"><B>&lt; </B><I>fileName</I></A>
+<DD><A HREF="exec.htm#M11" NAME="L354"><B>&lt;@ </B><I>fileId</I></A>
+<DD><A HREF="exec.htm#M12" NAME="L355"><B>&lt;&lt; </B><I>value</I></A>
+<DD><A HREF="exec.htm#M13" NAME="L356"><B>&gt; </B><I>fileName</I></A>
+<DD><A HREF="exec.htm#M14" NAME="L357"><B>2&gt; </B><I>fileName</I></A>
+<DD><A HREF="exec.htm#M15" NAME="L358"><B>&gt;&amp; </B><I>fileName</I></A>
+<DD><A HREF="exec.htm#M16" NAME="L359"><B>&gt;&gt; </B><I>fileName</I></A>
+<DD><A HREF="exec.htm#M17" NAME="L360"><B>2&gt;&gt; </B><I>fileName</I></A>
+<DD><A HREF="exec.htm#M18" NAME="L361"><B>&gt;&gt;&amp; </B><I>fileName</I></A>
+<DD><A HREF="exec.htm#M19" NAME="L362"><B>&gt;@ </B><I>fileId</I></A>
+<DD><A HREF="exec.htm#M20" NAME="L363"><B>2&gt;@ </B><I>fileId</I></A>
+<DD><A HREF="exec.htm#M21" NAME="L364"><B>2&gt;@1 </B></A>
+<DD><A HREF="exec.htm#M22" NAME="L365"><B>&gt;&amp;@ </B><I>fileId</I></A>
 </DL>
-<DD><A HREF="exec.htm#M23" NAME="L447">PORTABILITY ISSUES</A>
+<DD><A HREF="exec.htm#M23" NAME="L366">PORTABILITY ISSUES</A>
 <DL class="portability issues">
-<DD><A HREF="exec.htm#M24" NAME="L448"><B>Windows</B> (all versions)</A>
-<OL class="portability issues">
-</OL>
-<DD><A HREF="exec.htm#M25" NAME="L449"><B>Windows NT</B></A>
-<UL class="portability issues">
-</UL>
-<DD><A HREF="exec.htm#M26" NAME="L450"><B>Windows 9x</B></A>
-<UL class="portability issues">
-</UL>
-<DD><A HREF="exec.htm#M27" NAME="L451"><B>Unix</B> (including Mac OS X)</A>
+<DD><A HREF="exec.htm#M24" NAME="L367"><B>Windows</B> (all versions)</A>
+<DL class="portability issues">
 </DL>
-<DD><A HREF="exec.htm#M28" NAME="L452">UNIX EXAMPLES</A>
-<DD><A HREF="exec.htm#M29" NAME="L453">WORKING WITH NON-ZERO RESULTS</A>
-<DD><A HREF="exec.htm#M30" NAME="L454">WORKING WITH QUOTED ARGUMENTS</A>
-<DD><A HREF="exec.htm#M31" NAME="L455">WORKING WITH GLOBBING</A>
-<DD><A HREF="exec.htm#M32" NAME="L456">WORKING WITH USER-SUPPLIED SHELL SCRIPT FRAGMENTS</A>
-<DD><A HREF="exec.htm#M33" NAME="L457">WINDOWS EXAMPLES</A>
-<DD><A HREF="exec.htm#M34" NAME="L458">WORKING WITH CONSOLE PROGRAMS</A>
-<DD><A HREF="exec.htm#M35" NAME="L459">WORKING WITH COMMAND BUILT-INS</A>
-<DD><A HREF="exec.htm#M36" NAME="L460">WORKING WITH NATIVE FILENAMES</A>
-<DD><A HREF="exec.htm#M37" NAME="L461">SEE ALSO</A>
-<DD><A HREF="exec.htm#M38" NAME="L462">KEYWORDS</A>
+<DD><A HREF="exec.htm#M25" NAME="L368"><B>Windows NT</B></A>
+<DL class="portability issues">
+</DL>
+<DD><A HREF="exec.htm#M26" NAME="L369"><B>Windows 9x</B></A>
+<DL class="portability issues">
+</DL>
+<DD><A HREF="exec.htm#M27" NAME="L370"><B>Unix</B></A>
+</DL>
+<DD><A HREF="exec.htm#M28" NAME="L371">UNIX EXAMPLES</A>
+<DD><A HREF="exec.htm#M29" NAME="L372">WINDOWS EXAMPLES</A>
+<DD><A HREF="exec.htm#M30" NAME="L373">SEE ALSO</A>
+<DD><A HREF="exec.htm#M31" NAME="L374">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-exec &mdash; Invoke subprocesses
+exec - Invoke subprocesses
 <H3><A NAME="M3">SYNOPSIS</A></H3>
-<B>exec </B>?<I>switches</I>? <I>arg </I>?<I>arg ...</I>? ?<B>&amp;</B>?<BR>
+<B>exec </B>?<I>switches</I>? <I>arg </I>?<I>arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 This command treats its arguments as the specification
 of one or more subprocesses to execute.
@@ -165,7 +158,8 @@ The file must have been opened for writing.
 <P>
 If standard output has not been redirected then the <B>exec</B>
 command returns the standard output from the last command
-in the pipeline, unless
+in the pipeline,
+unless
 &#8220;2&gt;@1&#8221;
 was specified, in which case standard error is included as well.
 If any of the commands in the pipeline exit abnormally or
@@ -254,7 +248,7 @@ names must use the short, cryptic, path format (e.g., using
 instead of
 &#8220;applbakery.default&#8221;),
 which can be obtained with the
-&#8220;<B><A HREF="../TclCmd/file.htm">file attributes</A></B><I> fileName </I><B>-shortname</B>&#8221;
+&#8220;<B>file attributes </B><I>fileName </I><B>-shortname</B>&#8221;
 command.
 <P>
 Two or more forward or backward slashes in a row in a path refer to a
@@ -268,17 +262,17 @@ command should be used to concatenate path components.
 <P>
 Note that there are two general types of Win32 console applications:
 <P>
-<OL class="portability issues">
-<LI value="1">
+<DL class="portability issues">
+<DT>[1]<DD>
 CLI &#8212; CommandLine Interface, simple stdio exchange. <B>netstat.exe</B> for
 example.
-<P><LI value="2">
+<P><DT>[2]<DD>
 TUI &#8212; Textmode User Interface, any application that accesses the console
 API for doing such things as cursor movement, setting text color, detecting
 key presses and mouse movement, etc.  An example would be <B>telnet.exe</B>
 from Windows 2000.  These types of applications are not common in a windows
 environment, but do exist.
-<P></OL>
+<P></DL>
 <P><B>exec</B> will not work well with TUI applications when a console is not
 present, as is done when launching applications under wish.  It is desirable
 to have console applications hidden and detached.  This is a designed-in
@@ -292,24 +286,24 @@ for the longer name.  If a directory name was not specified as part of the
 application name, the following directories are automatically searched in
 order when attempting to locate the application:
 <P>
-<UL class="portability issues">
-<LI>
+<DL class="portability issues">
+<DT><DD>&#8226;&nbsp;
 The directory from which the Tcl executable was loaded.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The current directory.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The Windows NT 32-bit system directory.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The Windows NT 16-bit system directory.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The Windows NT home directory.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The directories listed in the path.
-</UL><P>In order to execute shell built-in commands like <B>dir</B> and <B>copy</B>,
+</DL><P>In order to execute shell built-in commands like <B>dir</B> and <B>copy</B>,
 the caller must prepend the desired command with
 &#8220;<B>cmd.exe /c </B>&#8221;
-because built-in commands are not implemented using executables.<UL class="portability issues">
-</UL>
+because built-in commands are not implemented using executables.<DL>
+</DL>
 <P><DT><A NAME="M26"><B>Windows 9x</B></A><DD>
 When attempting to execute an application, <B>exec</B> first searches for
 the name as it was specified.  Then, in order, <B>.com</B>, <B>.exe</B>, and
@@ -318,18 +312,18 @@ for the longer name.  If a directory name was not specified as part of the
 application name, the following directories are automatically searched in
 order when attempting to locate the application:
 <P>
-<UL class="portability issues">
-<LI>
+<DL class="portability issues">
+<DT><DD>&#8226;&nbsp;
 The directory from which the Tcl executable was loaded.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The current directory.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The Windows 9x system directory.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The Windows 9x home directory.
-<P><LI>
+<P><DT><DD>&#8226;&nbsp;
 The directories listed in the path.
-<P></UL>
+<P></DL>
 <P>
 In order to execute shell built-in commands like <B>dir</B> and <B>copy</B>,
 the caller must prepend the desired command with
@@ -367,91 +361,57 @@ interactively.  Applications which directly access the console window,
 rather than reading from their standard input and writing to their standard
 output may fail, hang Tcl, or even hang the system if their own private
 console window is not available to them.
-<P><DT><A NAME="M27"><B>Unix</B> (including Mac OS X)</A><DD>
+<P><DT><A NAME="M27"><B>Unix</B></A><DD>
 The <B>exec</B> command is fully functional and works as described.
 <P></DL>
 <H3><A NAME="M28">UNIX EXAMPLES</A></H3>
 Here are some examples of the use of the <B>exec</B> command on Unix.
-To execute a simple program and get its result:
 <P>
+To execute a simple program and get its result:
 <PRE><B>exec</B> uname -a</PRE>
-<H4><A NAME="M29">WORKING WITH NON-ZERO RESULTS</A></H4>
+<P>
 To execute a program that can return a non-zero result, you should
 wrap the call to <B>exec</B> in <B><A HREF="../TclCmd/catch.htm">catch</A></B> and check the contents
 of the <B>-errorcode</B> return option if you have an error:
-<P>
 <PRE>set status 0
 if {[catch {<B>exec</B> grep foo bar.txt} results options]} {
-    set details [dict get $options -errorcode]
-    if {[lindex $details 0] eq &quot;CHILDSTATUS&quot;} {
-        set status [lindex $details 2]
-    } else {
-        # Some other error; regenerate it to let caller handle
-        return -options $options -level 0 $results
-    }
+   set details [dict get $options -errorcode]
+   if {[lindex $details 0] eq &quot;CHILDSTATUS&quot;} {
+      set status [lindex $details 2]
+   } else {
+      # Some kind of unexpected failure
+   }
 }</PRE>
 <P>
-This is more easily written using the <B><A HREF="../TclCmd/try.htm">try</A></B> command, as that makes
-it simpler to trap specific types of errors. This is
-done using code like this:
-<P>
-<PRE>try {
-    set results [<B>exec</B> grep foo bar.txt]
-    set status 0
-} trap CHILDSTATUS {results options} {
-    set status [lindex [dict get $options -errorcode] 2]
-}</PRE>
-<H4><A NAME="M30">WORKING WITH QUOTED ARGUMENTS</A></H4>
 When translating a command from a Unix shell invocation, care should
 be taken over the fact that single quote characters have no special
 significance to Tcl.  Thus:
-<P>
 <PRE>awk '{sum += $1} END {print sum}' numbers.list</PRE>
-<P>
 would be translated into something like:
-<P>
 <PRE><B>exec</B> awk {{sum += $1} END {print sum}} numbers.list</PRE>
-<H4><A NAME="M31">WORKING WITH GLOBBING</A></H4>
+<P>
 If you are converting invocations involving shell globbing, you should
 remember that Tcl does not handle globbing or expand things into
 multiple arguments by default.  Instead you should write things like
 this:
-<P>
 <PRE><B>exec</B> ls -l {*}[glob *.tcl]</PRE>
-<H4><A NAME="M32">WORKING WITH USER-SUPPLIED SHELL SCRIPT FRAGMENTS</A></H4>
-One useful technique can be to expose to users of a script the ability
-to specify a fragment of shell script to execute that will have some
-data passed in on standard input that was produced by the Tcl program.
-This is a common technique for using the <I>lpr</I> program for
-printing. By far the simplest way of doing this is to pass the user's
-script to the user's shell for processing, as this avoids a lot of
-complexity with parsing other languages.
-<P>
-<PRE>set lprScript [<I>get from user...</I>]
-set postscriptData [<I>generate somehow...</I>]
-
-<B>exec</B> $env(SHELL) -c $lprScript &lt;&lt; $postscriptData</PRE>
-<H3><A NAME="M33">WINDOWS EXAMPLES</A></H3>
+<H3><A NAME="M29">WINDOWS EXAMPLES</A></H3>
 Here are some examples of the use of the <B>exec</B> command on Windows.
+<P>
 To start an instance of <I>notepad</I> editing a file without waiting
 for the user to finish editing the file:
-<P>
 <PRE><B>exec</B> notepad myfile.txt &amp;</PRE>
 <P>
 To print a text file using <I>notepad</I>:
-<P>
 <PRE><B>exec</B> notepad /p myfile.txt</PRE>
-<H4><A NAME="M34">WORKING WITH CONSOLE PROGRAMS</A></H4>
+<P>
 If a program calls other programs, such as is common with compilers,
 then you may need to resort to batch files to hide the console windows
 that sometimes pop up:
-<P>
 <PRE><B>exec</B> cmp.bat somefile.c -o somefile</PRE>
-<P>
 With the file <I>cmp.bat</I> looking something like:
-<P>
 <PRE>@gcc %1 %2 %3 %4 %5 %6 %7 %8 %9</PRE>
-<H4><A NAME="M35">WORKING WITH COMMAND BUILT-INS</A></H4>
+<P>
 Sometimes you need to be careful, as different programs may have the
 same name and be in the path. It can then happen that typing a command
 at the DOS prompt finds <I>a different program</I> than the same
@@ -465,23 +425,13 @@ applies especially when you want to run
 commands like
 <I>dir</I> from a Tcl script (if you just want to list filenames, use
 the <B><A HREF="../TclCmd/glob.htm">glob</A></B> command.)  To do that, use this:
-<P>
 <PRE><B>exec</B> {*}[auto_execok dir] *.tcl</PRE>
-<H4><A NAME="M36">WORKING WITH NATIVE FILENAMES</A></H4>
-Many programs on Windows require filename arguments to be passed in with
-backslashes as pathname separators. This is done with the help of the
-<B><A HREF="../TclCmd/file.htm">file nativename</A></B> command. For example, to make a directory (on NTFS)
-encrypted so that only the current user can access it requires use of
-the <I>CIPHER</I> command, like this:
-<P>
-<PRE>set secureDir &quot;~/Desktop/Secure Directory&quot;
-file mkdir $secureDir
-<B>exec</B> CIPHER /e /s:[file nativename $secureDir]</PRE>
-<H3><A NAME="M37">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/error.htm">error</A></B>, <B><A HREF="../TclCmd/file.htm">file</A></B>, <B><A HREF="../TclCmd/open.htm">open</A></B>
-<H3><A NAME="M38">KEYWORDS</A></H3>
+<H3><A NAME="M30">SEE ALSO</A></H3>
+<B><A HREF="../TclCmd/error.htm">error</A></B>, <B><A HREF="../TclCmd/open.htm">open</A></B>
+<H3><A NAME="M31">KEYWORDS</A></H3>
 <A href="../Keywords/E.htm#execute">execute</A>, <A href="../Keywords/P.htm#pipeline">pipeline</A>, <A href="../Keywords/R.htm#redirection">redirection</A>, <A href="../Keywords/S.htm#subprocess">subprocess</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 Copyright &copy; 2006 Donal K. Fellows.
 </div>

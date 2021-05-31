@@ -3,15 +3,15 @@
 <HEAD><TITLE>Utf manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Utf</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Utf</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Utf.htm#M2" NAME="L885">NAME</A>
-<DL><DD>Tcl_UniChar, Tcl_UniCharCaseMatch, Tcl_UniCharNcasecmp, Tcl_UniCharToUtf, Tcl_UtfToUniChar, Tcl_UniCharToUtfDString, Tcl_UtfToUniCharDString, Tcl_UniCharLen, Tcl_UniCharNcmp, Tcl_UtfCharComplete, Tcl_NumUtfChars, Tcl_UtfFindFirst, Tcl_UtfFindLast, Tcl_UtfNext, Tcl_UtfPrev, Tcl_UniCharAtIndex, Tcl_UtfAtIndex, Tcl_UtfBackslash &mdash; routines for manipulating UTF-8 strings</DD></DL>
-<DD><A HREF="Utf.htm#M3" NAME="L886">SYNOPSIS</A>
+<DD><A HREF="Utf.htm#M2" NAME="L811">NAME</A>
+<DL><DD>Tcl_UniChar, Tcl_UniCharCaseMatch, Tcl_UniCharNcasecmp, Tcl_UniCharToUtf, Tcl_UtfToUniChar, Tcl_UniCharToUtfDString, Tcl_UtfToUniCharDString, Tcl_UniCharLen, Tcl_UniCharNcmp, Tcl_UtfCharComplete, Tcl_NumUtfChars, Tcl_UtfFindFirst, Tcl_UtfFindLast, Tcl_UtfNext, Tcl_UtfPrev, Tcl_UniCharAtIndex, Tcl_UtfAtIndex, Tcl_UtfBackslash - routines for manipulating UTF-8 strings</DD></DL>
+<DD><A HREF="Utf.htm#M3" NAME="L812">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
-<DD>typedef ... <B>Tcl_UniChar</B>;
+<DD>typedef ... Tcl_UniChar;
 <DD>int
 <DD><B>Tcl_UniCharToUtf</B>(<I>ch, buf</I>)
 <DD>int
@@ -51,17 +51,17 @@
 <DD>int
 <DD><B>Tcl_UtfBackslash</B>(<I>src, readPtr, dst</I>)
 </DL>
-<DD><A HREF="Utf.htm#M4" NAME="L887">ARGUMENTS</A>
+<DD><A HREF="Utf.htm#M4" NAME="L813">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Utf.htm#M5" NAME="L888">DESCRIPTION</A>
-<DD><A HREF="Utf.htm#M6" NAME="L889">KEYWORDS</A>
+<DD><A HREF="Utf.htm#M5" NAME="L814">DESCRIPTION</A>
+<DD><A HREF="Utf.htm#M6" NAME="L815">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_UniChar, Tcl_UniCharCaseMatch, Tcl_UniCharNcasecmp, Tcl_UniCharToUtf, Tcl_UtfToUniChar, Tcl_UniCharToUtfDString, Tcl_UtfToUniCharDString, Tcl_UniCharLen, Tcl_UniCharNcmp, Tcl_UtfCharComplete, Tcl_NumUtfChars, Tcl_UtfFindFirst, Tcl_UtfFindLast, Tcl_UtfNext, Tcl_UtfPrev, Tcl_UniCharAtIndex, Tcl_UtfAtIndex, Tcl_UtfBackslash &mdash; routines for manipulating UTF-8 strings
+Tcl_UniChar, Tcl_UniCharCaseMatch, Tcl_UniCharNcasecmp, Tcl_UniCharToUtf, Tcl_UtfToUniChar, Tcl_UniCharToUtfDString, Tcl_UtfToUniCharDString, Tcl_UniCharLen, Tcl_UniCharNcmp, Tcl_UtfCharComplete, Tcl_NumUtfChars, Tcl_UtfFindFirst, Tcl_UtfFindLast, Tcl_UtfNext, Tcl_UtfPrev, Tcl_UniCharAtIndex, Tcl_UtfAtIndex, Tcl_UtfBackslash - routines for manipulating UTF-8 strings
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
-typedef ... <B>Tcl_UniChar</B>;<BR>
+typedef ... Tcl_UniChar;<BR>
 int<BR>
 <B>Tcl_UniCharToUtf</B>(<I>ch, buf</I>)<BR>
 int<BR>
@@ -129,8 +129,8 @@ negative, all bytes up to the first null byte are used.
 <P><DT>int <B>uniLength</B> (in)<DD>
 The length of the Unicode string in characters.  Must be greater than or
 equal to 0.
-<P><DT><A HREF="../TclLib/DString.htm">Tcl_DString</A> <B>*dsPtr</B> (in/out)<DD>
-A pointer to a previously initialized <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B>.
+<P><DT>Tcl_DString <B>*dsPtr</B> (in/out)<DD>
+A pointer to a previously initialized <B>Tcl_DString</B>.
 <P><DT>unsigned long <B>numChars</B> (in)<DD>
 The number of characters to compare.
 <P><DT>const char <B>*start</B> (in)<DD>
@@ -172,21 +172,21 @@ byte of <I>src</I> in <I>*chPtr</I> as a Tcl_UniChar between 0x0000 and
 0x00ff and return 1.  
 <P>
 <B>Tcl_UniCharToUtfDString</B> converts the given Unicode string
-to UTF-8, storing the result in a previously initialized <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B>.
+to UTF-8, storing the result in a previously initialized <B>Tcl_DString</B>.
 You must specify <I>uniLength</I>, the length of the given Unicode string.
 The return value is a pointer to the UTF-8 representation of the
 Unicode string.  Storage for the return value is appended to the
-end of the <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B>.
+end of the <B>Tcl_DString</B>.
 <P>
 <B>Tcl_UtfToUniCharDString</B> converts the given UTF-8 string to Unicode,
-storing the result in the previously initialized <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B>.
+storing the result in the previously initialized <B>Tcl_DString</B>.
 In the argument <I>length</I>, you may either specify the length of
 the given UTF-8 string in bytes or
 &#8220;-1&#8221;,
 in which case <B>Tcl_UtfToUniCharDString</B> uses <B>strlen</B> to
 calculate the length.  The return value is a pointer to the Unicode
 representation of the UTF-8 string.  Storage for the return value
-is appended to the end of the <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B>.  The Unicode string
+is appended to the end of the <B>Tcl_DString</B>.  The Unicode string
 is terminated with a Unicode null character.
 <P>
 <B>Tcl_UniCharLen</B> corresponds to <B>strlen</B> for Unicode
@@ -284,6 +284,7 @@ supported by <B>Tcl_UtfBackslash</B>.
 
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/U.htm#utf">utf</A>, <A href="../Keywords/U.htm#unicode">unicode</A>, <A href="../Keywords/B.htm#backslash">backslash</A>
-<div class="copy">Copyright &copy; 1997 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

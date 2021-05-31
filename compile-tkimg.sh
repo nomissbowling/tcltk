@@ -32,12 +32,9 @@ fi
 if [ ! -d $COMPILEDIR/$MODULE ] || [ -n "$SW_FORCECOPY" ]; then
     echo -n "Copying new sources ... "
     rsync -a --exclude "*/.svn" $EXTSRCDIR/$MODULE $COMPILEDIR/
-    #if [ -n "$WINDIR" ]; then find $COMPILEDIR/$MODULE | xargs dos2unix; fi
+    if [ -n "$WINDIR" ]; then find $COMPILEDIR/$MODULE | xargs dos2unix; fi
     echo done
 fi
-## patch to MINGW64
-#find $COMPILEDIR/$MODULE -name configure | xargs sed -i "s|MINGW32_[*]|MINGW64_*|g"
-#find $COMPILEDIR/$MODULE -name tcl.m4 | xargs sed -i "s|MINGW32_\*|MINGW64_\*|g"
 
 ## configure jpeg compat module which creates the needed jconfig.h
 cd $COMPILEDIR/$MODULE/compat/libjpeg

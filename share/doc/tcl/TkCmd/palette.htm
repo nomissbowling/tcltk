@@ -3,10 +3,10 @@
 <HEAD><TITLE>tk_setPalette manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> palette</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> palette</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-tk_setPalette, tk_bisque &mdash; Modify the Tk color palette
+tk_setPalette, tk_bisque - Modify the Tk color palette
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>tk_setPalette </B><I>background</I><BR>
 <B>tk_setPalette </B><I>name value </I>?<I>name value ...</I>?<BR>
@@ -24,7 +24,7 @@ of <I>name</I>-<I>value</I> pairs, where the first argument of the pair
 is the name of an option in the Tk option database and the second
 argument is the new value to use for that option.  The following
 database names are currently supported:
-<dl><dd><table border="0"><tr><td><p class="tablecell"><B>activeBackground</B><td><p class="tablecell"><B>foreground</B><td><p class="tablecell"><B>selectColor</B><tr><td><p class="tablecell"><B>activeForeground</B><td><p class="tablecell"><B>highlightBackground</B><td><p class="tablecell"><B>selectBackground</B><tr><td><p class="tablecell"><B>background</B><td><p class="tablecell"><B>highlightColor</B><td><p class="tablecell"><B>selectForeground</B><tr><td><p class="tablecell"><B>disabledForeground</B><td><p class="tablecell"><B>insertBackground</B><td><p class="tablecell"><B>troughColor</B></table></dl>
+<dl><dd><table border="0"><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>activeBackground</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>foreground</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>selectColor</B><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>activeForeground</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>highlightBackground</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>selectBackground</B><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>background</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>highlightColor</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>selectForeground</B><tr><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>disabledForeground</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>insertBackground</B><td><p style="font-size:12px;padding-left:.5em;padding-right:.5em;"><B>troughColor</B></table></dl>
 <B>tk_setPalette</B> tries to compute reasonable defaults for any
 options that you do not specify.  You can specify options other
 than the above ones and Tk will change those options on widgets as
@@ -53,8 +53,10 @@ The procedure <B>tk_bisque</B> is provided for backward compatibility:
 it restores the application's colors to the light brown
 (&#8220;bisque&#8221;)
 color scheme used in Tk 3.6 and earlier versions.
+
 <H3><A NAME="M5">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#bisque">bisque</A>, <A href="../Keywords/C.htm#color">color</A>, <A href="../Keywords/P.htm#palette">palette</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

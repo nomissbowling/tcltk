@@ -4,12 +4,12 @@
 '\" See the file "license.terms" for information on usage and redistribution
 '\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 '\"
-.TH scope n "" itcl "[incr\ Tcl]"
 .so man.macros
+.TH scope n "" itcl "[incr\ Tcl]"
 .BS
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
-itcl::scope \- capture the namespace context for a variable
+scope \- capture the namespace context for a variable
 .SH SYNOPSIS
 \fBitcl::scope \fIname\fR
 .BE
@@ -18,10 +18,12 @@ itcl::scope \- capture the namespace context for a variable
 .PP
 Creates a scoped value for the specified \fIname\fR, which must
 be a variable name.  If the \fIname\fR is an instance variable,
-then the scope command returns a name which will resolve in any
-context as an instance variable belonging to \fIobject\fR.  
-The precise format of this name is an internal detail to Itcl.
-Use of such a scoped value makes it possible to use
+then the scope command returns a string of the following form:
+.CS
+@itcl \fIobject varName\fP
+.CE
+This is recognized in any context as an instance variable belonging
+to \fIobject\fR.  So with itcl3.0 and beyond, it is possible to use
 instance variables in conjunction with widgets.  For example, if you
 have an object with a private variable \fCx\fR, and you can use
 \fCx\fR in conjunction with the \fC-textvariable\fR option of an

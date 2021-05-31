@@ -34,8 +34,6 @@ if [ ! -d $COMPILEDIR/$MODULE ] || [ -n "$SW_FORCECOPY" ]; then
     rsync -a --exclude "*/CVS" $EXTSRCDIR/$MODULE $COMPILEDIR/
     echo done
 fi
-## patch to MINGW64
-find $COMPILEDIR/$MODULE -name configure | xargs sed -i "s|MINGW32_|MINGW64_|g"
 
 ## change to compile dir
 cd $COMPILEDIR/$MODULE

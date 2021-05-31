@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_ComputeTextLayout manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> TextLayout</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> TextLayout</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="TextLayout.htm#M2" NAME="L597">NAME</A>
-<DL><DD>Tk_ComputeTextLayout, Tk_FreeTextLayout, Tk_DrawTextLayout, Tk_UnderlineTextLayout, Tk_PointToChar, Tk_CharBbox, Tk_DistanceToTextLayout, Tk_IntersectTextLayout, Tk_TextLayoutToPostscript &mdash; routines to measure and display single-font, multi-line, justified text.</DD></DL>
-<DD><A HREF="TextLayout.htm#M3" NAME="L598">SYNOPSIS</A>
+<DD><A HREF="TextLayout.htm#M2" NAME="L595">NAME</A>
+<DL><DD>Tk_ComputeTextLayout, Tk_FreeTextLayout, Tk_DrawTextLayout, Tk_UnderlineTextLayout, Tk_PointToChar, Tk_CharBbox, Tk_DistanceToTextLayout, Tk_IntersectTextLayout, Tk_TextLayoutToPostscript - routines to measure and display single-font, multi-line, justified text.</DD></DL>
+<DD><A HREF="TextLayout.htm#M3" NAME="L596">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>Tk_TextLayout
@@ -29,16 +29,17 @@
 <DD><B>Tk_IntersectTextLayout(</B><I>layout, x, y, width, height</I><B>)</B>
 <DD>void
 <DD><B>Tk_TextLayoutToPostscript(</B><I>interp, layout</I><B>)</B>
+<DD>
 </DL>
-<DD><A HREF="TextLayout.htm#M4" NAME="L599">ARGUMENTS</A>
+<DD><A HREF="TextLayout.htm#M4" NAME="L597">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="TextLayout.htm#M5" NAME="L600">DESCRIPTION</A>
-<DD><A HREF="TextLayout.htm#M6" NAME="L601">DISPLAY MODEL</A>
-<DD><A HREF="TextLayout.htm#M7" NAME="L602">KEYWORDS</A>
+<DD><A HREF="TextLayout.htm#M5" NAME="L598">DESCRIPTION</A>
+<DD><A HREF="TextLayout.htm#M6" NAME="L599">DISPLAY MODEL</A>
+<DD><A HREF="TextLayout.htm#M7" NAME="L600">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_ComputeTextLayout, Tk_FreeTextLayout, Tk_DrawTextLayout, Tk_UnderlineTextLayout, Tk_PointToChar, Tk_CharBbox, Tk_DistanceToTextLayout, Tk_IntersectTextLayout, Tk_TextLayoutToPostscript &mdash; routines to measure and display single-font, multi-line, justified text.
+Tk_ComputeTextLayout, Tk_FreeTextLayout, Tk_DrawTextLayout, Tk_UnderlineTextLayout, Tk_PointToChar, Tk_CharBbox, Tk_DistanceToTextLayout, Tk_IntersectTextLayout, Tk_TextLayoutToPostscript - routines to measure and display single-font, multi-line, justified text.
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Tk_TextLayout<BR>
@@ -59,9 +60,10 @@ int<BR>
 <B>Tk_IntersectTextLayout(</B><I>layout, x, y, width, height</I><B>)</B><BR>
 void<BR>
 <B>Tk_TextLayoutToPostscript(</B><I>interp, layout</I><B>)</B><BR>
+<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
-<DT><A HREF="../TkLib/GetFont.htm">Tk_Font</A> <B>tkfont</B> (in)<DD>
+<DT>Tk_Font <B>tkfont</B> (in)<DD>
 Font to use when constructing and displaying a text layout.  The
 <I>tkfont</I> must remain valid for the lifetime of the text layout.  Must
 have been returned by a previous call to <B><A HREF="../TkLib/GetFont.htm">Tk_GetFont</A></B>.
@@ -82,7 +84,7 @@ character to fit on a line, it will be expanded to allow one character to
 fit on each line.  If <I>wrapLength</I> is &lt;= 0, there is no automatic
 wrapping; lines will get as long as they need to be and only wrap if a
 newline/return character is encountered.
-<P><DT><A HREF="../TkLib/GetJustify.htm">Tk_Justify</A> <B>justify</B> (in)<DD>
+<P><DT>Tk_Justify <B>justify</B> (in)<DD>
 How to justify the lines in a multi-line text layout.  Possible values
 are <B>TK_JUSTIFY_LEFT</B>, <B>TK_JUSTIFY_CENTER</B>, or
 <B>TK_JUSTIFY_RIGHT</B>. If the text layout only occupies a single
@@ -143,7 +145,7 @@ Specifies the width and height, in pixels, of the rectangular area to
 compare for intersection against the text layout.
 <P><DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (out)<DD>
 Postscript code that will print the text layout is appended to
-the result of interpreter <I>interp</I>.
+<I>interp-&gt;result</I>.
 <P></DL>
 <H3><A NAME="M5">DESCRIPTION</A></H3>
 These routines are for measuring and displaying single-font, multi-line,
@@ -201,11 +203,9 @@ whose <I>x</I>-value is less than 0 will be considered closest to the first
 character on that line; any point whose <I>x</I>-value is greater than the
 width of the text layout will be considered closest to the last character on
 that line.  The return value is the index of the character that was closest
-to the point, or one more than the index of any character (to indicate that
-the point was after the end of the string and that the corresponding caret
-would be at the end of the string).  Given a <I>layout</I> with no characters,
-the value 0 will always be returned, referring to a hypothetical zero-width
-placeholder character.
+to the point.  Given a <I>layout</I> with no characters, the value 0 will
+always be returned, referring to a hypothetical zero-width placeholder
+character.  
 <P>
 <B>Tk_CharBbox</B> uses the information in <I>layout</I> to return the
 bounding box for the character specified by <I>index</I>.  The width of the
@@ -250,7 +250,7 @@ array of strings that represent the individual lines in <I>layout</I>.  It
 is the responsibility of the caller to take the Postscript array of
 strings and add some Postscript function operate on the array to render
 each of the lines.  The code that represents the Postscript array of
-strings is appended to interpreter <I>interp</I>'s result.
+strings is appended to <I>interp-&gt;result</I>.
 <H3><A NAME="M6">DISPLAY MODEL</A></H3>
 When measuring a text layout, space characters that occur at the end of a
 line are ignored.  The space characters still exist and the insertion point
@@ -292,6 +292,7 @@ actually drawn - they are merely placeholders maintained in the
 <I>layout</I>.  
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/F.htm#font">font</A>
-<div class="copy">Copyright &copy; 1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

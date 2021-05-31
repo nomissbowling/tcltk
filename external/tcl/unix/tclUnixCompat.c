@@ -36,10 +36,10 @@
  * 'length' stay aligned.
  */
 
-#define PadBuffer(buffer, length, size)			\
-    if (((length) % (size))) {				\
-	(buffer) += ((size) - ((length) % (size)));	\
-	(length) += ((size) - ((length) % (size)));	\
+#define PadBuffer(buffer, length, size)             \
+    if (((length) % (size))) {                      \
+	(buffer) += ((size) - ((length) % (size))); \
+	(length) += ((size) - ((length) % (size))); \
     }
 
 /*
@@ -49,7 +49,7 @@
 
 #ifdef TCL_THREADS
 
-typedef struct {
+typedef struct ThreadSpecificData {
     struct passwd pwd;
 #if defined(HAVE_GETPWNAM_R_5) || defined(HAVE_GETPWUID_R_5)
 #define NEED_PW_CLEANER 1
@@ -118,10 +118,10 @@ static int		CopyString(const char *src, char *buf, int buflen);
 #endif
 
 #ifdef NEED_PW_CLEANER
-static void		FreePwBuf(ClientData dummy);
+static void		FreePwBuf(ClientData ignored);
 #endif
 #ifdef NEED_GR_CLEANER
-static void		FreeGrBuf(ClientData dummy);
+static void		FreeGrBuf(ClientData ignored);
 #endif
 #endif /* TCL_THREADS */
 
@@ -201,7 +201,7 @@ TclpGetPwNam(
 	if (tsdPtr->pbuflen < 1) {
 	    tsdPtr->pbuflen = 1024;
 	}
-	tsdPtr->pbuf = (char *)ckalloc(tsdPtr->pbuflen);
+	tsdPtr->pbuf = ckalloc(tsdPtr->pbuflen);
 	Tcl_CreateThreadExitHandler(FreePwBuf, NULL);
     }
     while (1) {
@@ -214,7 +214,7 @@ TclpGetPwNam(
 	    return NULL;
 	}
 	tsdPtr->pbuflen *= 2;
-	tsdPtr->pbuf = (char *)ckrealloc(tsdPtr->pbuf, tsdPtr->pbuflen);
+	tsdPtr->pbuf = ckrealloc(tsdPtr->pbuf, tsdPtr->pbuflen);
     }
     return (pwPtr != NULL ? &tsdPtr->pwd : NULL);
 
@@ -281,7 +281,7 @@ TclpGetPwUid(
 	if (tsdPtr->pbuflen < 1) {
 	    tsdPtr->pbuflen = 1024;
 	}
-	tsdPtr->pbuf = (char *)ckalloc(tsdPtr->pbuflen);
+	tsdPtr->pbuf = ckalloc(tsdPtr->pbuflen);
 	Tcl_CreateThreadExitHandler(FreePwBuf, NULL);
     }
     while (1) {
@@ -294,7 +294,7 @@ TclpGetPwUid(
 	    return NULL;
 	}
 	tsdPtr->pbuflen *= 2;
-	tsdPtr->pbuf = (char *)ckrealloc(tsdPtr->pbuf, tsdPtr->pbuflen);
+	tsdPtr->pbuf = ckrealloc(tsdPtr->pbuf, tsdPtr->pbuflen);
     }
     return (pwPtr != NULL ? &tsdPtr->pwd : NULL);
 
@@ -336,10 +336,9 @@ TclpGetPwUid(
 #ifdef NEED_PW_CLEANER
 static void
 FreePwBuf(
-    ClientData dummy)
+    ClientData ignored)
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-    (void)dummy;
 
     ckfree(tsdPtr->pbuf);
 }
@@ -385,7 +384,7 @@ TclpGetGrNam(
 	if (tsdPtr->gbuflen < 1) {
 	    tsdPtr->gbuflen = 1024;
 	}
-	tsdPtr->gbuf = (char *)ckalloc(tsdPtr->gbuflen);
+	tsdPtr->gbuf = ckalloc(tsdPtr->gbuflen);
 	Tcl_CreateThreadExitHandler(FreeGrBuf, NULL);
     }
     while (1) {
@@ -398,7 +397,7 @@ TclpGetGrNam(
 	    return NULL;
 	}
 	tsdPtr->gbuflen *= 2;
-	tsdPtr->gbuf = (char *)ckrealloc(tsdPtr->gbuf, tsdPtr->gbuflen);
+	tsdPtr->gbuf = ckrealloc(tsdPtr->gbuf, tsdPtr->gbuflen);
     }
     return (grPtr != NULL ? &tsdPtr->grp : NULL);
 
@@ -465,7 +464,7 @@ TclpGetGrGid(
 	if (tsdPtr->gbuflen < 1) {
 	    tsdPtr->gbuflen = 1024;
 	}
-	tsdPtr->gbuf = (char *)ckalloc(tsdPtr->gbuflen);
+	tsdPtr->gbuf = ckalloc(tsdPtr->gbuflen);
 	Tcl_CreateThreadExitHandler(FreeGrBuf, NULL);
     }
     while (1) {
@@ -478,7 +477,7 @@ TclpGetGrGid(
 	    return NULL;
 	}
 	tsdPtr->gbuflen *= 2;
-	tsdPtr->gbuf = (char *)ckrealloc(tsdPtr->gbuf, tsdPtr->gbuflen);
+	tsdPtr->gbuf = ckrealloc(tsdPtr->gbuf, tsdPtr->gbuflen);
     }
     return (grPtr != NULL ? &tsdPtr->grp : NULL);
 
@@ -520,10 +519,9 @@ TclpGetGrGid(
 #ifdef NEED_GR_CLEANER
 static void
 FreeGrBuf(
-    ClientData dummy)
+    ClientData ignored)
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-    (void)dummy;
 
     ckfree(tsdPtr->gbuf);
 }
@@ -556,17 +554,17 @@ TclpGetHostByName(
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
 #if defined(HAVE_GETHOSTBYNAME_R_5)
-    int local_errno;
+    int h_errno;
 
     return gethostbyname_r(name, &tsdPtr->hent, tsdPtr->hbuf,
-			   sizeof(tsdPtr->hbuf), &local_errno);
+			   sizeof(tsdPtr->hbuf), &h_errno);
 
 #elif defined(HAVE_GETHOSTBYNAME_R_6)
     struct hostent *hePtr = NULL;
-    int local_errno, result;
+    int h_errno, result;
 
     result = gethostbyname_r(name, &tsdPtr->hent, tsdPtr->hbuf,
-	    sizeof(tsdPtr->hbuf), &hePtr, &local_errno);
+	    sizeof(tsdPtr->hbuf), &hePtr, &h_errno);
     return (result == 0) ? hePtr : NULL;
 
 #elif defined(HAVE_GETHOSTBYNAME_R_3)
@@ -626,17 +624,17 @@ TclpGetHostByAddr(
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
 #if defined(HAVE_GETHOSTBYADDR_R_7)
-    int local_errno;
+    int h_errno;
 
     return gethostbyaddr_r(addr, length, type, &tsdPtr->hent, tsdPtr->hbuf,
-	    sizeof(tsdPtr->hbuf), &local_errno);
+	    sizeof(tsdPtr->hbuf), &h_errno);
 
 #elif defined(HAVE_GETHOSTBYADDR_R_8)
     struct hostent *hePtr;
-    int local_errno;
+    int h_errno;
 
     return (gethostbyaddr_r(addr, length, type, &tsdPtr->hent, tsdPtr->hbuf,
-		sizeof(tsdPtr->hbuf), &hePtr, &local_errno) == 0)
+		sizeof(tsdPtr->hbuf), &hePtr, &h_errno) == 0)
 	    ? &tsdPtr->hent : NULL;
 #else
 #define NEED_COPYHOSTENT 1
@@ -687,8 +685,8 @@ CopyGrp(
     char *buf,
     int buflen)
 {
-    char *p = buf;
-    int copied, len = 0;
+    register char *p = buf;
+    register int copied, len = 0;
 
     /*
      * Copy username.
@@ -889,7 +887,7 @@ CopyArray(
     int buflen)			/* Size of buffer. */
 {
     int i, j, len = 0;
-    char *p, **newBuffer;
+    char *p, **new;
 
     if (src == NULL) {
 	return 0;
@@ -905,7 +903,7 @@ CopyArray(
 	return -1;
     }
 
-    newBuffer = (char **)buf;
+    new = (char **) buf;
     p = buf + len;
 
     for (j = 0; j < i; j++) {
@@ -916,10 +914,10 @@ CopyArray(
 	    return -1;
 	}
 	memcpy(p, src[j], sz);
-	newBuffer[j] = p;
+	new[j] = p;
 	p = buf + len;
     }
-    newBuffer[j] = NULL;
+    new[j] = NULL;
 
     return len;
 }
@@ -964,14 +962,6 @@ CopyString(
 #endif /* NEED_COPYSTRING */
 
 /*
- * Local Variables:
- * mode: c
- * c-basic-offset: 4
- * fill-column: 78
- * End:
- */
-
-/*
  *------------------------------------------------------------------------
  *
  * TclWinCPUID --
@@ -1014,7 +1004,7 @@ TclWinCPUID(
 #endif
     return status;
 }
-
+
 /*
  * Local Variables:
  * mode: c

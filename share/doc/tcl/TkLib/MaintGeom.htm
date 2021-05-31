@@ -3,36 +3,36 @@
 <HEAD><TITLE>Tk_MaintainGeometry manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> MaintGeom</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> MaintGeom</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="MaintGeom.htm#M2" NAME="L442">NAME</A>
-<DL><DD>Tk_MaintainGeometry, Tk_UnmaintainGeometry &mdash; maintain geometry of one window relative to another</DD></DL>
-<DD><A HREF="MaintGeom.htm#M3" NAME="L443">SYNOPSIS</A>
+<DD><A HREF="MaintGeom.htm#M2" NAME="L440">NAME</A>
+<DL><DD>Tk_MaintainGeometry, Tk_UnmaintainGeometry - maintain geometry of one window relative to another</DD></DL>
+<DD><A HREF="MaintGeom.htm#M3" NAME="L441">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD><B>Tk_MaintainGeometry</B>(<I>slave, master, x, y, width, height</I>)
 <DD><B>Tk_UnmaintainGeometry</B>(<I>slave, master</I>)
 </DL>
-<DD><A HREF="MaintGeom.htm#M4" NAME="L444">ARGUMENTS</A>
+<DD><A HREF="MaintGeom.htm#M4" NAME="L442">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="MaintGeom.htm#M5" NAME="L445">DESCRIPTION</A>
-<OL class="description">
-</OL>
-<DD><A HREF="MaintGeom.htm#M6" NAME="L446">KEYWORDS</A>
+<DD><A HREF="MaintGeom.htm#M5" NAME="L443">DESCRIPTION</A>
+<DL class="description">
+</DL>
+<DD><A HREF="MaintGeom.htm#M6" NAME="L444">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_MaintainGeometry, Tk_UnmaintainGeometry &mdash; maintain geometry of one window relative to another
+Tk_MaintainGeometry, Tk_UnmaintainGeometry - maintain geometry of one window relative to another
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 <B>Tk_MaintainGeometry</B>(<I>slave, master, x, y, width, height</I>)<BR>
 <B>Tk_UnmaintainGeometry</B>(<I>slave, master</I>)<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
-<DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>slave</B> (in)<DD>
+<DT>Tk_Window <B>slave</B> (in)<DD>
 Window whose geometry is to be controlled.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>master</B> (in)<DD>
+<P><DT>Tk_Window <B>master</B> (in)<DD>
 Window relative to which <I>slave</I>'s geometry will be controlled.
 <P><DT>int <B>x</B> (in)<DD>
 Desired x-coordinate of <I>slave</I> in <I>master</I>, measured in pixels
@@ -53,20 +53,20 @@ easier for geometry managers to deal with slaves whose masters are not
 their parents.
 Three problems arise if the master for a slave is not its parent:
 <P>
-<OL class="description">
-<LI value="1">
+<DL class="description">
+<DT>[1]<DD>
 The x- and y-position of the slave must be translated from the
 coordinate system of the master to that of the parent before
 positioning the slave.
-<P><LI value="2">
+<P><DT>[2]<DD>
 If the master window, or any of its ancestors up to the slave's
 parent, is moved, then the slave must be repositioned within its
 parent in order to maintain the correct position relative to the
 master.
-<P><LI value="3">
+<P><DT>[3]<DD>
 If the master or one of its ancestors is mapped or unmapped, then
 the slave must be mapped or unmapped to correspond.
-<P></OL>
+<P></DL>
 <P>
 None of these problems is an issue if the parent and master are
 the same.  For example, if the master or one of its ancestors
@@ -110,7 +110,8 @@ If <B>Tk_UnmaintainGeometry</B> is called for a <I>master</I>-<I>slave</I>
 pair that is is not currently managed, the call has no effect.
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/G.htm#geometry manager">geometry manager</A>, <A href="../Keywords/M.htm#map">map</A>, <A href="../Keywords/M.htm#master">master</A>, <A href="../Keywords/P.htm#parent">parent</A>, <A href="../Keywords/P.htm#position">position</A>, <A href="../Keywords/S.htm#slave">slave</A>, <A href="../Keywords/U.htm#unmap">unmap</A>
-<div class="copy">Copyright &copy; 1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

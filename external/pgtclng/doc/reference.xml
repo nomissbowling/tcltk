@@ -1,0 +1,5849 @@
+<!-- $Id: reference.xml 393 2017-11-14 00:50:17Z lbayuk $ -->
+<!-- Notes:
+     See local.xsl for use of section vs sect1 in this chapter.
+ -->
+<chapter id="pgtcl-ref">
+<title><application>pgtcl</application> Command Reference</title>
+
+  <abstract>
+    <title></title>
+    <para>
+This chapter contains the reference information for
+all the <application>pgtcl</application> commands.
+The commands are grouped into functional categories.
+(An alphabetical listing of commands can be found in
+<xref linkend="pgtcl-commands-table" />.)
+    </para>
+    <para>
+Note: This chapter follows the Tcl documentation convention for indicating
+optional parameters with question marks <literal>?like this...?</literal>
+rather than the typical notation with square brackets.
+    </para>
+  </abstract>
+
+<section id="pgtcl-ref-connection">
+<title>Database Connection Control Commands</title>
+
+  <abstract>
+    <title></title>
+    <para>
+The commands in this section are used to connect to and disconnect from the
+database.
+    </para>
+  </abstract>
+
+<refentry id="pg-connect">
+  <refmeta>
+    <refentrytitle>pg_connect</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_connect</refname>
+    <refpurpose>Open a connection to the server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_connect -conninfo <parameter>connectOptions</parameter>
+pg_connect -connlist <parameter>connectList</parameter>
+pg_connect <parameter>dbName</parameter> <optional>-host <parameter>hostName</parameter></optional> <optional>-port <parameter>portNumber</parameter></optional> <optional>-tty <parameter>tty</parameter></optional> <optional>-options <parameter>serverOptions</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+      <function>pg_connect</function> opens a connection to the
+      PostgreSQL server.
+    </para>
+
+    <para>
+      There are three ways to specify connection options: using a connection
+      string (<parameter>connectOptions</parameter>), using a connection list
+      (<parameter>connectList</parameter>), and an obsolete method with
+      a database name followed by separate option and value pairs.
+    </para>
+
+    <para>
+      Connections opened with <function>pg_connect</function>
+      should be closed with <xref linkend="pg-disconnect" />
+      once they are no longer needed.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <title>Using a connection string</title>
+
+      <varlistentry>
+        <term><option>-conninfo <replaceable>connectOptions</replaceable></option></term>
+        <listitem>
+          <para>
+connectOptions is a string of connection options, each written in the form
+<literal>keyword = value</literal>.  A list of valid options can be found
+in the description of the <application>libpq</application> function
+<function>PQconnectdb</function>. Some of the more common keywords are:
+<literal>host</literal>, <literal>port</literal>,
+<literal>dbname</literal>, <literal>user</literal>, and
+<literal>password</literal>. The keyword value must be placed in single
+quotes if it is empty or contains spaces. Within the single quotes, a
+single quote or backslash must be escaped by preceding it with a backslash.
+Spaces are optional around the equal signs.
+An example is:
+<programlisting>
+pg_connect -conninfo "host=myserver dbname=productiondb user=me password=mysecret"
+</programlisting>
+          </para>
+          <para>
+You can also use a URI form for the connectOptions string.
+The usual URI-escaping needs to be used (RFC 3986) for each component. (For
+example, if the password contains a ':' it must be written as '%3A'.)
+Refer to the notes below for more information.
+An example is:
+<programlisting>
+pg_connect -conninfo "postgresql://me:mysecret@myserver/productiondb"
+</programlisting>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <variablelist>
+      <title>Using a connection list</title>
+
+      <varlistentry>
+        <term><option>-connlist <replaceable>connectList</replaceable></option></term>
+        <listitem>
+          <para>
+connectList is a Tcl list with keyword and value pairs. The keywords are
+the same as those specified in the connection string form above.
+The advantage of this form is that it does not require escaping or quoting
+of individual values, other than requiring a well-formed Tcl list argument.
+An example is:
+<programlisting>
+pg_connect -connlist {host myserver dbname productiondb user me password mysecret}
+</programlisting>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <variablelist>
+      <title>Old style</title>
+
+      <varlistentry>
+        <term><replaceable>dbName</replaceable></term>
+        <listitem>
+          <para>
+            The name of the database to connect to.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-host <replaceable>hostName</replaceable></option></term>
+        <listitem>
+          <para>
+            The host name of the database server to connect to.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-port <replaceable>portNumber</replaceable></option></term>
+        <listitem>
+          <para>
+            The TCP port number of the database server to connect to.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-tty <replaceable>tty</replaceable></option></term>
+        <listitem>
+          <para>
+            A file or <acronym>TTY</acronym> for optional debug output from
+            the server.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-options <replaceable>serverOptions</replaceable></option></term>
+        <listitem>
+          <para>
+            Additional configuration options to pass to the server.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+       If successful, a handle for a database connection is returned.
+       Handles start with the prefix <literal>pgsql</literal>.
+    </para>
+    <para>
+       A Tcl error will be thrown if a connection could not be made. The Tcl
+       error message indicates the reason.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+
+    <para>
+      Specifying an unknown or invalid option in a connection string
+      or connection list will result in an error.
+    </para>
+
+    <para>
+      The older style is deprecated and should not be used. It does not
+      support specifying username or password. Assuming the database
+      requires authentication, using this form requires passing authentication
+      credentials in some other way (such as through environment variables).
+    </para>
+
+    <para>
+      The connection list form, and support for URI connection strings,
+      were added in
+      <application>pgtclng-2.1.0</application> and in
+      <application>pgintcl-3.5.0</application>.
+    </para>
+
+    <para>
+      Refer to the PostgreSQL documentation, "libpq - C Library", "Database
+      Connection Control Functions", "Connection URIs" for details on
+      URI connection strings.
+      With libpq-based implementations of the Pgtcl interface, such as
+      <application>Pgtcl-ng</application>, libpq parses the URI and handles
+      the full specification. It requires PostgreSQL-9.2.0 or higher.
+      The general form for a URI connection string is:
+<programlisting>
+postgresql://user:password@host:port/dbname?option=value...
+</programlisting>
+    </para>
+
+    <para>
+      <application>Pgintcl</application>, a pure-Tcl implementation of the
+      pgtcl interface, does not use libpq, and has these limitations
+      in <function>pg_connect</function>:
+        <itemizedlist>
+          <listitem>
+            <para>
+              The older form, with separate <parameter>dbname</parameter>
+              command argument, is not supported.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The URI form <literal>postgresql://...</literal> is supported,
+              but option parameters (following ? in the URI) are ignored and
+              not supported.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The list of valid connection options is much smaller than that
+              provided by libpq. Assume only host, hostaddr, port, dbname,
+              user, and password are valid
+              (or use <xref linkend="pg-conndefaults"/> to see the list).
+            </para>
+          </listitem>
+        </itemizedlist>
+    </para>
+
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application> functions
+      <function>PQconnectdb</function> for the connection string style,
+      <function>PQconnectdbParams</function> for the connection list style,
+      and <function>PQsetdb</function> for the older style.
+    </para>
+  </refsect1>
+
+</refentry>
+
+
+<refentry id="pg-disconnect">
+  <refmeta>
+    <refentrytitle>pg_disconnect</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_disconnect</refname>
+    <refpurpose>Close a connection to the server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_disconnect <parameter>conn</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_disconnect</function> closes a connection to the
+      PostgreSQL server.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection to be closed.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      None.
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQfinish</function>.
+    </para>
+  </refsect1>
+
+</refentry>
+
+
+<refentry id="pg-conndefaults">
+  <refmeta>
+    <refentrytitle>pg_conndefaults</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_conndefaults</refname>
+    <refpurpose>Get connection options and their defaults</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_conndefaults
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_conndefaults</function> returns information about the
+      connection options available in <function>pg_connect
+      -conninfo</function> and the current default value for each option.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <para>
+      None
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The result is a list describing the possible connection options and
+      their current default values.  Each entry in the list is a sublist
+      of the format:
+<synopsis>
+{optname label dispchar dispsize value}
+</synopsis>
+      where the <replaceable>optname</replaceable> is usable as an option in
+      <function>pg_connect -conninfo</function>.
+    </para>
+  </refsect1>
+
+</refentry>
+
+</section>
+
+<section id="pgtcl-ref-connstatus">
+  <title>Connection Status Commands</title>
+
+  <abstract>
+    <title></title>
+    <para>
+The commands in this section are used to report information about
+a connection to the database.
+    </para>
+  </abstract>
+
+<refentry id="pg-transaction-status">
+  <refmeta>
+    <refentrytitle>pg_transaction_status</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_transaction_status</refname>
+    <refpurpose>Get the current in-transaction status</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_transaction_status <parameter>conn</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_transaction_status</function> returns the current status of
+the connection: whether it is inside a transaction block, outside a
+transaction block, or inside a failed transaction block.  A transaction
+block begins with the SQL command <literal>BEGIN</literal>, and ends with
+one of the SQL commands <literal>COMMIT</literal> or
+<literal>ROLLBACK</literal>.  A failed transaction block is a transaction
+block after any error occurs; PostgreSQL will
+ignore all SQL commands until the end of the transaction block.
+<function>pg_transaction_status</function> allows an application to
+determine if it is in a transaction block or failed transaction block.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to report transaction status.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      One of the string values in the following table:
+    </para>
+    <informaltable id="pgtcl-transaction-status-table">
+      <tgroup cols="2">
+      <thead>
+        <row>
+          <entry>Value</entry>
+          <entry>Description</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>IDLE</entry>
+          <entry>Connection is idle, not in a transaction block.</entry>
+        </row>
+        <row>
+          <entry>INTRANS</entry>
+          <entry>Connection is in a (non-failed) transaction block.</entry>
+        </row>
+        <row>
+          <entry>INERROR</entry>
+          <entry>Connection is in a failed transaction block.</entry>
+        </row>
+        <row>
+          <entry>UNKNOWN</entry>
+          <entry>Connection is bad or in an unknown state.</entry>
+        </row>
+      </tbody>
+      </tgroup>
+    </informaltable>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQtransactionStatus</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-parameter-status">
+  <refmeta>
+    <refentrytitle>pg_parameter_status</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_parameter_status</refname>
+    <refpurpose>Get the value of a parameter from the database server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_parameter_status <parameter>conn</parameter> <parameter>paramName</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_parameter_status</function> returns the value of a
+PostgreSQL parameter as supplied by the server.
+Different releases of PostgreSQL may provide different parameters.
+As of PostgreSQL-8.4.0, the following parameters are available.
+    </para>
+    <informaltable id="pgtcl-parameters-table">
+      <tgroup cols="3">
+      <thead>
+        <row>
+          <entry>Parameter</entry>
+          <entry>Description</entry>
+          <entry>Example Value</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>client_encoding</entry>
+          <entry>Client's character set encoding</entry>
+          <entry>SQL_ASCII or UNICODE</entry>
+        </row>
+        <row>
+          <entry>DateStyle</entry>
+          <entry>Display format and rules for ambiguous date/time values</entry>
+          <entry>ISO, MDY </entry>
+        </row>
+        <row>
+          <entry>integer_datetimes</entry>
+          <entry>Date/times are integer based</entry>
+          <entry>off</entry>
+        </row>
+        <row>
+          <entry>IntervalStyle</entry>
+          <entry>Display format and rules for interval types</entry>
+          <entry>postgres</entry>
+        </row>
+        <row>
+          <entry>is_superuser</entry>
+          <entry>Has superuser rights?</entry>
+          <entry>off</entry>
+        </row>
+        <row>
+          <entry>server_encoding</entry>
+          <entry>Server (database) character set encoding</entry>
+          <entry>SQL_ASCII or UNICODE</entry>
+        </row>
+        <row>
+          <entry>server_version</entry>
+          <entry>PostgreSQL server version</entry>
+          <entry>8.4.0</entry>
+        </row>
+        <row>
+          <entry>session_authorization</entry>
+          <entry>Username</entry>
+          <entry>guest</entry>
+        </row>
+        <row>
+          <entry>standard_conforming_strings</entry>
+          <entry>Backslash \ is literal in quoted strings</entry>
+          <entry>off</entry>
+        </row>
+        <row>
+          <entry>TimeZone</entry>
+          <entry>Time zone for displaying and interpreting time stamps</entry>
+          <entry>EST5EDT</entry>
+        </row>
+
+      </tbody>
+      </tgroup>
+    </informaltable>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>paramName</replaceable></term>
+        <listitem>
+          <para>
+            The name of the parameter to get. See above list.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+       The value of the parameter, or an empty string if no such parameter was
+       supplied by the database.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      This command does not contact the database server. Parameters are
+      supplied by the server at connection time (or possibly later) and
+      saved by the interface until needed.
+    </para>
+    <para>
+      For another way to access the server version, see
+      <xref linkend="pg-server-version" />.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQparameterStatus</function>.
+    </para>
+
+  </refsect1>
+</refentry>
+
+<refentry id="pg-backend-pid">
+  <refmeta>
+    <refentrytitle>pg_backend_pid</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_backend_pid</refname>
+    <refpurpose>Get the process ID (PID) of the backend</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_backend_pid <parameter>conn</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_backend_pid</function> returns the process ID (PID) of
+the PostgreSQL backend process which is handling the connection.
+This is an integer that uniquely identifies this client connection
+among all others connected to the same PostgreSQL server.
+It can also be used with notifications (see <xref linkend="pg-listen" />).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection to query
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      An integer process ID (PID). This is the ID of a process running on
+      the server, not on the client system (unless they are the same).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      This command does not contact the database server - it uses information
+      supplied by the server at connection time.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQbackendPID</function>.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-2.0.0</application> and in
+      <application>pgintcl-3.4.0</application>.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-server-version">
+  <refmeta>
+    <refentrytitle>pg_server_version</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_server_version</refname>
+    <refpurpose>Get the PostgreSQL server software version</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_server_version <parameter>conn</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_server_version</function> returns the version of the
+connected PostgreSQL server, as an integer.
+This integer value can be used to check for a minimum server level, for
+example, and is easier to work with compared to the version string in the
+<literal>server_version</literal> parameter.
+For PostgreSQL releases through 9.x, there are two digits allocated to each
+of the major, minor, and revision numbers.
+For PostgreSQL releases starting with 10.x, there are two digits for the
+major version, two digits are zero, and two digits are for the minor version.
+See the example below.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection to query
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      An integer representing the PostgreSQL server software version number.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      This command does not contact the database server - it uses information
+      supplied by the server at connection time.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQserverVersion</function>.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-2.0.0</application> and in
+      <application>pgintcl-3.4.0</application>.
+    </para>
+    <para>
+      PostgreSQL used 3-part version numbers before 10.0 and 2-part
+      version numbers starting with 10.0.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+
+    <para>
+The return value from <function>pg_server_version</function> contains an
+integer representation of the <literal>server_version</literal> parameter. See
+<xref linkend="pg-parameter-status" /> for more on parameters.
+Consider the following:
+<programlisting>
+set version_int [pg_server_version $conn]
+set version_str [pg_parameter_status $conn server_version]
+</programlisting>
+If the PostgreSQL server is running version 9.6.5,
+the above will set version_int to 90605, and version_str to "9.6.5".
+If the PostgreSQL server is running version 10.1,
+the above will set version_int to 100001, and version_str to "10.1".
+    </para>
+  </refsect1>
+</refentry>
+
+</section>
+
+<section id="pgtcl-ref-query">
+  <title>Query Execution Commands</title>
+
+  <abstract>
+    <title></title>
+    <para>
+The commands in this section are used to send SQL commands (queries) to
+the database server, and fetch results from the database server.
+    </para>
+  </abstract>
+
+<refentry id="pg-exec">
+  <refmeta>
+    <refentrytitle>pg_exec</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_exec</refname>
+    <refpurpose>Execute an SQL command on the server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_exec <parameter>conn</parameter> <parameter>commandString</parameter> <optional><parameter>param...</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_exec</function> sends a command to the PostgreSQL server and
+returns a result handle.
+Optional arguments can be supplied to replace parameter place-holders in the
+command string.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>commandString</replaceable></term>
+        <listitem>
+          <para>
+            The SQL command to execute.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>param...</replaceable></term>
+        <listitem>
+          <para>
+            Zero or more parameter values to bind to command string
+            place-holders.
+            The first parameter will replace <literal>$1</literal> in the
+            command string, the second parameter will replace
+            <literal>$2</literal>, etc.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Returns a result handle which can be used with
+      <xref linkend="pg-result" /> to obtain the results of the command.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database. Note that no Tcl error will be thrown if an invalid
+      command is successfully sent to the server and a response successfully
+      received. The result status must be checked after a normal return.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      Be sure to free the returned result handle with
+      <function>pg_result -clear</function> when you are done with it.
+    </para>
+    <para>
+      <function>pg_exec</function> can be used to start a
+      <command>COPY</command>, after which the application reads directly from
+      or writes directly to the connection handle.
+      See <xref linkend="pgtcl-example-copy" /> for an example.
+    </para>
+    <para>
+      If optional arguments are supplied, this command becomes a
+      simplified form of <xref linkend="pg-exec-params" />, supporting
+      only text-format arguments with a text-format result. The command string
+      must include parameter place-holders <literal>$1</literal>,
+      <literal>$2</literal>, etc. and an equal number of parameter
+      arguments.
+      Be sure to brace-quote or escape the parameter place-holders such as
+      <literal>$1</literal> in the SQL command string
+      to protect them from Tcl variable expansion.
+      Use of these parameters avoids the need to quote and escape
+      values which would otherwise have to be substituted directly into the
+      command string.
+    </para>
+    <para>
+      The form of this command using optional arguments for parameterized
+      queries was added in
+      <application>pgtclng-1.5.1</application> and in
+      <application>pgintcl-2.1.0</application>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQexec</function> if called without optional
+      query parameter arguments, and the
+      function <function>PQexecParams</function> if called with optional
+      query parameter arguments.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-execute">
+  <refmeta>
+    <refentrytitle>pg_execute</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_execute</refname>
+    <refpurpose>Execute an SQL command on the server and optionally loop over the results</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_execute <optional>-array <parameter>arrayVar</parameter></optional> <optional>-oid <parameter>oidVar</parameter></optional> <parameter>conn</parameter> <parameter>commandString</parameter> <optional><parameter>procedure</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_execute</function> submits a command to the
+PostgreSQL server.
+    </para>
+
+    <para>
+If the command is not a <command>SELECT</command> statement, the
+number of rows affected by the command is returned.  If the command
+is an <command>INSERT</command> statement and a single row is
+inserted, the OID of the inserted row (if available) is stored in the variable
+<replaceable>oidVar</replaceable> if the optional <option>-oid</option>
+argument is supplied.
+    </para>
+   
+    <para>
+If the command is a <command>SELECT</command> statement, then, for each row
+in the result, the row values are stored in the
+<replaceable>arrayVar</replaceable> variable, if supplied, using the column
+names as the array indices, else in variables named by the column names,
+and then the optional <replaceable>procedure</replaceable> is executed if
+supplied.  (Omitting the <replaceable>procedure</replaceable> probably makes
+sense only if the query will return a single row.)  The number of rows
+selected is returned.
+    </para>
+
+    <para>
+The <replaceable>procedure</replaceable> can use the Tcl commands
+<literal>break</literal>, <literal>continue</literal>, and
+<literal>return</literal> with the expected behavior.  Note that if
+the <replaceable>procedure</replaceable> executes
+<literal>return</literal>, then <function>pg_execute</function>
+does not return the number of affected rows.
+    </para>
+
+    <para>
+<function>pg_execute</function> is a newer command which provides
+a superset of the features of <xref linkend="pg-select" /> and
+can replace <xref linkend="pg-exec" /> in many cases where access
+to the result handle is not needed.
+    </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><option>-array <replaceable>arrayVar</replaceable></option></term>
+        <listitem>
+          <para>
+            Specifies the name of an array variable where result rows are
+            stored, indexed by the column names.  This is ignored if
+            <replaceable>commandString</replaceable> is not a
+            <command>SELECT</command> statement.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-oid <replaceable>oidVar</replaceable></option></term>
+        <listitem>
+          <para>
+            Specifies the name of a variable into which the row OID from an
+            <command>INSERT</command> statement will be stored. The OID of
+            a row is only available if the table was created with OIDs.
+            Starting with PostgreSQL-8.0, tables are not created with OIDs
+            by default.  If the table has no OIDs, 0 is stored in oidVar.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>commandString</replaceable></term>
+        <listitem>
+          <para>
+            The SQL command to execute.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>procedure</replaceable></term>
+        <listitem>
+          <para>
+            Optional procedure to execute for each result row of a
+            <command>SELECT</command> statement.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The number of rows affected or returned by the command.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database, or if there is an error processing the query. Note
+      that this differs from <xref linkend="pg-exec" />, which will not
+      throw a Tcl error for a query which generates a database error.
+      A Tcl error will also be thrown if a procedure body is supplied
+      and its execution results in a Tcl error.
+    </para>
+    <para>
+      For database server handled errors, <function>pg_execute</function> will
+      throw a Tcl error and the error message will be a two-element list.
+      The first element is an error code, such as
+      <literal>PGRES_FATAL_ERROR</literal>, and
+      the second element is the database server error text.
+      Unfortunately, other errors also result in a Tcl error being thrown
+      but the error message is not a list - just the message text, so
+      the list form of the error message cannot be assumed.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      <function>pg_execute</function> cannot be used to start a
+      <command>COPY</command> because it doesn't return a result handle.
+      You must use <xref linkend="pg-exec" /> to start a
+      <command>COPY</command>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQexec</function>.
+    </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+
+    <para>
+      In the following examples, error checking with
+      <literal>catch</literal> has been omitted for clarity.
+    </para>
+
+    <para>
+      Insert a row and save the OID in <varname>result_oid</varname>,
+assuming the mytable was created using <command>WITH OIDS</command>:
+<programlisting>
+pg_execute -oid result_oid $conn "INSERT INTO mytable VALUES (1);"
+</programlisting>
+    </para>
+
+    <para>
+      Print the columns <literal>item</literal> and <literal>value</literal>
+      from each row:
+<programlisting>
+pg_execute -array d $conn "SELECT item, value FROM mytable" {
+    puts "Item=$d(item) Value=$d(value)"
+}
+</programlisting>
+    </para>
+
+    <para>
+      Find the maximum and minimum values and store them in
+      <literal>$s(max)</literal> and <literal>$s(min)</literal>:
+<programlisting>
+pg_execute -array s $conn "SELECT max(value) AS max, min(value) AS min FROM mytable"
+</programlisting>
+    </para>
+
+    <para>
+      Find the maximum and minimum values and store them in
+      <literal>$max</literal> and <literal>$min</literal>:
+<programlisting>
+pg_execute $conn "SELECT max(value) AS max, min(value) AS min FROM mytable"
+</programlisting>
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-select">
+  <refmeta>
+    <refentrytitle>pg_select</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_select</refname>
+    <refpurpose>Execute an SQL command on the server and loop over the results</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_select <parameter>conn</parameter> <parameter>commandString</parameter> <parameter>arrayVar</parameter> <parameter>procedure</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_select</function> submits a query (<command>SELECT</command>
+statement) to the PostgreSQL server and executes
+a given chunk of code for each row in the result.  The
+<replaceable>commandString</replaceable> must be a <command>SELECT</command>
+statement; anything else returns an error.  The
+<replaceable>arrayVar</replaceable> variable is an array name used in the loop.
+For each row, <replaceable>arrayVar</replaceable> is filled in with the row
+values, using the column names as the array indices.  Then the
+<replaceable>procedure</replaceable> is executed.
+    </para>
+
+    <para>
+      In addition to the column values, the following special entries are
+      made in the array:
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>.headers</literal></term>
+          <listitem>
+            <para>
+              A list of the column names returned by the query.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>.numcols</literal></term>
+          <listitem>
+            <para>
+              The number of columns returned by the query.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>.tupno</literal></term>
+          <listitem>
+            <para>
+              The current row number, starting at zero and incrementing for
+              each iteration of the loop body.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>commandString</replaceable></term>
+        <listitem>
+          <para>
+            The SQL query to execute.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>arrayVar</replaceable></term>
+        <listitem>
+          <para>
+            An array variable for returned rows.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>procedure</replaceable></term>
+        <listitem>
+          <para>
+            The procedure or script to run for each returned row.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      None
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database, or if there is an error processing the query, or
+      if the procedure body throws a Tcl error.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      <xref linkend="pg-execute" /> is a newer command which provides more
+      features and is more flexible than <function>pg_select</function>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQexec</function>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+
+    <para>
+      This examples assumes that the table <classname>table1</classname> has
+      columns <structfield>control</structfield> and
+      <structfield>name</structfield> (and perhaps others):
+<programlisting>
+pg_select $conn "SELECT * FROM table1" array {
+    puts [format "%5d %s" $array(control) $array(name)]
+}
+</programlisting>
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-exec-params">
+  <refmeta>
+    <refentrytitle>pg_exec_params</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_exec_params</refname>
+    <refpurpose>Execute a parameterized SQL command on the server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_exec_params <parameter>conn</parameter> <parameter>commandString</parameter> <parameter>resultFormats</parameter> <parameter>argFormats</parameter> <parameter>argTypes</parameter> <optional><parameter>param...</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_exec_params</function> sends a command to the PostgreSQL server
+with parameters to be bound to place-holders in the command, and returns a
+result handle.
+This is similar to <xref linkend="pg-exec-prepared" />, but doesn't
+use a pre-prepared statement, and if you want to use binary parameters you
+must also provide the type OIDs.  By separating parameters from the SQL
+command string, this command allows binding arguments to SQL statement
+parameters without quoting issues, and supports sending and receiving raw
+binary data.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>commandString</replaceable></term>
+        <listitem>
+          <para>
+            The SQL command to parse, bind arguments to, and execute.
+            Argument place-holders are indicated as <literal>$1</literal>,
+            <literal>$2</literal>, etc.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>resultFormats</replaceable></term>
+        <listitem>
+          <para>
+The format that the query results are expected in. Use <literal>T</literal>
+or <literal>TEXT</literal> for text format results,
+and <literal>B</literal> or <literal>BINARY</literal> for binary format
+results. If this parameter is an empty string, <literal>TEXT</literal> is
+assumed.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>argFormats</replaceable></term>
+        <listitem>
+          <para>
+The formats that the query parameters are sent in. This parameter can be an
+empty string, a single word, or a list.  If this parameter is an empty
+string, all query parameters are sent in text format.  If this
+parameter is a single word, it specifies the format for all query
+parameters. Use <literal>T</literal> (or <literal>TEXT</literal>) for text
+format, and <literal>B</literal> (or <literal>BINARY</literal>) for binary
+format.  If this parameter is a list, it must contain a single word
+(<literal>T</literal> or <literal>TEXT</literal> or <literal>B</literal> or
+<literal>BINARY</literal>) specifying the format for each query parameter.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>argTypes</replaceable></term>
+        <listitem>
+          <para>
+A list of PostgreSQL Type OIDs for the query parameter arguments.
+This list must either be empty, or contain one entry for each query
+parameter. If the list is empty, all arguments are treated as untyped
+literal strings, and all argument formats must be text. If the list is
+non-empty, each zero entry results in the corresponding text format
+argument being treated as an untyped literal string. Each non-zero entry
+is the type OID for the corresponding binary format argument. To get
+type OIDs, query the <literal>pg_type</literal> table.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>param...</replaceable></term>
+        <listitem>
+          <para>
+Zero or more parameter values to bind to command string place-holders.
+The first parameter will replace <literal>$1</literal> in the
+prepared query, the second parameter will replace <literal>$2</literal>,
+etc. The parameters will be interpreted as text or binary data
+according to the <replaceable>argFormats</replaceable> argument.
+          </para>
+        </listitem>
+      </varlistentry>
+ 
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Returns a result handle which can be used with
+      <xref linkend="pg-result" /> to obtain the results of the command.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database. Note that no Tcl error will be thrown if an invalid
+      query is successfully sent to the server and a response successfully
+      received. The result status must be checked after a normal return.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Be sure to brace-quote or escape the parameter place-holders such as
+<literal>$1</literal> in the SQL command string
+to protect them from Tcl variable expansion.
+    </para>
+    <para>
+The command syntax of <function>pg_exec_params</function> supports mixed
+text and binary result columns, but the underlying
+PostgreSQL library
+(<application>libpq</application>) does not currently support this.
+Therefore, all result columns must be text format, or all columns must be
+binary format.
+    </para>
+    <para>
+      There is no support for passing NULL value arguments as query parameters.
+    </para>
+    <para>
+      Be sure to free the returned result handle with
+      <function>pg_result -clear</function> when you are done with it.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-1.5.1</application> and in
+      <application>pgintcl-2.1.0</application>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQexecParams</function>.
+    </para>
+    <para>
+<xref linkend="pg-exec" /> also supports parameterized queries, but only
+TEXT parameter and result types.
+If all your parameters are TEXT type, and your result is TEXT type,
+it is simpler to use <xref linkend="pg-exec" /> instead.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-exec-prepared">
+  <refmeta>
+    <refentrytitle>pg_exec_prepared</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_exec_prepared</refname>
+    <refpurpose>Execute a pre-prepared SQL command on the server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_exec_prepared <parameter>conn</parameter> <parameter>statementName</parameter> <parameter>resultFormats</parameter> <parameter>argFormats</parameter> <optional><parameter>param...</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_exec_prepared</function> executes a pre-prepared SQL
+named statement on the server and returns a result handle. This command allows
+binding arguments to SQL statement parameters without quoting issues, and
+supports sending and receiving raw binary data.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>statementName</replaceable></term>
+        <listitem>
+          <para>
+            The name of the pre-prepared statement.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>resultFormats</replaceable></term>
+        <listitem>
+          <para>
+The format that the query results are expected in. Use <literal>T</literal>
+or <literal>TEXT</literal> for text format results,
+and <literal>B</literal> or <literal>BINARY</literal> for binary format
+results. If this parameter is an empty string, <literal>TEXT</literal> is
+assumed.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>argFormats</replaceable></term>
+        <listitem>
+          <para>
+The formats that the query parameters are sent in. This parameter can be an
+empty string, a single word, or a list.  If this parameter is an empty
+string, all query parameters are sent in text format.  If this
+parameter is a single word, it specifies the format for all query
+parameters. Use <literal>T</literal> (or <literal>TEXT</literal>) for text
+format, and <literal>B</literal> (or <literal>BINARY</literal>) for binary
+format.  If this parameter is a list, it must contain a single word
+(<literal>T</literal> or <literal>TEXT</literal> or <literal>B</literal> or
+<literal>BINARY</literal>) specifying the format for each query parameter.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>param...</replaceable></term>
+        <listitem>
+          <para>
+Zero or more parameter values to bind to command string place-holders.
+The first parameter will replace <literal>$1</literal> in the
+prepared query, the second parameter will replace <literal>$2</literal>,
+etc. The parameters will be interpreted as text or binary data
+according to the <replaceable>argFormats</replaceable> argument.
+          </para>
+        </listitem>
+      </varlistentry>
+
+ 
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Returns a result handle which can be used with
+      <xref linkend="pg-result" /> to obtain the results of the command.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database. Note that no Tcl error will be thrown if an invalid
+      query is successfully sent to the server and a response successfully
+      received. The result status must be checked after a normal return.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The statement must be prepared with an SQL PREPARE command, for example:
+<programlisting>
+    PREPARE statementName (INTEGER) AS SELECT * FROM mytable WHERE ID &gt; $1
+</programlisting>
+This can be sent to the database with <function>pg_exec</function>
+or <function>pg_execute</function> (but note that <literal>$1</literal> must
+be escaped for Tcl as <literal>\$1</literal>).
+Prepared statements persist until the end of a session.
+    </para>
+    <para>
+The command syntax of <function>pg_exec_prepared</function> supports mixed
+text and binary result columns, but the underlying PostgreSQL library
+(<application>libpq</application>) does not currently support this.
+Therefore, all result columns must be text format, or all columns must be
+binary format.
+    </para>
+    <para>
+      There is no support for passing NULL value arguments to prepared statements.
+    </para>
+    <para>
+      Be sure to free the returned result handle with
+      <function>pg_result -clear</function> when you are done with it.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQexecPrepared</function>.
+    </para>
+    <caution>
+      <para>
+The original Pgtcl implementation has a command with the same name but
+incompatible arguments.
+      </para>
+    </caution>
+
+  </refsect1>
+  <refsect1>
+    <title>Example</title>
+    <para>
+First, create a prepared a statement called sel1 which takes a single
+integer parameter and returns two values from the corresponding record in a
+database:
+<programlisting>
+pg_execute $conn "PREPARE sel1 (INTEGER) AS SELECT cost, itemname FROM mytable WHERE partnum = \$1"
+</programlisting>
+    </para>
+    <para>
+Now we can use that prepared statement to fetch the values from a record:
+<programlisting>
+set res [pg_exec_prepared $conn sel1 TEXT TEXT $partnumber]
+</programlisting>
+One TEXT argument, $partnumber, is sent to the prepared query and
+replaces $1. One TEXT result is expected back. The result handle
+res is accessed using <xref linkend="pg-result" /> just like a
+result handle from <xref linkend="pg-exec" />.
+    </para>
+    <para>
+Other examples can be found in <xref linkend="pgtcl-example-picstore-pq" />
+and <xref linkend="pgtcl-example-picview-pq" />.
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="pg-describe-cursor">
+  <refmeta>
+    <refentrytitle>pg_describe_cursor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_describe_cursor</refname>
+    <refpurpose>Get information about a cursor (portal)</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_describe_cursor <parameter>conn</parameter> <parameter>cursorName</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_describe_cursor</function> gets information about an open
+cursor (or portal, the term used by the PostgreSQL documentation). A cursor
+is created with the SQL DECLARE command. A result structure is returned,
+for use with <xref linkend="pg-result"/> to get information about the
+cursor.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which the cursor is open.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>cursorName</replaceable></term>
+        <listitem>
+          <para>
+            The name of the cursor to get information about.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      Returns a result handle which can be used with
+      <xref linkend="pg-result" /> to obtain information about the cursor.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      On success, a result structure which has status
+      <literal>PGRES_COMMAND_OK</literal> will be returned.
+      The result structure will have no data rows,
+      only attribute (column) information.
+      If no such cursor exists, the result structure will
+      have status <literal>PGRES_FATAL_ERROR</literal>.
+      A Tcl error may be thrown under other error conditions.
+    </para>
+    <para>
+      Use <xref linkend="pg-result"/> to get information from the
+      returned result structure, and be sure to free the returned
+      result handle with <function>pg_result -clear</function>
+      when you are done with it.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQdescribePortal</function>.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-1.7.0</application> and in
+      <application>pgintcl-3.1.0</application>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+Declare a cursor and get the names of its columns:
+<programlisting>
+pg_execute $conn "DECLARE mycursor CURSOR FOR SELECT * FROM mytable"
+set result [pg_describe_cursor $conn mycursor]
+if {[pg_result $result -status] eq "PGRES_COMMAND_OK"} {
+  puts "Cursor columns are: [pg_result $result -attributes]"
+}
+</programlisting>
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="pg-describe-prepared">
+  <refmeta>
+    <refentrytitle>pg_describe_prepared</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_describe_prepared</refname>
+    <refpurpose>Get information about a prepared statement</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_describe_prepared <parameter>conn</parameter> <parameter>statementName</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_describe_prepared</function> gets information about a prepared
+statement. A prepared statement is created with the SQL PREPARE command.
+A result structure is returned, for use with <xref linkend="pg-result"/>
+to get information about the prepared statement.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which the prepared statement is defined.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>statementName</replaceable></term>
+        <listitem>
+          <para>
+            The name of the prepared statement to get information about.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      Returns a result handle which can be used with
+      <xref linkend="pg-result" /> to obtain information about the prepared
+      statement.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      On success, a result structure which has status
+      <literal>PGRES_COMMAND_OK</literal> will be returned.
+      The result structure will have no data rows,
+      only attribute (column) information, and parameter information.
+      If no such prepared statement exists, the result structure will
+      have status <literal>PGRES_FATAL_ERROR</literal>.
+      A Tcl error may be thrown under other error conditions.
+    </para>
+    <para>
+      Use <xref linkend="pg-result"/> to get information from the
+      returned result structure, and be sure to free the returned
+      result handle with <function>pg_result -clear</function>
+      when you are done with it.
+      To get information about the prepared statement's parameters,
+      use the <xref linkend="pg-result"/> options
+      <literal>-numParams</literal> and <literal>-paramTypes</literal>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQdescribePrepared</function>.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-1.7.0</application> and in
+      <application>pgintcl-3.1.0</application>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+Create a prepared statement, and get information about its result columns
+and its parameters:
+<programlisting>
+pg_execute $conn "PREPARE myst AS SELECT * FROM mytable \
+    WHERE key BETWEEN \$1 AND \$2"
+set result [pg_describe_prepared $conn myst]
+if {[pg_result $result -status] eq "PGRES_COMMAND_OK"} {
+  puts "Prepared statement columns are: [pg_result $result -attributes]"
+  puts "Prepared statement has [pg_result $result -numParams] parameters."
+  puts "Prepared statement parameter types: [pg_result $result -paramTypes]"
+}
+</programlisting>
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="pg-result">
+  <refmeta>
+    <refentrytitle>pg_result</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_result</refname>
+    <refpurpose>Get information about a command result</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_result <parameter>resultHandle</parameter> <parameter>resultOption</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_result</function> returns information about a command result
+created by a prior
+<xref linkend="pg-exec" />,
+<xref linkend="pg-exec-prepared" />,
+<xref linkend="pg-exec-params" />,
+<xref linkend="pg-getresult" />,
+<xref linkend="pg-describe-cursor" />, or
+<xref linkend="pg-describe-prepared" />.
+    </para>
+
+    <para>
+You can keep a command result around for as long as you need it,
+but when you are done with it, be sure to free it by executing
+<function>pg_result -clear</function>.  Otherwise, you have a
+memory leak, and may eventually run out of memory or available command
+results.
+The <application>pgtcl-ng</application> implementation of
+the interface has a limit of 128 results per database connection, as a
+means of detecting if results are not being freed.
+(The <application>pgintcl</application> implementation does not check
+for too many active command result objects.)
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>resultHandle</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the command result.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>resultOption</replaceable></term>
+        <listitem>
+        <para>
+          One of the following options, specifying which piece of result
+          information to return:
+
+          <variablelist>
+            <varlistentry>
+              <term><option>-assign <replaceable>arrayName</replaceable></option></term>
+              <listitem>
+                <para>
+                  Assign the results to an array, using subscripts of the form
+                  <literal>(rowNumber,columnName)</literal>.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-assignbyidx</option> <replaceable>arrayName</replaceable> <optional><replaceable>appendstr</replaceable></optional></term>
+              <listitem>
+                <para>
+                  Assign the results to an array using the values of the
+                  first column and the names of the remaining column as keys.
+                  If <replaceable>appendstr</replaceable> is given then it is appended to
+                  each key.  In short, all but the first column of each row
+                  are stored into the array, using subscripts of the form
+                  <literal>(firstColumnValue,columnNameAppendStr)</literal>.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-attributes</option></term>
+              <listitem>
+                <para>
+                  Returns a list of the names of the columns in the result.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-clear</option></term>
+              <listitem>
+                <para>
+                  Clear the command result object.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-cmdStatus</option></term>
+              <listitem>
+                <para>
+                  Returns the command status tag from the SQL command that
+                  generated the result. This is the name of the SQL
+                  command, such as <command>UPDATE</command>, often
+                  followed by additional data such as the number of
+                  rows affected. Note: This was added in
+                  <application>pgtclng-1.5.1</application> and in
+                  <application>pgintcl-2.0.1</application>.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-cmdTuples</option></term>
+              <listitem>
+                <para>
+                  Returns the number of rows (tuples) affected by the command.
+                  This is appropriate to use for commands with completion
+                  status <literal>PGRES_COMMAND_OK</literal>.
+                  Starting with PostgreSQL-9.0, when used with either
+                  pgintcl-3.2.0 or pgtclng-1.8.0, this will also return
+                  the number of rows from a <command>SELECT</command> query.
+                  However, the use of <option>-numTuples</option> with SELECT
+                  queries is preferred.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-conn</option></term>
+              <listitem>
+                <para>
+                  Returns the handle (name) of the connection that produced the result.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-dict</option></term>
+              <listitem>
+                <para>
+                  Returns the query results as a Tcl dictionary. The dictionary
+                  contains one entry for each result row, using the 0-based row
+                  number as the key. The value (for each row) is a dictionary
+                  containing result field names as keys, and field values as
+                  values.
+                  Note: This was added in
+                  <application>pgtclng-1.9.0</application> and in
+                  <application>pgintcl-3.3.0</application>.
+                  It only works with Tcl-8.5 and higher.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-error</option> <optional><replaceable>fieldCode</replaceable></optional></term>
+              <listitem>
+                <para>
+                  Returns the error message, if the status indicates an error,
+                  otherwise an empty string.
+                  Note: the optional <replaceable>fieldCode</replaceable>
+                  parameter was added in
+                  <application>pgintcl-2.2.0</application> and
+                  <application>pgtclng-1.5.2</application>, making
+                  <option>-error</option> and <option>-errorField</option>
+                  synonymous.
+                  If a <replaceable>fieldCode</replaceable> is supplied,
+                  returns the value of an extended error code field.
+                  Refer to the next option, <option>-errorField</option>
+                  for details.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-errorField</option> <optional><replaceable>fieldCode</replaceable></optional></term>
+              <listitem>
+                <para>
+                  Returns the error message, if no
+                  <replaceable>fieldCode</replaceable> is supplied, or the
+                  value of an extended error code field, if
+                  <replaceable>fieldCode</replaceable> is supplied.
+                  Note: the <replaceable>fieldCode</replaceable>
+                  parameter was made optional in
+                  <application>pgintcl-2.2.0</application> and
+                  <application>pgtclng-1.5.2</application>, making
+                  <option>-error</option> and <option>-errorField</option>
+                  synonymous. Prior to those versions, <option>-error</option>
+                  was used to get the whole error message, and
+                  <option>-errorField</option> was used to get an extended
+                  error code field value.
+                </para>
+
+                <para>
+                  <replaceable>fieldCode</replaceable> selects the error code
+                  field by name (or alias), or single character abbreviation,
+                  according to the following table.
+                  Note: the FieldCode and Alias are case insensitive,
+                  but the single letter Abbreviations are case sensitive.
+                  <informaltable id="pgtcl-result-errorfield">
+                    <tgroup cols="4">
+                    <thead>
+                      <row>
+                        <entry>FieldCode</entry>
+                        <entry>Abbreviation</entry>
+                        <entry>Alias</entry>
+                        <entry>Description</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>SEVERITY</entry>
+                        <entry>S</entry>
+                        <entry></entry>
+                        <entry>Error severity, such as ERROR or FATAL</entry>
+                      </row>
+                      <row>
+                        <entry>SQLSTATE</entry>
+                        <entry>C</entry>
+                        <entry></entry>
+                        <entry>5-character SQL State code</entry>
+                      </row>
+                      <row>
+                        <entry>MESSAGE_PRIMARY</entry>
+                        <entry>M</entry>
+                        <entry>primary</entry>
+                        <entry>Primary error message</entry>
+                      </row>
+                      <row>
+                        <entry>MESSAGE_DETAIL</entry>
+                        <entry>D</entry>
+                        <entry>detail</entry>
+                        <entry>Error message detail, secondary message</entry>
+                      </row>
+                      <row>
+                        <entry>MESSAGE_HINT</entry>
+                        <entry>H</entry>
+                        <entry>hint</entry>
+                        <entry>Error message hint or suggestion</entry>
+                      </row>
+                      <row>
+                        <entry>STATEMENT_POSITION</entry>
+                        <entry>P</entry>
+                        <entry>position</entry>
+                        <entry>Decimal integer cursor position</entry>
+                      </row>
+                      <row>
+                        <entry>CONTEXT</entry>
+                        <entry>W</entry>
+                        <entry></entry>
+                        <entry>Error context, or call stack trace</entry>
+                      </row>
+                      <row>
+                        <entry>SOURCE_FILE</entry>
+                        <entry>F</entry>
+                        <entry>file</entry>
+                        <entry>PostgreSQL source code filename</entry>
+                      </row>
+                      <row>
+                        <entry>SOURCE_LINE</entry>
+                        <entry>L</entry>
+                        <entry>line</entry>
+                        <entry>PostgreSQL source code line number</entry>
+                      </row>
+                      <row>
+                        <entry>SOURCE_FUNCTION</entry>
+                        <entry>R</entry>
+                        <entry>function</entry>
+                        <entry>PostgreSQL source code function name</entry>
+                      </row>
+                      <row>
+                        <entry>SCHEMA_NAME</entry>
+                        <entry>s</entry>
+                        <entry></entry>
+                        <entry>Name of the schema of the object associated with the error </entry>
+                      </row>
+                      <row>
+                        <entry>TABLE_NAME</entry>
+                        <entry>t</entry>
+                        <entry></entry>
+                        <entry>Name of the table associated with the error</entry>
+                      </row>
+                      <row>
+                        <entry>COLUMN_NAME</entry>
+                        <entry>c</entry>
+                        <entry></entry>
+                        <entry>Name of table column associated with the error</entry>
+                      </row>
+                      <row>
+                        <entry>DATATYPE_NAME</entry>
+                        <entry>d</entry>
+                        <entry></entry>
+                        <entry>Name of the data type associated with the error</entry>
+                      </row>
+                      <row>
+                        <entry>CONSTRAINT_NAME</entry>
+                        <entry>t</entry>
+                        <entry></entry>
+                        <entry>Name of the database constraint associated with the error</entry>
+                      </row>
+                    </tbody>
+                    </tgroup>
+                  </informaltable>
+                  Note: Not all error field codes apply to any given error
+                  condition. <function>pg_result -errorField</function> will
+                  return an empty string if the database server did not
+                  provide the requested error field.
+                </para>
+                <para>
+                  Field code aliases were added to
+                  <application>pgintcl-2.2.0</application> and
+                  <application>pgtclng-1.5.2</application>.
+                </para>
+                <para>
+                  Field codes for Schema, Table, Column, Datatype, and
+                  Constraint names were added to
+                  <application>pgintcl-3.5.0</application> and
+                  <application>pgtclng-2.1.0</application>.
+                  Since these field codes use lower-case letter abbreviations
+                  (which are defined by the PostgreSQL server, starting with
+                  PostgreSQL-9.2 and 9.3), it was necessary to make the
+                  abbreviations case sensitive. In earlier
+                  releases, the single-character abbreviated field codes
+                  were case insensitive.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-getNull <replaceable>rowNumber</replaceable></option></term>
+              <listitem>
+                <para>
+                  Returns a list of 1s and 0s for the indicated row, with 1
+                  meaning the value of the column is NULL, and 0 meaning the
+                  value of the column is not NULL.
+                  Row numbers start at zero.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-getTuple <replaceable>rowNumber</replaceable></option></term>
+              <listitem>
+                <para>
+                  Returns the values of the columns of the indicated row in a
+                  list.  Row numbers start at zero.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-lAttributes</option></term>
+              <listitem>
+                <para>
+                  Returns a list of attributes of the query result columns.
+                  For each column, the list contains a sublist of
+                  the form <literal>{ColumnName TypeOid TypeSize}</literal>.
+                  More information on these values can be found in the
+                  PostgreSQL Libpq documentation.
+                  Note that <command>pg_result -lxAttributes</command>
+                  returns a superset of this information.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-list</option></term>
+              <listitem>
+                <para>
+                  Returns the entire result as a list of values in row-major,
+                  column-minor order.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-llist</option></term>
+              <listitem>
+                <para>
+                  Returns the entire result as a list of lists. The outer list
+                  contains one element for each result row, and the inner lists
+                  contain the values for each column of the row.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-lxAttributes</option></term>
+              <listitem>
+                <para>
+                  Returns an extended list of attributes of the query result
+                  columns. For each column, the list contains a sublist of
+                  the form <literal>{ColumnName TypeOid TypeSize
+                  TypeSizeModifier Format TableOID TableColumnIndex}</literal>.
+                  More information on these values can be found in the
+                  PostgreSQL Libpq documentation.
+                  Note that this is an extension of the information returned
+                  by <command>pg_result -lAttributes</command>.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-numAttrs</option></term>
+              <listitem>
+                <para>
+                  Returns the number of columns (attributes) in each row.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-numParams</option></term>
+              <listitem>
+                <para>
+                  Returns the number of parameters in a prepared query, if the
+                  result was returned by <xref linkend="pg-describe-prepared"/>.
+                  Returns 0 for any other type of result.
+                  Note: This was added in
+                  <application>pgtclng-1.7.0</application> and in
+                  <application>pgintcl-3.1.0</application>.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-numTuples</option></term>
+              <listitem>
+                <para>
+                  Returns the number of rows (tuples) returned by the query.
+                  This is appropriate to use for commands with completion
+                  status <literal>PGRES_TUPLES_OK</literal>.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-oid</option></term>
+              <listitem>
+                <para>
+                  If the command was a single row <command>INSERT</command>,
+                  returns the OID (Object ID) of the inserted row, if
+                  the table has OIDs. The default starting with PostgreSQL 8.0
+                  is to create tables without OIDs.
+                  Otherwise returns 0.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-paramTypes</option></term>
+              <listitem>
+                <para>
+                  Returns a list of the PostgreSQL type OIDs of the parameters
+                  in a prepared query, if the result was returned by
+                  <xref linkend="pg-describe-prepared"/>.
+                  Returns an empty list for any other type of result.
+                  Note: This was added in
+                  <application>pgtclng-1.7.0</application> and in
+                  <application>pgintcl-3.1.0</application>.
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-status</option></term>
+              <listitem>
+                <para>
+                  Returns the status of the result. This will be one of the
+                  following strings:
+                  <informaltable id="pgtcl-result-status">
+                    <tgroup cols="2">
+                    <thead>
+                      <row>
+                        <entry>Status</entry>
+                        <entry>Meaning</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>PGRES_COMMAND_OK</entry>
+                        <entry>Successful completion of a command returning no
+                               data, such as <command>INSERT</command>.
+                        </entry>
+                      </row>
+                      <row>
+                        <entry>PGRES_TUPLES_OK</entry>
+                        <entry>Successful completion of a command which returns
+                               data (such as <command>SELECT</command> or
+                               <command>SHOW</command>). Note this is the
+                               status even if the <command>SELECT</command>
+                               happens to return no rows.
+                        </entry>
+                      </row>
+                      <row>
+                        <entry>PGRES_COPY_OUT</entry>
+                        <entry>Begin <command>COPY TO STDOUT</command>.</entry>
+                      </row>
+
+                      <row>
+                        <entry>PGRES_COPY_IN</entry>
+                        <entry>Begin <command>COPY FROM STDIN</command>.</entry>
+                      </row>
+                      <row>
+                        <entry>PGRES_EMPTY_QUERY</entry>
+                        <entry>The query string sent to the server was
+                               empty.</entry>
+                      </row>
+                      <row>
+                        <entry>PGRES_BAD_RESPONSE</entry>
+                        <entry>The server's response was not understood.</entry>
+                      </row>
+                      <row>
+                        <entry>PGRES_FATAL_ERROR</entry>
+                        <entry>An error occurred. This includes any SQL
+                           syntax errors, or errors processing the command
+                           such as <command>SELECT</command> from a
+                           non-existing table.</entry>
+                      </row>
+                    </tbody>
+                    </tgroup>
+                  </informaltable>
+                </para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><option>-tupleArray <replaceable>rowNumber</replaceable> <replaceable>arrayName</replaceable></option></term>
+              <listitem>
+                <para>
+                  Stores the columns of the row in array
+                  <replaceable>arrayName</replaceable>, indexed by column names.
+                  Row numbers start at zero.
+                </para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+      <para>
+        The result depends on the selected option, as described above.
+      </para>
+      <para>
+        A Tcl error will be thrown if there is an error processing the
+        command, which is unlikely since no communication with the server
+        is involved.
+      </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      <xref linkend="pgtcl-example-results" /> contains examples of the
+      different ways to get query results with <function>pg_result</function>.
+    </para>
+    <para>
+      This command uses a variety of PostgreSQL
+      <application>libpq</application> functions described in the
+      <citetitle>Command Execution Functions</citetitle> chapter
+      of the <application>libpq</application> reference manual.
+    </para>
+  </refsect1>
+
+</refentry>
+
+
+<refentry id="pg-encrypt-password">
+  <refmeta>
+    <refentrytitle>pg_encrypt_password</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_encrypt_password</refname>
+    <refpurpose>Encrypt a password/username combination</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_encrypt_password <parameter>password</parameter> <parameter>username</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_encrypt_password</function> prepares the encrypted form of a
+PostgreSQL password. This is used to send encrypted (rather than
+clear-text) passwords to commands that can take a pre-encrypted password,
+such as ALTER ROLE.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>password</replaceable></term>
+        <listitem>
+          <para>
+            The password to encrypt.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>username</replaceable></term>
+        <listitem>
+          <para>
+            The username that goes with the password to encrypt.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The encrypted password string.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      The username is required because the encryption method uses both the
+      username and password to form the encrypted password string.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-1.7.0</application> and in
+      <application>pgintcl-3.1.0</application>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQencryptPassword</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-escape-string">
+  <refmeta>
+    <refentrytitle>pg_escape_string</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_escape_string</refname>
+    <refpurpose>Escape a string for use in an SQL string constant</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_escape_string <optional><parameter>conn</parameter></optional> <parameter>string</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_escape_string</function> returns its argument with added
+characters which makes it safe for use in single-quoted SQL string
+constants. It returns the string with all single quote marks doubled,
+and in some cases doubles backslash characters too.
+    </para>
+    <para>
+For example, <literal>pg_escape_string {can't}</literal> returns
+the string <literal>can''t</literal>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            Optional handle of the connection that the string should be
+            escaped for sending to.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>string</replaceable></term>
+        <listitem>
+          <para>
+            The string to escape.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The string argument, with added characters.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      See also <xref linkend="pg-quote" />,
+      <xref linkend="pg-escape-literal" />, and
+      <xref linkend="pg-escape-identifier" />.
+    </para>
+    <para>
+      The optional <replaceable>conn</replaceable> argument
+      was added to this command in
+      <application>pgtclng-1.7.0</application> and in
+      <application>pgintcl-3.1.0</application>.
+    </para>
+    <para>
+The <replaceable>conn</replaceable> argument is used to get character set
+encoding information, and the state of the PostgreSQL server configuration
+parameter <parameter>standard_conforming_strings</parameter>. The character
+set encoding is used to make sure that multi-byte characters do not confuse
+the escaping process. The state of the standard conforming strings setting
+is used to determine if backslashes need to be doubled. If the
+<replaceable>conn</replaceable> parameter is supplied, these settings can
+be accurately determined for the specific database connection being used.
+(Note that this information is maintained on the client side and does not
+necessitate any additional database server traffic.)
+    </para>
+    <para>
+If the <replaceable>conn</replaceable> parameter is not supplied, a best
+guess will be made based on the most recent information from any database
+connection by the client. Therefore, if the client makes a single database
+connection, or multiple connections with the same encoding and setting for
+standard_conforming_strings, there is no need to provide the
+<replaceable>conn</replaceable> parameter.
+    </para>
+    <caution>
+      <para>
+Pgintcl uses the <replaceable>conn</replaceable> parameter only to
+determine if standard_conforming_strings is on. Unlike libpq-based
+interface implementations, it does not have the ability to use character
+set encoding information.
+      </para>
+    </caution>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQescapeString</function>, if no connection handle
+      is supplied, or <function>PQescapeStringConn</function> if a connection
+      handle is supplied.
+    </para>
+    <caution>
+      <para>
+The Pgtcl implementation at <ulink url="http://flightaware.github.com/Pgtcl/">
+http://flightaware.github.com/Pgtcl/</ulink>
+(previously at pgfoundry.org/projects/pgtcl/)
+has a command with the same name, but incompatible behavior.
+Their <function>pg_escape_string</function> works like
+<xref linkend="pg-quote" />, and returns quotes around the result.
+In the Pgtcl-ng and Pgintcl implementations,
+<function>pg_escape_string</function> matches the
+<application>libpq</application> <function>PQescapeString()</function>
+function behavior, which returns the escaped value without single quotes.
+      </para>
+    </caution>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+<programlisting>
+set sql "SELECT * FROM mytable WHERE name = '[pg_escape_string $itemname]'"
+</programlisting>
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="pg-quote">
+  <refmeta>
+    <refentrytitle>pg_quote</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_quote</refname>
+    <refpurpose>Escape and quote a string for use as an SQL string
+      literal</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_quote <optional><parameter>conn</parameter></optional> <parameter>string</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_quote</function> returns its argument in single quotes, with added
+characters which makes it safe for use as an SQL string constant.
+It returns the string in single quotes, with all internal single
+quote marks doubled, and in some cases doubles backslash characters too.
+    </para>
+    <para>
+For example, <literal>pg_quote {can't}</literal> returns
+the string <literal>'can''t'</literal>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            Optional handle of the connection that the string should be
+            escaped for sending to.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>string</replaceable></term>
+        <listitem>
+          <para>
+            The string to quote and escape.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The string argument, in single quotes, with added characters.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      See also <xref linkend="pg-escape-string" />, which returns the
+      same thing but without the surrounding single quotes,
+      <xref linkend="pg-escape-literal" />, which is an alternative
+      implementation of <function>pg_quote</function>, and
+      <xref linkend="pg-escape-identifier" />.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-1.5.1</application> and in
+      <application>pgintcl-2.1.0</application>.
+    </para>
+    <para>
+      The optional <replaceable>conn</replaceable> argument
+      was added to this command in
+      <application>pgtclng-1.7.0</application> and in
+      <application>pgintcl-3.1.0</application>.
+    </para>
+    <para>
+The <replaceable>conn</replaceable> argument is used to get character set
+encoding information, and the state of the PostgreSQL server configuration
+parameter <parameter>standard_conforming_strings</parameter>. The character
+set encoding is used to make sure that multi-byte characters do not confuse
+the escaping process. The state of the standard conforming strings setting
+is used to determine if backslashes need to be doubled. If the
+<replaceable>conn</replaceable> parameter is supplied, these settings can
+be accurately determined for the specific database connection being used.
+(Note that this information is maintained on the client side and does not
+necessitate any additional database server traffic.)
+    </para>
+    <para>
+If the <replaceable>conn</replaceable> parameter is not supplied, a best
+guess will be made based on the most recent information from any database
+connection by the client. Therefore, if the client makes a single database
+connection, or multiple connections with the same encoding and setting for
+standard_conforming_strings, there is no need to provide the
+<replaceable>conn</replaceable> parameter.
+    </para>
+    <caution>
+      <para>
+Pgintcl uses the <replaceable>conn</replaceable> parameter only to
+determine if standard_conforming_strings is on. Unlike libpq-based
+interface implementations, it does not have the ability to use character
+set encoding information.
+      </para>
+    </caution>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQescapeString</function>, if no connection handle
+      is supplied, or <function>PQescapeStringConn</function> if a connection
+      handle is supplied. Surrounding single quotes are added to the result.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+<programlisting>
+set sql "SELECT * FROM mytable WHERE name = [pg_quote $itemname]"
+</programlisting>
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-escape-identifier">
+  <refmeta>
+    <refentrytitle>pg_escape_identifier</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_escape_identifier</refname>
+    <refpurpose>Escape a string for use as an SQL identifier (object name)</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_escape_identifier <parameter>conn</parameter> <parameter>string</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>pg_escape_identifier</function> returns its string argument safely
+escaped and quoted for use as an SQL identifier (a table name, column name,
+etc.). Use this command when you have an unknown or variable string
+representing an SQL identifier that you are using in an SQL statement, or
+have an SQL identifier name in a Tcl variable that might contain double quotes
+or spaces.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            Handle of the connection that the identifier will be used with.
+            (Note: This argument is not used by
+            <application>pgintcl</application>.)
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>string</replaceable></term>
+        <listitem>
+          <para>
+            The string to escape and quote.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The string argument, suitable for use as an identifier, including
+surrounding double quotes.
+      <caution>
+        <para>
+Use of double quotes around an identifier makes PostgreSQL treat that
+identifier as case sensitive.
+        </para>
+      </caution>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      See also
+      <xref linkend="pg-quote" />,
+      <xref linkend="pg-escape-string" />, and
+      <xref linkend="pg-escape-literal" />.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-2.1.0</application> and in
+      <application>pgintcl-3.5.0</application>.
+    </para>
+    <para>
+The <replaceable>conn</replaceable> argument is used to get character set
+encoding information, which is used to make sure that multi-byte characters
+do not confuse the escaping process.
+    <caution>
+      <para>
+Unlike libpq-based interface implementations, Pgintcl does not have the ability
+to use character set encoding information, and so it does not use the
+<replaceable>conn</replaceable> parameter at all.
+      </para>
+    </caution>
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQescapeLiteral</function>, which was added
+      in PostgreSQL-9.0.0.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Example</title>
+    <para>
+<programlisting>
+set sql "SELECT * FROM [pg_escape_identifier $conn $tablename] ORDER BY 1"
+</programlisting>
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="pg-escape-literal">
+  <refmeta>
+    <refentrytitle>pg_escape_literal</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_escape_literal</refname>
+    <refpurpose>Escape and quote a string for use as an SQL string
+      literal</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_escape_literal <parameter>conn</parameter> <parameter>string</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>pg_escape_literal</function> returns its string argument safely
+escaped and quoted for use as an SQL string literal (or string constant).
+    </para>
+    <para>
+For example, <literal>pg_escape_literal $conn "can't"</literal> returns
+the string <literal>'can''t'</literal>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            Handle of the connection that the string should be escaped
+            for sending to.
+            (Note: This argument is not used by
+            <application>pgintcl</application>.)
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>string</replaceable></term>
+        <listitem>
+          <para>
+            The string to quote and escape.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The string argument, suitable for use as an SQL string literal,
+including surrounding single quotes.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      See also
+      <xref linkend="pg-quote" />,
+      <xref linkend="pg-escape-string" />, and
+      <xref linkend="pg-escape-identifier" />.
+    </para>
+
+    <para>
+<function>pg_escape_literal</function> is effectively equivalent to
+<xref linkend="pg-quote" />, in that both return their string arguments
+quoted and escaped, suitable for use as an SQL literal.
+The return results and implementations differ:
+      <itemizedlist>
+        <listitem>
+          <para>
+<function>pg_quote</function> attempts to account for the setting of
+the <function>standard_conforming_strings</function> PostgreSQL
+parameter, to determine if backslashes inside the string need special
+processing.
+<function>pg_escape_literal</function> returns a result that is correct
+independent of <function>standard_conforming_strings</function>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+The <replaceable>conn</replaceable> parameter is optional with
+<function>pg_quote</function>, but required with
+<function>pg_escape_literal</function>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+The result from <function>pg_escape_literal</function> uses the
+PostgreSQL Escape String notation (<literal>E'...'</literal>),
+with doubled backslashes inside, if the string contains any backslashes,
+and the standard quoted literal notation if the string does not
+contain backslashes.
+The result from <function>pg_quote</function> always uses the standard SQL
+quoted literal notation.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+
+    <para>
+      This command was added in
+      <application>pgtclng-2.1.0</application> and in
+      <application>pgintcl-3.5.0</application>.
+    </para>
+    <para>
+The <replaceable>conn</replaceable> argument is used to get character set
+encoding information, which is used to make sure that multi-byte characters
+do not confuse the escaping process.
+    <caution>
+      <para>
+Unlike libpq-based interface implementations, Pgintcl does not have the ability
+to use character set encoding information, and so it does not use the
+<replaceable>conn</replaceable> parameter at all.
+      </para>
+    </caution>
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQescapeIdentifier</function>, which was added
+      in PostgreSQL-9.0.0.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Example</title>
+    <para>
+<programlisting>
+set sql "SELECT * FROM mytable WHERE name = [pg_escape_literal $itemname]"
+</programlisting>
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="pg-escape-bytea">
+  <refmeta>
+    <refentrytitle>pg_escape_bytea</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_escape_bytea</refname>
+    <refpurpose>Escape a binary string for use in an SQL string constant
+with bytea (byte array) columns</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_escape_bytea <optional><parameter>conn</parameter></optional> <parameter>binary_string</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_escape_bytea</function> returns its argument with added
+characters which makes it safe for use in single-quoted SQL string
+constants. Unlike <xref linkend="pg-escape-string" />, which works on
+text strings, <function>pg_escape_bytea</function> is meant for
+arbitrary binary data meant to be stored or used with
+<application>PostgreSQL</application> <literal>bytea</literal>
+(byte array) columns.
+This command allows arbitrary binary data to be safely sent through
+the <application>PostgreSQL</application> query mechanism in a
+text mode query.
+(An alternative to escaping and unescaping binary data is to use binary
+mode prepared queries.  See <xref linkend="pg-exec-prepared" />.)
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            Optional handle of the connection that the binary string should be
+            escaped for sending to.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>binary_string</replaceable></term>
+        <listitem>
+          <para>
+            The binary string data to escape. This is just a regular
+Tcl string, except that it can contain arbitrary byte values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The escaped data string. When placed in single quotes, it can safely
+be used in SQL statements.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      See also <xref linkend="pg-unescape-bytea" />, but note that these
+commands are not inverses of each other.
+<function>pg_escape_bytea</function> creates output that is meant to go
+through two levels of parsing by the database: one when parsing SQL, and
+one when processing the bytea data type. For example, a quote mark in the
+input string is translated to two quote marks by
+<function>pg_escape_bytea</function>, but is not translated back by
+<function>pg_unescape_bytea</function>.
+    </para>
+    <para>
+      The <application>pgintcl</application> implementation of this
+command is slow. Consider using binary prepared queries instead, to
+avoid having to escape and unescape your binary data.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-1.5.2</application> and in
+      <application>pgintcl-2.2.0</application>.
+    </para>
+    <para>
+      The optional <replaceable>conn</replaceable> argument
+      was added to this command in
+      <application>pgtclng-1.7.0</application> and in
+      <application>pgintcl-3.1.0</application>.
+    </para>
+    <para>
+The <replaceable>conn</replaceable> argument is used to get the state of
+the PostgreSQL server configuration parameter
+<parameter>standard_conforming_strings</parameter>.
+This is used to determine if backslashes need to be doubled. If the
+<replaceable>conn</replaceable> parameter is supplied, the setting can
+be accurately determined for the specific database connection being used.
+(Note that this information is maintained on the client side and does not
+necessitate any additional database server traffic.)
+    </para>
+    <para>
+If the <replaceable>conn</replaceable> parameter is not supplied, a best
+guess will be made based on the most recent information from any database
+connection by the client. Therefore, if the client makes a single database
+connection, or multiple connections with the same setting for
+standard_conforming_strings, there is no need to provide the
+<replaceable>conn</replaceable> parameter.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQescapeBytea</function>, if no connection handle
+      is supplied, or <function>PQescapeByteaConn</function> if a connection
+      handle is supplied.
+    </para>
+    <para>
+      See <xref linkend="pgtcl-example-picstore-esc" /> for an example.
+    </para>
+    <para>
+PostgreSQL-9.0.0 introduced <emphasis>hex mode</emphasis> encoding of bytea
+strings as an alternative to the <emphasis>escape mode</emphasis> encoding.
+In libpq-based <application>pgtcl-ng</application>,
+<function>pg_escape_bytea</function> returns a string with hex encoding
+if a connection handle is supplied and the connection is to a PostgreSQL 9.0
+or higher database. In all other cases (no connection handle supplied, or
+connected to an older database), pgtcl-ng uses escape mode encoding.
+In the pure-Tcl <application>pgintcl</application>,
+<function>pg_escape_bytea</function> always returns a string with
+escape mode encoding.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-unescape-bytea">
+  <refmeta>
+    <refentrytitle>pg_unescape_bytea</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_unescape_bytea</refname>
+    <refpurpose>Unescape a string returned by an SQL query on a bytea (byte
+array) column, recovering the original binary string.</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_unescape_bytea <parameter>string</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_unescape_bytea</function> recovers a binary string from the
+escaped data returned by <application>PostgreSQL</application> when
+a bytea (byte array) column is queried.
+This command returns the original data from a bytea column which was
+inserted (for example) after being escaped with
+<xref linkend="pg-escape-bytea" />.
+(An alternative to escaping and unescaping binary data is to use binary
+mode prepared queries.  See <xref linkend="pg-exec-prepared" />.)
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>string</replaceable></term>
+        <listitem>
+          <para>
+            The string to unescape. This should be the result of a query on
+a bytea column. Other uses are undefined (see notes).
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The unescaped binary data string. This is a regular Tcl string, which
+can contain arbitrary byte values.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQunescapeBytea</function>.
+    </para>
+    <para>
+See also <xref linkend="pg-escape-bytea" />.
+Note that <function>pg_escape_bytea</function> and
+<function>pg_unescape_bytea</function> are not inverses of each other.
+For example, a quote mark is translated to two quote marks by
+<function>pg_escape_bytea</function>, but <function>pg_unescape_bytea</function>
+does not change two quote marks back to a single quote mark.
+This asymmetry is due to the fact that SQL statements undergo an extra
+level of parsing with bytea columns.  <function>pg_escape_bytea</function>
+prepares a string for both levels of parsing, but
+<function>pg_unescape_bytea</function> only has to undo one level of escaping.
+    </para>
+    <caution>
+      <para>
+The <application>pgintcl</application> implementation of this
+command is not an accurate emulation of the <application>libpq</application>
+function. This was done for performance reasons. Also, starting with
+PostgreSQL-9.0, the database supports two different encoding methods for
+bytea data when returned as text: hex mode and escape mode.
+This is controlled using a PostgreSQL configuration setting
+<literal>bytea_output</literal> which takes the values
+<literal>hex</literal> or <literal>escape</literal>.  The default is hex mode.
+But Pgintcl-3.2.0 and earlier
+<emphasis>do not support hex mode encoding.</emphasis>
+Until this is fixed, you must set your database to use escape mode
+for bytea strings when using pgintcl.
+      </para>
+      <para>
+When using escape mode encoding, pgintcl will return correct results
+for data that results from a query on a bytea column
+(that is, any data output by the <function>byteaout</function> backend
+function). Results are undefined for other uses. For example, give the
+two byte sequence \a (which will never be output by PostgreSQL for a bytea
+column), <function>PQunescapeBytea</function> will return the single
+character 'a', but <function>pg_unescape_bytea</function> will return the
+byte value 7 (because Tcl unescapes \a to ASCII bell).
+      </para>
+    </caution>
+    <para>
+      This command was added in
+      <application>pgtclng-1.5.2</application> and in
+      <application>pgintcl-2.2.0</application>.
+    </para>
+    <para>
+      See <xref linkend="pgtcl-example-picview-esc" /> for an example.
+    </para>
+  </refsect1>
+</refentry>
+
+</section>
+
+<section id="pgtcl-ref-async">
+  <title>Asynchronous Query Processing Commands</title>
+
+  <abstract>
+    <title></title>
+    <para>
+The commands in this section are used for asynchronous queries. This
+allows sending queries to the database server and continue Tcl processing
+without waiting for results.
+Note that the commands in this section are not available in
+<application>pgintcl</application>.
+    </para>
+  </abstract>
+
+<refentry id="pg-sendquery">
+  <refmeta>
+    <refentrytitle>pg_sendquery</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_sendquery</refname>
+    <refpurpose>Send an SQL command to the server for asynchronous execution</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_sendquery <parameter>conn</parameter> <parameter>commandString</parameter> <optional><parameter>param...</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_sendquery</function> sends a command to the PostgreSQL server and
+returns immediately, without waiting for the command to complete and
+without providing a result handle.
+Optional arguments can be supplied to replace parameter place-holders in the
+command string.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>commandString</replaceable></term>
+        <listitem>
+          <para>
+            The SQL command to execute.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>param...</replaceable></term>
+        <listitem>
+          <para>
+            Zero or more parameter values to bind to command string
+            place-holders.
+            The first argument will replace <literal>$1</literal> in the
+            command string, the second argument will replace
+            <literal>$2</literal>, etc.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      None.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Use <xref linkend="pg-isbusy" /> to see if the command is still being executed.
+Use <xref linkend="pg-getresult" /> to get the result, waiting for the
+command to complete if necessary.
+Alternatively, use <xref linkend="pg-result-callback" /> to register a
+callback command to be executed when a result is ready (that is, when
+<xref linkend="pg-getresult" /> will not block).
+    </para>
+
+    <para>
+If optional arguments are supplied, this command becomes a simplified form
+of <xref linkend="pg-sendquery-params" />, supporting only text-format
+arguments with a text-format result. The command string must include parameter
+place-holders <literal>$1</literal>, <literal>$2</literal>, etc. and an equal
+number of parameter arguments.
+Be sure to brace-quote or escape the parameter place-holders such as
+<literal>$1</literal> in the SQL command string to protect them from Tcl
+variable expansion.
+Use of these parameters avoids the need to quote and escape values which would
+otherwise have to be substituted directly into the command string.
+    </para>
+
+    <para>
+The form of this command using optional arguments for parameterized
+queries was added in <application>pgtclng-1.6.0</application>.
+    </para>
+
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>PQsendQuery</function> if called without optional
+query parameter arguments, and the
+function <function>PQsendQueryParams</function> if called with optional
+query parameter arguments.
+    </para>
+
+  </refsect1>
+</refentry>
+
+<refentry id="pg-sendquery-params">
+  <refmeta>
+    <refentrytitle>pg_sendquery_params</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_sendquery_params</refname>
+    <refpurpose>Send a parameterized SQL command to the server for asynchronous execution</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_sendquery_params <parameter>conn</parameter> <parameter>commandString</parameter> <parameter>resultFormats</parameter> <parameter>argFormats</parameter> <parameter>argTypes</parameter> <optional><parameter>param...</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_sendquery_params</function> sends a parameterized command to
+the PostgreSQL server and returns immediately, without waiting for the
+command to complete. Parameter values are bound to place-holders in
+the command sent to the server.
+By separating parameters from the SQL command string, this command allows
+binding arguments to SQL statement parameters without quoting issues,
+and supports sending and receiving raw binary data.
+The syntax of <function>pg_sendquery_params</function> is the same as
+<xref linkend="pg-exec-params" /> which is for synchronous query execution.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>commandString</replaceable></term>
+        <listitem>
+          <para>
+            The SQL command to parse, bind arguments to, and execute.
+            Argument place-holders are indicated as <literal>$1</literal>,
+            <literal>$2</literal>, etc.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>resultFormats</replaceable></term>
+        <listitem>
+          <para>
+The format that the query results are expected in. Use <literal>T</literal>
+or <literal>TEXT</literal> for text format results,
+and <literal>B</literal> or <literal>BINARY</literal> for binary format
+results. If this parameter is an empty string, <literal>TEXT</literal> is
+assumed.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>argFormats</replaceable></term>
+        <listitem>
+          <para>
+The formats that the query parameters are sent in. This parameter can be an
+empty string, a single word, or a list.  If this parameter is an empty
+string, all query parameters are sent in text format.  If this
+parameter is a single word, it specifies the format for all query
+parameters. Use <literal>T</literal> (or <literal>TEXT</literal>) for text
+format, and <literal>B</literal> (or <literal>BINARY</literal>) for binary
+format.  If this parameter is a list, it must contain a single word
+(<literal>T</literal> or <literal>TEXT</literal> or <literal>B</literal> or
+<literal>BINARY</literal>) specifying the format for each query parameter.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>argTypes</replaceable></term>
+        <listitem>
+          <para>
+A list of PostgreSQL Type OIDs for the query parameter arguments.
+This list must either be empty, or contain one entry for each query
+parameter. If the list is empty, all arguments are treated as untyped
+literal strings, and all argument formats must be text. If the list is
+non-empty, each zero entry results in the corresponding text format
+argument being treated as an untyped literal string. Each non-zero entry
+is the type OID for the corresponding binary format argument. To get
+type OIDs, query the <literal>pg_type</literal> table.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>param...</replaceable></term>
+        <listitem>
+          <para>
+Zero or more parameter values to bind to command string place-holders.
+The first parameter will replace <literal>$1</literal> in the
+prepared query, the second parameter will replace <literal>$2</literal>,
+etc. The parameters will be interpreted as text or binary data
+according to the <replaceable>argFormats</replaceable> argument.
+          </para>
+        </listitem>
+      </varlistentry>
+ 
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      None.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Use <xref linkend="pg-isbusy" /> to see if the command is still being executed.
+Use <xref linkend="pg-getresult" /> to get the result, waiting for the
+command to complete if necessary.
+Alternatively, use <xref linkend="pg-result-callback" /> to register a
+callback command to be executed when a result is ready (that is, when
+<xref linkend="pg-getresult" /> will not block).
+    </para>
+
+    <para>
+Be sure to brace-quote or escape the parameter place-holders such as
+<literal>$1</literal> in the SQL command string
+to protect them from Tcl variable expansion.
+    </para>
+    <para>
+The command syntax of <function>pg_sendquery_params</function> supports mixed
+text and binary result columns, but the underlying PostgreSQL library
+(<application>libpq</application>) does not currently support this.
+Therefore, all result columns must be text format, or all columns must be
+binary format.
+    </para>
+    <para>
+      There is no support for passing NULL value arguments as query parameters.
+    </para>
+    <para>
+      This command was added in <application>pgtclng-1.6.0</application>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQsendQueryParams</function>.
+    </para>
+    <para>
+<xref linkend="pg-sendquery" /> also supports parameterized asynchronous
+queries, but only TEXT parameter and result types.
+If all your parameters are TEXT type, and your result is TEXT type,
+it is simpler to use <xref linkend="pg-sendquery" /> instead.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-sendquery-prepared">
+  <refmeta>
+    <refentrytitle>pg_sendquery_prepared</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_sendquery_prepared</refname>
+    <refpurpose>Send a pre-prepared SQL command to the server for asynchronous execution</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_sendquery_prepared <parameter>conn</parameter> <parameter>statementName</parameter> <parameter>resultFormats</parameter> <parameter>argFormats</parameter> <optional><parameter>param...</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_sendquery_prepared</function> initiates execution of a
+pre-prepared SQL named statement on the server and returns immediately,
+without waiting for the command to complete.
+This command allows binding arguments to SQL statement parameters without
+quoting issues, and supports sending and receiving raw binary data.
+The syntax of <function>pg_sendquery_prepared</function> is the same as
+<xref linkend="pg-exec-prepared" /> which is for synchronous query execution.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to execute the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>statementName</replaceable></term>
+        <listitem>
+          <para>
+            The name of the pre-prepared statement.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>resultFormats</replaceable></term>
+        <listitem>
+          <para>
+The format that the query results are expected in. Use <literal>T</literal>
+or <literal>TEXT</literal> for text format results,
+and <literal>B</literal> or <literal>BINARY</literal> for binary format
+results. If this parameter is an empty string, <literal>TEXT</literal> is
+assumed.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>argFormats</replaceable></term>
+        <listitem>
+          <para>
+The formats that the query parameters are sent in. This parameter can be an
+empty string, a single word, or a list.  If this parameter is an empty
+string, all query parameters are sent in text format.  If this
+parameter is a single word, it specifies the format for all query
+parameters. Use <literal>T</literal> (or <literal>TEXT</literal>) for text
+format, and <literal>B</literal> (or <literal>BINARY</literal>) for binary
+format.  If this parameter is a list, it must contain a single word
+(<literal>T</literal> or <literal>TEXT</literal> or <literal>B</literal> or
+<literal>BINARY</literal>) specifying the format for each query parameter.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>param...</replaceable></term>
+        <listitem>
+          <para>
+Zero or more parameter values to bind to command string place-holders.
+The first parameter will replace <literal>$1</literal> in the
+prepared query, the second parameter will replace <literal>$2</literal>,
+etc. The parameters will be interpreted as text or binary data
+according to the <replaceable>argFormats</replaceable> argument.
+          </para>
+        </listitem>
+      </varlistentry>
+ 
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      None.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The statement must be prepared with an SQL PREPARE command, for example:
+<programlisting>
+    PREPARE statementName (INTEGER) AS SELECT * FROM mytable WHERE ID &gt; $1
+</programlisting>
+This can be sent to the database with <function>pg_exec</function>
+or <function>pg_execute</function> (but note that <literal>$1</literal> must
+be escaped for Tcl as <literal>\$1</literal>).
+Prepared statements persist until the end of a session.
+    </para>
+    <para>
+Use <xref linkend="pg-isbusy" /> to see if the command is still being executed.
+Use <xref linkend="pg-getresult" /> to get the result, waiting for the
+command to complete if necessary.
+Alternatively, use <xref linkend="pg-result-callback" /> to register a
+callback command to be executed when a result is ready (that is, when
+<xref linkend="pg-getresult" /> will not block).
+    </para>
+
+    <para>
+The command syntax of <function>pg_sendquery_prepared</function> supports mixed
+text and binary result columns, but the underlying PostgreSQL library
+(<application>libpq</application>) does not currently support this.
+Therefore, all result columns must be text format, or all columns must be
+binary format.
+    </para>
+    <para>
+      There is no support for passing NULL value arguments to prepared statements.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>PQsendQueryPrepared</function>.
+    </para>
+    <caution>
+      <para>
+The original Pgtcl implementation has a command with the same name but
+incompatible arguments.
+      </para>
+    </caution>
+
+  </refsect1>
+
+
+</refentry>
+
+<refentry id="pg-isbusy">
+  <refmeta>
+    <refentrytitle>pg_isbusy</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_isbusy</refname>
+    <refpurpose>See if pg_getresult will block</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_isbusy <parameter>conn</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_isbusy</function> checks if a result from an asynchronous
+query submitted by <xref linkend="pg-sendquery" /> is ready, or
+if <xref linkend="pg-getresult" /> will block because the result
+is not yet ready.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection to check for readiness.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      Returns 1 if <function>pg_getresult</function> will block because a
+      result is not yet ready. Returns 0 otherwise, meaning either
+      a result is ready, or there are no pending results.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>PQisBusy</function>.
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="pg-getresult">
+  <refmeta>
+    <refentrytitle>pg_getresult</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_getresult</refname>
+    <refpurpose>Wait for and return result from asynchronous SQL command</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_getresult <parameter>conn</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_getresult</function> waits for the database server to
+complete a pending asynchronous query, and returns a result handle
+for the query.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection to get a result from.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      A result handle from the execution of <xref linkend="pg-sendquery" />.
+    </para>
+    <para>
+      There are no error conditions.
+      This command will block until a result is available. If no
+      asynchronous query is pending, it returns an empty string.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      Be sure to free the returned result handle with
+      <function>pg_result -clear</function> when you are done with it.
+    </para>
+    <para>
+      If a callback command for asynchronous query results has been
+      established with <xref linkend="pg-result-callback" />, but the
+      results ready event has not yet occurred when
+      <function>pg_getresult</function> is called, the callback will be
+      canceled by pg_getresult.
+    </para>
+
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>PQgetResult</function>.
+    </para>
+
+  </refsect1>
+</refentry>
+
+<refentry id="pg-cancelrequest">
+  <refmeta>
+    <refentrytitle>pg_cancelrequest</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_cancelrequest</refname>
+    <refpurpose>Cancel an in-progress asynchronous query</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_cancelrequest <parameter>conn</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_cancelrequest</function> asks the database server to
+abandon processing of the current command issued by
+<xref linkend="pg-sendquery" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to cancel the current command.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Nothing. Throws a Tcl error if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+There is no guarantee that the command will actually be canceled. For
+example, the command may have been completed before the database server
+can receive and handle the cancel request. If a request is canceled, and
+you were in the middle of a transaction, the entire transaction is rolled
+back.
+    </para>
+    <para>
+You still need to call <xref linkend="pg-getresult" /> repeatedly until it
+doesn't return anything, and deal with all the returned result handles,
+usually by freeing them with <literal>pg_result&nbsp;-clear</literal>.
+    </para>
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>PQrequestCancel</function>.
+    </para>
+
+
+  </refsect1>
+</refentry>
+
+<refentry id="pg-blocking">
+  <refmeta>
+    <refentrytitle>pg_blocking</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_blocking</refname>
+    <refpurpose>Get or set the connection mode - blocking or nonblocking</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_blocking <parameter>conn</parameter> <optional><parameter>newSetting</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_blocking</function> changes the blocking mode of a connection,
+or just gets the current mode.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>newSetting</replaceable></term>
+        <listitem>
+          <para>
+If supplied, a Tcl boolean value with the new blocking mode setting.
+Use 1 (or true, yes, or on) to set blocking mode, or 0 (or false, no, or
+off) for non-blocking mode.
+          </para>
+        </listitem>
+      </varlistentry>
+   
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+If <replaceable>newSetting</replaceable> is provided, returns the blocking
+state: 1 if blocking, 0 if non-blocking, before changing to the new setting.
+If <replaceable>newSetting</replaceable> is not provided, returns the current
+blocking state.
+    </para>
+    <para>
+      There are no error conditions other than argument errors.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+You do not need to set a connection to non-blocking state to use the
+asynchronous query commands such as <xref linkend="pg-sendquery" />.
+Furthermore, non-blocking mode has not been tested with other
+<application>pgtcl</application> commands, so the consequences
+of using non-blocking mode are generally not known.
+    </para>
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>PQsetnonblocking</function>.
+    </para>
+
+  </refsect1>
+</refentry>
+
+<refentry id="pg-result-callback">
+  <refmeta>
+    <refentrytitle>pg_result_callback</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_result_callback</refname>
+    <refpurpose>Set a callback for asynchronous SQL command result availability</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_result_callback <parameter>conn</parameter> <optional><parameter>callbackCommand</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_result_callback</function> creates, changes, or cancels a
+request to execute a callback command when the result of an asynchronous
+query is ready.
+With a <replaceable>callbackCommand</replaceable> parameter, the callback
+command is established or an existing callback command is replaced.
+With no <replaceable>callbackCommand</replaceable> parameter, any existing
+callback command is canceled.
+    </para>
+
+    <para>
+To use event-driven asynchronous queries, first establish a callback
+command with <function>pg_result_callback</function>, then issue a
+command with <xref linkend="pg-sendquery" />,
+<xref linkend="pg-sendquery-prepared" />,
+or <xref linkend="pg-sendquery-params" />.
+The Tcl/Tk application can then continue processing while the query is
+executing, without blocking or busy-waiting for the result. For example,
+a Tk application can continue to respond to user-interface events.
+Or, a Tcl application can simultaneously wait for a query result or a
+network socket input ready condition.
+When the query result is available, the Tcl/Tk event system will
+execute the callback command.
+    </para>
+
+    <para>
+The callback command string is executed from the Tcl idle loop.
+That is the normal idle state of an application written with Tk.
+In non-Tk Tcl shells, you can execute <function>update</function>
+or <function>vwait</function> to cause the idle loop to be entered.
+    </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to establish the callback.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>callbackCommand</replaceable></term>
+        <listitem>
+          <para>
+            If present, provides the command string to execute when
+            an asynchronous query result is ready. If absent, an existing
+            asynchronous query result callback command is canceled.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Nothing. Throws a Tcl error if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+An established callback command will be automatically removed when
+any of the following occurs:
+      <itemizedlist>
+        <listitem>
+          <para>
+            The callbackCommand executes because a result is ready.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <xref linkend="pg-getresult" /> is called, which blocks until a
+            result is ready.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <xref linkend="pg-cancelrequest" /> is called, canceling the
+            asynchronous query.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The connection to the PostgreSQL server is closed.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <function>pg_result_callback</function> is called - without
+            a callbackCommand, to remove the callback, or with a new
+            callbackCommand to replace the existing callback.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      While an asynchronous query callback command is in place, synchronous
+      query commands (pg_exec, pg_select, etc.) are not allowed and will
+      throw a Tcl error.
+    </para>
+    <para>
+      This command was added in <application>pgtclng-1.6.0</application>.
+      It is not available in <application>pgintcl</application>.
+      This feature was suggested by Kyle Bateman (kyleb), with the initial
+      implementation designed and written by Miguel Sofer (msofer).
+    </para>
+    <para>
+      See <xref linkend="pgtcl-example-asyncevent" /> for an example.
+    </para>
+  </refsect1>
+</refentry>
+
+</section>
+
+<section id="pgtcl-ref-notif">
+  <title>Notification and Notice Processing Commands</title>
+
+  <abstract>
+    <title></title>
+    <para>
+The commands in this section are used to process notices and notification
+messages from the database server.
+    </para>
+  </abstract>
+
+<refentry id="pg-listen">
+  <refmeta>
+    <refentrytitle>pg_listen</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_listen</refname>
+    <refpurpose>Set a callback for asynchronous notification messages</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_listen <optional><parameter>-pid</parameter></optional> <parameter>conn</parameter> <parameter>notifyName</parameter> <optional><parameter>callbackCommand</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_listen</function> creates, changes, or cancels a
+request to listen for asynchronous notification messages from the
+PostgreSQL server.  With a
+<replaceable>callbackCommand</replaceable> parameter, the request is
+established, or the command string of an already existing request
+is replaced.  With no <replaceable>callbackCommand</replaceable> parameter, a
+prior request is canceled.
+    </para>
+
+    <para>
+After a <function>pg_listen</function> request is established, the
+specified command string is executed whenever a notification
+message bearing the given name arrives from the server.  This
+occurs when any PostgreSQL client
+application issues a
+<command>NOTIFY</command> command referencing that name.  The
+command string is executed from the Tcl idle loop.  That is the
+normal idle state of an application written with Tk.  In non-Tk Tcl
+shells, you can execute <function>update</function> or
+<function>vwait</function> to cause the idle loop to be entered.
+    </para>
+
+    <para>
+You should not invoke the SQL statements <command>LISTEN</command>
+or <command>UNLISTEN</command> directly when using
+<function>pg_listen</function>.  <application>pgtcl</application>
+takes care of issuing those statements for you.  But if you want to
+send a notification message yourself, invoke the SQL
+<command>NOTIFY</command> statement using
+<function>pg_exec</function> or a related command.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>-pid</replaceable></term>
+        <listitem>
+          <para>
+            If present, indicates that the <literal>callbackCommand</literal>
+            should be given an additional parameter which is the backend
+            process ID (PID) of the client which sent the notification.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection on which to listen for notifications
+            or cancel listening.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>notifyName</replaceable></term>
+        <listitem>
+          <para>
+            The name of the notification condition to start or stop
+            listening to.
+            Starting with PostgreSQL-9.0, this is referred to as a channel
+            by the PostgreSQL documentation.
+            This is treated like an SQL name: downcased, unless enclosed in
+            double quotes. (See notes below)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>callbackCommand</replaceable></term>
+        <listitem>
+          <para>
+            If present, provides the command string to execute when a
+            matching notification arrives. If absent, an existing
+            command string for matching notification is canceled.
+            The command string should be the name of a Tcl procedure
+            (possibly with leading arguments specified), which accepts an
+            argument for the notifying PID if the <literal>-pid</literal>
+            option was used, and also accepts an optional additional argument
+            for the notification payload.
+            See the notes below for details.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Nothing. Throws a Tcl error if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The <literal>notifyName</literal> (or channel) is considered case
+insensitive unless quoted, for compatibility with way SQL treats the
+channel name in the SQL NOTIFY command.
+That is, <function>pg_listen</function> converts the name to lower case,
+unless it is enclosed in double quotes. If it is in double quotes (which
+must be protected to get past the Tcl parser, for example as
+<literal>{"MyChannel"}</literal>) then the quote marks are stripped and the
+name is not case folded.
+    </para>
+    <para>
+Note: pgtcl-ng always did case folding or quote stripping on notifyName.
+pgintcl, however, did not do any case folding or quote stripping on the
+notifyName parameter until after version 3.3.0. For maximum compatibility,
+use only unquoted lower case values for notifyName and in SQL NOTIFY.
+    </para>
+
+    <para>
+Starting with PostgreSQL-9.0, a notification message can include a payload
+string. An example of SQL to send a notification with payload is:
+<programlisting>
+NOTIFY my_channel, 'the payload'
+</programlisting>
+The Tcl commands to set up a listener for that condition might look like this:
+<programlisting>
+proc my_listener {{payload ""}} {
+    ....
+}
+pg_listen $db_conn my_channel my_listener
+</programlisting>
+The procedure can be defined to accept additional arguments before
+the payload, with the fixed arguments supplied in the pg_listen command as
+a single script argument.
+<programlisting>
+proc my_listener2 {command_arg {payload ""}} {
+    ....
+}
+pg_listen $db_conn my_channel [list my_listener2 Command1]
+</programlisting>
+    </para>
+    <para>
+If the NOTIFY message includes a payload string, Pgtcl will include this as
+an additional argument to the listener command. If the NOTIFY message does
+not include a payload string, or includes an empty string as a payload,
+or you are connected to a pre-9.0.0 PostgreSQL database,
+then no additional argument will be supplied to the listener command.
+This is why you need to have an optional argument to your listener command,
+not a required argument.
+    </para>
+    <para>
+Passing a payload string to the notification command was added in
+pgtclng-1.8.0 and pgintcl-3.2.0, and only works when connected to a
+PostgreSQL-9.0.0 or higher database server.
+    </para>
+    <caution>
+      <para>
+Code written for previous versions of the Pgtcl interfaces should be
+updated to include an optional argument to all listener callback commands.
+If you do not update your listener callback command to have an optional
+argument, and you never include a payload in the notification SQL, your
+script will not have any problems. However, note that anyone who can
+connect to the database can send a notification (if they know the channel
+name used in the pg_listen command), and they can include a payload. If
+your listener callback does not expect a payload argument, it will throw a
+background error (which may or may not terminate the script) if it receives
+such a payload argument.
+      </para>
+    </caution>
+    <para>
+The <literal>-pid</literal> option was added in pgtclng-2.0.0 and pgintcl-3.4.0.
+It may be useful, for example, to compare with the connection's own backend
+process id (see <xref linkend="pg-backend-pid"/> to ignore notifications
+coming from the client itself. See the example below.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Example</title>
+    <para>
+In this partial example, a notification handler accepts a PID argument
+and compares it with the client's own backend PID to ignore notifications
+from the client itself.
+<programlisting>
+proc my_handler {backend_pid notifier_pid {payload ""}} {
+    # Ignore notifications from ourself:
+    if {$backend_pid == $notifier_pid} return
+    ... continue processing ...
+} 
+# Establish a listener, with notifying PID argument.
+# Include our backend PID as a command argument.
+pg_listen -pid $db_conn my_channel [list my_handler [pg_backend_pid $db_conn]]
+</programlisting>
+    </para>
+  </refsect1>
+
+</refentry>
+
+
+<refentry id="pg-on-connection-loss">
+  <refmeta>
+    <refentrytitle>pg_on_connection_loss</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_on_connection_loss</refname>
+    <refpurpose>Set a callback for unexpected connection loss</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_on_connection_loss <parameter>conn</parameter> <optional><parameter>callbackCommand</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_on_connection_loss</function> creates, changes, or cancels a
+request to execute a callback command if an unexpected loss of connection
+to the database occurs.  With a <replaceable>callbackCommand</replaceable>
+parameter, the request is established, or the command string of an already
+existing request is replaced.  With no
+<replaceable>callbackCommand</replaceable> parameter, a prior request is
+canceled.
+    </para>
+
+    <para>
+The callback command string is executed from the Tcl idle loop.
+That is the normal idle state of an application written with Tk.
+In non-Tk Tcl shells, you can execute <function>update</function>
+or <function>vwait</function> to cause the idle loop to be entered.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection to watch for connection losses.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>callbackCommand</replaceable></term>
+        <listitem>
+          <para>
+            If present, provides the command string to execute when
+            connection loss is detected. If absent, an existing
+            command string for connection loss is canceled.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Nothing. Throws a Tcl error if an error occurs.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      This command is not available in <application>pgintcl</application>.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-notice-handler">
+  <refmeta>
+    <refentrytitle>pg_notice_handler</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_notice_handler</refname>
+    <refpurpose>Set a callback for notice or warning messages from the server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_notice_handler <parameter>conn</parameter> <optional><parameter>command</parameter></optional>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+<function>pg_notice_handler</function> gets or sets the command to be
+executed when a notice or warning message arrives from the server. Notice
+and warning messages are sent in response to a command sent by an
+application client, but are not error messages and do not result in an
+error condition from the command. Instead, a notice handler is called to
+process the message. The default notice handler displays the message to the
+standard error stream (stderr). <function>pg_notice_handler</function> lets
+the application control the processing of notice and warning messages.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection for which to establish the notice handler.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>command</replaceable></term>
+        <listitem>
+          <para>
+Optional new command to handler notice and warning messages. If no
+command is supplied, the notice handler is not changed. The text of the
+message from the server will be appended as list element to the command.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      The previous notice handler command is returned. (The current notice
+      handler command is returned, if no new command is supplied).
+    </para>
+    <para>
+      There are no error conditions, except for argument errors. If
+      a notice handler itself throws a Tcl error, the error will be
+      ignored.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default notice handler is equivalent to
+<literal>puts -nonewline stderr</literal>.
+(Currently, all PostgreSQL notice and warning messages end in a newline.)
+    </para>
+    <para>
+If you want to suppress notice and warning messages completely, you can set
+the notice handler to an empty string.
+But if you just want to ignore notice messages, a better way is to increase
+the message threshold with the SQL command:
+<literal>SET CLIENT_MIN_MESSAGES TO WARNING</literal>.
+    </para>
+    <para>
+Don't confuse Notices with Notification.  Notice and warning messages are
+generated by the server in response to a command from the client, but do
+not imply failure of the command so they don't affect the result status.
+An example of a notice is index creation as a result of creating a table
+with a primary key. An example of a warning is if
+<literal>ROLLBACK</literal> is issued outside a transaction.  By contrast,
+notifications are messages sent on behalf of another database client.
+    </para>
+  </refsect1>
+</refentry>
+
+</section>
+
+<section id="pgtcl-ref-largeobj">
+  <title>Large Object Processing Commands</title>
+
+  <abstract>
+    <title></title>
+    <para>
+The commands in this section are used to create and work with
+PostgreSQL Large Objects. For more
+information about Large Objects, refer to the
+PostgreSQL reference manual, Client
+Interfaces, Large Objects chapter.
+    </para>
+  </abstract>
+  <note>
+    <para>
+The Large Object commands must be used within a transaction block,
+beginning with <command>BEGIN</command> and ending with
+<command>COMMIT</command> or <command>ROLLBACK</command>.
+This is because the large object file descriptors (returned
+by <xref linkend="pg-lo-open" />) are only valid for the current
+transaction.
+    </para>
+    <para>
+Examples of Large Object commands can be found in
+<xref linkend="pgtcl-example-picstore-lo" /> and
+<xref linkend="pgtcl-example-picview-lo" />.
+    </para>
+  </note>
+
+<refentry id="pg-lo-creat">
+  <refmeta>
+    <refentrytitle>pg_lo_creat</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_creat</refname>
+    <refpurpose>Create a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_creat <parameter>conn</parameter> <parameter>mode</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_creat</function> creates a large object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>mode</replaceable></term>
+        <listitem>
+          <para>
+The access mode for the large object.  It can be any or'ing
+together of <literal>INV_READ</literal> and <literal>INV_WRITE</literal>.  The
+<quote>or</quote> operator is <literal>|</literal>.  For example:
+<programlisting>
+[pg_lo_creat $conn "INV_READ|INV_WRITE"]
+</programlisting>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The OID of the large object created.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_creat</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+
+<refentry id="pg-lo-open">
+  <refmeta>
+    <refentrytitle>pg_lo_open</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_open</refname>
+    <refpurpose>Open a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_open <parameter>conn</parameter> <parameter>loid</parameter> <parameter>mode</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_open</function> opens a large object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>loid</replaceable></term>
+        <listitem>
+          <para>
+            The OID of the large object.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>mode</replaceable></term>
+        <listitem>
+          <para>
+            Specifies the access mode for the large object.  Mode can be
+            either <literal>r</literal>, <literal>w</literal>, or
+            <literal>rw</literal>.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      A descriptor for use in later large-object commands.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_open</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+
+<refentry id="pg-lo-close">
+  <refmeta>
+    <refentrytitle>pg_lo_close</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_close</refname>
+    <refpurpose>Close a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_close <parameter>conn</parameter> <parameter>descriptor</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_close</function> closes a large object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      Nothing.  A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_close</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+
+<refentry id="pg-lo-read">
+  <refmeta>
+    <refentrytitle>pg_lo_read</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_read</refname>
+    <refpurpose>Read from a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_read <parameter>conn</parameter> <parameter>descriptor</parameter> <parameter>bufVar</parameter> <parameter>len</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_read</function> reads at most
+      <replaceable>len</replaceable> bytes from a large object into a
+      variable named <replaceable>bufVar</replaceable>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>bufVar</replaceable></term>
+        <listitem>
+          <para>
+            The name of a buffer variable to contain the large object
+            segment.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>len</replaceable></term>
+        <listitem>
+          <para>
+            The maximum number of bytes to read.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The number of bytes actually read is returned; this could be less than
+      the number requested if the end of the large object is reached first.
+    </para>
+    <para>
+      If an error occurs reading from the large object, a negative number
+      will be returned. Other errors result in a Tcl error being thrown.
+      Note that error handling for this command is different from most of the
+      other Large Object commands.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_read</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+
+<refentry id="pg-lo-write">
+  <refmeta>
+    <refentrytitle>pg_lo_write</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_write</refname>
+    <refpurpose>Write to a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_write <parameter>conn</parameter> <parameter>descriptor</parameter> <parameter>buf</parameter> <parameter>len</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_write</function> writes at most
+      <replaceable>len</replaceable> bytes from a variable
+      <replaceable>buf</replaceable> to a large object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>buf</replaceable></term>
+        <listitem>
+          <para>
+            The string to write to the large object (not a variable name,
+            but the value itself).
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>len</replaceable></term>
+        <listitem>
+          <para>
+            The maximum number of bytes to write.  The number written will
+            be the smaller of this value and the length of the string.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      The number of bytes actually written is returned; this will ordinarily
+      be the same as the number requested.
+    </para>
+    <para>
+      If an error occurs writing to the large object, a negative number
+      will be returned. Other errors result in a Tcl error being thrown.
+      Note that error handling for this command is different from most of the
+      other Large Object commands.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_write</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+
+<refentry id="pg-lo-lseek">
+  <refmeta>
+    <refentrytitle>pg_lo_lseek</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_lseek</refname>
+    <refpurpose>Seek to a position of a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_lseek <parameter>conn</parameter> <parameter>descriptor</parameter> <parameter>offset</parameter> <parameter>whence</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_lseek</function> moves the current read/write
+      position to <replaceable>offset</replaceable> bytes from the position
+      specified by <replaceable>whence</replaceable>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>offset</replaceable></term>
+        <listitem>
+          <para>
+            The new seek position in bytes.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>whence</replaceable></term>
+        <listitem>
+          <para>
+            Specified from where to calculate the new seek position:
+            <literal>SEEK_CUR</literal> (from current position),
+            <literal>SEEK_END</literal> (from end), or
+            <literal>SEEK_SET</literal> (from start).
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The current zero-based byte offset in the large object, after the seek
+      is complete. This is identical to the value which would be returned by
+      <xref linkend="pg-lo-tell" />.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This function is limited to using a 32-bit signed offset (about 2GB).
+      See <xref linkend="pg-lo-lseek64"/> for 64-bit offset support.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_lseek</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-lo-lseek64">
+  <refmeta>
+    <refentrytitle>pg_lo_lseek64</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_lseek64</refname>
+    <refpurpose>Seek to a position of a large object, using a 64-bit offset</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_lseek64 <parameter>conn</parameter> <parameter>descriptor</parameter> <parameter>offset</parameter> <parameter>whence</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_lseek64</function> moves the current read/write
+      position to <replaceable>offset</replaceable> bytes from the position
+      specified by <replaceable>whence</replaceable>.
+      The offset is a 64-bit integer, allowing for larger size objects
+      compare to <xref linkend="pg-lo-lseek"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>offset</replaceable></term>
+        <listitem>
+          <para>
+            The new seek position in bytes, as a 64-bit integer.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>whence</replaceable></term>
+        <listitem>
+          <para>
+            Specified from where to calculate the new seek position:
+            <literal>SEEK_CUR</literal> (from current position),
+            <literal>SEEK_END</literal> (from end), or
+            <literal>SEEK_SET</literal> (from start).
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The current zero-based byte offset in the large object, after the seek
+      is complete. This is identical to the value which would be returned by
+      <xref linkend="pg-lo-tell64" />, and is a 64-bit integer.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-2.1.0</application> and in
+      <application>pgintcl-3.5.0</application>.
+    </para>
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>lo_lseek64</function>.
+In order for <function>pg_lo_lseek64</function> to be available and usable,
+the library must be be built and linked with PostgreSQL
+<application>libpq</application> 9.3.0 or higher
+(does not apply to <application>pgintcl</application>),
+and be connected to a PostgreSQL server version 9.3.0 or higher.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-lo-tell">
+  <refmeta>
+    <refentrytitle>pg_lo_tell</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_tell</refname>
+    <refpurpose>Return the current seek position of a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_tell <parameter>conn</parameter> <parameter>descriptor</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_tell</function> returns the current read/write
+      position in bytes from the beginning of the large object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The current zero-based byte offset in the large object,
+      suitable for use with <xref linkend="pg-lo-lseek" />.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This function is limited to using a 32-bit signed offset (about 2GB).
+      See <xref linkend="pg-lo-tell64"/> for 64-bit offset support.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_tell</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+
+<refentry id="pg-lo-tell64">
+  <refmeta>
+    <refentrytitle>pg_lo_tell64</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_tell</refname>
+    <refpurpose>Return the current seek position of a large object, using 64-bit offsets</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_tell64 <parameter>conn</parameter> <parameter>descriptor</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_tell64</function> returns the current read/write
+      position in bytes from the beginning of the large object.
+      The return value is a 64-bit integer, allowing for larger size objects
+      compare to <xref linkend="pg-lo-tell"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The current zero-based byte offset in the large object,
+      as a 64-bit integer,
+      suitable for use with <xref linkend="pg-lo-lseek64" />.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-2.1.0</application> and in
+      <application>pgintcl-3.5.0</application>.
+    </para>
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>lo_tell64</function>.
+Support for 64-bit large object offsets was added to PostgreSQL-9.3.0.
+In order for <function>pg_lo_tell64</function> to be available and usable,
+the library must be be built and linked with PostgreSQL
+<application>libpq</application> 9.3.0 or higher
+(does not apply to <application>pgintcl</application>),
+and be connected to a PostgreSQL server version 9.3.0 or higher.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-lo-truncate">
+  <refmeta>
+    <refentrytitle>pg_lo_truncate</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_truncate</refname>
+    <refpurpose>Truncate a large object, changing its size</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_truncate <parameter>conn</parameter> <parameter>descriptor</parameter> <parameter>length</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_truncate</function> changes the size of a large object
+      to a specified number of bytes. If the new size is smaller than the
+      current size, the large object is truncated. If the new size is larger
+      than the current size, the large object is padded with null bytes.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>length</replaceable></term>
+        <listitem>
+          <para>
+            The desired new size in bytes for the large object.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      Nothing.  A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This function is limited to using a 32-bit signed length (about 2GB).
+      See <xref linkend="pg-lo-truncate64"/> for 64-bit length support.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-1.7.0</application> and in
+      <application>pgintcl-3.1.0</application>.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_truncate</function>.
+      That function was added to libpq and the PostgreSQL server in version
+      8.3, and the command will not be available if using older versions.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-lo-truncate64">
+  <refmeta>
+    <refentrytitle>pg_lo_truncate64</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_truncate64</refname>
+    <refpurpose>Truncate a large object, changing its size, using a 64-bit offset</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_truncate64 <parameter>conn</parameter> <parameter>descriptor</parameter> <parameter>length</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_truncate64</function> changes the size of a large object
+      to a specified number of bytes. If the new size is smaller than the
+      current size, the large object is truncated. If the new size is larger
+      than the current size, the large object is padded with null bytes.
+      The new size is a 64-bit integer, allowing for larger size objects
+      compare to <xref linkend="pg-lo-truncate"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>descriptor</replaceable></term>
+        <listitem>
+          <para>
+            A descriptor for the large object from <xref linkend="pg-lo-open" />.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>length</replaceable></term>
+        <listitem>
+          <para>
+            The desired new size in bytes for the large object, as a 64-bit
+            integer.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      Nothing.  A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command was added in
+      <application>pgtclng-2.1.0</application> and in
+      <application>pgintcl-3.5.0</application>.
+    </para>
+    <para>
+This command uses or emulates the PostgreSQL <application>libpq</application>
+function <function>lo_truncate64</function>.
+In order for <function>pg_lo_truncate64</function> to be available and usable,
+the library must be be built and linked with PostgreSQL
+<application>libpq</application> 9.3.0 or higher
+(does not apply to <application>pgintcl</application>),
+and be connected to a PostgreSQL server version 9.3.0 or higher.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-lo-unlink">
+  <refmeta>
+    <refentrytitle>pg_lo_unlink</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_unlink</refname>
+    <refpurpose>Delete a large object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_unlink <parameter>conn</parameter> <parameter>loid</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_unlink</function> deletes the specified large
+      object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>loid</replaceable></term>
+        <listitem>
+          <para>
+            The OID of the large object.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      Nothing.  A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_unlink</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+
+<refentry id="pg-lo-import">
+  <refmeta>
+    <refentrytitle>pg_lo_import</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_import</refname>
+    <refpurpose>Import a large object from a file</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_import <parameter>conn</parameter> <parameter>filename</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_import</function> reads the specified file and
+      places the contents into a new large object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>filename</replaceable></term>
+        <listitem>
+          <para>
+            Specified the file from which to import the data.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+
+    <para>
+      The OID of the large object created.
+    </para>
+    <para>
+      A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_import</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="pg-lo-export">
+  <refmeta>
+    <refentrytitle>pg_lo_export</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>pg_lo_export</refname>
+    <refpurpose>Export a large object to a file</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<synopsis>
+pg_lo_export <parameter>conn</parameter> <parameter>loid</parameter> <parameter>filename</parameter>
+</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      <function>pg_lo_export</function> writes the specified large object
+      into a file.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Arguments</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>conn</replaceable></term>
+        <listitem>
+          <para>
+            The handle of the connection.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>loid</replaceable></term>
+        <listitem>
+          <para>
+            The OID of the large object.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>filename</replaceable></term>
+        <listitem>
+          <para>
+            Specifies the file into which the data is to be exported.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+      Nothing.  A Tcl error will be thrown if an error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </para>
+    <para>
+      This command uses or emulates the PostgreSQL
+      <application>libpq</application>
+      function <function>lo_export</function>.
+    </para>
+  </refsect1>
+</refentry>
+
+</section>
+</chapter>

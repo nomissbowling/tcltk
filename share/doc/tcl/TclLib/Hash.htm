@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_Hash manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Hash</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Hash</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Hash.htm#M2" NAME="L400">NAME</A>
-<DL><DD>Tcl_InitHashTable, Tcl_InitCustomHashTable, Tcl_InitObjHashTable, Tcl_DeleteHashTable, Tcl_CreateHashEntry, Tcl_DeleteHashEntry, Tcl_FindHashEntry, Tcl_GetHashValue, Tcl_SetHashValue, Tcl_GetHashKey, Tcl_FirstHashEntry, Tcl_NextHashEntry, Tcl_HashStats &mdash; procedures to manage hash tables</DD></DL>
-<DD><A HREF="Hash.htm#M3" NAME="L401">SYNOPSIS</A>
+<DD><A HREF="Hash.htm#M2" NAME="L366">NAME</A>
+<DL><DD>Tcl_InitHashTable, Tcl_InitCustomHashTable, Tcl_InitObjHashTable, Tcl_DeleteHashTable, Tcl_CreateHashEntry, Tcl_DeleteHashEntry, Tcl_FindHashEntry, Tcl_GetHashValue, Tcl_SetHashValue, Tcl_GetHashKey, Tcl_FirstHashEntry, Tcl_NextHashEntry, Tcl_HashStats - procedures to manage hash tables</DD></DL>
+<DD><A HREF="Hash.htm#M3" NAME="L367">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD><B>Tcl_InitHashTable</B>(<I>tablePtr, keyType</I>)
@@ -23,7 +23,7 @@
 <DD>ClientData
 <DD><B>Tcl_GetHashValue</B>(<I>entryPtr</I>)
 <DD><B>Tcl_SetHashValue</B>(<I>entryPtr, value</I>)
-<DD>void *
+<DD>char *
 <DD><B>Tcl_GetHashKey</B>(<I>tablePtr, entryPtr</I>)
 <DD>Tcl_HashEntry *
 <DD><B>Tcl_FirstHashEntry</B>(<I>tablePtr, searchPtr</I>)
@@ -32,26 +32,26 @@
 <DD>char *
 <DD><B>Tcl_HashStats</B>(<I>tablePtr</I>)
 </DL>
-<DD><A HREF="Hash.htm#M4" NAME="L402">ARGUMENTS</A>
+<DD><A HREF="Hash.htm#M4" NAME="L368">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Hash.htm#M5" NAME="L403">DESCRIPTION</A>
+<DD><A HREF="Hash.htm#M5" NAME="L369">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="Hash.htm#M6" NAME="L404"><B>TCL_STRING_KEYS</B></A>
-<DD><A HREF="Hash.htm#M7" NAME="L405"><B>TCL_ONE_WORD_KEYS</B></A>
-<DD><A HREF="Hash.htm#M8" NAME="L406"><B>TCL_CUSTOM_TYPE_KEYS</B></A>
-<DD><A HREF="Hash.htm#M9" NAME="L407"><B>TCL_CUSTOM_PTR_KEYS</B></A>
-<DD><A HREF="Hash.htm#M10" NAME="L408"><I>other</I></A>
+<DD><A HREF="Hash.htm#M6" NAME="L370"><B>TCL_STRING_KEYS</B></A>
+<DD><A HREF="Hash.htm#M7" NAME="L371"><B>TCL_ONE_WORD_KEYS</B></A>
+<DD><A HREF="Hash.htm#M8" NAME="L372"><B>TCL_CUSTOM_TYPE_KEYS</B></A>
+<DD><A HREF="Hash.htm#M9" NAME="L373"><B>TCL_CUSTOM_PTR_KEYS</B></A>
+<DD><A HREF="Hash.htm#M10" NAME="L374"><I>other</I></A>
 </DL>
-<DD><A HREF="Hash.htm#M11" NAME="L409">THE TCL_HASHKEYTYPE STRUCTURE</A>
+<DD><A HREF="Hash.htm#M11" NAME="L375">THE TCL_HASHKEYTYPE STRUCTURE</A>
 <DL class="the tcl_hashkeytype structure">
-<DD><A HREF="Hash.htm#M12" NAME="L410"><B>TCL_HASH_KEY_RANDOMIZE_HASH</B></A>
-<DD><A HREF="Hash.htm#M13" NAME="L411"><B>TCL_HASH_KEY_SYSTEM_HASH</B></A>
+<DD><A HREF="Hash.htm#M12" NAME="L376"><B>TCL_HASH_KEY_RANDOMIZE_HASH</B></A>
+<DD><A HREF="Hash.htm#M13" NAME="L377"><B>TCL_HASH_KEY_SYSTEM_HASH</B></A>
 </DL>
-<DD><A HREF="Hash.htm#M14" NAME="L412">KEYWORDS</A>
+<DD><A HREF="Hash.htm#M14" NAME="L378">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_InitHashTable, Tcl_InitCustomHashTable, Tcl_InitObjHashTable, Tcl_DeleteHashTable, Tcl_CreateHashEntry, Tcl_DeleteHashEntry, Tcl_FindHashEntry, Tcl_GetHashValue, Tcl_SetHashValue, Tcl_GetHashKey, Tcl_FirstHashEntry, Tcl_NextHashEntry, Tcl_HashStats &mdash; procedures to manage hash tables
+Tcl_InitHashTable, Tcl_InitCustomHashTable, Tcl_InitObjHashTable, Tcl_DeleteHashTable, Tcl_CreateHashEntry, Tcl_DeleteHashEntry, Tcl_FindHashEntry, Tcl_GetHashValue, Tcl_SetHashValue, Tcl_GetHashKey, Tcl_FirstHashEntry, Tcl_NextHashEntry, Tcl_HashStats - procedures to manage hash tables
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 <B>Tcl_InitHashTable</B>(<I>tablePtr, keyType</I>)<BR>
@@ -66,7 +66,7 @@ Tcl_HashEntry *<BR>
 ClientData<BR>
 <B>Tcl_GetHashValue</B>(<I>entryPtr</I>)<BR>
 <B>Tcl_SetHashValue</B>(<I>entryPtr, value</I>)<BR>
-void *<BR>
+char *<BR>
 <B>Tcl_GetHashKey</B>(<I>tablePtr, entryPtr</I>)<BR>
 Tcl_HashEntry *<BR>
 <B>Tcl_FirstHashEntry</B>(<I>tablePtr, searchPtr</I>)<BR>
@@ -85,8 +85,8 @@ Kind of keys to use for new hash table.  Must be either
 <B>TCL_STRING_KEYS</B>, <B>TCL_ONE_WORD_KEYS</B>, <B>TCL_CUSTOM_TYPE_KEYS</B>,
 <B>TCL_CUSTOM_PTR_KEYS</B>, or an integer value greater than 1.
 <P><DT>Tcl_HashKeyType <B>*typePtr</B> (in)<DD>
-Address of structure which defines the behavior of the hash table.
-<P><DT>const void <B>*key</B> (in)<DD>
+Address of structure which defines the behaviour of the hash table.
+<P><DT>const char <B>*key</B> (in)<DD>
 Key to use for probe into table.  Exact form depends on
 <I>keyType</I> used to create table.
 <P><DT>int <B>*newPtr</B> (out)<DD>
@@ -108,8 +108,8 @@ very quickly locate the entry, and hence its value. There may be at
 most one entry in a hash table with a particular key, but many entries
 may have the same value.  Keys can take one of four forms: strings,
 one-word values, integer arrays, or custom keys defined by a
-Tcl_HashKeyType structure (See section <B>THE TCL_HASHKEYTYPE STRUCTURE</B>
-below). All of the keys in a given table have the same
+Tcl_HashKeyType structure (See section <B>THE TCL_HASHKEYTYPE
+STRUCTURE</B> below). All of the keys in a given table have the same
 form, which is specified when the table is initialized.
 <P>
 The value of a hash table entry can be anything that fits in the same
@@ -138,7 +138,7 @@ key types described later are allowed, with the exception of
 <P>
 <B>Tcl_InitObjHashTable</B> is a wrapper around
 <B>Tcl_InitCustomHashTable</B> and initializes a hash table whose keys
-are <A HREF="../TclLib/Object.htm">Tcl_Obj</A> *.
+are Tcl_Obj *.
 <P>
 <B>Tcl_InitCustomHashTable</B> initializes a structure that describes a
 new hash table. The space for the structure is provided by the
@@ -274,7 +274,6 @@ Extension writers can define new hash key types by defining four procedures,
 initializing a <B>Tcl_HashKeyType</B> structure to describe the type, and
 calling <B>Tcl_InitCustomHashTable</B>. The <B>Tcl_HashKeyType</B> structure is
 defined as follows:
-<P>
 <PRE>typedef struct Tcl_HashKeyType {
     int <I>version</I>;
     int <I>flags</I>;
@@ -282,7 +281,7 @@ defined as follows:
     Tcl_CompareHashKeysProc *<I>compareKeysProc</I>;
     Tcl_AllocHashEntryProc *<I>allocEntryProc</I>;
     Tcl_FreeHashEntryProc *<I>freeEntryProc</I>;
-} <B>Tcl_HashKeyType</B>;</PRE>
+} Tcl_HashKeyType;</PRE>
 <P>
 The <I>version</I> member is the version of the table. If this structure is
 extended in future then the version can be used to distinguish between
@@ -309,52 +308,44 @@ circular dependency.
 <P>
 The <I>hashKeyProc</I> member contains the address of a function called to
 calculate a hash value for the key.
-<P>
-<PRE>typedef unsigned int <B>Tcl_HashKeyProc</B>(
+<PRE>typedef unsigned int (Tcl_HashKeyProc) (
         Tcl_HashTable *<I>tablePtr</I>,
         void *<I>keyPtr</I>);</PRE>
-<P>
 If this is NULL then <I>keyPtr</I> is used and
 <B>TCL_HASH_KEY_RANDOMIZE_HASH</B> is assumed.
 <P>
 The <I>compareKeysProc</I> member contains the address of a function called to
 compare two keys.
-<P>
-<PRE>typedef int <B>Tcl_CompareHashKeysProc</B>(
+<PRE>typedef int (Tcl_CompareHashKeysProc) (
         void *<I>keyPtr</I>,
         Tcl_HashEntry *<I>hPtr</I>);</PRE>
-<P>
 If this is NULL then the <I>keyPtr</I> pointers are compared. If the keys do
 not match then the function returns 0, otherwise it returns 1.
 <P>
 The <I>allocEntryProc</I> member contains the address of a function called to
 allocate space for an entry and initialize the key and clientData.
-<P>
-<PRE>typedef Tcl_HashEntry *<B>Tcl_AllocHashEntryProc</B>(
+<PRE>typedef Tcl_HashEntry *(Tcl_AllocHashEntryProc) (
         Tcl_HashTable *<I>tablePtr</I>,
         void *<I>keyPtr</I>);</PRE>
-<P>
-If this is NULL then <B><A HREF="../TclLib/Alloc.htm">Tcl_Alloc</A></B> is used to allocate enough space for a
+If this is NULL then <A HREF="../TclLib/Alloc.htm">Tcl_Alloc</A> is used to allocate enough space for a
 Tcl_HashEntry, the key pointer is assigned to key.oneWordValue and the
 clientData is set to NULL. String keys and array keys use this function to
 allocate enough space for the entry and the key in one block, rather than
 doing it in two blocks. This saves space for a pointer to the key from the
-entry and another memory allocation. <A HREF="../TclLib/Object.htm">Tcl_Obj</A>* keys use this function to
+entry and another memory allocation. Tcl_Obj* keys use this function to
 allocate enough space for an entry and increment the reference count on the
-value.
+object.
 <P>
 The <I>freeEntryProc</I> member contains the address of a function called to
 free space for an entry.
-<P>
-<PRE>typedef void <B>Tcl_FreeHashEntryProc</B>(
-        Tcl_HashEntry *<I>hPtr</I>);</PRE>
-<P>
-If this is NULL then <B><A HREF="../TclLib/Alloc.htm">Tcl_Free</A></B> is used to free the space for the entry.
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A>* keys use this function to decrement the reference count on the
-value.
+<PRE>typedef void (Tcl_FreeHashEntryProc) (Tcl_HashEntry *<I>hPtr</I>);</PRE>
+If this is NULL then <A HREF="../TclLib/Alloc.htm">Tcl_Free</A> is used to free the space for the entry.
+Tcl_Obj* keys use this function to decrement the reference count on the
+object.
 <H3><A NAME="M14">KEYWORDS</A></H3>
 <A href="../Keywords/H.htm#hash table">hash table</A>, <A href="../Keywords/K.htm#key">key</A>, <A href="../Keywords/L.htm#lookup">lookup</A>, <A href="../Keywords/S.htm#search">search</A>, <A href="../Keywords/V.htm#value">value</A>
-<div class="copy">Copyright &copy; 1989-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1989-1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

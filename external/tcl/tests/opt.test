@@ -11,13 +11,13 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-if {"::tcltest" ni [namespace children]} {
-    package require tcltest 2.5
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
     namespace import -force ::tcltest::*
 }
 
 # the package we are going to test
-package require opt 0.4.8
+package require opt 0.4.1
 
 # we are using implementation specifics to test the package
 
@@ -27,8 +27,8 @@ package require opt 0.4.8
 set n $::tcl::OptDescN
 
 test opt-1.1 {OptKeyRegister / check that auto allocation is skipping existing keys} {
-    list [::tcl::OptKeyRegister {} $n] [::tcl::OptKeyRegister {} [expr {$n+1}]] [::tcl::OptKeyRegister {}]
-} "$n [expr {$n+1}] [expr {$n+2}]"
+    list [::tcl::OptKeyRegister {} $n] [::tcl::OptKeyRegister {} [expr $n+1]] [::tcl::OptKeyRegister {}]
+} "$n [expr $n+1] [expr $n+2]"
 
 test opt-2.1 {OptKeyDelete} {
     list [::tcl::OptKeyRegister {} testkey] \
@@ -56,7 +56,7 @@ test opt-3.2 {OptParse / temp key is removed even on errors} {
 
 test opt-4.1 {OptProc} {
     ::tcl::OptProc optTest {} {}
-    optTest
+    optTest ;
     ::tcl::OptKeyDelete optTest
 } {}
 
@@ -72,7 +72,7 @@ test opt-5.1 {OptProcArgGiven} {
 } {0 1 1 1}
 
 test opt-6.1 {OptKeyParse} {
-    ::tcl::OptKeyRegister {} test
+    ::tcl::OptKeyRegister {} test;
     list [catch {::tcl::OptKeyParse test {-help}} msg] $msg
 } {1 {Usage information:
     Var/FlagName Type Value Help

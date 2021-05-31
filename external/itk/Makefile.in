@@ -86,7 +86,6 @@ exec_prefix	= @exec_prefix@
 
 bindir		= @bindir@
 libdir		= @libdir@
-datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 includedir	= @includedir@
@@ -100,11 +99,10 @@ pkgincludedir	= $(includedir)/$(PKG_DIR)
 
 top_builddir	= .
 
-INSTALL_OPTIONS	=
-INSTALL         = $(SHELL) $(srcdir)/tclconfig/install-sh -c ${INSTALL_OPTIONS}
-INSTALL_PROGRAM	= ${INSTALL} -m 755
-INSTALL_DATA	= ${INSTALL} -m 444
-INSTALL_SCRIPT	= ${INSTALL_SCRIPT_PROGRAM}
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
+INSTALL_SCRIPT	= @INSTALL_SCRIPT@
 
 PACKAGE_NAME	= @PACKAGE_NAME@
 PACKAGE_VERSION	= @PACKAGE_VERSION@
@@ -130,7 +128,6 @@ TCL_BIN_DIR	= @TCL_BIN_DIR@
 TCL_SRC_DIR	= @TCL_SRC_DIR@
 TK_SRC_DIR	= @TK_SRC_DIR@
 TK_BIN_DIR	= @TK_BIN_DIR@
-ITCL_TOOLS_DIR	= @itcl_SRC_DIR@/tools
 
 # Not used, but retained for reference of what libs Tcl required
 TCL_LIBS	= @TCL_LIBS@
@@ -160,7 +157,7 @@ INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
 PKG_CFLAGS	= @PKG_CFLAGS@
 
 DEFS		= @DEFS@ $(PKG_CFLAGS) \
-		  -DITK_LIBRARY=\"$(pkglibdir)\"
+		  -DITK_LIBRARY=\"$(pkglibdir)\" -DUSE_NON_CONST
 
 CONFIG_CLEAN_FILES = @CONFIG_CLEAN_FILES@ Makefile itkConfig.sh pkgIndex.tcl
 
@@ -230,7 +227,7 @@ install-doc: doc
 	done
 
 test: binaries libraries
-	$(WISH) `@CYGPATH@ $(srcdir)/tests/all.tcl` -load "package require itk $(PACKAGE_VERSION)" $(TESTFLAGS)
+	$(WISH) `@CYGPATH@ $(srcdir)/tests/all.tcl` -load "package require Itk $(PACKAGE_VERSION)" $(TESTFLAGS) | cat
 
 shell: binaries libraries
 	@$(WISH) $(SCRIPT)
@@ -411,9 +408,9 @@ install-bin-binaries:
 
 .SUFFIXES: .c .$(OBJEXT)
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+#Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+#	cd $(top_builddir) \
+#	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
 uninstall-binaries:
 	list='$(lib_BINARIES)'; for p in $$list; do \
@@ -426,10 +423,6 @@ uninstall-binaries:
 	list='$(bin_BINARIES)'; for p in $$list; do \
 	  rm -f $(DESTDIR)$(bindir)/$$p; \
 	done
-
-genstubs: $(ITCL_TOOLS_DIR)/genStubs.tcl $(srcdir)/generic/itk.decls
-	@echo $(TCLSH) $(ITCL_TOOLS_DIR)/genStubs.tcl $(srcdir)/generic $(srcdir)/generic/itk.decls
-	@$(TCLSH) $(ITCL_TOOLS_DIR)/genStubs.tcl $(srcdir)/generic $(srcdir)/generic/itk.decls
 
 .PHONY: all binaries clean depend distclean doc install libraries test
 

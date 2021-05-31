@@ -46,6 +46,13 @@ else
         unzip -o $SCRIPTDIR/backup/fftw-3.3.3-dll32.zip -d $COMPILEDIR/$MODULE/libfftw
         make -f Makefile.win32
     fi
+
+    #if [ "$BARCH" == "x86_64" ]; then
+    #    rsync -a $COMPILEDIR/$MODULE/libfftw/libfftw3-3.dll $iSHARELIB64DIR
+    #else
+    #    rsync -a $COMPILEDIR/$MODULE/libfftw/libfftw3-3.dll $iSHARELIB32DIR
+    #fi
+
     rsync -a $COMPILEDIR/$MODULE/libfftw/libfftw3-3.dll $INSTALLDIR/bin/
     ## copy licence file
     rsync -a $COMPILEDIR/$MODULE/libfftw/COPYRIGHT $iLICENCEDIR/libfftw.licence

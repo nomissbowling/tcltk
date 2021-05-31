@@ -3,11 +3,11 @@
 <HEAD><TITLE>array manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> array</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> array</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="array.htm#M2" NAME="L26">NAME</A>
-<DL><DD>array &mdash; Manipulate array variables</DD></DL>
+<DL><DD>array - Manipulate array variables</DD></DL>
 <DD><A HREF="array.htm#M3" NAME="L27">SYNOPSIS</A>
 <DL>
 </DL>
@@ -30,7 +30,7 @@
 <DD><A HREF="array.htm#M18" NAME="L42">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-array &mdash; Manipulate array variables
+array - Manipulate array variables
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>array </B><I>option arrayName</I> ?<I>arg arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -145,14 +145,14 @@ The command always returns an empty string.
 <P></DL>
 <H3><A NAME="M16">EXAMPLES</A></H3>
 <PRE><B>array set</B> colorcount {
-    red   1
-    green 5
-    blue  4
-    white 9
+   red   1
+   green 5
+   blue  4
+   white 9
 }
 
 foreach {color count} [<B>array get</B> colorcount] {
-    puts &quot;Color: $color Count: $count&quot;
+   puts &quot;Color: $color Count: $count&quot;
 }
   <B><font size="+1">&#8594;</font></B> Color: blue Count: 4
     Color: white Count: 9
@@ -160,7 +160,7 @@ foreach {color count} [<B>array get</B> colorcount] {
     Color: red Count: 1
 
 foreach color [<B>array names</B> colorcount] {
-    puts &quot;Color: $color Count: $colorcount($color)&quot;
+   puts &quot;Color: $color Count: $colorcount($color)&quot;
 }
   <B><font size="+1">&#8594;</font></B> Color: blue Count: 4
     Color: white Count: 9
@@ -168,7 +168,7 @@ foreach color [<B>array names</B> colorcount] {
     Color: red Count: 1
 
 foreach color [lsort [<B>array names</B> colorcount]] {
-    puts &quot;Color: $color Count: $colorcount($color)&quot;
+   puts &quot;Color: $color Count: $colorcount($color)&quot;
 }
   <B><font size="+1">&#8594;</font></B> Color: blue Count: 4
     Color: green Count: 5
@@ -193,7 +193,8 @@ foreach color [lsort [<B>array names</B> colorcount]] {
 <B><A HREF="../TclCmd/list.htm">list</A></B>, <B><A HREF="../TclCmd/string.htm">string</A></B>, <B><A HREF="../TclCmd/variable.htm">variable</A></B>, <B><A HREF="../TclCmd/trace.htm">trace</A></B>, <B><A HREF="../TclCmd/foreach.htm">foreach</A></B>
 <H3><A NAME="M18">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#array">array</A>, <A href="../Keywords/E.htm#element names">element names</A>, <A href="../Keywords/S.htm#search">search</A>
-<div class="copy">Copyright &copy; 1993-1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993-1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

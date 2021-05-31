@@ -10,7 +10,10 @@ MODULE=tk
 if [ -n "$SW_DEBUG" ]; then
     CONFIGURE_SWITCH+="--enable-symbols "
 fi
-
+## check symbol switch
+if [ -n "$SW_SYMBOLS" ]; then
+    CFLAGS="-g"
+fi
 ## check 64bit platform
 if [ "$BARCH" == "x86_64" ]; then
     CONFIGURE_SWITCH+="--enable-64bit "
@@ -34,12 +37,12 @@ if [ ! -d $COMPILEDIR/$MODULE ] || [ -n "$SW_FORCECOPY" ] ; then
     echo done
     ## apply patches
     ## https://sourceforge.net/tracker/?func=detail&aid=2996762&group_id=12997&atid=312997
-    #patch --forward $COMPILEDIR/$MODULE/generic/tkListbox.c $PATCHDIR/$MODULE/tk-lbjustify-tkListbox-c.patch
-    #if [ -z "$WINDIR" ]; then
-    #    patch --forward $COMPILEDIR/$MODULE/unix/tkUnixDefault.h $PATCHDIR/$MODULE/tk-lbjustify-tkUnixDefault-h.patch
-    #else
-    #    patch --forward $COMPILEDIR/$MODULE/win/tkWinDefault.h $PATCHDIR/$MODULE/tk-lbjustify-tkWinDefault-h.patch
-    #fi
+    patch --forward $COMPILEDIR/$MODULE/generic/tkListbox.c $PATCHDIR/$MODULE/tk-lbjustify-tkListbox-c.patch
+    if [ -z "$WINDIR" ]; then
+        patch --forward $COMPILEDIR/$MODULE/unix/tkUnixDefault.h $PATCHDIR/$MODULE/tk-lbjustify-tkUnixDefault-h.patch
+    else
+        patch --forward $COMPILEDIR/$MODULE/win/tkWinDefault.h $PATCHDIR/$MODULE/tk-lbjustify-tkWinDefault-h.patch
+    fi
 fi
 
 ## check if mandatory packages are installed
@@ -67,8 +70,7 @@ else
 fi
 
 ## configure and make
-autoconf
-./configure --prefix=$INSTALLDIR --enable-threads --mandir=$iSHAREDIR $CONFIGURE_SWITCH
+(CFLAGS="$CFLAGS" ./configure --prefix=$INSTALLDIR --enable-threads --mandir=$iSHAREDIR $CONFIGURE_SWITCH)
 ## --with-tcl=$INSTALLDIR/lib --disable-xft
 make
 make install
@@ -77,17 +79,17 @@ echo -n "Copying extras ... "
 ## postprocess
 cd $INSTALLDIR/bin
 if [ -z "$WINDIR" ]; then
-    mv wish8.6 wish86
-    rsync -a wish86 wish
+    mv wish8.5 wish85
+    rsync -a wish85 wish
 else
     if [ -n "$SW_DEBUG" ]; then
-        mv wish86g.exe wish86.exe
-        rsync -a wish86.exe wish.exe
+        mv wish85g.exe wish85.exe
+        rsync -a wish85.exe wish.exe
     else
-        rsync -a wish86.exe wish.exe
+        rsync -a wish85.exe wish.exe
     fi
 fi
-
+  
 ## copy licence file
 rsync -a $EXTSRCDIR/$MODULE/license.terms $iLICENCEDIR/$MODULE.licence
 echo done

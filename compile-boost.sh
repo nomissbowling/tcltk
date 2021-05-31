@@ -15,7 +15,7 @@ BFILE=boost_${VERSION}.tar.gz
 #fi
 
 ## print
-echo "** Compiling $MODULE"
+echo "** Compiling $MODULE in ${BASEDIR=.}"
 
 ## delete whole compile sources and start from new
 if [ -n "$SW_CLEANUP" ]; then
@@ -52,4 +52,4 @@ fi
 cp -pv $COMPILEDIR/$MODULE/LICENSE_1_0.txt $iLICENCEDIR/$MODULE.licence
 
 ## fini
-echo "** Finished compile-$MODULE."
+echo "** Finished compile $MODULE."

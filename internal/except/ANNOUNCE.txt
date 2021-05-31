@@ -1,0 +1,41 @@
+I am pleased to announce the second public version of TclExcept: 
+
+TclExcept v2.0: Tcl-only exception handling and assertion package
+by Frédéric BONNET (frederic.bonnet@ciril.fr)
+
+Updated 24 may 2000, 15h51
+
+The home page for this package is:
+http://www.purl.org/net/bonnet/Tcl/TclExcept/index.htm
+
+************************************************************************
+
+TclExcept is a Tcl package that provides C++ and Java-like exception handling, 
+and assertions inside Tcl script. Since it is a Tcl-only extension, no 
+compilation is required, and it should work with Tcl version 7.6 or newer and on 
+any platform. The source file is 9kB. It has been tested on Tcl7.6, Tcl8.0.5 and 
+Tcl8.2.2 on Windows95/NT and SunOS platforms.
+
+
+WHERE TO GET TCLEXCEPT
+
+	Home Page:
+	http://www.purl.org/net/bonnet/Tcl/TclExcept/index.htm
+
+	Distribution files:
+	http://www.purl.org/net/bonnet/pub/TclExcept20.zip (sources)
+
+
+
+INSTALLATION, LICENSE, ETC.
+
+The file README.txt of the distribution contains information about the 
+installation, compilation and use of TclExcept. Read it carefully. 
+The file license.txt describes the license that covers TclExcept. It is very 
+close to the Tcl/Tk license.
+
+I'd appreciate that every TclExcept user send me a mail so I can keep track of 
+the number of users for this software, in a purely informative goal. I won't 
+make any use of these other than statistic.
+Feel free to send any comment or bug report to frederic.bonnet@ciril.fr. 
+TclExcept is likely to be improved depending on users feedback.

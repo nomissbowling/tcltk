@@ -3,30 +3,29 @@
 <HEAD><TITLE>grab manual page - Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> grab</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> grab</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="grab.htm#M2" NAME="L757">NAME</A>
-<DL><DD>grab &mdash; Confine pointer and keyboard events to a window sub-tree</DD></DL>
-<DD><A HREF="grab.htm#M3" NAME="L758">SYNOPSIS</A>
+<DD><A HREF="grab.htm#M2" NAME="L696">NAME</A>
+<DL><DD>grab - Confine pointer and keyboard events to a window sub-tree</DD></DL>
+<DD><A HREF="grab.htm#M3" NAME="L697">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="grab.htm#M4" NAME="L759">DESCRIPTION</A>
+<DD><A HREF="grab.htm#M4" NAME="L698">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="grab.htm#M5" NAME="L760"><B>grab </B>?<B>-global</B>? <I>window</I></A>
-<DD><A HREF="grab.htm#M6" NAME="L761"><B>grab current </B>?<I>window</I>?</A>
-<DD><A HREF="grab.htm#M7" NAME="L762"><B>grab release </B><I>window</I></A>
-<DD><A HREF="grab.htm#M8" NAME="L763"><B>grab set </B>?<B>-global</B>? <I>window</I></A>
-<DD><A HREF="grab.htm#M9" NAME="L764"><B>grab status </B><I>window</I></A>
+<DD><A HREF="grab.htm#M5" NAME="L699"><B>grab </B>?<B>-global</B>? <I>window</I></A>
+<DD><A HREF="grab.htm#M6" NAME="L700"><B>grab current </B>?<I>window</I>?</A>
+<DD><A HREF="grab.htm#M7" NAME="L701"><B>grab release </B><I>window</I></A>
+<DD><A HREF="grab.htm#M8" NAME="L702"><B>grab set </B>?<B>-global</B>? <I>window</I></A>
+<DD><A HREF="grab.htm#M9" NAME="L703"><B>grab status </B><I>window</I></A>
 </DL>
-<DD><A HREF="grab.htm#M10" NAME="L765">WARNING</A>
-<DD><A HREF="grab.htm#M11" NAME="L766">BUGS</A>
-<DD><A HREF="grab.htm#M12" NAME="L767">EXAMPLE</A>
-<DD><A HREF="grab.htm#M13" NAME="L768">SEE ALSO</A>
-<DD><A HREF="grab.htm#M14" NAME="L769">KEYWORDS</A>
+<DD><A HREF="grab.htm#M10" NAME="L704">WARNING</A>
+<DD><A HREF="grab.htm#M11" NAME="L705">BUGS</A>
+<DD><A HREF="grab.htm#M12" NAME="L706">EXAMPLE</A>
+<DD><A HREF="grab.htm#M13" NAME="L707">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-grab &mdash; Confine pointer and keyboard events to a window sub-tree
+grab - Confine pointer and keyboard events to a window sub-tree
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>grab </B>?<B>-global</B>? <I>window</I><BR>
 <B>grab </B><I>option </I>?<I>arg arg </I>...?<BR>
@@ -109,7 +108,7 @@ does nothing.  Returns an empty string.
 <P><DT><A NAME="M9"><B>grab status </B><I>window</I></A><DD>
 Returns <B>none</B> if no grab is currently set on <I>window</I>,
 <B>local</B> if a local grab is set on <I>window</I>, and
-<B>global</B> if a global grab is set.
+<B><A HREF="../TclCmd/global.htm">global</A></B> if a global grab is set.
 <P></DL>
 <H3><A NAME="M10">WARNING</A></H3>
 It is very easy to use global grabs to render a display completely
@@ -137,11 +136,10 @@ clicked.
 pack [button .b2 -text &quot;Click me! #2&quot; -command {destroy .b2}]
 pack [button .b3 -text &quot;Click me! #3&quot; -command {destroy .b3}]
 <B>grab</B> .b2</PRE>
-<H3><A NAME="M13">SEE ALSO</A></H3>
-<B><A HREF="../TkCmd/busy.htm">busy</A></B>
-<H3><A NAME="M14">KEYWORDS</A></H3>
+<H3><A NAME="M13">KEYWORDS</A></H3>
 <A href="../Keywords/G.htm#grab">grab</A>, <A href="../Keywords/K.htm#keyboard events">keyboard events</A>, <A href="../Keywords/P.htm#pointer events">pointer events</A>, <A href="../Keywords/W.htm#window">window</A>
-<div class="copy">Copyright &copy; 1992 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1992 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

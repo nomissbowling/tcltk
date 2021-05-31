@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_GetEncoding manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Encoding</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Encoding</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Encoding.htm#M2" NAME="L244">NAME</A>
-<DL><DD>Tcl_GetEncoding, Tcl_FreeEncoding, Tcl_GetEncodingFromObj, Tcl_ExternalToUtfDString, Tcl_ExternalToUtf, Tcl_UtfToExternalDString, Tcl_UtfToExternal, Tcl_WinTCharToUtf, Tcl_WinUtfToTChar, Tcl_GetEncodingName, Tcl_SetSystemEncoding, Tcl_GetEncodingNameFromEnvironment, Tcl_GetEncodingNames, Tcl_CreateEncoding, Tcl_GetEncodingSearchPath, Tcl_SetEncodingSearchPath, Tcl_GetDefaultEncodingDir, Tcl_SetDefaultEncodingDir &mdash; procedures for creating and using encodings</DD></DL>
-<DD><A HREF="Encoding.htm#M3" NAME="L245">SYNOPSIS</A>
+<DD><A HREF="Encoding.htm#M2" NAME="L215">NAME</A>
+<DL><DD>Tcl_GetEncoding, Tcl_FreeEncoding, Tcl_GetEncodingFromObj, Tcl_ExternalToUtfDString, Tcl_ExternalToUtf, Tcl_UtfToExternalDString, Tcl_UtfToExternal, Tcl_WinTCharToUtf, Tcl_WinUtfToTChar, Tcl_GetEncodingName, Tcl_SetSystemEncoding, Tcl_GetEncodingNameFromEnvironment, Tcl_GetEncodingNames, Tcl_CreateEncoding, Tcl_GetEncodingSearchPath, Tcl_SetEncodingSearchPath, Tcl_GetDefaultEncodingDir, Tcl_SetDefaultEncodingDir - procedures for creating and using encodings</DD></DL>
+<DD><A HREF="Encoding.htm#M3" NAME="L216">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>Tcl_Encoding
@@ -23,10 +23,10 @@
 <DD><B>Tcl_UtfToExternalDString</B>(<I>encoding, src, srcLen, dstPtr</I>)
 <DD>int
 <DD><B>Tcl_ExternalToUtf</B>(<I>interp, encoding, src, srcLen, flags, statePtr,
-<DD>dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)
+<DD>                  dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)
 <DD>int
 <DD><B>Tcl_UtfToExternal</B>(<I>interp, encoding, src, srcLen, flags, statePtr,
-<DD>dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)
+<DD>                  dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)
 <DD>char *
 <DD><B>Tcl_WinTCharToUtf</B>(<I>tsrc, srcLen, dstPtr</I>)
 <DD>TCHAR *
@@ -50,29 +50,29 @@
 <DD>void
 <DD><B>Tcl_SetDefaultEncodingDir</B>(<I>path</I>)
 </DL>
-<DD><A HREF="Encoding.htm#M4" NAME="L246">ARGUMENTS</A>
+<DD><A HREF="Encoding.htm#M4" NAME="L217">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Encoding.htm#M5" NAME="L247">INTRODUCTION</A>
-<DD><A HREF="Encoding.htm#M6" NAME="L248">DESCRIPTION</A>
+<DD><A HREF="Encoding.htm#M5" NAME="L218">INTRODUCTION</A>
+<DD><A HREF="Encoding.htm#M6" NAME="L219">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="Encoding.htm#M7" NAME="L249"><B>TCL_OK</B></A>
-<DD><A HREF="Encoding.htm#M8" NAME="L250"><B>TCL_CONVERT_NOSPACE</B></A>
-<DD><A HREF="Encoding.htm#M9" NAME="L251"><B>TCL_CONVERT_MULTIBYTE</B></A>
-<DD><A HREF="Encoding.htm#M10" NAME="L252"><B>TCL_CONVERT_SYNTAX</B></A>
-<DD><A HREF="Encoding.htm#M11" NAME="L253"><B>TCL_CONVERT_UNKNOWN</B></A>
+<DD><A HREF="Encoding.htm#M7" NAME="L220"><B>TCL_OK</B></A>
+<DD><A HREF="Encoding.htm#M8" NAME="L221"><B>TCL_CONVERT_NOSPACE</B></A>
+<DD><A HREF="Encoding.htm#M9" NAME="L222"><B>TCL_CONVERT_MULTIBYTE</B></A>
+<DD><A HREF="Encoding.htm#M10" NAME="L223"><B>TCL_CONVERT_SYNTAX</B></A>
+<DD><A HREF="Encoding.htm#M11" NAME="L224"><B>TCL_CONVERT_UNKNOWN</B></A>
 </DL>
-<DD><A HREF="Encoding.htm#M12" NAME="L254">ENCODING FILES</A>
-<OL class="encoding files">
-<DD><A HREF="Encoding.htm#M13" NAME="L255">[1] <B>S</B></A>
-<DD><A HREF="Encoding.htm#M14" NAME="L256">[2] <B>D</B></A>
-<DD><A HREF="Encoding.htm#M15" NAME="L257">[3] <B>M</B></A>
-<DD><A HREF="Encoding.htm#M16" NAME="L258">[4] <B>E</B></A>
-</OL>
-<DD><A HREF="Encoding.htm#M17" NAME="L259">KEYWORDS</A>
+<DD><A HREF="Encoding.htm#M12" NAME="L225">ENCODING FILES</A>
+<DL class="encoding files">
+<DD><A HREF="Encoding.htm#M13" NAME="L226">[1] <B>S</B></A>
+<DD><A HREF="Encoding.htm#M14" NAME="L227">[2] <B>D</B></A>
+<DD><A HREF="Encoding.htm#M15" NAME="L228">[3] <B>M</B></A>
+<DD><A HREF="Encoding.htm#M16" NAME="L229">[4] <B>E</B></A>
+</DL>
+<DD><A HREF="Encoding.htm#M17" NAME="L230">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_GetEncoding, Tcl_FreeEncoding, Tcl_GetEncodingFromObj, Tcl_ExternalToUtfDString, Tcl_ExternalToUtf, Tcl_UtfToExternalDString, Tcl_UtfToExternal, Tcl_WinTCharToUtf, Tcl_WinUtfToTChar, Tcl_GetEncodingName, Tcl_SetSystemEncoding, Tcl_GetEncodingNameFromEnvironment, Tcl_GetEncodingNames, Tcl_CreateEncoding, Tcl_GetEncodingSearchPath, Tcl_SetEncodingSearchPath, Tcl_GetDefaultEncodingDir, Tcl_SetDefaultEncodingDir &mdash; procedures for creating and using encodings
+Tcl_GetEncoding, Tcl_FreeEncoding, Tcl_GetEncodingFromObj, Tcl_ExternalToUtfDString, Tcl_ExternalToUtf, Tcl_UtfToExternalDString, Tcl_UtfToExternal, Tcl_WinTCharToUtf, Tcl_WinUtfToTChar, Tcl_GetEncodingName, Tcl_SetSystemEncoding, Tcl_GetEncodingNameFromEnvironment, Tcl_GetEncodingNames, Tcl_CreateEncoding, Tcl_GetEncodingSearchPath, Tcl_SetEncodingSearchPath, Tcl_GetDefaultEncodingDir, Tcl_SetDefaultEncodingDir - procedures for creating and using encodings
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 Tcl_Encoding<BR>
@@ -87,10 +87,10 @@ char *<BR>
 <B>Tcl_UtfToExternalDString</B>(<I>encoding, src, srcLen, dstPtr</I>)<BR>
 int<BR>
 <B>Tcl_ExternalToUtf</B>(<I>interp, encoding, src, srcLen, flags, statePtr,<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)<BR>
+                  dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)<BR>
 int<BR>
 <B>Tcl_UtfToExternal</B>(<I>interp, encoding, src, srcLen, flags, statePtr,<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)<BR>
+                  dst, dstLen, srcReadPtr, dstWrotePtr, dstCharsPtr</I>)<BR>
 char *<BR>
 <B>Tcl_WinTCharToUtf</B>(<I>tsrc, srcLen, dstPtr</I>)<BR>
 TCHAR *<BR>
@@ -105,7 +105,7 @@ void<BR>
 <B>Tcl_GetEncodingNames</B>(<I>interp</I>)<BR>
 Tcl_Encoding<BR>
 <B>Tcl_CreateEncoding</B>(<I>typePtr</I>)<BR>
-<A HREF="../TclLib/Object.htm">Tcl_Obj</A> *<BR>
+Tcl_Obj *<BR>
 <B>Tcl_GetEncodingSearchPath</B>()<BR>
 int<BR>
 <B>Tcl_SetEncodingSearchPath</B>(<I>searchPath</I>)<BR>
@@ -123,7 +123,7 @@ Name of encoding to load.
 <P><DT>Tcl_Encoding <B><A HREF="../TclCmd/encoding.htm">encoding</A></B> (in)<DD>
 The encoding to query, free, or use for converting text.  If <I>encoding</I> is 
 NULL, the current system encoding is used.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*objPtr</B> (in)<DD>
+<P><DT>Tcl_Obj <B>*objPtr</B> (in)<DD>
 Name of encoding to get token for.
 <P><DT>Tcl_Encoding <B>*encodingPtr</B> (out)<DD>
 Points to storage where encoding token is to be written.
@@ -137,8 +137,8 @@ An array of Windows TCHAR characters to convert to UTF-8.
 <P><DT>int <B>srcLen</B> (in)<DD>
 Length of <I>src</I> or <I>tsrc</I> in bytes.  If the length is negative, the 
 encoding-specific length of the string is used.
-<P><DT><A HREF="../TclLib/DString.htm">Tcl_DString</A> <B>*dstPtr</B> (out)<DD>
-Pointer to an uninitialized or free <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B> in which the converted
+<P><DT>Tcl_DString <B>*dstPtr</B> (out)<DD>
+Pointer to an uninitialized or free <B>Tcl_DString</B> in which the converted
 result will be stored.
 <P><DT>int <B>flags</B> (in)<DD>
 Various flag bits OR-ed together.  
@@ -179,11 +179,11 @@ buffer as a result of the conversion.  May be NULL.
 <P><DT>int <B>*dstCharsPtr</B> (out)<DD>
 Filled with the number of characters that correspond to the number of bytes
 stored in the output buffer.  May be NULL.
-<P><DT><A HREF="../TclLib/DString.htm">Tcl_DString</A> <B>*bufPtr</B> (out)<DD>
+<P><DT>Tcl_DString <B>*bufPtr</B> (out)<DD>
 Storage for the prescribed system encoding name.
 <P><DT>const Tcl_EncodingType <B>*typePtr</B> (in)<DD>
 Structure that defines a new type of encoding.  
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*searchPath</B> (in)<DD>
+<P><DT>Tcl_Obj <B>*searchPath</B> (in)<DD>
 List of filesystem directories in which to search for encoding data files.
 <P><DT>const char <B>*path</B> (in)<DD>
 A path to the location of the encoding file.  
@@ -236,8 +236,8 @@ and delete it from the database.
 name, just as <B>Tcl_GetEncoding</B> does. When an encoding is found,
 it is cached within the <B>objPtr</B> value for future reference, the
 <B>Tcl_Encoding</B> token is written to the storage pointed to by
-<I>encodingPtr</I>, and the value <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> is returned. If no such
-encoding is found, the value <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned, and no
+<I>encodingPtr</I>, and the value <B>TCL_OK</B> is returned. If no such
+encoding is found, the value <B>TCL_ERROR</B> is returned, and no
 writing to <B>*</B><I>encodingPtr</I> takes place. Just as with
 <B>Tcl_GetEncoding</B>, the caller should call <B>Tcl_FreeEncoding</B>
 on the resulting encoding token when that token will no longer be
@@ -316,7 +316,7 @@ If you planned to use the same
 &#8220;char&#8221;
 based interfaces on both Windows
 95 and Windows NT, you could use <B>Tcl_UtfToExternal</B> and
-<B>Tcl_ExternalToUtf</B> (or their <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B> equivalents) with an
+<B>Tcl_ExternalToUtf</B> (or their <B>Tcl_DString</B> equivalents) with an
 encoding of NULL (the current system encoding).  On the other hand,
 if you planned to use the Unicode interface when running on Windows NT
 and the
@@ -324,7 +324,6 @@ and the
 interfaces when running on Windows 95, you would have
 to perform the following type of test over and over in your program
 (as represented in pseudo-code):
-<P>
 <PRE>if (running NT) {
     encoding &lt;- Tcl_GetEncoding(&quot;unicode&quot;);
     nativeBuffer &lt;- Tcl_UtfToExternal(encoding, utfBuffer);
@@ -332,7 +331,6 @@ to perform the following type of test over and over in your program
 } else {
     nativeBuffer &lt;- Tcl_UtfToExternal(NULL, utfBuffer);
 }</PRE>
-<P>
 <B>Tcl_WinUtfToTChar</B> and <B>Tcl_WinTCharToUtf</B> automatically
 handle this test and use the proper encoding based on the current
 operating system.  <B>Tcl_WinUtfToTChar</B> returns a pointer to
@@ -351,17 +349,17 @@ was used to create the encoding.  The string returned by
 whenever the user passes a NULL value for the <I>encoding</I> argument to
 any of the other encoding functions.  If <I>name</I> is NULL, the system
 encoding is reset to the default system encoding, <B><A HREF="../TclCmd/binary.htm">binary</A></B>.  If the
-name did not refer to any known or loadable encoding, <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is
+name did not refer to any known or loadable encoding, <B>TCL_ERROR</B> is
 returned and an error message is left in <I>interp</I>.  Otherwise, this
 procedure increments the reference count of the new system encoding,
 decrements the reference count of the old system encoding, and returns
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.
+<B>TCL_OK</B>.
 <P>
 <B>Tcl_GetEncodingNameFromEnvironment</B> provides a means for the Tcl
 library to report the encoding name it believes to be the correct one
 to use as the system encoding, based on system calls and examination of
 the environment suitable for the platform.  It accepts <I>bufPtr</I>,
-a pointer to an uninitialized or freed <B><A HREF="../TclLib/DString.htm">Tcl_DString</A></B> and writes
+a pointer to an uninitialized or freed <B>Tcl_DString</B> and writes
 the encoding name to it.  The <B><A HREF="../TclLib/DString.htm">Tcl_DStringValue</A></B> is returned.
 <P>
 <B>Tcl_GetEncodingNames</B> sets the <I>interp</I> result to a list
@@ -389,13 +387,13 @@ about the name of the encoding and the procedures that will be called to
 convert between this encoding and UTF-8.  It is defined as follows:
 <P>
 <PRE>typedef struct Tcl_EncodingType {
-    const char *<I>encodingName</I>;
-    Tcl_EncodingConvertProc *<I>toUtfProc</I>;
-    Tcl_EncodingConvertProc *<I>fromUtfProc</I>;
-    Tcl_EncodingFreeProc *<I>freeProc</I>;
-    ClientData <I>clientData</I>;
-    int <I>nullSize</I>;
-} <B>Tcl_EncodingType</B>;</PRE>
+        const char *<I>encodingName</I>;
+        Tcl_EncodingConvertProc *<I>toUtfProc</I>;
+        Tcl_EncodingConvertProc *<I>fromUtfProc</I>;
+        Tcl_EncodingFreeProc *<I>freeProc</I>;
+        ClientData <I>clientData</I>;
+        int <I>nullSize</I>;
+} Tcl_EncodingType;</PRE>
 <P>
 The <I>encodingName</I> provides a string name for the encoding, by
 which it can be referred in other procedures such as
@@ -421,7 +419,7 @@ CNS11643) are not accepted.
 The callback procedures <I>toUtfProc</I> and <I>fromUtfProc</I> should match the
 type <B>Tcl_EncodingConvertProc</B>:
 <P>
-<PRE>typedef int <B>Tcl_EncodingConvertProc</B>(
+<PRE>typedef int Tcl_EncodingConvertProc(
         ClientData <I>clientData</I>,
         const char *<I>src</I>, 
         int <I>srcLen</I>, 
@@ -450,8 +448,7 @@ procedure will be a non-NULL location.
 <P>
 The callback procedure <I>freeProc</I>, if non-NULL, should match the type 
 <B>Tcl_EncodingFreeProc</B>:
-<P>
-<PRE>typedef void <B>Tcl_EncodingFreeProc</B>(
+<PRE>typedef void Tcl_EncodingFreeProc(
         ClientData <I>clientData</I>);</PRE>
 <P>
 This <I>freeProc</I> function is called when the encoding is deleted.  The
@@ -470,8 +467,8 @@ value based on the environment.  There is one encoding search path for the
 entire process, shared by all threads in the process.
 <P>
 <B>Tcl_SetEncodingSearchPath</B> stores <I>searchPath</I> and returns
-<B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>, unless <I>searchPath</I> is not a valid Tcl list, which
-causes <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> to be returned.  The elements of <I>searchPath</I>
+<B>TCL_OK</B>, unless <I>searchPath</I> is not a valid Tcl list, which
+causes <B>TCL_ERROR</B> to be returned.  The elements of <I>searchPath</I>
 are not verified as existing readable filesystem directories.  When
 searching for encoding data files takes place, and non-existent or
 non-readable filesystem directories on the <I>searchPath</I> are silently
@@ -503,7 +500,7 @@ that provides a human-readable description of the file.  The next line
 identifies the type of encoding file.  It can be one of the following
 letters:
 <P>
-<OL class="encoding files">
+<DL class="encoding files">
 <DT><A NAME="M13">[1] <B>S</B></A><DD>
 A single-byte encoding, where one character is always one byte long in the
 encoding.  An example is <B>iso8859-1</B>, used by many European languages.
@@ -520,7 +517,7 @@ many Japanese computers.
 An escape-sequence encoding, specifying that certain sequences of bytes
 do not represent characters, but commands that describe how following bytes
 should be interpreted.  
-<P></OL>
+<P></DL>
 <P>
 The rest of the lines in the file depend on the type.  
 <P>
@@ -528,7 +525,6 @@ Cases [1], [2], and [3] are collectively referred to as table-based encoding
 files.  The lines in a table-based encoding file are in the same
 format as this example taken from the <B>shiftjis</B> encoding (this is not
 the complete file):
-<P>
 <PRE># Encoding file: shiftjis, multi-byte
 M
 003F 0 40
@@ -592,7 +588,6 @@ If all characters on a page would map to 0000, that page can be omitted.
 Case [4] is the escape-sequence encoding file.  The lines in an this type of
 file are in the same format as this example taken from the <B>iso2022-jp</B>
 encoding:
-<P>
 <PRE># Encoding file: iso2022-jp, escape-driven
 E
 init		{}
@@ -624,6 +619,7 @@ for its script library.  If the encoding file exists, but is
 malformed, an error message will be left in <I>interp</I>.
 <H3><A NAME="M17">KEYWORDS</A></H3>
 <A href="../Keywords/U.htm#utf">utf</A>, <A href="../Keywords/E.htm#encoding">encoding</A>, <A href="../Keywords/C.htm#convert">convert</A>
-<div class="copy">Copyright &copy; 1997-1998 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1997-1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

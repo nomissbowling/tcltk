@@ -3,28 +3,28 @@
 <HEAD><TITLE>option manual page - Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> option</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> option</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="option.htm#M2" NAME="L1061">NAME</A>
-<DL><DD>option &mdash; Add/retrieve window options to/from the option database</DD></DL>
-<DD><A HREF="option.htm#M3" NAME="L1062">SYNOPSIS</A>
+<DD><A HREF="option.htm#M2" NAME="L998">NAME</A>
+<DL><DD>option - Add/retrieve window options to/from the option database</DD></DL>
+<DD><A HREF="option.htm#M3" NAME="L999">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="option.htm#M4" NAME="L1063">DESCRIPTION</A>
+<DD><A HREF="option.htm#M4" NAME="L1000">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="option.htm#M5" NAME="L1064"><B>widgetDefault</B></A>
-<DD><A HREF="option.htm#M6" NAME="L1065"><B>startupFile</B></A>
-<DD><A HREF="option.htm#M7" NAME="L1066"><B>userDefault</B></A>
-<DD><A HREF="option.htm#M8" NAME="L1067"><B>interactive</B></A>
+<DD><A HREF="option.htm#M5" NAME="L1001"><B>widgetDefault</B></A>
+<DD><A HREF="option.htm#M6" NAME="L1002"><B>startupFile</B></A>
+<DD><A HREF="option.htm#M7" NAME="L1003"><B>userDefault</B></A>
+<DD><A HREF="option.htm#M8" NAME="L1004"><B>interactive</B></A>
 </DL>
-<DD><A HREF="option.htm#M9" NAME="L1068">PATTERN FORMAT</A>
-<DD><A HREF="option.htm#M10" NAME="L1069">EXAMPLES</A>
-<DD><A HREF="option.htm#M11" NAME="L1070">SEE ALSO</A>
-<DD><A HREF="option.htm#M12" NAME="L1071">KEYWORDS</A>
+<DD><A HREF="option.htm#M9" NAME="L1005">PATTERN FORMAT</A>
+<DD><A HREF="option.htm#M10" NAME="L1006">EXAMPLES</A>
+<DD><A HREF="option.htm#M11" NAME="L1007">SEE ALSO</A>
+<DD><A HREF="option.htm#M12" NAME="L1008">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-option &mdash; Add/retrieve window options to/from the option database
+option - Add/retrieve window options to/from the option database
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>option add </B><I>pattern value </I>?<I>priority</I>?<BR>
 <B>option clear</B><BR>
@@ -36,8 +36,8 @@ database or to retrieve options from the database.  The <B>add</B>
 form of the command adds a new option to the database.
 <I>Pattern</I> contains
 the option being specified, and consists of names and/or classes
-separated by asterisks or dots, in the usual X format (see
-<B><A HREF="#M9">PATTERN FORMAT</A></B>).  <I>Value</I>
+separated by asterisks or dots, in the usual X format (see <B>PATTERN
+FORMAT</B>).  <I>Value</I>
 contains a text string to associate with <I>pattern</I>;  this is the
 value that will be returned in calls to <B><A HREF="../TkLib/GetOption.htm">Tk_GetOption</A></B> or by
 invocations of the <B>option get</B> command.  If <I>priority</I>
@@ -118,8 +118,7 @@ first word of the pattern is matched against the name and class of the
 <B><A HREF="../TkCmd/toplevel.htm">toplevel</A></B>, which are usually set by options to <B><A HREF="../UserCmd/wish.htm">wish</A></B>.
 <H3><A NAME="M10">EXAMPLES</A></H3>
 Instruct every button in the application to have red text on it unless
-explicitly overridden, by setting the <B>foreground</B> for the <B><A HREF="../TkCmd/button.htm">Button</A></B>
-class (note that on some platforms the option is ignored):
+explicitly overridden (note that on some platforms the option is ignored):
 <PRE><B>option add</B> *Button.foreground red startupFile</PRE>
 <P>
 Allow users to control what happens in an entry widget when the Return
@@ -132,7 +131,8 @@ bind .e &lt;Return&gt; [<B>option get</B> .e returnCommand Command]
 <B><A HREF="../TkCmd/options.htm">options</A></B>, <B><A HREF="../UserCmd/wish.htm">wish</A></B>
 <H3><A NAME="M12">KEYWORDS</A></H3>
 <A href="../Keywords/D.htm#database">database</A>, <A href="../Keywords/O.htm#option">option</A>, <A href="../Keywords/P.htm#priority">priority</A>, <A href="../Keywords/R.htm#retrieve">retrieve</A>
-<div class="copy">Copyright &copy; 1990 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

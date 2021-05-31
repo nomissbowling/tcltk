@@ -28,7 +28,7 @@ function printHelp {
     echo ""
     echo "Syntax:"
     echo " build-history.sh [<options>]"
-    echo "Options (optional):"
+    echo "Options:"
     echo " -help: Print this help text."
 }
 ##

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=TCL/TK 8.5 debugging console (tkcon)
+GenericName=tkcon
+Comment=Enhances the TCL/TK console with a GUI
+Exec=%installdir%/bin/wish85 %installdir%/bin/tkcon -name tkcon85
+TryExec=%installdir%/bin/wish85
+Icon=%installdir%/img/mainicon.png
+Type=Application
+Terminal=false
+Categories=Development;
+Keywords=gse;scoe;tcl;tk;tcltk;tkcon;
+StartupWMClass=tkcon85

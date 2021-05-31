@@ -9,19 +9,12 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
-#ifdef TCL_BROKEN_MAINARGS
-/* On mingw32 and cygwin this doesn't work */
-#   undef UNICODE
-#   undef _UNICODE
-#endif
-
 #include <stdio.h>
 #include <io.h>
 #include <string.h>
-#include <tchar.h>
 
 int
-_tmain(void)
+main(void)
 {
     char buf[1024];
     int n;

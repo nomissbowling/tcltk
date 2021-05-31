@@ -3,22 +3,22 @@
 <HEAD><TITLE>Tk_RestackWindow manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> Restack</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> Restack</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_RestackWindow &mdash; Change a window's position in the stacking order
+Tk_RestackWindow - Change a window's position in the stacking order
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 int<BR>
 <B>Tk_RestackWindow</B>(<I>tkwin, aboveBelow, other</I>)<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
-<DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window to restack.
 <P><DT>int <B>aboveBelow</B> (in)<DD>
 Indicates new position of <I>tkwin</I> relative to <I>other</I>;
 must be <B>Above</B> or <B>Below</B>.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>other</B> (in)<DD>
+<P><DT>Tk_Window <B>other</B> (in)<DD>
 <I>Tkwin</I> will be repositioned just above or below this window.
 Must be a sibling of <I>tkwin</I> or a descendant of a sibling.
 If NULL then <I>tkwin</I> is restacked above or below all siblings.
@@ -35,9 +35,11 @@ just above or below <I>other</I>.
 The <I>aboveBelow</I> argument must have one of the symbolic values
 <B>Above</B> or <B>Below</B>.
 Both of these values are defined by the include file &lt;X11/Xlib.h&gt;.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#above">above</A>, <A href="../Keywords/B.htm#below">below</A>, <A href="../Keywords/O.htm#obscure">obscure</A>, <A href="../Keywords/S.htm#stacking order">stacking order</A>
-<div class="copy">Copyright &copy; 1990 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

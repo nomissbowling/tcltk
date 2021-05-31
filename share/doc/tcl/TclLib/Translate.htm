@@ -3,10 +3,10 @@
 <HEAD><TITLE>Tcl_TranslateFileName manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Translate</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Translate</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_TranslateFileName &mdash; convert file name to native form and replace tilde with home directory
+Tcl_TranslateFileName - convert file name to native form and replace tilde with home directory
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 char *<BR>
@@ -18,7 +18,7 @@ Interpreter in which to report an error, if any.
 <P><DT>const char <B>*name</B> (in)<DD>
 File name, which may start with a
 &#8220;~&#8221;.
-<P><DT><A HREF="../TclLib/DString.htm">Tcl_DString</A> <B>*bufferPtr</B> (in/out)<DD>
+<P><DT>Tcl_DString <B>*bufferPtr</B> (in/out)<DD>
 If needed, this dynamic string is used to store the new file name.
 At the time of the call it should be uninitialized or free.  The
 caller must eventually call <B><A HREF="../TclLib/DString.htm">Tcl_DStringFree</A></B> to free up
@@ -31,11 +31,11 @@ passing to the local operating system.  In particular, it converts
 network names into native form and does tilde substitution.  
 <P>
 However, with the advent of the newer <B><A HREF="../TclLib/FileSystem.htm">Tcl_FSGetNormalizedPath</A></B> and
-<B><A HREF="../TclLib/FileSystem.htm">Tcl_FSGetNativePath</A></B>, there is no longer any need to use this
-procedure.  In particular, <B><A HREF="../TclLib/FileSystem.htm">Tcl_FSGetNativePath</A></B> performs all the
+<B>Tcl_GetNativePath</B>, there is no longer any need to use this
+procedure.  In particular, <B>Tcl_GetNativePath</B> performs all the
 necessary translation and encoding conversion, is virtual-filesystem
 aware, and caches the native result for faster repeated calls.
-Finally <B><A HREF="../TclLib/FileSystem.htm">Tcl_FSGetNativePath</A></B> does not require you to free anything
+Finally <B>Tcl_GetNativePath</B> does not require you to free anything
 afterwards.
 <P>
 If
@@ -59,11 +59,13 @@ frees the dynamic string itself so that the caller need not call
 <P>
 The caller is responsible for making sure that the interpreter's result
 has its default empty value when <B>Tcl_TranslateFileName</B> is invoked.
+
 <H3><A NAME="M6">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/filename.htm">filename</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/F.htm#file name">file name</A>, <A href="../Keywords/H.htm#home directory">home directory</A>, <A href="../Keywords/T.htm#tilde">tilde</A>, <A href="../Keywords/T.htm#translate">translate</A>, <A href="../Keywords/U.htm#user">user</A>
-<div class="copy">Copyright &copy; 1989-1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1989-1993 The Regents of the University of California.
 Copyright &copy; 1994-1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

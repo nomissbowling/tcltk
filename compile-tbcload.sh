@@ -10,7 +10,10 @@ MODULE=tbcload
 if [ -n "$SW_DEBUG" ]; then
     CONFIGURE_SWITCH+="--enable-symbols"
 fi
-
+## check symbol switch
+if [ -n "$SW_SYMBOLS" ]; then
+    CFLAGS="-g"
+fi
 ## check 64bit platform
 if [ "$BARCH" == "x86_64" ]; then
     CONFIGURE_SWITCH+="--enable-64bit "
@@ -37,19 +40,13 @@ fi
 cd $COMPILEDIR/$MODULE
 
 ## configure and make
-#env CFLAGS="-D TCL_86_PLUS -D TCL_862_PLUS"
-autoconf
-(CFLAGS="-I$COMPILEDIR/tcl/win" ./configure --prefix=$INSTALLDIR -includedir=$COMPILEDIR/tcl/win $CONFIGURE_SWITCH)
+(CFLAGS="$CFLAGS" ./configure --prefix=$INSTALLDIR $CONFIGURE_SWITCH)
 make
 make install
 
 ## copy licence file
 echo -n "Copying extras ... "
 rsync -a $COMPILEDIR/$MODULE/license.terms $iLICENCEDIR/$MODULE.licence
-
-## Sun, Uni ... etc. copy source files
-mkdir -p $iSHAREDIR/source
-tar -czf $iSHAREDIR/source/$MODULE.tgz -C $INTSRCDIR/ $MODULE
 echo done
 
 ## fini

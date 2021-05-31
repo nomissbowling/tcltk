@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_escape_string</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-query.html" title="4.3. Query Execution Commands" /><link rel="prev" href="pg-encrypt-password.html" title="pg_encrypt_password" /><link rel="next" href="pg-quote.html" title="pg_quote" /><link rel="copyright" href="legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_escape_string</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-encrypt-password.html">Prev</a> </td><th width="60%" align="center">4.3. Query Execution Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-quote.html">Next</a></td></tr></table><hr /></div><div class="refentry" title="pg_escape_string"><a id="pg-escape-string"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_escape_string</span></h2><p>pg_escape_string &#8212; Escape a string for use in an SQL string constant</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><pre class="synopsis">
+pg_escape_string ?<span class="optional"><em class="parameter"><code>conn</code></em></span>? <em class="parameter"><code>string</code></em>
+</pre></div><div class="refsect1" title="Description"><a id="id2574926"></a><h2>Description</h2><p>
+<code class="function">pg_escape_string</code> returns its argument with added
+characters which makes it safe for use in single-quoted SQL string
+constants. It returns the string with all single quote marks doubled,
+and in some cases doubles backslash characters too.
+    </p><p>
+For example, <code class="literal">pg_escape_string {can't}</code> returns
+the string <code class="literal">can''t</code>.
+    </p></div><div class="refsect1" title="Arguments"><a id="id2574958"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            Optional handle of the connection that the string should be
+            escaped for sending to.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>string</code></em></span></dt><dd><p>
+            The string to escape.
+          </p></dd></dl></div></div><div class="refsect1" title="Return Value"><a id="id2574998"></a><h2>Return Value</h2><p>
+      The string argument, with added characters.
+    </p></div><div class="refsect1" title="Notes"><a id="id2575009"></a><h2>Notes</h2><p>
+      See also <a class="xref" href="pg-quote.html" title="pg_quote"><span class="refentrytitle">pg_quote</span></a>.
+    </p><p>
+      The optional <em class="replaceable"><code>conn</code></em> argument
+      was added to this command in
+      <span class="application">pgtclng-1.7.0</span> and in
+      <span class="application">pgintcl-3.1.0</span>.
+    </p><p>
+The <em class="replaceable"><code>conn</code></em> argument is used to get character set
+encoding information, and the state of the PostgreSQL server configuration
+parameter <em class="parameter"><code>standard_conforming_strings</code></em>. The character
+set encoding is used to make sure that multi-byte characters do not confuse
+the escaping process. The state of the standard conforming strings setting
+is used to determine if backslashes need to be doubled. If the
+<em class="replaceable"><code>conn</code></em> parameter is supplied, these settings can
+be accurately determined for the specific database connection being used.
+(Note that this information is maintained on the client side and does not
+necessitate any additional database server traffic.)
+    </p><p>
+If the <em class="replaceable"><code>conn</code></em> parameter is not supplied, a best
+guess will be made based on the most recent information from any database
+connection by the client. Therefore, if the client makes a single database
+connection, or multiple connections with the same encoding and setting for
+standard_conforming_strings, there is no need to provide the
+<em class="replaceable"><code>conn</code></em> parameter.
+    </p><div class="caution" title="Caution" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Caution</h3><p>
+Pgintcl uses the <em class="replaceable"><code>conn</code></em> parameter only to
+determine if standard_conforming_strings is on. Unlike libpq-based
+interface implementations, it does not have the ability to use character
+set encoding information.
+      </p></div><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">PQescapeString</code>, if no connection handle
+      is supplied, or <code class="function">PQescapeStringConn</code> if a connection
+      handle is supplied.
+    </p><div class="caution" title="Caution" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Caution</h3><p>
+The Pgtcl implementation at
+<a class="ulink" href="http://pgfoundry.org/projects/pgtcl/" target="_top">Pgfoundry</a>
+has a command with the same name, but incompatible behavior.
+That one was originally compatible, but was changed to behave the same as
+<a class="xref" href="pg-quote.html" title="pg_quote"><span class="refentrytitle">pg_quote</span></a>.
+Pgtcl-ng and pgintcl retain the original behavior for pg_escape_string
+that matches the libpq PQescapeString function (returns the escaped value,
+without single quotes).
+      </p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-encrypt-password.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-query.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-quote.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_encrypt_password </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_quote</td></tr></table></div></body></html>

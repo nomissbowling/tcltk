@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+   <TITLE>TclExcept - exception</TITLE>
+</HEAD>
+<BODY>
+
+<H3>
+NAME</H3>
+exception - Create and query exception types
+<H3>
+SYNOPSIS</H3>
+
+<PRE><B>exception</B><I> name</I></PRE>
+<PRE><B>exception</B><I> name parentList</I></PRE>
+
+<H3>
+DESCRIPTION</H3>
+The <B>exception</B> command is used to declare exception types for later use
+with <A HREF="throw.htm"><B>throw</B></A> and <A HREF="try.htm"><B>try</B></A>.
+Declaring exceptions types is optional and is only needed when one wants to
+create exception type hierarchies. It provides a simple inheritance mechanism
+that may simplify complex exception handling.
+
+<P><B>Exception</B> takes 2 arguments:
+<DL>
+<DT>
+<B>name</B></DT>
+
+<DD>
+the exception to query or declare. This is an arbitrary Tcl string that
+indicates the type of the exception.
+<DT>
+<B>parentList</B></DT>
+
+<DD>
+a Tcl list (possibly empty) containing the parent types of the given
+exception. A thrown exception of type <I>name</I> will be seen as any of these
+parent types. Each parent type can itself be a subtype of other exception
+types. The order of parents defines their order of precedence.</DD>
+</DL>
+
+<P>
+The first form queries an exception's parent list (empty by default). The second
+sets its parent list.
+
+<P>
+For example:
+<UL>
+<PRE><B>exception C {A B}</B></PRE>
+</UL>
+will declare the exception type <B>C</B> to be a subtype of exception types
+<B>A</B> and <B>B</B> (in this order), such that:
+
+<UL>
+<PRE><B>try {
+&nbsp;&nbsp;&nbsp;&nbsp;throw C "ouch!"
+} catch {type msg} {
+&nbsp;&nbsp;&nbsp;&nbsp;A {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;puts "A exception thrown (real type: \"$type\"): $msg"
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}</B></PRE>
+</UL>
+will print:
+<UL>
+<PRE><B>A exception thrown (real type: "C"): ouch!
+</B></PRE>
+</UL>
+<P>
+<B>Try</B> will scan all of its catching clauses in their declared order, and for each one
+will check if the caught exception type matches the catching type. Matching is done
+in depth order. For example, if exception C derives from B1 and B2, 
+B1 derives from A1, and B2 derives from A2 and A3, then the matching order will be
+{C&nbsp;B1&nbsp;A1&nbsp;B2&nbsp;A2&nbsp;A3}. To build the matching order list, recursively add each type's parents 
+after itself: C => {C&nbsp;<B>B1&nbsp;B2</B>} => {C&nbsp;B1&nbsp;<B>A1</B>&nbsp;B2&nbsp;<B>A2&nbsp;A3</B>} and so on.
+
+<H3>
+KNOWN BUGS/LIMITATIONS</H3>
+Avoid creating cyclic hierarchies, else <B>TclExcept</B> will run into an infinite loop!
+<H3>
+SEE ALSO</H3>
+catch(n), error(n), return(n), <A HREF="try.htm">try</A>, 
+<A HREF="throw.htm">throw</A>
+<H3>
+KEYWORDS</H3>
+error, exception
+</BODY>
+</HTML>

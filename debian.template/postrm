@@ -12,8 +12,8 @@ GITBRANCH=%git_branch%
 DEBNAME=%deb_name%
 DEBVERSION=%deb_version%
 DEBFILE=%deb_file%
-INSTDIR=%inst_dir%
-BINDIR=%bindir%
+PREFIX=%prefix%
+POSTFIX=%postfix%
 CBOLD="\033[1m"
 CEND="\e[0m"
 
@@ -30,7 +30,7 @@ case "$1" in
         if [ "$1" == "remove" ] || [ "$1" == "purge" ]; then
             ## remove desktop file
             SITESDIR=/usr/share/applications
-            SITECONF=tkcon86.desktop
+            SITECONF=tkcon.desktop
             if [ -e $SITESDIR/$SITECONF ]; then
                 rm $SITESDIR/$SITECONF
                 echo "Removed desktop file"

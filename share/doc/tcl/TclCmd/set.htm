@@ -3,10 +3,10 @@
 <HEAD><TITLE>set manual page - Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> set</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> set</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-set &mdash; Read and write variables
+set - Read and write variables
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>set </B><I>varName </I>?<I>value</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -34,22 +34,18 @@ unless <I>varName</I> was declared to resolve differently through one of the
 <B><A HREF="../TclCmd/global.htm">global</A></B>, <B><A HREF="../TclCmd/variable.htm">variable</A></B> or <B><A HREF="../TclCmd/upvar.htm">upvar</A></B> commands.
 <H3><A NAME="M5">EXAMPLES</A></H3>
 Store a random number in the variable <I>r</I>:
-<P>
 <PRE><B>set</B> r [expr {rand()}]</PRE>
 <P>
 Store a short message in an array element:
-<P>
 <PRE><B>set</B> anAry(msg) &quot;Hello, World!&quot;</PRE>
 <P>
 Store a short message in an array element specified by a variable:
-<P>
 <PRE><B>set</B> elemName &quot;msg&quot;
 <B>set</B> anAry($elemName) &quot;Hello, World!&quot;</PRE>
 <P>
 Copy a value into the variable <I>out</I> from a variable whose name is
 stored in the <I>vbl</I> (note that it is often easier to use arrays in
 practice instead of doing double-dereferencing):
-<P>
 <PRE><B>set</B> in0 &quot;small random&quot;
 <B>set</B> in1 &quot;large random&quot;
 <B>set</B> vbl in[expr {rand() &gt;= 0.5}]
@@ -58,7 +54,8 @@ practice instead of doing double-dereferencing):
 <B><A HREF="../TclCmd/expr.htm">expr</A></B>, <B><A HREF="../TclCmd/global.htm">global</A></B>, <B><A HREF="../TclCmd/namespace.htm">namespace</A></B>, <B><A HREF="../TclCmd/proc.htm">proc</A></B>, <B><A HREF="../TclCmd/trace.htm">trace</A></B>, <B><A HREF="../TclCmd/unset.htm">unset</A></B>, <B><A HREF="../TclCmd/upvar.htm">upvar</A></B>, <B><A HREF="../TclCmd/variable.htm">variable</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/R.htm#read">read</A>, <A href="../Keywords/W.htm#write">write</A>, <A href="../Keywords/V.htm#variable">variable</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

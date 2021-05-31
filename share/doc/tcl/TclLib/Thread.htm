@@ -3,12 +3,12 @@
 <HEAD><TITLE>Threads manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Thread</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Thread</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Thread.htm#M2" NAME="L814">NAME</A>
-<DL><DD>Tcl_ConditionNotify, Tcl_ConditionWait, Tcl_ConditionFinalize, Tcl_GetThreadData, Tcl_MutexLock, Tcl_MutexUnlock, Tcl_MutexFinalize, Tcl_CreateThread, Tcl_JoinThread &mdash; Tcl thread support</DD></DL>
-<DD><A HREF="Thread.htm#M3" NAME="L815">SYNOPSIS</A>
+<DD><A HREF="Thread.htm#M2" NAME="L742">NAME</A>
+<DL><DD>Tcl_ConditionNotify, Tcl_ConditionWait, Tcl_ConditionFinalize, Tcl_GetThreadData, Tcl_MutexLock, Tcl_MutexUnlock, Tcl_MutexFinalize, Tcl_CreateThread, Tcl_JoinThread - Tcl thread support</DD></DL>
+<DD><A HREF="Thread.htm#M3" NAME="L743">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>void
@@ -26,24 +26,23 @@
 <DD>void
 <DD><B>Tcl_MutexFinalize</B>(<I>mutexPtr</I>)
 <DD>int
-<DD><B>Tcl_CreateThread</B>(<I>idPtr, proc, clientData, stackSize, flags</I>)
+<DD><B>Tcl_CreateThread</B>(<I>idPtr, threadProc, clientData, stackSize, flags</I>)
 <DD>int
 <DD><B>Tcl_JoinThread</B>(<I>id, result</I>)
 </DL>
-<DD><A HREF="Thread.htm#M4" NAME="L816">ARGUMENTS</A>
+<DD><A HREF="Thread.htm#M4" NAME="L744">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Thread.htm#M5" NAME="L817">INTRODUCTION</A>
-<DD><A HREF="Thread.htm#M6" NAME="L818">DESCRIPTION</A>
-<DD><A HREF="Thread.htm#M7" NAME="L819">SYNCHRONIZATION AND COMMUNICATION</A>
-<DD><A HREF="Thread.htm#M8" NAME="L820">INITIALIZATION</A>
-<DD><A HREF="Thread.htm#M9" NAME="L821">SCRIPT-LEVEL ACCESS TO THREADS</A>
-<DD><A HREF="Thread.htm#M10" NAME="L822">EXAMPLE</A>
-<DD><A HREF="Thread.htm#M11" NAME="L823">SEE ALSO</A>
-<DD><A HREF="Thread.htm#M12" NAME="L824">KEYWORDS</A>
+<DD><A HREF="Thread.htm#M5" NAME="L745">INTRODUCTION</A>
+<DD><A HREF="Thread.htm#M6" NAME="L746">DESCRIPTION</A>
+<DD><A HREF="Thread.htm#M7" NAME="L747">SYNCHRONIZATION AND COMMUNICATION</A>
+<DD><A HREF="Thread.htm#M8" NAME="L748">INITIALIZATION</A>
+<DD><A HREF="Thread.htm#M9" NAME="L749">SCRIPT-LEVEL ACCESS TO THREADS</A>
+<DD><A HREF="Thread.htm#M10" NAME="L750">SEE ALSO</A>
+<DD><A HREF="Thread.htm#M11" NAME="L751">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_ConditionNotify, Tcl_ConditionWait, Tcl_ConditionFinalize, Tcl_GetThreadData, Tcl_MutexLock, Tcl_MutexUnlock, Tcl_MutexFinalize, Tcl_CreateThread, Tcl_JoinThread &mdash; Tcl thread support
+Tcl_ConditionNotify, Tcl_ConditionWait, Tcl_ConditionFinalize, Tcl_GetThreadData, Tcl_MutexLock, Tcl_MutexUnlock, Tcl_MutexFinalize, Tcl_CreateThread, Tcl_JoinThread - Tcl thread support
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 void<BR>
@@ -61,7 +60,7 @@ void<BR>
 void<BR>
 <B>Tcl_MutexFinalize</B>(<I>mutexPtr</I>)<BR>
 int<BR>
-<B>Tcl_CreateThread</B>(<I>idPtr, proc, clientData, stackSize, flags</I>)<BR>
+<B>Tcl_CreateThread</B>(<I>idPtr, threadProc, clientData, stackSize, flags</I>)<BR>
 int<BR>
 <B>Tcl_JoinThread</B>(<I>id, result</I>)<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
@@ -70,7 +69,7 @@ int<BR>
 A condition variable, which must be associated with a mutex lock.
 <P><DT>Tcl_Mutex <B>*mutexPtr</B> (in)<DD>
 A mutex lock.
-<P><DT>const <A HREF="../TclLib/GetTime.htm">Tcl_Time</A> <B>*timePtr</B> (in)<DD>
+<P><DT>Tcl_Time <B>*timePtr</B> (in)<DD>
 A time limit on the condition wait.  NULL to wait forever.
 Note that a polling value of 0 seconds does not make much sense.
 <P><DT>Tcl_ThreadDataKey <B>*keyPtr</B> (in)<DD>
@@ -86,15 +85,15 @@ The referred storage will contain the id of the newly created thread as
 returned by the operating system.
 <P><DT>Tcl_ThreadId <B>id</B> (in)<DD>
 Id of the thread waited upon.
-<P><DT>Tcl_ThreadCreateProc <B>*proc</B> (in)<DD>
+<P><DT>Tcl_ThreadCreateProc <B>threadProc</B> (in)<DD>
 This procedure will act as the <B>main()</B> of the newly created
 thread. The specified <I>clientData</I> will be its sole argument.
 <P><DT>ClientData <B>clientData</B> (in)<DD>
-Arbitrary information. Passed as sole argument to the <I>proc</I>.
+Arbitrary information. Passed as sole argument to the <I>threadProc</I>.
 <P><DT>int <B>stackSize</B> (in)<DD>
 The size of the stack given to the new thread.
 <P><DT>int <B>flags</B> (in)<DD>
-Bitmask containing flags allowing the caller to modify behavior of
+Bitmask containing flags allowing the caller to modify behaviour of
 the new thread.
 <P><DT>int <B>*result</B> (out)<DD>
 The referred storage is used to place the exit code of the thread
@@ -115,15 +114,15 @@ and use multiple interpreters.)
 <H3><A NAME="M6">DESCRIPTION</A></H3>
 Tcl provides <B>Tcl_CreateThread</B> for creating threads. The
 caller can determine the size of the stack given to the new thread and
-modify the behavior through the supplied <I>flags</I>. The value
+modify the behaviour through the supplied <I>flags</I>. The value
 <B>TCL_THREAD_STACK_DEFAULT</B> for the <I>stackSize</I> indicates that
 the default size as specified by the operating system is to be used
 for the new thread. As for the flags, currently only the values
 <B>TCL_THREAD_NOFLAGS</B> and <B>TCL_THREAD_JOINABLE</B> are defined. The
-first of them invokes the default behavior with no special settings.
-Using the second value marks the new thread as <I>joinable</I>. This
-means that another thread can wait for the such marked thread to exit
-and join it.
+first of them invokes the default behaviour with no
+specialties. Using the second value marks the new thread as
+<I>joinable</I>. This means that another thread can wait for the such
+marked thread to exit and join it.
 <P>
 Restrictions: On some UNIX systems the pthread-library does not
 contain the functionality to specify the stack size of a thread. The
@@ -207,52 +206,13 @@ Tcl provides no built-in commands for scripts to use to create,
 manage, or join threads, nor any script-level access to mutex or
 condition variables.  It provides such facilities only via C
 interfaces, and leaves it up to packages to expose these matters to
-the script level.  One such package is the <B><A HREF="../ThreadCmd/thread.htm">Thread</A></B> package.
-<H3><A NAME="M10">EXAMPLE</A></H3>
-To create a thread with portable code, its implementation function should be
-declared as follows:
-<P>
-<PRE>static <B>Tcl_ThreadCreateProc</B> MyThreadImplFunc;</PRE>
-<P>
-It should then be defined like this example, which just counts up to a given
-value and then finishes.
-<P>
-<PRE>static <B>Tcl_ThreadCreateType</B>
-MyThreadImplFunc(
-    ClientData clientData)
-{
-    int i, limit = (int) clientData;
-    for (i=0 ; i&lt;limit ; i++) {
-        /* doing nothing at all here */
-    }
-    <B>TCL_THREAD_CREATE_RETURN</B>;
-}</PRE>
-<P>
-To create the above thread, make it execute, and wait for it to finish, we
-would do this:
-<P>
-<PRE>int limit = 1000000000;
-ClientData limitData = (void*)((intptr_t) limit);
-Tcl_ThreadId id;    <I>/* holds identity of thread created */</I>
-int result;
-
-if (<B>Tcl_CreateThread</B>(&amp;id, MyThreadImplFunc, limitData,
-        <B>TCL_THREAD_STACK_DEFAULT</B>,
-        <B>TCL_THREAD_JOINABLE</B>) != TCL_OK) {
-    <I>/* Thread did not create correctly */</I>
-    return;
-}
-<I>/* Do something else for a while here */</I>
-if (<B>Tcl_JoinThread</B>(id, &amp;result) != TCL_OK) {
-    <I>/* Thread did not finish properly */</I>
-    return;
-}
-<I>/* All cleaned up nicely */</I></PRE>
-<H3><A NAME="M11">SEE ALSO</A></H3>
-<B><A HREF="../TclLib/Notifier.htm">Tcl_GetCurrentThread</A></B>, <B><A HREF="../TclLib/Notifier.htm">Tcl_ThreadQueueEvent</A></B>, <B><A HREF="../TclLib/Notifier.htm">Tcl_ThreadAlert</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_ExitThread</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_FinalizeThread</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_CreateThreadExitHandler</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_DeleteThreadExitHandler</A></B>, <B><A HREF="../ThreadCmd/thread.htm">Thread</A></B>
-<H3><A NAME="M12">KEYWORDS</A></H3>
+the script level.  One such package is the <B>Thread</B> package.
+<H3><A NAME="M10">SEE ALSO</A></H3>
+<B><A HREF="../TclLib/Notifier.htm">Tcl_GetCurrentThread</A></B>, <B><A HREF="../TclLib/Notifier.htm">Tcl_ThreadQueueEvent</A></B>, <B><A HREF="../TclLib/Notifier.htm">Tcl_ThreadAlert</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_ExitThread</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_FinalizeThread</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_CreateThreadExitHandler</A></B>, <B><A HREF="../TclLib/Exit.htm">Tcl_DeleteThreadExitHandler</A></B>, <B>Thread</B>
+<H3><A NAME="M11">KEYWORDS</A></H3>
 <A href="../Keywords/T.htm#thread">thread</A>, <A href="../Keywords/M.htm#mutex">mutex</A>, <A href="../Keywords/C.htm#condition variable">condition variable</A>, <A href="../Keywords/T.htm#thread local storage">thread local storage</A>
-<div class="copy">Copyright &copy; 1999 Scriptics Corporation
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1999 Scriptics Corporation
 Copyright &copy; 1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

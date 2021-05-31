@@ -3,14 +3,14 @@
 <HEAD><TITLE>error manual page - Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> error</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> error</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-error &mdash; Generate an error
+error - Generate an error
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>error </B><I>message</I> ?<I>info</I>? ?<I>code</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
-Returns a <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> code, which causes command interpretation to be
+Returns a <B>TCL_ERROR</B> code, which causes command interpretation to be
 unwound.  <I>Message</I> is a string that is returned to the application
 to indicate what went wrong.
 <P>
@@ -30,18 +30,15 @@ with the <B><A HREF="../TclCmd/catch.htm">catch</A></B> command:
 if a caught error cannot be handled successfully, <I>info</I> can be used
 to return a stack trace reflecting the original point of occurrence
 of the error:
-<P>
-<PRE>catch {...} errMsg
+<PRE><B>catch {...} errMsg
 set savedInfo $::errorInfo
 	...
-<B>error</B> $errMsg $savedInfo</PRE>
-<P>
+error $errMsg $savedInfo</B></PRE>
 When working with Tcl 8.5 or later, the following code
 should be used instead:
-<P>
-<PRE>catch {...} errMsg options
+<PRE><B>catch {...} errMsg options
 	...
-return -options $options $errMsg</PRE>
+return -options $options $errMsg</B></PRE>
 <P>
 If the <I>code</I> argument is present, then its value is stored
 in the <B>-errorcode</B> return option.  The <B>-errorcode</B>
@@ -51,15 +48,15 @@ the <B><A HREF="../TclCmd/return.htm">return</A></B> manual page for information
 for this option's value.
 <H3><A NAME="M5">EXAMPLE</A></H3>
 Generate an error if a basic mathematical operation fails:
-<P>
 <PRE>if {1+2 != 3} {
     <B>error</B> &quot;something is very wrong with addition&quot;
 }</PRE>
 <H3><A NAME="M6">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/catch.htm">catch</A></B>, <B><A HREF="../TclCmd/return.htm">return</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
-<A href="../Keywords/E.htm#error">error</A>, <A href="../Keywords/E.htm#exception">exception</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<A href="../Keywords/E.htm#error">error</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

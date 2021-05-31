@@ -35,14 +35,6 @@
 
 #include "tclInt.h"
 
-#ifndef TCL_CFGVAL_ENCODING
-#   ifdef _WIN32
-#	define TCL_CFGVAL_ENCODING "cp1252"
-#   else
-#	define TCL_CFGVAL_ENCODING "iso8859-1"
-#   endif
-#endif
-
 /*
  * Use C preprocessor statements to define the various values for the embedded
  * configuration information.
@@ -96,7 +88,7 @@
 #  define CFG_PROFILED		"0"
 #endif
 
-static Tcl_Config const cfg[] = {
+static Tcl_Config cfg[] = {
     {"debug",			CFG_DEBUG},
     {"threaded",		CFG_THREADED},
     {"profiled",		CFG_PROFILED},
@@ -128,7 +120,7 @@ static Tcl_Config const cfg[] = {
 
 void
 TclInitEmbeddedConfigurationInformation(
-    Tcl_Interp *interp)		/* Interpreter the configuration command is
+    Tcl_Interp* interp)		/* Interpreter the configuration command is
 				 * registered in. */
 {
     Tcl_RegisterConfig(interp, "tcl", cfg, TCL_CFGVAL_ENCODING);

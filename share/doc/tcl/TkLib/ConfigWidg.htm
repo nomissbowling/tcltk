@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_ConfigureWidget manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> ConfigWidg</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> ConfigWidg</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="ConfigWidg.htm#M2" NAME="L46">NAME</A>
-<DL><DD>Tk_ConfigureWidget, Tk_ConfigureInfo, Tk_ConfigureValue, Tk_FreeOptions &mdash; process configuration options for widgets</DD></DL>
+<DL><DD>Tk_ConfigureWidget, Tk_ConfigureInfo, Tk_ConfigureValue, Tk_FreeOptions - process configuration options for widgets</DD></DL>
 <DD><A HREF="ConfigWidg.htm#M3" NAME="L47">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -66,7 +66,7 @@
 <DD><A HREF="ConfigWidg.htm#M42" NAME="L86">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_ConfigureWidget, Tk_ConfigureInfo, Tk_ConfigureValue, Tk_FreeOptions &mdash; process configuration options for widgets
+Tk_ConfigureWidget, Tk_ConfigureInfo, Tk_ConfigureValue, Tk_FreeOptions - process configuration options for widgets
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 int<BR>
@@ -80,12 +80,12 @@ int<BR>
 <DL class="arguments">
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter to use for returning error messages.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Window used to represent widget (needed to set up X resources).
-<P><DT>const Tk_ConfigSpec <B>*specs</B> (in)<DD>
+<P><DT>Tk_ConfigSpec <B>*specs</B> (in)<DD>
 Pointer to table specifying legal configuration options for this
 widget.
-<P><DT>int <B><A HREF="../TclCmd/tclvars.htm">argc</A></B> (in)<DD>
+<P><DT>int <B>argc</B> (in)<DD>
 Number of arguments in <I>argv</I>.
 <P><DT>const char <B>**argv</B> (in)<DD>
 Command-line options for configuring widget.
@@ -114,7 +114,7 @@ order to free up resources.
 <P></DL>
 <H3><A NAME="M5">DESCRIPTION</A></H3>
 Note: <B>Tk_ConfigureWidget</B> should be replaced with the new
-<B><A HREF="../TclLib/Object.htm">Tcl_Obj</A></B> based API <B><A HREF="../TkLib/SetOptions.htm">Tk_SetOptions</A></B>.  The old interface is
+<B>Tcl_Obj</B> based API <B><A HREF="../TkLib/SetOptions.htm">Tk_SetOptions</A></B>.  The old interface is
 retained for backward compatibility.
 <P>
 <B>Tk_ConfigureWidget</B> is called to configure various aspects of a
@@ -136,11 +136,11 @@ a table specifying the configuration options that are supported
 <I>argv</I>) to fill in fields of a record (<I>widgRec</I>).
 It uses the option database and defaults specified in <I>specs</I>
 to fill in fields of <I>widgRec</I> that are not specified in <I>argv</I>.
-<B>Tk_ConfigureWidget</B> normally returns the value <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>; in this
+<B>Tk_ConfigureWidget</B> normally returns the value <B>TCL_OK</B>; in this
 case it does not modify <I>interp</I>.
 If an error
-occurs then <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and <B>Tk_ConfigureWidget</B> will
-leave an error message in interpreter <I>interp</I>'s result in the standard Tcl
+occurs then <B>TCL_ERROR</B> is returned and <B>Tk_ConfigureWidget</B> will
+leave an error message in <I>interp-&gt;result</I> in the standard Tcl
 fashion.
 In the event of an error return, some of the fields of <I>widgRec</I>
 could already have been set, if configuration information for them
@@ -153,14 +153,14 @@ expected by the widget.  Each of its entries specifies one configuration
 option and has the following structure:
 <PRE>typedef struct {
     int <I>type</I>;
-    const char *<I>argvName</I>;
-    const char *<I>dbName</I>;
-    const char *<I>dbClass</I>;
-    const char *<I>defValue</I>;
+    char *<I>argvName</I>;
+    char *<I>dbName</I>;
+    char *<I>dbClass</I>;
+    char *<I>defValue</I>;
     int <I>offset</I>;
     int <I>specFlags</I>;
-    const Tk_CustomOption *<I>customPtr</I>;
-} <B>Tk_ConfigSpec</B>;</PRE>
+    Tk_CustomOption *<I>customPtr</I>;
+} Tk_ConfigSpec;</PRE>
 The <I>type</I> field indicates what type of configuration option this is
 (e.g. <B>TK_CONFIG_COLOR</B> for a color value, or <B>TK_CONFIG_INT</B> for
 an integer value).  The <I>type</I> field indicates how to use the
@@ -170,7 +170,7 @@ The <I>argvName</I> field is a string such as
 or
 &#8220;-bg&#8221;,
 which is compared with the values in <I>argv</I> (if <I>argvName</I> is
-NULL it means this is a grouped entry;  see <B><A HREF="#M28">GROUPED ENTRIES</A></B> below).  The
+NULL it means this is a grouped entry;  see <B>GROUPED ENTRIES</B> below).  The
 <I>dbName</I> and <I>dbClass</I> fields are used to look up a value
 for this option in the option database.  The <I>defValue</I> field
 specifies a default value for this configuration option if no
@@ -225,7 +225,7 @@ legal values for <I>type</I>, and the corresponding actions, are:
 The value
 must be an ASCII string identifying a cursor in a form
 suitable for passing to <B><A HREF="../TkLib/GetCursor.htm">Tk_GetCursor</A></B>. 
-The value is converted to a <B><A HREF="../TkLib/GetCursor.htm">Tk_Cursor</A></B> by calling
+The value is converted to a <B>Tk_Cursor</B> by calling
 <B><A HREF="../TkLib/GetCursor.htm">Tk_GetCursor</A></B> and the result is stored in the target.
 In addition, the resulting cursor is made the active cursor
 for <I>tkwin</I> by calling <B>XDefineCursor</B>.
@@ -237,7 +237,7 @@ was not <B>None</B>, then it is freed by passing it to <B><A HREF="../TkLib/GetC
 <P><DT><A NAME="M7"><B>TK_CONFIG_ANCHOR</B></A><DD>
 The value must be an ASCII string identifying an anchor point in one of the ways
 accepted by <B><A HREF="../TkLib/GetAnchor.htm">Tk_GetAnchor</A></B>.
-The string is converted to a <B><A HREF="../TkLib/GetAnchor.htm">Tk_Anchor</A></B> by calling
+The string is converted to a <B>Tk_Anchor</B> by calling
 <B><A HREF="../TkLib/GetAnchor.htm">Tk_GetAnchor</A></B> and the result is stored in the target.
 <P><DT><A NAME="M8"><B>TK_CONFIG_BITMAP</B></A><DD>
 The value must be an ASCII string identifying a bitmap in a form
@@ -269,7 +269,7 @@ be set to 1 and for false values it will be set to 0.
 <P><DT><A NAME="M10"><B>TK_CONFIG_BORDER</B></A><DD>
 The value must be an ASCII string identifying a border color in a form
 suitable for passing to <B><A HREF="../TkLib/3DBorder.htm">Tk_Get3DBorder</A></B>.  The value is converted
-to a (<B><A HREF="../TkLib/3DBorder.htm">Tk_3DBorder *</A></B>) by calling <B><A HREF="../TkLib/3DBorder.htm">Tk_Get3DBorder</A></B> and the result
+to a (<B>Tk_3DBorder *</B>) by calling <B><A HREF="../TkLib/3DBorder.htm">Tk_Get3DBorder</A></B> and the result
 is stored in the target.
 If <B>TK_CONFIG_NULL_OK</B> is specified in <I>specFlags</I> then the value
 may be an empty string, in which case the target will be set to NULL.
@@ -298,7 +298,7 @@ that the new cursor is not made the active one for <I>tkwin</I>.
 This option allows applications to define new option types.
 The <I>customPtr</I> field of the entry points to a structure
 defining the new option type.
-See the section <B><A HREF="#M39">CUSTOM OPTION TYPES</A></B> below for details.
+See the section <B>CUSTOM OPTION TYPES</B> below for details.
 <P><DT><A NAME="M15"><B>TK_CONFIG_DOUBLE</B></A><DD>
 The value must be an ASCII floating-point number in
 the format accepted by <B>strtol</B>.  The string is converted
@@ -311,7 +311,7 @@ will never match any arguments.
 <P><DT><A NAME="M17"><B>TK_CONFIG_FONT</B></A><DD>
 The value must be an ASCII string identifying a font in a form
 suitable for passing to <B><A HREF="../TkLib/GetFont.htm">Tk_GetFont</A></B>.  The value is converted
-to a <B><A HREF="../TkLib/GetFont.htm">Tk_Font</A></B> by calling <B><A HREF="../TkLib/GetFont.htm">Tk_GetFont</A></B> and the result
+to a <B>Tk_Font</B> by calling <B><A HREF="../TkLib/GetFont.htm">Tk_GetFont</A></B> and the result
 is stored in the target.
 If <B>TK_CONFIG_NULL_OK</B> is specified in <I>specFlags</I> then the value
 may be an empty string, in which case the target will be set to NULL.
@@ -337,7 +337,7 @@ to the join style by calling
 The value must be
 an ASCII string identifying a justification method in one of the
 ways accepted by <B><A HREF="../TkLib/GetJustify.htm">Tk_GetJustify</A></B>.
-The string is converted to a <B><A HREF="../TkLib/GetJustify.htm">Tk_Justify</A></B> by calling
+The string is converted to a <B>Tk_Justify</B> by calling
 <B><A HREF="../TkLib/GetJustify.htm">Tk_GetJustify</A></B> and the result is stored in the target.
 <P><DT><A NAME="M21"><B>TK_CONFIG_MM</B></A><DD>
 The value must specify a screen distance in one of the forms acceptable
@@ -384,7 +384,8 @@ If <B>TK_CONFIG_NULL_OK</B> is specified in <I>specFlags</I> and the value
 is an empty string then the target will be set to NULL.
 <P><DT><A NAME="M27"><B>TK_CONFIG_WINDOW</B></A><DD>
 The value must be a window path name.  It is translated to a
-<B><A HREF="../TkLib/WindowId.htm">Tk_Window</A></B> token and the token is stored in the target.
+<B>Tk_Window</B> token and the token is stored in the target.
+
 <P></DL>
 <H3><A NAME="M28">GROUPED ENTRIES</A></H3>
 In some cases it is useful to generate multiple resources from
@@ -402,6 +403,7 @@ Each of the entries after the first must have a NULL value in its
 <I>argvName</I> field;  this indicates that the entry is to be grouped
 with the entry that precedes it.  Only the <I>type</I> and <I>offset</I>
 fields are used from these follow-on entries.
+
 <H3><A NAME="M29">FLAGS</A></H3>
 The <I>flags</I> argument passed to <B>Tk_ConfigureWidget</B> is used
 in conjunction with the <I>specFlags</I> fields in the entries of <I>specs</I>
@@ -495,12 +497,14 @@ for which this entry is valid.  When calling <B>Tk_ConfigureWidget</B>,
 <I>flags</I> will have a single one of these bits set to select the
 entries for the desired widget type.  For a working example of
 this feature, see the code in tkButton.c.
+
 <H3><A NAME="M35">TK_OFFSET</A></H3>
 The <B><A HREF="../TkLib/SetOptions.htm">Tk_Offset</A></B> macro is provided as a safe way of generating
 the <I>offset</I> values for entries in Tk_ConfigSpec structures.
 It takes two arguments:  the name of a type of record, and the
 name of a field in that record.  It returns the byte offset of
 the named field in records of the given type.
+
 <H3><A NAME="M36">TK_CONFIGUREINFO</A></H3>
 The <B>Tk_ConfigureInfo</B> procedure may be used to obtain
 information about one or all of the options for a given widget.
@@ -510,12 +514,12 @@ pointer to a widget record containing the current information for
 a widget (<I>widgRec</I>), and a NULL <I>argvName</I> argument,
 <B>Tk_ConfigureInfo</B> generates a string describing all of the
 configuration options for the window.  The string is placed
-in interpreter <I>interp</I>'s result.  Under normal circumstances
-it returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>;  if an error occurs then it returns <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>
-and the interpreter's result will contain an error message.
+in <I>interp-&gt;result</I>.  Under normal circumstances
+it returns <B>TCL_OK</B>;  if an error occurs then it returns <B>TCL_ERROR</B>
+and <I>interp-&gt;result</I> contains an error message.
 <P>
 If <I>argvName</I> is NULL, then the value left in
-the interpreter's result by <B>Tk_ConfigureInfo</B>
+<I>interp-&gt;result</I> by <B>Tk_ConfigureInfo</B>
 consists of a list of one or more entries, each of which describes
 one configuration option (i.e. one entry in <I>specs</I>).  Each
 entry in the list will contain either two or five values.  If the
@@ -528,24 +532,26 @@ field of <I>widgRec</I> by calling procedures like <B><A HREF="../TkLib/GetColor
 <P>
 If the <I>argvName</I> argument to <B>Tk_ConfigureInfo</B> is non-NULL,
 then it indicates a single option, and information is returned only
-for that option.  The string placed in the interpreter's result will be
+for that option.  The string placed in <I>interp-&gt;result</I> will be
 a list containing two or five values as described above;  this will
 be identical to the corresponding sublist that would have been returned
 if <I>argvName</I> had been NULL.
 <P>
 The <I>flags</I> argument to <B>Tk_ConfigureInfo</B> is used to restrict
 the <I>specs</I> entries to consider, just as for <B>Tk_ConfigureWidget</B>.
+
 <H3><A NAME="M37">TK_CONFIGUREVALUE</A></H3>
 <B>Tk_ConfigureValue</B> takes arguments similar to <B>Tk_ConfigureInfo</B>;
 instead of returning a list of values, it just returns the current value
 of the option given by <I>argvName</I> (<I>argvName</I> must not be NULL).
-The value is returned in interpreter <I>interp</I>'s result and <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> is
+The value is returned in <I>interp-&gt;result</I> and <B>TCL_OK</B> is
 normally returned as the procedure's result.
 If an error occurs in <B>Tk_ConfigureValue</B> (e.g., <I>argvName</I> is
-not a valid option name), <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and an error message
-is left in the interpreter's result.
+not a valid option name), <B>TCL_ERROR</B> is returned and an error message
+is left in <I>interp-&gt;result</I>.
 This procedure is typically called to implement <B>cget</B> widget
 commands.
+
 <H3><A NAME="M38">TK_FREEOPTIONS</A></H3>
 The <B>Tk_FreeOptions</B> procedure may be invoked during widget cleanup
 to release all of the resources associated with configuration options.
@@ -557,6 +563,7 @@ it contains a null pointer) then no resource is freed for that
 entry.
 After freeing a resource, <B>Tk_FreeOptions</B> sets the
 corresponding field of the widget record to null.
+
 <H3><A NAME="M39">CUSTOM OPTION TYPES</A></H3>
 Applications can extend the built-in configuration types with additional
 configuration types by writing procedures to parse and print options
@@ -565,22 +572,22 @@ of the a type and creating a structure pointing to those procedures:
     Tk_OptionParseProc *<I>parseProc</I>;
     Tk_OptionPrintProc *<I>printProc</I>;
     ClientData <I>clientData</I>;
-} <B>Tk_CustomOption</B>;
+} Tk_CustomOption;
 
-typedef int <B>Tk_OptionParseProc</B>(
-        ClientData <I>clientData</I>,
-        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
-        <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
-        char *<I>value</I>,
-        char *<I>widgRec</I>,
-        int <I>offset</I>);
+typedef int Tk_OptionParseProc(
+    ClientData <I>clientData</I>,
+    <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
+    Tk_Window <I>tkwin</I>,
+    char *<I>value</I>,
+    char *<I>widgRec</I>,
+    int <I>offset</I>);
 
-typedef const char *<B>Tk_OptionPrintProc</B>(
-        ClientData <I>clientData</I>,
-        <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
-        char *<I>widgRec</I>,
-        int <I>offset</I>,
-        Tcl_FreeProc **<I>freeProcPtr</I>);</PRE>
+typedef char *Tk_OptionPrintProc(
+    ClientData <I>clientData</I>,
+    Tk_Window <I>tkwin</I>,
+    char *<I>widgRec</I>,
+    int <I>offset</I>,
+    Tcl_FreeProc **<I>freeProcPtr</I>);</PRE>
 The Tk_CustomOption structure contains three fields, which are pointers
 to the two procedures and a <I>clientData</I> value to be passed to those
 procedures when they are invoked.  The <I>clientData</I> value typically
@@ -607,9 +614,9 @@ The last argument, <I>offset</I>, gives the offset in bytes from the start
 of the widget record to the location where the option value is to
 be placed.  The procedure should translate the string to whatever
 form is appropriate for the option and store the value in the widget
-record.  It should normally return <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>, but if an error occurs
-in translating the string to a value then it should return <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>
-and store an error message in interpreter <I>interp</I>'s result.
+record.  It should normally return <B>TCL_OK</B>, but if an error occurs
+in translating the string to a value then it should return <B>TCL_ERROR</B>
+and store an error message in <I>interp-&gt;result</I>.
 <P>
 The <I>printProc</I> procedure is called
 by <B>Tk_ConfigureInfo</B> to produce a string value describing an
@@ -632,6 +639,7 @@ Tk_CustomOption structure has been created for them, options of this
 new type may be manipulated with Tk_ConfigSpec entries whose <I>type</I>
 fields are <B>TK_CONFIG_CUSTOM</B> and whose <I>customPtr</I> fields point
 to the Tk_CustomOption structure.
+
 <H3><A NAME="M40">EXAMPLES</A></H3>
 Although the explanation of <B>Tk_ConfigureWidget</B> is fairly
 complicated, its actual use is pretty straightforward.
@@ -641,11 +649,13 @@ The library implementation of frames
 (tkFrame.c) has a simple configuration table, and the library
 implementation of buttons (tkButton.c) has a much more complex
 table that uses many of the fancy <I>specFlags</I> mechanisms.
+
 <H3><A NAME="M41">SEE ALSO</A></H3>
 <B><A HREF="../TkLib/SetOptions.htm">Tk_SetOptions</A></B>
 <H3><A NAME="M42">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#anchor">anchor</A>, <A href="../Keywords/B.htm#bitmap">bitmap</A>, <A href="../Keywords/B.htm#boolean">boolean</A>, <A href="../Keywords/B.htm#border">border</A>, <A href="../Keywords/C.htm#cap style">cap style</A>, <A href="../Keywords/C.htm#color">color</A>, <A href="../Keywords/C.htm#configuration options">configuration options</A>, <A href="../Keywords/C.htm#cursor">cursor</A>, <A href="../Keywords/C.htm#custom">custom</A>, <A href="../Keywords/D.htm#double">double</A>, <A href="../Keywords/F.htm#font">font</A>, <A href="../Keywords/I.htm#integer">integer</A>, <A href="../Keywords/J.htm#join style">join style</A>, <A href="../Keywords/J.htm#justify">justify</A>, <A href="../Keywords/M.htm#millimeters">millimeters</A>, <A href="../Keywords/P.htm#pixels">pixels</A>, <A href="../Keywords/R.htm#relief">relief</A>, <A href="../Keywords/S.htm#synonym">synonym</A>, <A href="../Keywords/U.htm#uid">uid</A>
-<div class="copy">Copyright &copy; 1990-1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

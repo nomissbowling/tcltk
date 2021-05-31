@@ -3,35 +3,35 @@
 <HEAD><TITLE>image manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> image</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> image</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="image.htm#M2" NAME="L808">NAME</A>
-<DL><DD>image &mdash; Create and manipulate images</DD></DL>
-<DD><A HREF="image.htm#M3" NAME="L809">SYNOPSIS</A>
+<DD><A HREF="image.htm#M2" NAME="L746">NAME</A>
+<DL><DD>image - Create and manipulate images</DD></DL>
+<DD><A HREF="image.htm#M3" NAME="L747">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="image.htm#M4" NAME="L810">DESCRIPTION</A>
+<DD><A HREF="image.htm#M4" NAME="L748">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="image.htm#M5" NAME="L811"><B>image create </B><I>type </I>?<I>name</I>? ?<I>option value ...</I>?</A>
-<DD><A HREF="image.htm#M6" NAME="L812"><B>image delete </B>?<I>name name</I> ...?</A>
-<DD><A HREF="image.htm#M7" NAME="L813"><B>image height </B><I>name</I></A>
-<DD><A HREF="image.htm#M8" NAME="L814"><B>image inuse </B><I>name</I></A>
-<DD><A HREF="image.htm#M9" NAME="L815"><B>image names</B></A>
-<DD><A HREF="image.htm#M10" NAME="L816"><B>image type </B><I>name</I></A>
-<DD><A HREF="image.htm#M11" NAME="L817"><B>image types</B></A>
-<DD><A HREF="image.htm#M12" NAME="L818"><B>image width </B><I>name</I></A>
+<DD><A HREF="image.htm#M5" NAME="L749"><B>image create </B><I>type </I>?<I>name</I>? ?<I>option value ...</I>?</A>
+<DD><A HREF="image.htm#M6" NAME="L750"><B>image delete </B>?<I>name name</I> ...?</A>
+<DD><A HREF="image.htm#M7" NAME="L751"><B>image height </B><I>name</I></A>
+<DD><A HREF="image.htm#M8" NAME="L752"><B>image inuse </B><I>name</I></A>
+<DD><A HREF="image.htm#M9" NAME="L753"><B>image names</B></A>
+<DD><A HREF="image.htm#M10" NAME="L754"><B>image type </B><I>name</I></A>
+<DD><A HREF="image.htm#M11" NAME="L755"><B>image types</B></A>
+<DD><A HREF="image.htm#M12" NAME="L756"><B>image width </B><I>name</I></A>
 </DL>
-<DD><A HREF="image.htm#M13" NAME="L819">BUILT-IN IMAGE TYPES</A>
+<DD><A HREF="image.htm#M13" NAME="L757">BUILT-IN IMAGE TYPES</A>
 <DL class="built-in image types">
-<DD><A HREF="image.htm#M14" NAME="L820"><B>bitmap</B></A>
-<DD><A HREF="image.htm#M15" NAME="L821"><B>photo</B></A>
+<DD><A HREF="image.htm#M14" NAME="L758"><B>bitmap</B></A>
+<DD><A HREF="image.htm#M15" NAME="L759"><B>photo</B></A>
 </DL>
-<DD><A HREF="image.htm#M16" NAME="L822">SEE ALSO</A>
-<DD><A HREF="image.htm#M17" NAME="L823">KEYWORDS</A>
+<DD><A HREF="image.htm#M16" NAME="L760">SEE ALSO</A>
+<DD><A HREF="image.htm#M17" NAME="L761">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-image &mdash; Create and manipulate images
+image - Create and manipulate images
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>image</B> <I>option </I>?<I>arg arg ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -106,12 +106,14 @@ See the <B><A HREF="../TkCmd/bitmap.htm">bitmap</A></B> manual entry for more in
 Displays a variety of full-color images, using dithering to
 approximate colors on displays with limited color capabilities.
 See the <B><A HREF="../TkCmd/photo.htm">photo</A></B> manual entry for more information.
+
 <P></DL>
 <H3><A NAME="M16">SEE ALSO</A></H3>
 <B><A HREF="../TkCmd/bitmap.htm">bitmap</A></B>, <B><A HREF="../TkCmd/options.htm">options</A></B>, <B><A HREF="../TkCmd/photo.htm">photo</A></B>
 <H3><A NAME="M17">KEYWORDS</A></H3>
 <A href="../Keywords/H.htm#height">height</A>, <A href="../Keywords/I.htm#image">image</A>, <A href="../Keywords/T.htm#types of images">types of images</A>, <A href="../Keywords/W.htm#width">width</A>
-<div class="copy">Copyright &copy; 1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

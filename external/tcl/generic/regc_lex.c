@@ -832,23 +832,27 @@ lexescape(
 	RETV(PLAIN, CHR('\t'));
 	break;
     case CHR('u'):
-	c = (uchr) lexdigits(v, 16, 1, 4);
+	c = (uchr) lexdigits(v, 16, 4, 4);
 	if (ISERR()) {
 	    FAILW(REG_EESCAPE);
 	}
 	RETV(PLAIN, c);
 	break;
     case CHR('U'):
-	i = lexdigits(v, 16, 1, 8);
+	i = lexdigits(v, 16, 8, 8);
 	if (ISERR()) {
 	    FAILW(REG_EESCAPE);
 	}
-	if (i > 0xFFFF) {
-	    /* TODO: output a Surrogate pair
-	     */
+#if CHRBITS > 16
+	if ((unsigned)i > 0x10FFFF) {
 	    i = 0xFFFD;
 	}
-	RETV(PLAIN, (uchr) i);
+#else
+	if ((unsigned)i & ~0xFFFF) {
+	    i = 0xFFFD;
+	}
+#endif
+	RETV(PLAIN, (uchr)i);
 	break;
     case CHR('v'):
 	RETV(PLAIN, CHR('\v'));
@@ -863,7 +867,7 @@ lexescape(
 	break;
     case CHR('x'):
 	NOTE(REG_UUNPORT);
-	c = (uchr) lexdigits(v, 16, 1, 2);
+	c = lexdigits(v, 16, 1, 255);	/* REs >255 long outside spec */
 	if (ISERR()) {
 	    FAILW(REG_EESCAPE);
 	}
@@ -885,7 +889,7 @@ lexescape(
     case CHR('9'):
 	save = v->now;
 	v->now--;		/* put first digit back */
-	c = (uchr) lexdigits(v, 10, 1, 255);	/* REs >255 long outside spec */
+	c = lexdigits(v, 10, 1, 255);	/* REs >255 long outside spec */
 	if (ISERR()) {
 	    FAILW(REG_EESCAPE);
 	}
@@ -905,19 +909,16 @@ lexescape(
 
 	v->now = save;
 
-	/* FALLTHRU */
+	/*
+	 * And fall through into octal number.
+	 */
 
     case CHR('0'):
 	NOTE(REG_UUNPORT);
 	v->now--;		/* put first digit back */
-	c = (uchr) lexdigits(v, 8, 1, 3);
+	c = lexdigits(v, 8, 1, 3);
 	if (ISERR()) {
 	    FAILW(REG_EESCAPE);
-	}
-	if (c > 0xFF) {
-	    /* out of range, so we handled one digit too much */
-	    v->now--;
-	    c >>= 3;
 	}
 	RETV(PLAIN, c);
 	break;
@@ -931,27 +932,23 @@ lexescape(
 
 /*
  - lexdigits - slurp up digits and return chr value
- ^ static int lexdigits(struct vars *, int, int, int);
+ ^ static chr lexdigits(struct vars *, int, int, int);
  */
-static int			/* chr value; errors signalled via ERR */
+static chr			/* chr value; errors signalled via ERR */
 lexdigits(
     struct vars *v,
     int base,
     int minlen,
     int maxlen)
 {
-    int n;
+    uchr n;			/* unsigned to avoid overflow misbehavior */
     int len;
     chr c;
     int d;
-    const uchr ub = (uchr) base;
+    CONST uchr ub = (uchr) base;
 
     n = 0;
     for (len = 0; len < maxlen && !ATEOS(); len++) {
-	if (n > 0x10FFF) {
-	    /* Stop when continuing would otherwise overflow */
-	    break;
-	}
 	c = *v->now++;
 	switch (c) {
 	case CHR('0'): case CHR('1'): case CHR('2'): case CHR('3'):
@@ -984,7 +981,7 @@ lexdigits(
 	ERR(REG_EESCAPE);
     }
 
-    return n;
+    return (chr)n;
 }
 
 /*
@@ -1106,7 +1103,7 @@ brenext(
 
 /*
  - skip - skip white space and comments in expanded form
- ^ static void skip(struct vars *);
+ ^ static VOID skip(struct vars *);
  */
 static void
 skip(
@@ -1148,6 +1145,24 @@ newline(void)
 {
     return CHR('\n');
 }
+
+/*
+ - ch - return the chr sequence for regc_locale.c's fake collating element ch
+ * This helps confine use of CHR to this source file.  Beware that the caller
+ * knows how long the sequence is.
+ ^ #ifdef REG_DEBUG
+ ^ static const chr *ch(NOPARMS);
+ ^ #endif
+ */
+#ifdef REG_DEBUG
+static const chr *
+ch(void)
+{
+    static const chr chstr[] = { CHR('c'), CHR('h'), CHR('\0') };
+
+    return chstr;
+}
+#endif
 
 /*
  - chrnamed - return the chr known by a given (chr string) name

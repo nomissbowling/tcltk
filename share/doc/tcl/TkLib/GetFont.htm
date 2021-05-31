@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_AllocFontFromObj manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> GetFont</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> GetFont</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="GetFont.htm#M2" NAME="L302">NAME</A>
-<DL><DD>Tk_AllocFontFromObj, Tk_GetFont, Tk_GetFontFromObj, Tk_NameOfFont, Tk_FreeFontFromObj, Tk_FreeFont &mdash; maintain database of fonts</DD></DL>
-<DD><A HREF="GetFont.htm#M3" NAME="L303">SYNOPSIS</A>
+<DD><A HREF="GetFont.htm#M2" NAME="L296">NAME</A>
+<DL><DD>Tk_AllocFontFromObj, Tk_GetFont, Tk_GetFontFromObj, Tk_NameOfFont, Tk_FreeFontFromObj, Tk_FreeFont - maintain database of fonts</DD></DL>
+<DD><A HREF="GetFont.htm#M3" NAME="L297">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>Tk_Font 
@@ -23,16 +23,17 @@
 <DD><B>Tk_FreeFontFromObj(</B><I>tkwin, objPtr</I><B>)</B>
 <DD>void
 <DD><B>Tk_FreeFont(</B><I>tkfont</I><B>)</B>
+<DD>
 </DL>
-<DD><A HREF="GetFont.htm#M4" NAME="L304">ARGUMENTS</A>
+<DD><A HREF="GetFont.htm#M4" NAME="L298">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="GetFont.htm#M5" NAME="L305">DESCRIPTION</A>
-<DD><A HREF="GetFont.htm#M6" NAME="L306">SEE ALSO</A>
-<DD><A HREF="GetFont.htm#M7" NAME="L307">KEYWORDS</A>
+<DD><A HREF="GetFont.htm#M5" NAME="L299">DESCRIPTION</A>
+<DD><A HREF="GetFont.htm#M6" NAME="L300">SEE ALSO</A>
+<DD><A HREF="GetFont.htm#M7" NAME="L301">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_AllocFontFromObj, Tk_GetFont, Tk_GetFontFromObj, Tk_NameOfFont, Tk_FreeFontFromObj, Tk_FreeFont &mdash; maintain database of fonts
+Tk_AllocFontFromObj, Tk_GetFont, Tk_GetFontFromObj, Tk_NameOfFont, Tk_FreeFontFromObj, Tk_FreeFont - maintain database of fonts
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Tk_Font <BR>
@@ -47,14 +48,15 @@ Tk_Font <BR>
 <B>Tk_FreeFontFromObj(</B><I>tkwin, objPtr</I><B>)</B><BR>
 void<BR>
 <B>Tk_FreeFont(</B><I>tkfont</I><B>)</B><BR>
+<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter to use for error reporting.  If <B>NULL</B>, then no error
 messages are left after errors.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window in which font will be used.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*objPtr</B> (in/out)<DD>
+<P><DT>Tcl_Obj <B>*objPtr</B> (in/out)<DD>
 Gives name or description of font.  See documentation
 for the <B><A HREF="../TkCmd/font.htm">font</A></B> command for details on acceptable formats.
 Internal rep will be modified to cache corresponding Tk_Font.
@@ -119,11 +121,13 @@ with the same information used to create it; for
 with its Tk_Font token.  There should be
 exactly one call to <B>Tk_FreeFontFromObj</B> or <B>Tk_FreeFont</B>
 for each call to <B>Tk_AllocFontFromObj</B> or <B>Tk_GetFont</B>.
+
 <H3><A NAME="M6">SEE ALSO</A></H3>
 <B><A HREF="../TkLib/FontId.htm">Tk_FontId</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/F.htm#font">font</A>
-<div class="copy">Copyright &copy; 1990-1992 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990-1992 The Regents of the University of California.
 Copyright &copy; 1994-1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

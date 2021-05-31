@@ -3,11 +3,11 @@
 <HEAD><TITLE>ttk::widget manual page - Tk Themed Widget</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> ttk_widget</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> ttk_widget</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="ttk_widget.htm#M2" NAME="L48">NAME</A>
-<DL><DD>ttk::widget &mdash; Standard options and commands supported by Tk themed widgets</DD></DL>
+<DL><DD>ttk::widget - Standard options and commands supported by Tk themed widgets</DD></DL>
 <DD><A HREF="ttk_widget.htm#M3" NAME="L49">DESCRIPTION</A>
 <DD><A HREF="ttk_widget.htm#M4" NAME="L50">STANDARD OPTIONS</A>
 <DL>
@@ -46,10 +46,10 @@
 </DL>
 <DD><A HREF="ttk_widget.htm#M16" NAME="L75">COMMANDS</A>
 <DL class="commands">
-<DD><A HREF="ttk_widget.htm#M17" NAME="L76"><I>pathName </I><B>cget </B><I>option</I></A>
+<DD><A HREF="ttk_widget.htm#M17" NAME="L76"><I>pathName </I><B>cget</B> <I>option</I></A>
 <DD><A HREF="ttk_widget.htm#M18" NAME="L77"><I>pathName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A>
-<DD><A HREF="ttk_widget.htm#M19" NAME="L78"><I>pathName </I><B>identify element </B><I>x y</I></A>
-<DD><A HREF="ttk_widget.htm#M20" NAME="L79"><I>pathName </I><B>instate </B><I>statespec</I> ?<I>script</I>?</A>
+<DD><A HREF="ttk_widget.htm#M19" NAME="L78"><I>pathName </I><B>identify</B> <B>element</B> <I>x y</I></A>
+<DD><A HREF="ttk_widget.htm#M20" NAME="L79"><I>pathName </I><B>instate</B> <I>statespec</I> ?<I>script</I>?</A>
 <DD><A HREF="ttk_widget.htm#M21" NAME="L80"><I>pathName </I><B>state</B> ?<I>stateSpec</I>?</A>
 </DL>
 <DD><A HREF="ttk_widget.htm#M22" NAME="L81">WIDGET STATES</A>
@@ -70,7 +70,7 @@
 <DD><A HREF="ttk_widget.htm#M35" NAME="L94">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-ttk::widget &mdash; Standard options and commands supported by Tk themed widgets
+ttk::widget - Standard options and commands supported by Tk themed widgets
 <H3><A NAME="M3">DESCRIPTION</A></H3>
 This manual describes common widget options and commands.
 <H3><A NAME="M4">STANDARD OPTIONS</A></H3>
@@ -104,8 +104,8 @@ is appended, and which should return <B>0</B> or <B>1</B>),
 or the empty string.
 See <I>options(n)</I> in the Tk reference manual for the full description.
 <P><DT>Command-Line Name: <B><A NAME="M-style">-style</A></B>
-<DT>Database Name: <B><A HREF="../TkCmd/ttk_style.htm">style</A></B>
-<DT>Database Class: <B><A HREF="../TkCmd/ttk_style.htm">Style</A></B>
+<DT>Database Name: <B>style</B>
+<DT>Database Class: <B>Style</B>
 <DD>May be used to specify a custom widget style.
 </DL>
 <H3><A NAME="M5">SCROLLABLE WIDGET OPTIONS</A></H3>
@@ -127,7 +127,7 @@ The first fraction indicates the first information in the widget
 that is visible in the window, and the second fraction indicates
 the information just after the last portion that is visible.
 <P>
-Typically the <B>-xscrollcommand</B> option consists of the path name
+Typically the <B>xScrollCommand</B> option consists of the path name
 of a <B><A HREF="../TkCmd/scrollbar.htm">scrollbar</A></B> widget followed by
 &#8220;set&#8221;,
 e.g.
@@ -148,13 +148,13 @@ The following options are supported by labels, buttons,
 and other button-like widgets:
 <DL>
 <DT>Command-Line Name: <B><A NAME="M-text">-text</A></B>
-<DT>Database Name: <B>text</B>
-<DT>Database Class: <B>Text</B>
+<DT>Database Name: <B><A HREF="../TkCmd/text.htm">text</A></B>
+<DT>Database Class: <B><A HREF="../TkCmd/text.htm">Text</A></B>
 <DD>Specifies a text string to be displayed inside the widget
 (unless overridden by <B>-textvariable</B>).
 <P><DT>Command-Line Name: <B><A NAME="M-textvariable">-textvariable</A></B>
 <DT>Database Name: <B>textVariable</B>
-<DT>Database Class: <B>Variable</B>
+<DT>Database Class: <B><A HREF="../TclCmd/variable.htm">Variable</A></B>
 <DD>Specifies the name of a global variable whose value will be used
 in place of the <B>-text</B> resource.
 <P><DT>Command-Line Name: <B><A NAME="M-underline">-underline</A></B>
@@ -164,13 +164,13 @@ in place of the <B>-text</B> resource.
 in the text string.
 The underlined character is used for mnemonic activation.
 <P><DT>Command-Line Name: <B><A NAME="M-image">-image</A></B>
-<DT>Database Name: <B>image</B>
-<DT>Database Class: <B>Image</B>
+<DT>Database Name: <B><A HREF="../TkCmd/image.htm">image</A></B>
+<DT>Database Class: <B><A HREF="../TkCmd/image.htm">Image</A></B>
 <DD>Specifies an image to display.
 This is a list of 1 or more elements.
 The first element is the default image name.
 The rest of the list is a sequence of <I>statespec / value</I> pairs
-as per <B><A HREF="../TkCmd/ttk_style.htm">style map</A></B>, specifying different images to use when
+as per <B>style map</B>, specifying different images to use when
 the widget is in a particular state or combination of states.
 All images in the list should have the same size.
 <P><DT>Command-Line Name: <B><A NAME="M-compound">-compound</A></B>
@@ -217,7 +217,7 @@ does not affect the <B>-state</B> option.
 </DL>
 <H3><A NAME="M16">COMMANDS</A></H3>
 <DL class="commands">
-<DT><A NAME="M17"><I>pathName </I><B>cget </B><I>option</I></A><DD>
+<DT><A NAME="M17"><I>pathName </I><B>cget</B> <I>option</I></A><DD>
 Returns the current value of the configuration option given
 by <I>option</I>.
 <P><DT><A NAME="M18"><I>pathName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A><DD>
@@ -233,13 +233,13 @@ option name, database name, database class, default value,
 and current value.
 If no <I>option</I> is specified, returns a list describing all of
 the available options for <I>pathName</I>.
-<P><DT><A NAME="M19"><I>pathName </I><B>identify element </B><I>x y</I></A><DD>
+<P><DT><A NAME="M19"><I>pathName </I><B>identify</B> <B>element</B> <I>x y</I></A><DD>
 Returns the name of the element under the point given
 by <I>x</I> and <I>y</I>, or an empty string if the point does
 not lie within any element.
 <I>x</I> and <I>y</I> are pixel coordinates relative to the widget.
 Some widgets accept other <B>identify</B> subcommands.
-<P><DT><A NAME="M20"><I>pathName </I><B>instate </B><I>statespec</I> ?<I>script</I>?</A><DD>
+<P><DT><A NAME="M20"><I>pathName </I><B>instate</B> <I>statespec</I> ?<I>script</I>?</A><DD>
 Test the widget's state.
 If <I>script</I> is not specified, returns 1 if
 the widget state matches <I>statespec</I> and 0 otherwise.
@@ -275,9 +275,9 @@ and pressing a mouse button will cause some action to occur. (aka
 <P><DT><A NAME="M24"><B>disabled</B></A><DD>
 Widget is disabled under program control (aka
 &#8220;unavailable&#8221;,
-&#8220;inactive&#8221;).
+&#8220;inactive&#8221;)
 <P><DT><A NAME="M25"><B>focus</B></A><DD>
-Widget has keyboard focus.
+Widget has keyboard focus
 <P><DT><A NAME="M26"><B>pressed</B></A><DD>
 Widget is being pressed (aka
 &#8220;armed&#8221;
@@ -323,17 +323,18 @@ indicating that the bit is off.
 <PRE>set b [ttk::button .b]
 
 # Disable the widget:
-$b <B>state</B> disabled
+$b state disabled
 
 # Invoke the widget only if it is currently pressed and enabled:
-$b <B>instate</B> {pressed !disabled} { .b invoke }
+$b instate {pressed !disabled} { .b invoke }
 
 # Reenable widget:
-$b <B>state</B> !disabled</PRE>
+$b state !disabled</PRE>
 <H3><A NAME="M34">SEE ALSO</A></H3>
 <B><A HREF="../TkCmd/ttk_intro.htm">ttk::intro</A></B>, <B><A HREF="../TkCmd/ttk_style.htm">ttk::style</A></B>
 <H3><A NAME="M35">KEYWORDS</A></H3>
 <A href="../Keywords/S.htm#state">state</A>, <A href="../Keywords/C.htm#configure">configure</A>, <A href="../Keywords/O.htm#option">option</A>
-<div class="copy">Copyright &copy; 2004 Joe English
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2004 Joe English
 </div>
 </BODY></HTML>

@@ -16,7 +16,7 @@ CC = gcc
 # Include and library paths to the Tcl interpreter
 # We use includes from the compiled interpreter
 TCL_INC = -I"$(INSTALLDIR)/include"
-TCL_LIB = -L"$(INSTALLDIR)/lib" -ltcl8.6
+TCL_LIB = -L"$(INSTALLDIR)/lib" -ltcl8.5
 
 # Include and library paths for the FFTW DLL
 FFTW_INC =

@@ -33,4 +33,4 @@ rsync -a $EXTSRCDIR/$MODULE/LICENSE.txt $iLICENCEDIR/$MODULE.licence
 echo done
 
 ## fini
-echo "** Finished compile-$MODULE."
+echo "** Finished $MODULE."

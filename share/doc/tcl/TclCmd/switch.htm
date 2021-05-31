@@ -3,30 +3,30 @@
 <HEAD><TITLE>switch manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> switch</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> switch</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="switch.htm#M2" NAME="L1809">NAME</A>
-<DL><DD>switch &mdash; Evaluate one of several scripts, depending on a given value</DD></DL>
-<DD><A HREF="switch.htm#M3" NAME="L1810">SYNOPSIS</A>
+<DD><A HREF="switch.htm#M2" NAME="L1591">NAME</A>
+<DL><DD>switch - Evaluate one of several scripts, depending on a given value</DD></DL>
+<DD><A HREF="switch.htm#M3" NAME="L1592">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="switch.htm#M4" NAME="L1811">DESCRIPTION</A>
+<DD><A HREF="switch.htm#M4" NAME="L1593">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="switch.htm#M5" NAME="L1812"><B>-exact</B></A>
-<DD><A HREF="switch.htm#M6" NAME="L1813"><B>-glob</B></A>
-<DD><A HREF="switch.htm#M7" NAME="L1814"><B>-regexp</B></A>
-<DD><A HREF="switch.htm#M8" NAME="L1815"><B>-nocase</B></A>
-<DD><A HREF="switch.htm#M9" NAME="L1816"><B>-matchvar</B> <I>varName</I></A>
-<DD><A HREF="switch.htm#M10" NAME="L1817"><B>-indexvar</B> <I>varName</I></A>
-<DD><A HREF="switch.htm#M11" NAME="L1818"><B>--</B></A>
+<DD><A HREF="switch.htm#M5" NAME="L1594"><B>-exact</B></A>
+<DD><A HREF="switch.htm#M6" NAME="L1595"><B>-glob</B></A>
+<DD><A HREF="switch.htm#M7" NAME="L1596"><B>-regexp</B></A>
+<DD><A HREF="switch.htm#M8" NAME="L1597"><B>-nocase</B></A>
+<DD><A HREF="switch.htm#M9" NAME="L1598"><B>-matchvar</B> <I>varName</I></A>
+<DD><A HREF="switch.htm#M10" NAME="L1599"><B>-indexvar</B> <I>varName</I></A>
+<DD><A HREF="switch.htm#M11" NAME="L1600"><B>--</B></A>
 </DL>
-<DD><A HREF="switch.htm#M12" NAME="L1819">EXAMPLES</A>
-<DD><A HREF="switch.htm#M13" NAME="L1820">SEE ALSO</A>
-<DD><A HREF="switch.htm#M14" NAME="L1821">KEYWORDS</A>
+<DD><A HREF="switch.htm#M12" NAME="L1601">EXAMPLES</A>
+<DD><A HREF="switch.htm#M13" NAME="L1602">SEE ALSO</A>
+<DD><A HREF="switch.htm#M14" NAME="L1603">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-switch &mdash; Evaluate one of several scripts, depending on a given value
+switch - Evaluate one of several scripts, depending on a given value
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>switch </B>?<I>options</I>?<I> string pattern body </I>?<I>pattern body </I>...?<BR>
 <B>switch </B>?<I>options</I>?<I> string </I>{<I>pattern body </I>?<I>pattern body </I>...?}<BR>
@@ -126,55 +126,52 @@ patterns, and not intermingled with the patterns.
 <H3><A NAME="M12">EXAMPLES</A></H3>
 The <B>switch</B> command can match against variables and not just
 literals, as shown here (the result is <I>2</I>):
-<P>
 <PRE>set foo &quot;abc&quot;
 <B>switch</B> abc a - b {expr {1}} $foo {expr {2}} default {expr {3}}</PRE>
 <P>
 Using glob matching and the fall-through body is an alternative to
 writing regular expressions with alternations, as can be seen here
 (this returns <I>1</I>):
-<P>
 <PRE><B>switch</B> -glob aaab {
-    a*b     -
-    b       {expr {1}}
-    a*      {expr {2}}
-    default {expr {3}}
+   a*b     -
+   b       {expr {1}}
+   a*      {expr {2}}
+   default {expr {3}}
 }</PRE>
 <P>
 Whenever nothing matches, the <B>default</B> clause (which must be
 last) is taken.  This example has a result of <I>3</I>:
-<P>
 <PRE><B>switch</B> xyz {
-    a -
-    b {
-        # Correct Comment Placement
-        expr {1}
-    }
-    c {
-        expr {2}
-    }
-    default {
-        expr {3}
-    }
+   a -
+   b {
+      # Correct Comment Placement
+      expr {1}
+   }
+   c {
+      expr {2}
+   }
+   default {
+      expr {3}
+   }
 }</PRE>
 <P>
 When matching against regular expressions, information about what
 exactly matched is easily obtained using the <B>-matchvar</B> option:
-<P>
 <PRE><B>switch</B> -regexp -matchvar foo -- $bar {
-    a(b*)c {
-        puts &quot;Found [string length [lindex $foo 1]] 'b's&quot;
-    }
-    d(e*)f(g*)h {
-        puts &quot;Found [string length [lindex $foo 1]] 'e's and&#92;
-                [string length [lindex $foo 2]] 'g's&quot;
-    }
+   a(b*)c {
+      puts &quot;Found [string length [lindex $foo 1]] 'b's&quot;
+   }
+   d(e*)f(g*)h {
+      puts &quot;Found [string length [lindex $foo 1]] 'e's and&#92;
+            [string length [lindex $foo 2]] 'g's&quot;
+   }
 }</PRE>
 <H3><A NAME="M13">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/for.htm">for</A></B>, <B><A HREF="../TclCmd/if.htm">if</A></B>, <B><A HREF="../TclCmd/regexp.htm">regexp</A></B>
 <H3><A NAME="M14">KEYWORDS</A></H3>
 <A href="../Keywords/S.htm#switch">switch</A>, <A href="../Keywords/M.htm#match">match</A>, <A href="../Keywords/R.htm#regular expression">regular expression</A>
-<div class="copy">Copyright &copy; 1993 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1993 The Regents of the University of California.
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

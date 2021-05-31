@@ -33,20 +33,11 @@
 #endif
 
 #ifdef __CYGWIN__
-#ifdef __cplusplus
-extern "C" {
-#endif
-#ifdef __clang__
-#pragma clang diagnostic ignored "-Wignored-attributes"
-#endif
 DLLIMPORT extern __stdcall unsigned char GetVersionExW(void *);
 DLLIMPORT extern __stdcall void *GetModuleHandleW(const void *);
 DLLIMPORT extern __stdcall void FreeLibrary(void *);
 DLLIMPORT extern __stdcall void *GetProcAddress(void *, const char *);
 DLLIMPORT extern __stdcall void GetSystemInfo(void *);
-#ifdef __cplusplus
-}
-#endif
 
 #define NUMPROCESSORS 15
 static const char *const processors[NUMPROCESSORS] = {
@@ -56,29 +47,29 @@ static const char *const processors[NUMPROCESSORS] = {
 
 typedef struct {
   union {
-    unsigned int  dwOemId;
+    DWORD  dwOemId;
     struct {
       int wProcessorArchitecture;
       int wReserved;
     };
   };
-  unsigned int     dwPageSize;
+  DWORD     dwPageSize;
   void *lpMinimumApplicationAddress;
   void *lpMaximumApplicationAddress;
   void *dwActiveProcessorMask;
-  unsigned int     dwNumberOfProcessors;
-  unsigned int     dwProcessorType;
-  unsigned int     dwAllocationGranularity;
+  DWORD     dwNumberOfProcessors;
+  DWORD     dwProcessorType;
+  DWORD     dwAllocationGranularity;
   int      wProcessorLevel;
   int      wProcessorRevision;
 } SYSTEM_INFO;
 
 typedef struct {
-  unsigned int dwOSVersionInfoSize;
-  unsigned int dwMajorVersion;
-  unsigned int dwMinorVersion;
-  unsigned int dwBuildNumber;
-  unsigned int dwPlatformId;
+  DWORD dwOSVersionInfoSize;
+  DWORD dwMajorVersion;
+  DWORD dwMinorVersion;
+  DWORD dwBuildNumber;
+  DWORD dwPlatformId;
   wchar_t szCSDVersion[128];
 } OSVERSIONINFOW;
 #endif
@@ -86,6 +77,64 @@ typedef struct {
 #ifdef HAVE_COREFOUNDATION
 #include <CoreFoundation/CoreFoundation.h>
 #endif
+
+/*
+ * Define TCL_NO_STACK_CHECK in the compiler options if you want to revert to
+ * the old behavior of never checking the stack.
+ */
+
+/*
+ * Define this if you want to see a lot of output regarding stack checking.
+ */
+
+#undef TCL_DEBUG_STACK_CHECK
+
+/*
+ * Values used to compute how much space is really available for Tcl's use for
+ * the stack.
+ *
+ * The getrlimit() function is documented to return the maximum stack size in
+ * bytes. However, with threads enabled, the pthread library on some platforms
+ * does bad things to the stack size limits. First, the limits cannot be
+ * changed. Second, they appear to be sometimes reported incorrectly.
+ *
+ * The defines below may need to be adjusted if more platforms have this
+ * broken behavior with threads enabled.
+ */
+
+#ifndef TCL_MAGIC_STACK_DIVISOR
+#define TCL_MAGIC_STACK_DIVISOR		1
+#endif
+#ifndef TCL_RESERVED_STACK_PAGES
+#define TCL_RESERVED_STACK_PAGES	8
+#endif
+
+/*
+ * Thread specific data for stack checking.
+ */
+
+#ifndef TCL_NO_STACK_CHECK
+typedef struct ThreadSpecificData {
+    int *outerVarPtr;		/* The "outermost" stack frame pointer for
+				 * this thread. */
+    int *stackBound;            /* The current stack boundary */
+} ThreadSpecificData;
+static Tcl_ThreadDataKey dataKey;
+#ifdef TCL_CROSS_COMPILE
+static int stackGrowsDown = -1;
+static int StackGrowsDown(int *parent);
+#elif defined(TCL_STACK_GROWS_UP)
+#define stackGrowsDown 0
+#else
+#define stackGrowsDown 1
+#endif
+#endif /* TCL_NO_STACK_CHECK */
+
+#ifdef TCL_DEBUG_STACK_CHECK
+#define STACK_DEBUG(args) printf args
+#else
+#define STACK_DEBUG(args) (void)0
+#endif /* TCL_DEBUG_STACK_CHECK */
 
 /*
  * Tcl tries to use standard and homebrew methods to guess the right encoding
@@ -119,9 +168,9 @@ static char pkgPath[sizeof(TCL_PACKAGE_PATH)+200] = TCL_PACKAGE_PATH;
  * first list checked for a mapping from env encoding to Tcl encoding name.
  */
 
-typedef struct {
-    const char *lang;
-    const char *encoding;
+typedef struct LocaleTable {
+    CONST char *lang;
+    CONST char *encoding;
 } LocaleTable;
 
 /*
@@ -134,10 +183,10 @@ typedef struct {
  * among existing platforms.
  */
 
-static const LocaleTable localeTable[] = {
-    {"",		"iso8859-1"},
-    {"ansi-1251",	"cp1251"},
-    {"ansi_x3.4-1968",	"iso8859-1"},
+static CONST LocaleTable localeTable[] = {
+	    {"",		"iso8859-1"},
+		    {"ansi-1251",	"cp1251"},
+	    {"ansi_x3.4-1968",	"iso8859-1"},
     {"ascii",		"ascii"},
     {"big5",		"big5"},
     {"cp1250",		"cp1250"},
@@ -174,61 +223,61 @@ static const LocaleTable localeTable[] = {
     {"euc-cn",		"euc-cn"},
     {"euc-jp",		"euc-jp"},
     {"euc-kr",		"euc-kr"},
-    {"eucjp",		"euc-jp"},
-    {"euckr",		"euc-kr"},
-    {"euctw",		"euc-cn"},
+		    {"eucjp",		"euc-jp"},
+		    {"euckr",		"euc-kr"},
+		    {"euctw",		"euc-cn"},
     {"gb12345",		"gb12345"},
     {"gb1988",		"gb1988"},
     {"gb2312",		"gb2312"},
-    {"gb2312-1980",	"gb2312"},
+		    {"gb2312-1980",	"gb2312"},
     {"gb2312-raw",	"gb2312-raw"},
-    {"greek8",		"cp869"},
-    {"ibm1250",		"cp1250"},
-    {"ibm1251",		"cp1251"},
-    {"ibm1252",		"cp1252"},
-    {"ibm1253",		"cp1253"},
-    {"ibm1254",		"cp1254"},
-    {"ibm1255",		"cp1255"},
-    {"ibm1256",		"cp1256"},
-    {"ibm1257",		"cp1257"},
-    {"ibm1258",		"cp1258"},
-    {"ibm437",		"cp437"},
-    {"ibm737",		"cp737"},
-    {"ibm775",		"cp775"},
-    {"ibm850",		"cp850"},
-    {"ibm852",		"cp852"},
-    {"ibm855",		"cp855"},
-    {"ibm857",		"cp857"},
-    {"ibm860",		"cp860"},
-    {"ibm861",		"cp861"},
-    {"ibm862",		"cp862"},
-    {"ibm863",		"cp863"},
-    {"ibm864",		"cp864"},
-    {"ibm865",		"cp865"},
-    {"ibm866",		"cp866"},
-    {"ibm869",		"cp869"},
-    {"ibm874",		"cp874"},
-    {"ibm932",		"cp932"},
-    {"ibm936",		"cp936"},
-    {"ibm949",		"cp949"},
-    {"ibm950",		"cp950"},
-    {"iso-2022",	"iso2022"},
-    {"iso-2022-jp",	"iso2022-jp"},
-    {"iso-2022-kr",	"iso2022-kr"},
-    {"iso-8859-1",	"iso8859-1"},
-    {"iso-8859-10",	"iso8859-10"},
-    {"iso-8859-13",	"iso8859-13"},
-    {"iso-8859-14",	"iso8859-14"},
-    {"iso-8859-15",	"iso8859-15"},
-    {"iso-8859-16",	"iso8859-16"},
-    {"iso-8859-2",	"iso8859-2"},
-    {"iso-8859-3",	"iso8859-3"},
-    {"iso-8859-4",	"iso8859-4"},
-    {"iso-8859-5",	"iso8859-5"},
-    {"iso-8859-6",	"iso8859-6"},
-    {"iso-8859-7",	"iso8859-7"},
-    {"iso-8859-8",	"iso8859-8"},
-    {"iso-8859-9",	"iso8859-9"},
+		    {"greek8",		"cp869"},
+	    {"ibm1250",		"cp1250"},
+	    {"ibm1251",		"cp1251"},
+	    {"ibm1252",		"cp1252"},
+	    {"ibm1253",		"cp1253"},
+	    {"ibm1254",		"cp1254"},
+	    {"ibm1255",		"cp1255"},
+	    {"ibm1256",		"cp1256"},
+	    {"ibm1257",		"cp1257"},
+	    {"ibm1258",		"cp1258"},
+	    {"ibm437",		"cp437"},
+	    {"ibm737",		"cp737"},
+	    {"ibm775",		"cp775"},
+	    {"ibm850",		"cp850"},
+	    {"ibm852",		"cp852"},
+	    {"ibm855",		"cp855"},
+	    {"ibm857",		"cp857"},
+	    {"ibm860",		"cp860"},
+	    {"ibm861",		"cp861"},
+	    {"ibm862",		"cp862"},
+	    {"ibm863",		"cp863"},
+	    {"ibm864",		"cp864"},
+	    {"ibm865",		"cp865"},
+	    {"ibm866",		"cp866"},
+	    {"ibm869",		"cp869"},
+	    {"ibm874",		"cp874"},
+	    {"ibm932",		"cp932"},
+	    {"ibm936",		"cp936"},
+	    {"ibm949",		"cp949"},
+	    {"ibm950",		"cp950"},
+	    {"iso-2022",	"iso2022"},
+	    {"iso-2022-jp",	"iso2022-jp"},
+	    {"iso-2022-kr",	"iso2022-kr"},
+	    {"iso-8859-1",	"iso8859-1"},
+	    {"iso-8859-10",	"iso8859-10"},
+	    {"iso-8859-13",	"iso8859-13"},
+	    {"iso-8859-14",	"iso8859-14"},
+	    {"iso-8859-15",	"iso8859-15"},
+	    {"iso-8859-16",	"iso8859-16"},
+	    {"iso-8859-2",	"iso8859-2"},
+	    {"iso-8859-3",	"iso8859-3"},
+	    {"iso-8859-4",	"iso8859-4"},
+	    {"iso-8859-5",	"iso8859-5"},
+	    {"iso-8859-6",	"iso8859-6"},
+	    {"iso-8859-7",	"iso8859-7"},
+	    {"iso-8859-8",	"iso8859-8"},
+	    {"iso-8859-9",	"iso8859-9"},
     {"iso2022",		"iso2022"},
     {"iso2022-jp",	"iso2022-jp"},
     {"iso2022-kr",	"iso2022-kr"},
@@ -246,47 +295,47 @@ static const LocaleTable localeTable[] = {
     {"iso8859-7",	"iso8859-7"},
     {"iso8859-8",	"iso8859-8"},
     {"iso8859-9",	"iso8859-9"},
-    {"iso88591",	"iso8859-1"},
-    {"iso885915",	"iso8859-15"},
-    {"iso88592",	"iso8859-2"},
-    {"iso88595",	"iso8859-5"},
-    {"iso88596",	"iso8859-6"},
-    {"iso88597",	"iso8859-7"},
-    {"iso88598",	"iso8859-8"},
-    {"iso88599",	"iso8859-9"},
+		    {"iso88591",	"iso8859-1"},
+		    {"iso885915",	"iso8859-15"},
+		    {"iso88592",	"iso8859-2"},
+		    {"iso88595",	"iso8859-5"},
+		    {"iso88596",	"iso8859-6"},
+		    {"iso88597",	"iso8859-7"},
+		    {"iso88598",	"iso8859-8"},
+		    {"iso88599",	"iso8859-9"},
 #ifdef hpux
-    {"ja",		"shiftjis"},
+		    {"ja",		"shiftjis"},
 #else
-    {"ja",		"euc-jp"},
+		    {"ja",		"euc-jp"},
 #endif
-    {"ja_jp",		"euc-jp"},
-	{"ja_jp.euc",	"euc-jp"},
-    {"ja_jp.eucjp",	"euc-jp"},
-    {"ja_jp.jis",	"iso2022-jp"},
-    {"ja_jp.mscode",	"shiftjis"},
-    {"ja_jp.sjis",	"shiftjis"},
-    {"ja_jp.ujis",	"euc-jp"},
-    {"japan",		"euc-jp"},
+		    {"ja_jp",		"euc-jp"},
+		    {"ja_jp.euc",	"euc-jp"},
+		    {"ja_jp.eucjp",	"euc-jp"},
+		    {"ja_jp.jis",	"iso2022-jp"},
+		    {"ja_jp.mscode",	"shiftjis"},
+		    {"ja_jp.sjis",	"shiftjis"},
+		    {"ja_jp.ujis",	"euc-jp"},
+		    {"japan",		"euc-jp"},
 #ifdef hpux
-    {"japanese",	"shiftjis"},
+		    {"japanese",	"shiftjis"},
 #else
-    {"japanese",	"euc-jp"},
+		    {"japanese",	"euc-jp"},
 #endif
-    {"japanese-sjis",	"shiftjis"},
-    {"japanese-ujis",	"euc-jp"},
-    {"japanese.euc",	"euc-jp"},
-    {"japanese.sjis",	"shiftjis"},
+		    {"japanese-sjis",	"shiftjis"},
+		    {"japanese-ujis",	"euc-jp"},
+		    {"japanese.euc",	"euc-jp"},
+		    {"japanese.sjis",	"shiftjis"},
     {"jis0201",		"jis0201"},
     {"jis0208",		"jis0208"},
     {"jis0212",		"jis0212"},
-    {"jp_jp",		"shiftjis"},
-    {"ko",		"euc-kr"},
-    {"ko_kr",		"euc-kr"},
-    {"ko_kr.euc",	"euc-kr"},
-    {"ko_kw.euckw",	"euc-kr"},
+		    {"jp_jp",		"shiftjis"},
+		    {"ko",		"euc-kr"},
+		    {"ko_kr",		"euc-kr"},
+		    {"ko_kr.euc",	"euc-kr"},
+		    {"ko_kw.euckw",	"euc-kr"},
     {"koi8-r",		"koi8-r"},
     {"koi8-u",		"koi8-u"},
-    {"korean",		"euc-kr"},
+		    {"korean",		"euc-kr"},
     {"ksc5601",		"ksc5601"},
     {"maccenteuro",	"macCentEuro"},
     {"maccroatian",	"macCroatian"},
@@ -300,25 +349,28 @@ static const LocaleTable localeTable[] = {
     {"macthai",		"macThai"},
     {"macturkish",	"macTurkish"},
     {"macukraine",	"macUkraine"},
-    {"roman8",		"iso8859-1"},
-    {"ru",		"iso8859-5"},
-    {"ru_ru",		"iso8859-5"},
-    {"ru_su",		"iso8859-5"},
+		    {"roman8",		"iso8859-1"},
+		    {"ru",		"iso8859-5"},
+		    {"ru_ru",		"iso8859-5"},
+		    {"ru_su",		"iso8859-5"},
     {"shiftjis",	"shiftjis"},
-    {"sjis",		"shiftjis"},
+		    {"sjis",		"shiftjis"},
     {"symbol",		"symbol"},
     {"tis-620",		"tis-620"},
-    {"tis620",		"tis-620"},
-    {"turkish8",	"cp857"},
-    {"utf8",		"utf-8"},
-    {"zh",		"cp936"},
-    {"zh_cn.gb2312",	"euc-cn"},
-    {"zh_cn.gbk",	"euc-cn"},
-    {"zh_cz.gb2312",	"euc-cn"},
-    {"zh_tw",		"euc-tw"},
-    {"zh_tw.big5",	"big5"},
+		    {"tis620",		"tis-620"},
+		    {"turkish8",	"cp857"},
+		    {"utf8",		"utf-8"},
+		    {"zh",		"cp936"},
+		    {"zh_cn.gb2312",	"euc-cn"},
+		    {"zh_cn.gbk",	"euc-cn"},
+		    {"zh_cz.gb2312",	"euc-cn"},
+		    {"zh_tw",		"euc-tw"},
+		    {"zh_tw.big5",	"big5"},
 };
 
+#ifndef TCL_NO_STACK_CHECK
+static int		GetStackSize(size_t *stackSizePtr);
+#endif /* TCL_NO_STACK_CHECK */
 #ifdef HAVE_COREFOUNDATION
 static int		MacOSXGetLibraryPath(Tcl_Interp *interp,
 			    int maxPathLen, char *tclLibPath);
@@ -470,10 +522,10 @@ TclpInitLibraryPath(
 {
 #define LIBRARY_SIZE	    32
     Tcl_Obj *pathPtr, *objPtr;
-    const char *str;
+    CONST char *str;
     Tcl_DString buffer;
 
-    TclNewObj(pathPtr);
+    pathPtr = Tcl_NewObj();
 
     /*
      * Look for the library relative to the TCL_LIBRARY env variable. If the
@@ -489,7 +541,7 @@ TclpInitLibraryPath(
     if ((str != NULL) && (str[0] != '\0')) {
 	Tcl_DString ds;
 	int pathc;
-	const char **pathv;
+	CONST char **pathv;
 	char installLib[LIBRARY_SIZE];
 
 	Tcl_DStringInit(&ds);
@@ -506,7 +558,8 @@ TclpInitLibraryPath(
 	 * If TCL_LIBRARY is set, search there.
 	 */
 
-	Tcl_ListObjAppendElement(NULL, pathPtr, Tcl_NewStringObj(str, -1));
+	objPtr = Tcl_NewStringObj(str, -1);
+	Tcl_ListObjAppendElement(NULL, pathPtr, objPtr);
 
 	Tcl_SplitPath(str, &pathc, &pathv);
 	if ((pathc > 0) && (strcasecmp(installLib + 4, pathv[pathc-1]) != 0)) {
@@ -520,9 +573,11 @@ TclpInitLibraryPath(
 
 	    pathv[pathc - 1] = installLib + 4;
 	    str = Tcl_JoinPath(pathc, pathv, &ds);
-	    Tcl_ListObjAppendElement(NULL, pathPtr, TclDStringToObj(&ds));
+	    objPtr = Tcl_NewStringObj(str, Tcl_DStringLength(&ds));
+	    Tcl_ListObjAppendElement(NULL, pathPtr, objPtr);
+	    Tcl_DStringFree(&ds);
 	}
-	ckfree(pathv);
+	ckfree((char *) pathv);
     }
 
     /*
@@ -555,8 +610,8 @@ TclpInitLibraryPath(
 
     *encodingPtr = Tcl_GetEncoding(NULL, NULL);
     str = Tcl_GetStringFromObj(pathPtr, lengthPtr);
-    *valuePtr = (char *)ckalloc(*lengthPtr + 1);
-    memcpy(*valuePtr, str, *lengthPtr + 1);
+    *valuePtr = ckalloc((unsigned int) (*lengthPtr)+1);
+    memcpy(*valuePtr, str, (size_t)(*lengthPtr)+1);
     Tcl_DecrRefCount(pathPtr);
 }
 
@@ -593,9 +648,15 @@ TclpSetInitialEncodings(void)
     Tcl_DStringFree(&encodingName);
 }
 
-static const char *
+void
+TclpSetInterfaces(void)
+{
+    /* do nothing */
+}
+
+static CONST char *
 SearchKnownEncodings(
-    const char *encoding)
+    CONST char *encoding)
 {
     int left = 0;
     int right = sizeof(localeTable)/sizeof(LocaleTable);
@@ -616,12 +677,12 @@ SearchKnownEncodings(
     return NULL;
 }
 
-const char *
+CONST char *
 Tcl_GetEncodingNameFromEnvironment(
     Tcl_DString *bufPtr)
 {
-    const char *encoding;
-    const char *knownEncoding;
+    CONST char *encoding;
+    CONST char *knownEncoding;
 
     Tcl_DStringInit(bufPtr);
 
@@ -677,7 +738,7 @@ Tcl_GetEncodingNameFromEnvironment(
     }
 
     if (encoding != NULL) {
-	const char *p;
+	CONST char *p;
 	Tcl_DString ds;
 
 	Tcl_DStringInit(&ds);
@@ -742,43 +803,6 @@ Tcl_GetEncodingNameFromEnvironment(
  *----------------------------------------------------------------------
  */
 
-#if defined(HAVE_COREFOUNDATION) && MAC_OS_X_VERSION_MAX_ALLOWED > 1020
-/*
- * Helper because whether CFLocaleCopyCurrent and CFLocaleGetIdentifier are
- * strongly or weakly bound varies by version of OSX, triggering warnings.
- */
-
-static inline void
-InitMacLocaleInfoVar(
-    CFLocaleRef (*localeCopyCurrent)(void),
-    CFStringRef (*localeGetIdentifier)(CFLocaleRef),
-    Tcl_Interp *interp)
-{
-    CFLocaleRef localeRef;
-    CFStringRef locale;
-    char loc[256];
-
-    if (localeCopyCurrent == NULL || localeGetIdentifier == NULL) {
-	return;
-    }
-
-    localeRef = localeCopyCurrent();
-    if (!localeRef) {
-	return;
-    }
-
-    locale = localeGetIdentifier(localeRef);
-    if (locale && CFStringGetCString(locale, loc, 256,
-	    kCFStringEncodingUTF8)) {
-	if (!Tcl_CreateNamespace(interp, "::tcl::mac", NULL, NULL)) {
-	    Tcl_ResetResult(interp);
-	}
-	Tcl_SetVar2(interp, "::tcl::mac::locale", NULL, loc, TCL_GLOBAL_ONLY);
-    }
-    CFRelease(localeRef);
-}
-#endif /*defined(HAVE_COREFOUNDATION) && MAC_OS_X_VERSION_MAX_ALLOWED > 1020*/
-
 void
 TclpSetVariables(
     Tcl_Interp *interp)
@@ -797,21 +821,38 @@ TclpSetVariables(
 #ifdef HAVE_COREFOUNDATION
     char tclLibPath[MAXPATHLEN + 1];
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
     /*
      * Set msgcat fallback locale to current CFLocale identifier.
      */
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
-    InitMacLocaleInfoVar(CFLocaleCopyCurrent, CFLocaleGetIdentifier, interp);
+    CFLocaleRef localeRef;
+
+    if (&CFLocaleCopyCurrent != NULL && &CFLocaleGetIdentifier != NULL &&
+	    (localeRef = CFLocaleCopyCurrent())) {
+	CFStringRef locale = CFLocaleGetIdentifier(localeRef);
+
+	if (locale) {
+	    char loc[256];
+
+	    if (CFStringGetCString(locale, loc, 256, kCFStringEncodingUTF8)) {
+		if (!Tcl_CreateNamespace(interp, "::tcl::mac", NULL, NULL)) {
+		    Tcl_ResetResult(interp);
+		}
+		Tcl_SetVar(interp, "::tcl::mac::locale", loc, TCL_GLOBAL_ONLY);
+	    }
+	}
+	CFRelease(localeRef);
+    }
 #endif /* MAC_OS_X_VERSION_MAX_ALLOWED > 1020 */
 
     if (MacOSXGetLibraryPath(interp, MAXPATHLEN, tclLibPath) == TCL_OK) {
-	const char *str;
+	CONST char *str;
 	CFBundleRef bundleRef;
 
-	Tcl_SetVar2(interp, "tclDefaultLibrary", NULL, tclLibPath, TCL_GLOBAL_ONLY);
-	Tcl_SetVar2(interp, "tcl_pkgPath", NULL, tclLibPath, TCL_GLOBAL_ONLY);
-	Tcl_SetVar2(interp, "tcl_pkgPath", NULL, " ",
+	Tcl_SetVar(interp, "tclDefaultLibrary", tclLibPath, TCL_GLOBAL_ONLY);
+	Tcl_SetVar(interp, "tcl_pkgPath", tclLibPath, TCL_GLOBAL_ONLY);
+	Tcl_SetVar(interp, "tcl_pkgPath", " ",
 		TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
 
 	str = TclGetEnv("DYLD_FRAMEWORK_PATH", &ds);
@@ -827,9 +868,9 @@ TclpSetVariables(
 		    *p = ' ';
 		}
 	    } while (*p++);
-	    Tcl_SetVar2(interp, "tcl_pkgPath", NULL, Tcl_DStringValue(&ds),
+	    Tcl_SetVar(interp, "tcl_pkgPath", Tcl_DStringValue(&ds),
 		    TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
-	    Tcl_SetVar2(interp, "tcl_pkgPath", NULL, " ",
+	    Tcl_SetVar(interp, "tcl_pkgPath", " ",
 		    TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
 	    Tcl_DStringFree(&ds);
 	}
@@ -844,9 +885,9 @@ TclpSetVariables(
 			(unsigned char*) tclLibPath, MAXPATHLEN) &&
 			! TclOSstat(tclLibPath, &statBuf) &&
 			S_ISDIR(statBuf.st_mode)) {
-		    Tcl_SetVar2(interp, "tcl_pkgPath", NULL, tclLibPath,
+		    Tcl_SetVar(interp, "tcl_pkgPath", tclLibPath,
 			    TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
-		    Tcl_SetVar2(interp, "tcl_pkgPath", NULL, " ",
+		    Tcl_SetVar(interp, "tcl_pkgPath", " ",
 			    TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
 		}
 		CFRelease(frameworksURL);
@@ -857,20 +898,20 @@ TclpSetVariables(
 			(unsigned char*) tclLibPath, MAXPATHLEN) &&
 			! TclOSstat(tclLibPath, &statBuf) &&
 			S_ISDIR(statBuf.st_mode)) {
-		    Tcl_SetVar2(interp, "tcl_pkgPath", NULL, tclLibPath,
+		    Tcl_SetVar(interp, "tcl_pkgPath", tclLibPath,
 			    TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
-		    Tcl_SetVar2(interp, "tcl_pkgPath", NULL, " ",
+		    Tcl_SetVar(interp, "tcl_pkgPath", " ",
 			    TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
 		}
 		CFRelease(frameworksURL);
 	    }
 	}
-	Tcl_SetVar2(interp, "tcl_pkgPath", NULL, pkgPath,
+	Tcl_SetVar(interp, "tcl_pkgPath", pkgPath,
 		TCL_GLOBAL_ONLY | TCL_APPEND_VALUE);
     } else
 #endif /* HAVE_COREFOUNDATION */
     {
-	Tcl_SetVar2(interp, "tcl_pkgPath", NULL, pkgPath, TCL_GLOBAL_ONLY);
+	Tcl_SetVar(interp, "tcl_pkgPath", pkgPath, TCL_GLOBAL_ONLY);
     }
 
 #ifdef DJGPP
@@ -883,7 +924,7 @@ TclpSetVariables(
 #ifdef __CYGWIN__
 	unameOK = 1;
     if (!osInfoInitialized) {
-	void *handle = GetModuleHandleW(L"NTDLL");
+	HANDLE handle = GetModuleHandleW(L"NTDLL");
 	int(__stdcall *getversion)(void *) =
 		(int(__stdcall *)(void *))GetProcAddress(handle, "RtlGetVersion");
 	osInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOW);
@@ -906,7 +947,7 @@ TclpSetVariables(
 
 #elif !defined NO_UNAME
     if (uname(&name) >= 0) {
-	const char *native;
+	CONST char *native;
 
 	unameOK = 1;
 
@@ -979,12 +1020,6 @@ TclpSetVariables(
 	Tcl_SetVar2(interp, "tcl_platform", "user", user, TCL_GLOBAL_ONLY);
 	Tcl_DStringFree(&ds);
     }
-
-    /*
-     * Define what the platform PATH separator is. [TIP #315]
-     */
-
-    Tcl_SetVar2(interp, "tcl_platform","pathSeparator", ":", TCL_GLOBAL_ONLY);
 }
 
 /*
@@ -1009,7 +1044,7 @@ TclpSetVariables(
 
 int
 TclpFindVariable(
-    const char *name,		/* Name of desired environment variable
+    CONST char *name,		/* Name of desired environment variable
 				 * (native). */
     int *lengthPtr)		/* Used to return length of name (for
 				 * successful searches) or number of non-NULL
@@ -1017,7 +1052,7 @@ TclpFindVariable(
 				 * searches). */
 {
     int i, result = -1;
-    const char *env, *p1, *p2;
+    register CONST char *env, *p1, *p2;
     Tcl_DString envString;
 
     Tcl_DStringInit(&envString);
@@ -1043,6 +1078,216 @@ TclpFindVariable(
     Tcl_DStringFree(&envString);
     return result;
 }
+
+#ifndef TCL_NO_STACK_CHECK
+/*
+ *----------------------------------------------------------------------
+ *
+ * TclpGetCStackParams --
+ *
+ *	Determine the stack params for the current thread: in which
+ *	direction does the stack grow, and what is the stack lower (resp.
+ *	upper) bound for safe invocation of a new command? This is used to
+ *	cache the values needed for an efficient computation of
+ *	TclpCheckStackSpace() when the interp is known.
+ *
+ * Results:
+ *	Returns 1 if the stack grows down, in which case a stack lower bound
+ *	is stored at stackBoundPtr. If the stack grows up, 0 is returned and
+ *	an upper bound is stored at stackBoundPtr. If a bound cannot be
+ *	determined NULL is stored at stackBoundPtr.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+TclpGetCStackParams(
+    int **stackBoundPtr)
+{
+    int result = TCL_OK;
+    size_t stackSize = 0;	/* The size of the current stack. */
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+				/* Most variables are actually in a
+				 * thread-specific data block to minimise the
+				 * impact on the stack. */
+#ifdef TCL_CROSS_COMPILE
+    if (stackGrowsDown == -1) {
+	/*
+	 * Not initialised!
+	 */
+
+	stackGrowsDown = StackGrowsDown(NULL);
+    }
+#endif
+
+    /*
+     * The first time through in a thread: record the "outermost" stack
+     * frame and inquire with the OS about the stack size.
+     */
+
+    if (tsdPtr->outerVarPtr == NULL) {
+	tsdPtr->outerVarPtr = &result;
+	result = GetStackSize(&stackSize);
+	if (result != TCL_OK) {
+	    /* Can't check, assume it always succeeds */
+#ifdef TCL_CROSS_COMPILE
+	    stackGrowsDown = 1;
+#endif
+	    tsdPtr->stackBound = NULL;
+	    goto done;
+	}
+    }
+
+    if (stackSize || (tsdPtr->stackBound &&
+	    ((stackGrowsDown && (&result < tsdPtr->stackBound)) ||
+	    (!stackGrowsDown && (&result > tsdPtr->stackBound))))) {
+	/*
+	 * Either the thread's first pass or stack failure: set the params
+	 */
+
+	if (!stackSize) {
+	    /*
+	     * Stack failure: if we didn't already blow up, we are within the
+	     * safety area. Recheck with the OS in case the stack was grown.
+	     */
+	    result = GetStackSize(&stackSize);
+	    if (result != TCL_OK) {
+		/* Can't check, assume it always succeeds */
+#ifdef TCL_CROSS_COMPILE
+		stackGrowsDown = 1;
+#endif
+		tsdPtr->stackBound = NULL;
+		goto done;
+	    }
+	}
+
+	if (stackGrowsDown) {
+	    tsdPtr->stackBound = (int *) ((char *)tsdPtr->outerVarPtr -
+		    stackSize);
+	    if (tsdPtr->stackBound > tsdPtr->outerVarPtr) {
+	    	/* Overflow, that should never happen, just set it to NULL.
+	    	 * See [Bug #3166410] */
+	    	tsdPtr->stackBound = NULL;
+	    }
+	} else {
+	    tsdPtr->stackBound = (int *) ((char *)tsdPtr->outerVarPtr +
+		    stackSize);
+	    if (tsdPtr->stackBound < tsdPtr->outerVarPtr) {
+	    	/* Overflow, that should never happen, just set it to NULL.
+	    	 * See [Bug #3166410] */
+	    	tsdPtr->stackBound = NULL;
+	    }
+	}
+    }
+
+    done:
+    *stackBoundPtr = tsdPtr->stackBound;
+    return stackGrowsDown;
+}
+
+#ifdef TCL_CROSS_COMPILE
+int
+StackGrowsDown(
+    int *parent)
+{
+    int here;
+    if (!parent) {
+	return StackGrowsDown(&here);
+    }
+    return (&here < parent);
+}
+#endif
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * GetStackSize --
+ *
+ *	Discover what the stack size for the current thread/process actually
+ *	is. Expects to only ever be called once per thread and then only at a
+ *	point when there is a reasonable amount of space left on the current
+ *	stack; TclpCheckStackSpace is called sufficiently frequently that that
+ *	is true.
+ *
+ * Results:
+ *	TCL_OK if the stack space was discovered, TCL_BREAK if the stack space
+ *	was undiscoverable in a way that stack checks should fail, and
+ *	TCL_CONTINUE if the stack space was undiscoverable in a way that stack
+ *	checks should succeed.
+ *
+ * Side effects:
+ *	None
+ *
+ *----------------------------------------------------------------------
+ */
+
+static int
+GetStackSize(
+    size_t *stackSizePtr)
+{
+    size_t rawStackSize;
+    struct rlimit rLimit;	/* The result from getrlimit(). */
+
+#ifdef TCL_THREADS
+    rawStackSize = TclpThreadGetStackSize();
+    if (rawStackSize == (size_t) -1) {
+	/*
+	 * Some kind of confirmed error in TclpThreadGetStackSize?! Fall back
+	 * to whatever getrlimit can determine.
+	 */
+	STACK_DEBUG(("stack checks: TclpThreadGetStackSize failed in \n"));
+    }
+    if (rawStackSize > 0) {
+	goto finalSanityCheck;
+    }
+
+    /*
+     * If we have zero or an error, try the system limits instead. After all,
+     * the pthread documentation states that threads should always be bound by
+     * the system stack size limit in any case.
+     */
+#endif /* TCL_THREADS */
+
+    if (getrlimit(RLIMIT_STACK, &rLimit) != 0) {
+	/*
+	 * getrlimit() failed, just fail the whole thing.
+	 */
+	STACK_DEBUG(("skipping stack checks with failure: getrlimit failed\n"));
+	return TCL_BREAK;
+    }
+    if (rLimit.rlim_cur == RLIM_INFINITY) {
+	/*
+	 * Limit is "infinite"; there is no stack limit.
+	 */
+	STACK_DEBUG(("skipping stack checks with success: infinite limit\n"));
+	return TCL_CONTINUE;
+    }
+    rawStackSize = rLimit.rlim_cur;
+
+    /*
+     * Final sanity check on the determined stack size. If we fail this,
+     * assume there are bogus values about and that we can't actually figure
+     * out what the stack size really is.
+     */
+
+#ifdef TCL_THREADS /* Stop warning... */
+  finalSanityCheck:
+#endif
+    if (rawStackSize <= 0) {
+	STACK_DEBUG(("skipping stack checks with success\n"));
+	return TCL_CONTINUE;
+    }
+
+    /*
+     * Calculate a stack size with a safety margin.
+     */
+
+    *stackSizePtr = (rawStackSize / TCL_MAGIC_STACK_DIVISOR)
+	    - (getpagesize() * TCL_RESERVED_STACK_PAGES);
+
+    return TCL_OK;
+}
+#endif /* TCL_NO_STACK_CHECK */
 
 /*
  *----------------------------------------------------------------------

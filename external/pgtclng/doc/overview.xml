@@ -1,0 +1,220 @@
+<!-- $Id: overview.xml 340 2013-10-04 15:34:55Z lbayuk $ -->
+<chapter id="pgtcl-overview">
+  <title>Overview</title>
+
+  <para>
+<xref linkend="pgtcl-commands-table" /> gives an overview over the commands
+available in <application>pgtcl</application>. These commands are described
+in the reference chapter.
+  </para>
+
+<table id="pgtcl-commands-table">
+<title><application>pgtcl</application> Commands</title>
+<tgroup cols="2">
+<thead>
+  <row>
+    <entry>Command</entry>
+    <entry>Description</entry>
+  </row>
+</thead>
+
+<tbody>
+  <!-- Commands in this table are in alphabetical order, with links
+       to the reference section - which is grouped functionally.
+  -->
+  <row>
+    <entry><xref linkend="pg-backend-pid" /></entry>
+    <entry>Get the backend process ID (PID)</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-blocking" /></entry>
+    <entry>Get or set the connection mode - blocking or nonblocking</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-cancelrequest" /></entry>
+    <entry>Cancel an in-progress asynchronous query</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-conndefaults" /></entry>
+    <entry>Get connection options and their defaults</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-connect" /></entry>
+    <entry>Open a connection to the server</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-describe-cursor" /></entry>
+    <entry>Get information about a cursor (portal)</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-describe-prepared" /></entry>
+    <entry>Get information about a prepared statement</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-disconnect" /></entry>
+    <entry>Close a connection to the server</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-encrypt-password" /></entry>
+    <entry>Encrypt a password/username combination</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-escape-bytea" /></entry>
+    <entry>Escape a binary string for use in an SQL string constant
+      with bytea (byte array) columns</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-escape-identifier" /></entry>
+    <entry>Escape a string for use as an SQL identifier (object name)</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-escape-literal" /></entry>
+    <entry>Escape a string for use as an SQL string literal</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-escape-string" /></entry>
+    <entry>Escape a string for use in an SQL string constant</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-exec" /></entry>
+    <entry>Execute an SQL command on the server</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-exec-params" /></entry>
+    <entry>Execute a parameterized SQL command on the server</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-exec-prepared" /></entry>
+    <entry>Execute a pre-prepared SQL command on the server</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-execute" /></entry>
+    <entry>Execute an SQL command on the server and optionally loop over the results</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-getresult" /></entry>
+    <entry>Wait for and return result from asynchronous SQL command</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-isbusy" /></entry>
+    <entry>See if pg_getresult will block</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-listen" /></entry>
+    <entry>Set a callback for asynchronous notification messages</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-close" /></entry>
+    <entry>Close a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-creat" /></entry>
+    <entry>Create a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-export" /></entry>
+    <entry>Export a large object to a file</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-import" /></entry>
+    <entry>Import a large object from a file</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-lseek" /></entry>
+    <entry>Seek to a position in a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-lseek64" /></entry>
+    <entry>Seek to a position in a large object, with 64-bit offset</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-open" /></entry>
+    <entry>Open a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-read" /></entry>
+    <entry>Read from a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-tell" /></entry>
+    <entry>Return the current seek position of a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-tell64" /></entry>
+    <entry>Return the current seek position of a large object, with 64-bit range</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-truncate" /></entry>
+    <entry>Truncate (or extend) the size of a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-truncate64" /></entry>
+    <entry>Truncate (or extend) the size of a large object, with 64-bit size</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-unlink" /></entry>
+    <entry>Delete a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-lo-write" /></entry>
+    <entry>Write to a large object</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-notice-handler" /></entry>
+    <entry>Set a callback for notice or warning messages from the server</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-on-connection-loss" /></entry>
+    <entry>Set a callback for unexpected connection loss</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-parameter-status" /></entry>
+    <entry>Get the value of a parameter from the database server</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-quote" /></entry>
+    <entry>Escape and quote a string for use in an SQL string</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-result" /></entry>
+    <entry>Get information about a command result</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-result-callback" /></entry>
+    <entry>Set a callback for asynchronous SQL command result availability</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-select" /></entry>
+    <entry>Execute an SQL command on the server and loop over the results</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-sendquery" /></entry>
+    <entry>Send an SQL command to the server for asynchronous execution</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-sendquery-params" /></entry>
+    <entry>Send a parameterized SQL command to the server for asynchronous execution</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-sendquery-prepared" /></entry>
+    <entry>Send a pre-prepared SQL command to the server for asynchronous execution</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-server-version" /></entry>
+    <entry>Get the PostgreSQL server software version as an integer</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-transaction-status" /></entry>
+    <entry>Get the current in-transaction status</entry>
+  </row>
+  <row>
+    <entry><xref linkend="pg-unescape-bytea" /></entry>
+    <entry>Unescape a string returned by an SQL query on a bytea (byte
+array) column, recovering the original binary string</entry>
+  </row>
+</tbody>
+</tgroup>
+</table>
+
+</chapter>
+

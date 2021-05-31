@@ -3,36 +3,36 @@
 <HEAD><TITLE>dde manual page - Tcl Bundled Packages</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> dde</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> dde</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="dde.htm#M2" NAME="L313">NAME</A>
-<DL><DD>dde &mdash; Execute a Dynamic Data Exchange command</DD></DL>
-<DD><A HREF="dde.htm#M3" NAME="L314">SYNOPSIS</A>
+<DD><A HREF="dde.htm#M2" NAME="L272">NAME</A>
+<DL><DD>dde - Execute a Dynamic Data Exchange command</DD></DL>
+<DD><A HREF="dde.htm#M3" NAME="L273">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="dde.htm#M4" NAME="L315">DESCRIPTION</A>
-<DD><A HREF="dde.htm#M5" NAME="L316">DDE COMMANDS</A>
+<DD><A HREF="dde.htm#M4" NAME="L274">DESCRIPTION</A>
+<DD><A HREF="dde.htm#M5" NAME="L275">DDE COMMANDS</A>
 <DL class="dde commands">
-<DD><A HREF="dde.htm#M6" NAME="L317"><B>dde servername </B>?<B>-force</B>? ?<B>-handler </B><I>proc</I>? ?<B>--</B>? ?<I>topic</I>?</A>
-<DD><A HREF="dde.htm#M7" NAME="L318"><B>dde execute</B> ?<B>-async</B>? ?<B>-binary</B>? <I>service topic data</I></A>
-<DD><A HREF="dde.htm#M8" NAME="L319"><B>dde poke</B> ?<B>-binary</B>? <I>service topic item data</I></A>
-<DD><A HREF="dde.htm#M9" NAME="L320"><B>dde request</B> ?<B>-binary</B>? <I>service topic item</I></A>
-<DD><A HREF="dde.htm#M10" NAME="L321"><B>dde services </B><I>service topic</I></A>
-<DD><A HREF="dde.htm#M11" NAME="L322"><B>dde eval</B> ?<B>-async</B>? <I>topic cmd </I>?<I>arg arg ...</I>?</A>
+<DD><A HREF="dde.htm#M6" NAME="L276"><B>dde servername </B>?<B>-force</B>? ?<B>-handler </B><I>proc</I>? ?<B>--</B>? ?<I>topic</I>?</A>
+<DD><A HREF="dde.htm#M7" NAME="L277"><B>dde execute</B> ?<B>-async</B>? <I>service topic data</I></A>
+<DD><A HREF="dde.htm#M8" NAME="L278"><B>dde poke </B><I>service topic item data</I></A>
+<DD><A HREF="dde.htm#M9" NAME="L279"><B>dde request</B> ?<B>-binary</B>? <I>service topic item</I></A>
+<DD><A HREF="dde.htm#M10" NAME="L280"><B>dde services </B><I>service topic</I></A>
+<DD><A HREF="dde.htm#M11" NAME="L281"><B>dde eval</B> ?<B>-async</B>? <I>topic cmd </I>?<I>arg arg ...</I>?</A>
 </DL>
-<DD><A HREF="dde.htm#M12" NAME="L323">DDE AND TCL</A>
-<DD><A HREF="dde.htm#M13" NAME="L324">EXAMPLE</A>
-<DD><A HREF="dde.htm#M14" NAME="L325">SEE ALSO</A>
-<DD><A HREF="dde.htm#M15" NAME="L326">KEYWORDS</A>
+<DD><A HREF="dde.htm#M12" NAME="L282">DDE AND TCL</A>
+<DD><A HREF="dde.htm#M13" NAME="L283">EXAMPLE</A>
+<DD><A HREF="dde.htm#M14" NAME="L284">SEE ALSO</A>
+<DD><A HREF="dde.htm#M15" NAME="L285">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-dde &mdash; Execute a Dynamic Data Exchange command
+dde - Execute a Dynamic Data Exchange command
 <H3><A NAME="M3">SYNOPSIS</A></H3>
-<B>package require dde 1.4</B><BR>
+<B>package require dde 1.3</B><BR>
 <B>dde servername</B> ?<B>-force</B>? ?<B>-handler </B><I>proc</I>? ?<B>--</B>? ?<I>topic</I>?<BR>
-<B>dde execute</B> ?<B>-async</B>? ?<B>-binary</B>? <I>service topic data</I><BR>
-<B>dde poke</B> ?<B>-binary</B>? <I>service topic item data</I><BR>
+<B>dde execute</B> ?<B>-async</B>? <I>service topic data</I><BR>
+<B>dde poke</B> <I>service topic item data</I><BR>
 <B>dde request</B> ?<B>-binary</B>? <I>service topic item</I><BR>
 <B>dde services </B><I>service topic</I><BR>
 <B>dde eval</B> ?<B>-async</B>? <I>topic cmd </I>?<I>arg arg ...</I>?<BR>
@@ -72,7 +72,7 @@ process calls to the dde server. If the package has been loaded into a
 safe interpreter then a <B>-handler</B> procedure must be defined. The
 procedure is called with all the arguments provided by the remote
 call.
-<P><DT><A NAME="M7"><B>dde execute</B> ?<B>-async</B>? ?<B>-binary</B>? <I>service topic data</I></A><DD>
+<P><DT><A NAME="M7"><B>dde execute</B> ?<B>-async</B>? <I>service topic data</I></A><DD>
 <B>dde execute</B> takes the <I>data</I> and sends it to the server indicated
 by <I>service</I> with the topic indicated by <I>topic</I>. Typically,
 <I>service</I> is the name of an application, and <I>topic</I> is a file to
@@ -82,12 +82,7 @@ script is run in the application.  The <B>-async</B> option requests
 asynchronous invocation.  The command returns an error message if the
 script did not run, unless the <B>-async</B> flag was used, in which case
 the command returns immediately with no error.
-Without the <B>-binary</B> option all data will be sent in unicode. For
-dde clients which don't implement the CF_UNICODE clipboard format, this
-will automatically be translated to the system encoding. You can use 
-the <B>-binary</B> option in combination with the result of
-<B><A HREF="../TclCmd/encoding.htm">encoding convertto</A></B> to send data in any other encoding.
-<P><DT><A NAME="M8"><B>dde poke</B> ?<B>-binary</B>? <I>service topic item data</I></A><DD>
+<P><DT><A NAME="M8"><B>dde poke </B><I>service topic item data</I></A><DD>
 <B>dde poke</B> passes the <I>data</I> to the server indicated by
 <I>service</I> using the <I>topic</I> and <I>item</I> specified.  Typically,
 <I>service</I> is the name of an application.  <I>topic</I> is application
@@ -95,11 +90,6 @@ specific but can be a command to the server or the name of a file to work
 on.  The <I>item</I> is also application specific and is often not used, but
 it must always be non-null.  The <I>data</I> field is given to the remote
 application.
-Without the <B>-binary</B> option all data will be sent in unicode. For
-dde clients which don't implement the CF_UNICODE clipboard format, this
-will automatically be translated to the system encoding. You can use 
-the <B>-binary</B> option in combination with the result of
-<B><A HREF="../TclCmd/encoding.htm">encoding convertto</A></B> to send data in any other encoding.
 <P><DT><A NAME="M9"><B>dde request</B> ?<B>-binary</B>? <I>service topic item</I></A><DD>
 <B>dde request</B> is typically used to get the value of something; the
 value of a cell in Microsoft Excel or the text of a selection in
@@ -162,14 +152,14 @@ situation.
 <H3><A NAME="M13">EXAMPLE</A></H3>
 This asks Internet Explorer (which must already be running) to go to a
 particularly important website:
-<P>
 <PRE>package require dde
-<B>dde execute</B> -async iexplore WWW_OpenURL <A HREF="http://www.tcl.tk/">http://www.tcl.tk/</A></PRE>
+<B>dde execute</B> -async iexplore WWW_OpenURL http://www.tcl.tk/</PRE>
 <H3><A NAME="M14">SEE ALSO</A></H3>
 <B><A HREF="../TkCmd/tk.htm">tk</A></B>, <B><A HREF="../TkCmd/winfo.htm">winfo</A></B>, <B><A HREF="../TkCmd/send.htm">send</A></B>
 <H3><A NAME="M15">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#application">application</A>, <A href="../Keywords/D.htm#dde">dde</A>, <A href="../Keywords/N.htm#name">name</A>, <A href="../Keywords/R.htm#remote execution">remote execution</A>
-<div class="copy">Copyright &copy; 1997 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1997 Sun Microsystems, Inc.
 Copyright &copy; 2001 ActiveState Corporation.
 </div>
 </BODY></HTML>

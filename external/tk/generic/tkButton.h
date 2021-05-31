@@ -292,7 +292,7 @@ typedef struct {
  * and button/label defaults, for use in optionSpecs.
  */
 
-MODULE_SCOPE const Tk_ClassProcs tkpButtonProcs;
+MODULE_SCOPE Tk_ClassProcs tkpButtonProcs;
 MODULE_SCOPE char tkDefButtonHighlightWidth[TCL_INTEGER_SPACE];
 MODULE_SCOPE char tkDefButtonPadx[TCL_INTEGER_SPACE];
 MODULE_SCOPE char tkDefButtonPady[TCL_INTEGER_SPACE];

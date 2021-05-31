@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_CreateSlave manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> CrtSlave</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> CrtSlave</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="CrtSlave.htm#M2" NAME="L180">NAME</A>
-<DL><DD>Tcl_IsSafe, Tcl_MakeSafe, Tcl_CreateSlave, Tcl_GetSlave, Tcl_GetMaster, Tcl_GetInterpPath, Tcl_CreateAlias, Tcl_CreateAliasObj, Tcl_GetAlias, Tcl_GetAliasObj, Tcl_ExposeCommand, Tcl_HideCommand &mdash; manage multiple Tcl interpreters, aliases and hidden commands</DD></DL>
-<DD><A HREF="CrtSlave.htm#M3" NAME="L181">SYNOPSIS</A>
+<DD><A HREF="CrtSlave.htm#M2" NAME="L153">NAME</A>
+<DL><DD>Tcl_IsSafe, Tcl_MakeSafe, Tcl_CreateSlave, Tcl_GetSlave, Tcl_GetMaster, Tcl_GetInterpPath, Tcl_CreateAlias, Tcl_CreateAliasObj, Tcl_GetAlias, Tcl_GetAliasObj, Tcl_ExposeCommand, Tcl_HideCommand - manage multiple Tcl interpreters, aliases and hidden commands</DD></DL>
+<DD><A HREF="CrtSlave.htm#M3" NAME="L154">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>int
@@ -25,30 +25,30 @@
 <DD><B>Tcl_GetInterpPath</B>(<I>askingInterp, slaveInterp</I>)
 <DD>int
 <DD><B>Tcl_CreateAlias</B>(<I>slaveInterp, slaveCmd, targetInterp, targetCmd,
-<DD>argc, argv</I>)
+<DD>                argc, argv</I>)
 <DD>int
 <DD><B>Tcl_CreateAliasObj</B>(<I>slaveInterp, slaveCmd, targetInterp, targetCmd,
-<DD>objc, objv</I>)
+<DD>                   objc, objv</I>)
 <DD>int
 <DD><B>Tcl_GetAlias</B>(<I>interp, slaveCmd, targetInterpPtr, targetCmdPtr,
-<DD>argcPtr, argvPtr</I>)
+<DD>             argcPtr, argvPtr</I>)
 <DD>int
 <DD><B>Tcl_GetAliasObj</B>(<I>interp, slaveCmd, targetInterpPtr, targetCmdPtr,
-<DD>objcPtr, objvPtr</I>)
+<DD>                objcPtr, objvPtr</I>)
 <DD>int
 <DD><B>Tcl_ExposeCommand</B>(<I>interp, hiddenCmdName, cmdName</I>)
 <DD>int
 <DD><B>Tcl_HideCommand</B>(<I>interp, cmdName, hiddenCmdName</I>)
 </DL>
-<DD><A HREF="CrtSlave.htm#M4" NAME="L182">ARGUMENTS</A>
+<DD><A HREF="CrtSlave.htm#M4" NAME="L155">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="CrtSlave.htm#M5" NAME="L183">DESCRIPTION</A>
-<DD><A HREF="CrtSlave.htm#M6" NAME="L184">SEE ALSO</A>
-<DD><A HREF="CrtSlave.htm#M7" NAME="L185">KEYWORDS</A>
+<DD><A HREF="CrtSlave.htm#M5" NAME="L156">DESCRIPTION</A>
+<DD><A HREF="CrtSlave.htm#M6" NAME="L157">SEE ALSO</A>
+<DD><A HREF="CrtSlave.htm#M7" NAME="L158">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_IsSafe, Tcl_MakeSafe, Tcl_CreateSlave, Tcl_GetSlave, Tcl_GetMaster, Tcl_GetInterpPath, Tcl_CreateAlias, Tcl_CreateAliasObj, Tcl_GetAlias, Tcl_GetAliasObj, Tcl_ExposeCommand, Tcl_HideCommand &mdash; manage multiple Tcl interpreters, aliases and hidden commands
+Tcl_IsSafe, Tcl_MakeSafe, Tcl_CreateSlave, Tcl_GetSlave, Tcl_GetMaster, Tcl_GetInterpPath, Tcl_CreateAlias, Tcl_CreateAliasObj, Tcl_GetAlias, Tcl_GetAliasObj, Tcl_ExposeCommand, Tcl_HideCommand - manage multiple Tcl interpreters, aliases and hidden commands
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 int<BR>
@@ -65,16 +65,16 @@ int<BR>
 <B>Tcl_GetInterpPath</B>(<I>askingInterp, slaveInterp</I>)<BR>
 int<BR>
 <B>Tcl_CreateAlias</B>(<I>slaveInterp, slaveCmd, targetInterp, targetCmd,<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>argc, argv</I>)<BR>
+                argc, argv</I>)<BR>
 int<BR>
 <B>Tcl_CreateAliasObj</B>(<I>slaveInterp, slaveCmd, targetInterp, targetCmd,<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>objc, objv</I>)<BR>
+                   objc, objv</I>)<BR>
 int<BR>
 <B>Tcl_GetAlias</B>(<I>interp, slaveCmd, targetInterpPtr, targetCmdPtr,<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>argcPtr, argvPtr</I>)<BR>
+             argcPtr, argvPtr</I>)<BR>
 int<BR>
 <B>Tcl_GetAliasObj</B>(<I>interp, slaveCmd, targetInterpPtr, targetCmdPtr,<BR>
-<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>objcPtr, objvPtr</I>)<BR>
+                objcPtr, objvPtr</I>)<BR>
 int<BR>
 <B>Tcl_ExposeCommand</B>(<I>interp, hiddenCmdName, cmdName</I>)<BR>
 int<BR>
@@ -99,16 +99,16 @@ Name of source command for alias.
 Interpreter that contains the target command for an alias.
 <P><DT>const char <B>*targetCmd</B> (in)<DD>
 Name of target command for alias in <I>targetInterp</I>.
-<P><DT>int <B><A HREF="../TclCmd/tclvars.htm">argc</A></B> (in)<DD>
+<P><DT>int <B>argc</B> (in)<DD>
 Count of additional arguments to pass to the alias command.
 <P><DT>const char *const <B>*argv</B> (in)<DD>
 Vector of strings, the additional arguments to pass to the alias command.
 This storage is owned by the caller.
 <P><DT>int <B>objc</B> (in)<DD>
-Count of additional value arguments to pass to the aliased command.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>**objv</B> (in)<DD>
-Vector of <A HREF="../TclLib/Object.htm">Tcl_Obj</A> structures, the additional value arguments to pass to
-the aliased command.
+Count of additional object arguments to pass to the alias object command.
+<P><DT>Tcl_Obj <B>**objv</B> (in)<DD>
+Vector of Tcl_Obj structures, the additional object arguments to pass to
+the alias object command.
 This storage is owned by the caller.
 <P><DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>**targetInterpPtr</B> (in)<DD>
 Pointer to location to store the address of the interpreter where a target
@@ -124,12 +124,12 @@ Pointer to location to store a vector of strings, the additional arguments
 to pass to an alias. The location is in storage owned by the caller, the
 vector of strings is owned by the called function.
 <P><DT>int <B>*objcPtr</B> (out)<DD>
-Pointer to location to store count of additional value arguments to be
+Pointer to location to store count of additional object arguments to be
 passed to the alias. The location is in storage owned by the caller.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>***objvPtr</B> (out)<DD>
-Pointer to location to store a vector of <A HREF="../TclLib/Object.htm">Tcl_Obj</A> structures, the additional
-arguments to pass to an alias command. The location is in storage
-owned by the caller, the vector of <A HREF="../TclLib/Object.htm">Tcl_Obj</A> structures is owned by the
+<P><DT>Tcl_Obj <B>***objvPtr</B> (out)<DD>
+Pointer to location to store a vector of Tcl_Obj structures, the additional
+arguments to pass to an object alias command. The location is in storage
+owned by the caller, the vector of Tcl_Obj structures is owned by the
 called function.
 <P><DT>const char <B>*cmdName</B> (in)<DD>
 Name of an exposed command to hide or create.
@@ -143,7 +143,7 @@ facility from inside C programs. They enable managing multiple interpreters
 in a hierarchical relationship, and the management of aliases, commands
 that when invoked in one interpreter execute a command in another
 interpreter. The return value for those procedures that return an <B>int</B>
-is either <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> or <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>. If <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned
+is either <B>TCL_OK</B> or <B>TCL_ERROR</B>. If <B>TCL_ERROR</B> is returned
 then the <B>result</B> field of the interpreter contains an error message.
 <P>
 <B>Tcl_CreateSlave</B> creates a new interpreter as a slave of <I>interp</I>.
@@ -186,17 +186,17 @@ top-level interpreter) then <B>NULL</B> is returned.
 <B>Tcl_GetInterpPath</B> sets the <I>result</I> field in <I>askingInterp</I>
 to the relative path between <I>askingInterp</I> and <I>slaveInterp</I>;
 <I>slaveInterp</I> must be a slave of <I>askingInterp</I>. If the computation
-of the relative path succeeds, <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> is returned, else
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned and the <I>result</I> field in
+of the relative path succeeds, <B>TCL_OK</B> is returned, else
+<B>TCL_ERROR</B> is returned and the <I>result</I> field in
 <I>askingInterp</I> contains the error message.
 <P>
-<B>Tcl_CreateAlias</B> creates a command named <I>slaveCmd</I> in
+<B>Tcl_CreateAlias</B> creates an object command named <I>slaveCmd</I> in
 <I>slaveInterp</I> that when invoked, will cause the command <I>targetCmd</I>
 to be invoked in <I>targetInterp</I>. The arguments specified by the strings
 contained in <I>argv</I> are always prepended to any arguments supplied in the
 invocation of <I>slaveCmd</I> and passed to <I>targetCmd</I>.
-This operation returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> if it succeeds, or <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> if
-it fails; in that case, an error message is left in the value result
+This operation returns <B>TCL_OK</B> if it succeeds, or <B>TCL_ERROR</B> if
+it fails; in that case, an error message is left in the object result
 of <I>slaveInterp</I>.
 Note that there are no restrictions on the ancestry relationship (as
 created by <B>Tcl_CreateSlave</B>) between <I>slaveInterp</I> and
@@ -204,7 +204,7 @@ created by <B>Tcl_CreateSlave</B>) between <I>slaveInterp</I> and
 restrictions on how they are related.
 <P>
 <B>Tcl_CreateAliasObj</B> is similar to <B>Tcl_CreateAlias</B> except 
-that it takes a vector of values to pass as additional arguments instead
+that it takes a vector of objects to pass as additional arguments instead
 of a vector of strings.
 <P>
 <B>Tcl_GetAlias</B> returns information about an alias <I>aliasName</I>
@@ -215,7 +215,7 @@ For example, if <I>targetNamePtr</I> is non-<B>NULL</B> it is set to a
 pointer to the string containing the name of the target command.
 <P>
 <B>Tcl_GetAliasObj</B> is similar to <B>Tcl_GetAlias</B> except that it
-returns a pointer to a vector of <A HREF="../TclLib/Object.htm">Tcl_Obj</A> structures instead of a vector of
+returns a pointer to a vector of Tcl_Obj structures instead of a vector of
 strings.
 <P>
 <B>Tcl_ExposeCommand</B> moves the command named <I>hiddenCmdName</I> from
@@ -223,12 +223,12 @@ the set of hidden commands to the set of exposed commands, putting
 it under the name
 <I>cmdName</I>. 
 <I>HiddenCmdName</I> must be the name of an existing hidden
-command, or the operation will return <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> and leave an error
+command, or the operation will return <B>TCL_ERROR</B> and leave an error
 message in the <I>result</I> field in <I>interp</I>.
 If an exposed command named <I>cmdName</I> already exists,
-the operation returns <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> and leaves an error message in the
-value result of <I>interp</I>.
-If the operation succeeds, it returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.
+the operation returns <B>TCL_ERROR</B> and leaves an error message in the
+object result of <I>interp</I>.
+If the operation succeeds, it returns <B>TCL_OK</B>.
 After executing this command, attempts to use <I>cmdName</I> in a call to
 <B><A HREF="../TclLib/Eval.htm">Tcl_Eval</A></B> or with the Tcl <B><A HREF="../TclCmd/eval.htm">eval</A></B> command will again succeed.
 <P>
@@ -236,18 +236,18 @@ After executing this command, attempts to use <I>cmdName</I> in a call to
 exposed commands to the set of hidden commands, under the name
 <I>hiddenCmdName</I>.
 <I>CmdName</I> must be the name of an existing exposed
-command, or the operation will return <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> and leave an error
-message in the value result of <I>interp</I>.
+command, or the operation will return <B>TCL_ERROR</B> and leave an error
+message in the object result of <I>interp</I>.
 Currently both <I>cmdName</I> and <I>hiddenCmdName</I> must not contain
-namespace qualifiers, or the operation will return <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> and
-leave an error message in the value result of <I>interp</I>.
+namespace qualifiers, or the operation will return <B>TCL_ERROR</B> and
+leave an error message in the object result of <I>interp</I>.
 The <I>CmdName</I> will be looked up in the global namespace, and not
 relative to the current namespace, even if the current namespace is not the
 global one.
 If a hidden command whose name is <I>hiddenCmdName</I> already
-exists, the operation also returns <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> and the <I>result</I>
+exists, the operation also returns <B>TCL_ERROR</B> and the <I>result</I>
 field in <I>interp</I> contains an error message.
-If the operation succeeds, it returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.
+If the operation succeeds, it returns <B>TCL_OK</B>.
 After executing this command, attempts to use <I>cmdName</I> in a call to
 <B><A HREF="../TclLib/Eval.htm">Tcl_Eval</A></B> or with the Tcl <B><A HREF="../TclCmd/eval.htm">eval</A></B> command will fail.
 <P>
@@ -257,6 +257,7 @@ For a description of the Tcl interface to multiple interpreters, see
 <B><A HREF="../TclCmd/interp.htm">interp</A></B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#alias">alias</A>, <A href="../Keywords/C.htm#command">command</A>, <A href="../Keywords/E.htm#exposed commands">exposed commands</A>, <A href="../Keywords/H.htm#hidden commands">hidden commands</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/I.htm#invoke">invoke</A>, <A href="../Keywords/M.htm#master">master</A>, <A href="../Keywords/S.htm#slave">slave</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -20,7 +20,6 @@ library tk
 
 interface tk
 hooks {tkPlat tkInt tkIntPlat tkIntXlib}
-scspec EXTERN
 
 # Declare each of the functions in the public Tk interface.  Note that
 # the an index should never be reused for a different function in order
@@ -105,7 +104,7 @@ declare 18 {
 	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
 }
 declare 19 {
-    CONST86 char *Tk_CanvasTagsPrintProc(ClientData clientData, Tk_Window tkwin,
+    char *Tk_CanvasTagsPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
 declare 20 {
@@ -128,24 +127,24 @@ declare 24 {
 }
 declare 25 {
     int Tk_ClipboardAppend(Tcl_Interp *interp, Tk_Window tkwin,
-	    Atom target, Atom format, const char *buffer)
+	    Atom target, Atom format, char *buffer)
 }
 declare 26 {
     int Tk_ClipboardClear(Tcl_Interp *interp, Tk_Window tkwin)
 }
 declare 27 {
     int Tk_ConfigureInfo(Tcl_Interp *interp,
-	    Tk_Window tkwin, const Tk_ConfigSpec *specs,
+	    Tk_Window tkwin, Tk_ConfigSpec *specs,
 	    char *widgRec, const char *argvName, int flags)
 }
 declare 28 {
     int Tk_ConfigureValue(Tcl_Interp *interp,
-	    Tk_Window tkwin, const Tk_ConfigSpec *specs,
+	    Tk_Window tkwin, Tk_ConfigSpec *specs,
 	    char *widgRec, const char *argvName, int flags)
 }
 declare 29 {
     int Tk_ConfigureWidget(Tcl_Interp *interp,
-	    Tk_Window tkwin, const Tk_ConfigSpec *specs,
+	    Tk_Window tkwin, Tk_ConfigSpec *specs,
 	    int argc, CONST84 char **argv, char *widgRec,
 	    int flags)
 }
@@ -165,7 +164,7 @@ declare 32 {
 declare 33 {
     unsigned long Tk_CreateBinding(Tcl_Interp *interp,
 	    Tk_BindingTable bindingTable, ClientData object,
-	    const char *eventStr, const char *script, int append)
+	    const char *eventStr, const char *command, int append)
 }
 declare 34 {
     Tk_BindingTable Tk_CreateBindingTable(Tcl_Interp *interp)
@@ -184,13 +183,13 @@ declare 37 {
     void Tk_CreateGenericHandler(Tk_GenericProc *proc, ClientData clientData)
 }
 declare 38 {
-    void Tk_CreateImageType(const Tk_ImageType *typePtr)
+    void Tk_CreateImageType(Tk_ImageType *typePtr)
 }
 declare 39 {
     void Tk_CreateItemType(Tk_ItemType *typePtr)
 }
 declare 40 {
-    void Tk_CreatePhotoImageFormat(const Tk_PhotoImageFormat *formatPtr)
+    void Tk_CreatePhotoImageFormat(Tk_PhotoImageFormat *formatPtr)
 }
 declare 41 {
     void Tk_CreateSelHandler(Tk_Window tkwin,
@@ -208,7 +207,7 @@ declare 43 {
 }
 declare 44 {
     int Tk_DefineBitmap(Tcl_Interp *interp, const char *name,
-	    const void *source, int width, int height)
+	    const char *source, int width, int height)
 }
 declare 45 {
     void Tk_DefineCursor(Tk_Window window, Tk_Cursor cursor)
@@ -317,7 +316,7 @@ declare 73 {
     void Tk_FreeImage(Tk_Image image)
 }
 declare 74 {
-    void Tk_FreeOptions(const Tk_ConfigSpec *specs,
+    void Tk_FreeOptions(Tk_ConfigSpec *specs,
 	    char *widgRec, Display *display, int needFlags)
 }
 declare 75 {
@@ -360,7 +359,7 @@ declare 85 {
 }
 declare 86 {
     Pixmap Tk_GetBitmapFromData(Tcl_Interp *interp,
-	    Tk_Window tkwin, const void *source, int width, int height)
+	    Tk_Window tkwin, const char *source, int width, int height)
 }
 declare 87 {
     int Tk_GetCapStyle(Tcl_Interp *interp, const char *str, int *capPtr)
@@ -404,7 +403,7 @@ declare 97 {
 }
 declare 98 {
     ClientData Tk_GetImageMasterData(Tcl_Interp *interp,
-	    const char *name, CONST86 Tk_ImageType **typePtrPtr)
+	    const char *name, Tk_ImageType **typePtrPtr)
 }
 declare 99 {
     Tk_ItemType *Tk_GetItemTypes(void)
@@ -472,7 +471,7 @@ declare 116 {
     Tk_Window Tk_IdToWindow(Display *display, Window window)
 }
 declare 117 {
-    void Tk_ImageChanged(Tk_ImageMaster model, int x, int y,
+    void Tk_ImageChanged(Tk_ImageMaster master, int x, int y,
 	    int width, int height, int imageWidth, int imageHeight)
 }
 declare 118 {
@@ -486,8 +485,8 @@ declare 120 {
 	    int width, int height)
 }
 declare 121 {
-    void Tk_MaintainGeometry(Tk_Window window,
-	    Tk_Window container, int x, int y, int width, int height)
+    void Tk_MaintainGeometry(Tk_Window slave,
+	    Tk_Window master, int x, int y, int width, int height)
 }
 declare 122 {
     Tk_Window Tk_MainWindow(Tcl_Interp *interp)
@@ -539,7 +538,7 @@ declare 136 {
     CONST84_RETURN char *Tk_NameOfFont(Tk_Font font)
 }
 declare 137 {
-    CONST84_RETURN char *Tk_NameOfImage(Tk_ImageMaster model)
+    CONST84_RETURN char *Tk_NameOfImage(Tk_ImageMaster imageMaster)
 }
 declare 138 {
     CONST84_RETURN char *Tk_NameOfJoinStyle(int join)
@@ -562,7 +561,7 @@ declare 142 {
 declare 143 {
     int Tk_ParseArgv(Tcl_Interp *interp,
 	    Tk_Window tkwin, int *argcPtr, CONST84 char **argv,
-	    const Tk_ArgvInfo *argTable, int flags)
+	    Tk_ArgvInfo *argTable, int flags)
 }
 declare 144 {
     void Tk_PhotoPutBlock_NoComposite(Tk_PhotoHandle handle,
@@ -692,7 +691,7 @@ declare 180 {
     void Tk_Ungrab(Tk_Window tkwin)
 }
 declare 181 {
-    void Tk_UnmaintainGeometry(Tk_Window window, Tk_Window container)
+    void Tk_UnmaintainGeometry(Tk_Window slave, Tk_Window master)
 }
 declare 182 {
     void Tk_UnmapWindow(Tk_Window tkwin)
@@ -825,7 +824,7 @@ declare 216 {
     int Tk_CreateConsoleWindow(Tcl_Interp *interp)
 }
 declare 217 {
-    void Tk_CreateSmoothMethod(Tcl_Interp *interp, const Tk_SmoothMethod *method)
+    void Tk_CreateSmoothMethod(Tcl_Interp *interp, Tk_SmoothMethod *method)
 }
 #declare 218 {
 #    void Tk_CreateCanvasVisitor(Tcl_Interp *interp, void *typePtr)
@@ -924,7 +923,7 @@ declare 241 {
 }
 declare 242 {
     void Tk_SetClassProcs(Tk_Window tkwin,
-	    const Tk_ClassProcs *procs, ClientData instanceData)
+	    Tk_ClassProcs *procs, ClientData instanceData)
 }
 
 # New in 8.4a4
@@ -1063,10 +1062,10 @@ declare 271 {
 # Developers who need to produce a file [load]able into legacy interps must
 # build against legacy sources.
 declare 272 {
-    void Tk_CreateOldImageType(const Tk_ImageType *typePtr)
+    void Tk_CreateOldImageType(Tk_ImageType *typePtr)
 }
 declare 273 {
-    void Tk_CreateOldPhotoImageFormat(const Tk_PhotoImageFormat *formatPtr)
+    void Tk_CreateOldPhotoImageFormat(Tk_PhotoImageFormat *formatPtr)
 }
 declare 280 {
     void TkUnusedStubEntry(void)
@@ -1142,19 +1141,8 @@ declare 9 aqua {
 declare 10 aqua {
     int Tk_MacOSXIsAppInFront(void)
 }
-declare 11 aqua {
-    Tk_Window Tk_MacOSXGetTkWindow(void *w)
-}
-declare 12 aqua {
-    void *Tk_MacOSXGetCGContextForDrawable(Drawable drawable)
-}
-# Replaces TkMacOSXDrawable
-declare 13 aqua {
-    void *Tk_MacOSXGetNSWindowForDrawable(Drawable drawable)
-}
 declare 16 aqua {
-    void TkGenWMConfigureEvent_(Tk_Window tkwin, int x, int y, int width,
-	    int height, int flags)
+    void TkUnusedStubEntry(void)
 }
 
 ##############################################################################
@@ -1162,8 +1150,30 @@ declare 16 aqua {
 # Public functions that are not accessible via the stubs table.
 
 export {
+    const char *Tk_InitStubs(Tcl_Interp *interp, const char *version,
+	    int exact)
+}
+export {
     const char *Tk_PkgInitStubsCheck(Tcl_Interp *interp, const char *version,
 	    int exact)
+}
+
+# Global variables that need to be exported from the tcl shared library.
+
+export {
+    TkStubs *tkStubsPtr                         (fool checkstubs)
+}
+export {
+    TkPlatStubs *tkPlatStubsPtr                 (fool checkstubs)
+}
+export {
+    TkIntStubs *tkIntStubsPtr                   (fool checkstubs)
+}
+export {
+    TkIntPlatStubs *tkIntPlatStubsPtr           (fool checkstubs)
+}
+export {
+    TkIntXlibStubs *tkIntXlibStubsPtr           (fool checkstubs)
 }
 
 # Local Variables:

@@ -3,10 +3,10 @@
 <HEAD><TITLE>Tcl_StaticPackage manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> StaticPkg</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> StaticPkg</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_StaticPackage &mdash; make a statically linked package available via the 'load' command
+Tcl_StaticPackage - make a statically linked package available via the 'load' command
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 <B>Tcl_StaticPackage</B>(<I>interp, pkgName, initProc, safeInitProc</I>)<BR>
@@ -25,7 +25,7 @@ Procedure to invoke to incorporate this package into a trusted
 interpreter.
 <P><DT>Tcl_PackageInitProc <B>*safeInitProc</B> (in)<DD>
 Procedure to call to incorporate this package into a safe interpreter
-(one that will execute untrusted scripts).  NULL means the package
+(one that will execute untrusted scripts).   NULL means the package
 cannot be used in safe interpreters.
 <P></DL>
 <H3><A NAME="M5">DESCRIPTION</A></H3>
@@ -46,21 +46,18 @@ be invoked, depending on whether the target interpreter is safe
 or not.
 <I>initProc</I> and <I>safeInitProc</I> must both match the
 following prototype:
-<P>
-<PRE>typedef int <B>Tcl_PackageInitProc</B>(
-        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>);</PRE>
-<P>
+<PRE>typedef int Tcl_PackageInitProc(<A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>);</PRE>
 The <I>interp</I> argument identifies the interpreter in which the package
-is to be loaded.  The initialization procedure must return <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> or
-<B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> to indicate whether or not it completed successfully; in
+is to be loaded.  The initialization procedure must return <B>TCL_OK</B> or
+<B>TCL_ERROR</B> to indicate whether or not it completed successfully; in
 the event of an error it should set the interpreter's result to point to an
 error message.  The result or error from the initialization procedure will
 be returned as the result of the <B><A HREF="../TclCmd/load.htm">load</A></B> command that caused the
 initialization procedure to be invoked.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/I.htm#initialization procedure">initialization procedure</A>, <A href="../Keywords/P.htm#package">package</A>, <A href="../Keywords/S.htm#static linking">static linking</A>
-<H3><A NAME="M7">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/load.htm">load</A></B>, <B><A HREF="../TclCmd/package.htm">package</A></B>, <B><A HREF="../TclLib/PkgRequire.htm">Tcl_PkgRequire</A></B>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

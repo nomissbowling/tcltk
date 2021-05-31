@@ -3,10 +3,10 @@
 <HEAD><TITLE>fileevent manual page - Tcl Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl Commands, version 8.6.0</a> <small>&gt;</small> fileevent</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclCmd</a> <small>&gt;</small> fileevent</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-fileevent &mdash; Execute a script when a channel becomes readable or writable
+fileevent - Execute a script when a channel becomes readable or writable
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>fileevent </B><I>channelId </I><B>readable </B>?<I>script</I>?<BR>
 <B>fileevent </B><I>channelId </I><B>writable </B>?<I>script</I>?<BR>
@@ -27,8 +27,8 @@ tell when data is present and only invoke <B><A HREF="../TclCmd/gets.htm">gets</
 they will not block.
 <P>
 The <I>channelId</I> argument to <B>fileevent</B> refers to an open
-channel such as a Tcl standard channel (<B><A HREF="../TclLib/GetStdChan.htm">stdin</A></B>, <B><A HREF="../TclLib/GetStdChan.htm">stdout</A></B>,
-or <B><A HREF="../TclLib/GetStdChan.htm">stderr</A></B>), the return value from an invocation of <B><A HREF="../TclCmd/open.htm">open</A></B>
+channel such as a Tcl standard channel (<B>stdin</B>, <B>stdout</B>,
+or <B>stderr</B>), the return value from an invocation of <B><A HREF="../TclCmd/open.htm">open</A></B>
 or <B><A HREF="../TclCmd/socket.htm">socket</A></B>, or the result of a channel creation command provided
 by a Tcl extension.
 <P>
@@ -82,11 +82,6 @@ In nonblocking mode <B><A HREF="../TclCmd/puts.htm">puts</A></B>, <B><A HREF="..
 See the documentation for the individual commands for information
 on how they handle blocking and nonblocking channels.
 <P>
-Testing for the end of file condition should be done after any attempts
-read the channel data. The eof flag is set once an attempt to read the
-end of data has occurred and testing before this read will require an
-additional event to be fired.
-<P>
 The script for a file event is executed at global level (outside the
 context of any Tcl procedure) in the interpreter in which the
 <B>fileevent</B> command was invoked.
@@ -97,46 +92,24 @@ an error;  this is done in order to prevent infinite loops due to
 buggy handlers.
 <H3><A NAME="M5">EXAMPLE</A></H3>
 In this setup <B>GetData</B> will be called with the channel as an
-argument whenever $chan becomes readable. The <B><A HREF="../TclCmd/read.htm">read</A></B> call will
-read whatever binary data is currently available without blocking.
-Here the channel has the fileevent removed when an end of file 
-occurs to avoid being continually called (see above). Alternatively
-the channel may be closed on this condition.
-<P>
+argument whenever $chan becomes readable.
 <PRE>proc GetData {chan} {
-    set data [read $chan]
-    puts &quot;[string length $data] $data&quot;
-    if {[eof $chan]} {
-        fileevent $chan readable {}
+    if {![eof $chan]} {
+        puts [gets $chan]
     }
 }
 
-fconfigure $chan -blocking 0 -encoding binary
-<B>fileevent</B> $chan readable [list GetData $chan]</PRE>
-<P>
-The next example demonstrates use of <B><A HREF="../TclCmd/gets.htm">gets</A></B> to read line-oriented
-data.
-<P>
-<PRE>proc GetData {chan} {
-    if {[gets $chan line] &gt;= 0} {
-        puts $line
-    }
-    if {[eof $chan]} {
-        close $chan
-    }
-}
-
-fconfigure $chan -blocking 0 -buffering line -translation crlf
 <B>fileevent</B> $chan readable [list GetData $chan]</PRE>
 <H3><A NAME="M6">CREDITS</A></H3>
 <B>fileevent</B> is based on the <B>addinput</B> command created
 by Mark Diekhans.
+
 <H3><A NAME="M7">SEE ALSO</A></H3>
 <B><A HREF="../TclCmd/fconfigure.htm">fconfigure</A></B>, <B><A HREF="../TclCmd/gets.htm">gets</A></B>, <B><A HREF="../TclCmd/interp.htm">interp</A></B>, <B><A HREF="../TclCmd/puts.htm">puts</A></B>, <B><A HREF="../TclCmd/read.htm">read</A></B>, <B><A HREF="../TclLib/StdChannels.htm">Tcl_StandardChannels</A></B>
 <H3><A NAME="M8">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#asynchronous I/O">asynchronous I/O</A>, <A href="../Keywords/B.htm#blocking">blocking</A>, <A href="../Keywords/C.htm#channel">channel</A>, <A href="../Keywords/E.htm#event handler">event handler</A>, <A href="../Keywords/N.htm#nonblocking">nonblocking</A>, <A href="../Keywords/R.htm#readable">readable</A>, <A href="../Keywords/S.htm#script">script</A>, <A href="../Keywords/W.htm#writable.">writable.</A>
-<div class="copy">Copyright &copy; 1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
-Copyright &copy; 2008 Pat Thoyts
 </div>
 </BODY></HTML>

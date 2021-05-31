@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_CreateBindingTable manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> BindTable</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> BindTable</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="BindTable.htm#M2" NAME="L16">NAME</A>
-<DL><DD>Tk_CreateBindingTable, Tk_DeleteBindingTable, Tk_CreateBinding, Tk_DeleteBinding, Tk_GetBinding, Tk_GetAllBindings, Tk_DeleteAllBindings, Tk_BindEvent &mdash; invoke scripts in response to X events</DD></DL>
+<DL><DD>Tk_CreateBindingTable, Tk_DeleteBindingTable, Tk_CreateBinding, Tk_DeleteBinding, Tk_GetBinding, Tk_GetAllBindings, Tk_DeleteAllBindings, Tk_BindEvent - invoke scripts in response to X events</DD></DL>
 <DD><A HREF="BindTable.htm#M3" NAME="L17">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -31,7 +31,7 @@
 <DD><A HREF="BindTable.htm#M6" NAME="L20">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CreateBindingTable, Tk_DeleteBindingTable, Tk_CreateBinding, Tk_DeleteBinding, Tk_GetBinding, Tk_GetAllBindings, Tk_DeleteAllBindings, Tk_BindEvent &mdash; invoke scripts in response to X events
+Tk_CreateBindingTable, Tk_DeleteBindingTable, Tk_CreateBinding, Tk_DeleteBinding, Tk_GetBinding, Tk_GetAllBindings, Tk_DeleteAllBindings, Tk_BindEvent - invoke scripts in response to X events
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Tk_BindingTable<BR>
@@ -58,14 +58,14 @@ call to <B>Tk_CreateBindingTable</B>.
 Identifies object with which binding is associated.
 <P><DT>const char <B>*eventString</B> (in)<DD>
 String describing event sequence.
-<P><DT>const char <B>*script</B> (in)<DD>
+<P><DT>char <B>*script</B> (in)<DD>
 Tcl script to invoke when binding triggers.
 <P><DT>int <B><A HREF="../TclCmd/append.htm">append</A></B> (in)<DD>
 Non-zero means append <I>script</I> to existing script for binding,
 if any; zero means replace existing script with new one.
 <P><DT>XEvent <B>*eventPtr</B> (in)<DD>
 X event to match against bindings in <I>bindingTable</I>.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Identifier for any window on the display where the event occurred.
 Used to find display-related information such as key maps.
 <P><DT>int <B>numObjects</B> (in)<DD>
@@ -123,25 +123,25 @@ select relevant events, or to disallow the use of certain events
 in bindings.
 If an error occurred while creating the binding (e.g., <I>eventString</I>
 refers to a non-existent event), then 0 is returned and an error
-message is left as the result of interpreter <I>interp</I>.
+message is left in <I>interp-&gt;result</I>.
 <P>
 <B>Tk_DeleteBinding</B> removes from <I>bindingTable</I> the
 binding given by <I>object</I> and <I>eventString</I>, if
 such a binding exists.
-<B>Tk_DeleteBinding</B> always returns <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.
-In some cases it may reset the interpreter result to the default
+<B>Tk_DeleteBinding</B> always returns <B>TCL_OK</B>.
+In some cases it may reset <I>interp-&gt;result</I> to the default
 empty value.
 <P>
 <B>Tk_GetBinding</B> returns a pointer to the script associated
 with <I>eventString</I> and <I>object</I> in <I>bindingTable</I>.
 If no such binding exists then NULL is returned and an error
-message is left as the result of interpreter <I>interp</I>.
+message is left in <I>interp-&gt;result</I>.
 <P>
-<B>Tk_GetAllBindings</B> returns in <I>interp</I>'s result a list
+<B>Tk_GetAllBindings</B> returns in <I>interp-&gt;result</I> a list
 of all the event strings for which there are bindings in
 <I>bindingTable</I> associated with <I>object</I>.
-If there are no bindings for <I>object</I>, the result will be an empty
-string.
+If there are no bindings for <I>object</I> then an empty
+string is returned in <I>interp-&gt;result</I>.
 <P>
 <B>Tk_DeleteAllBindings</B> deletes all of the bindings in
 <I>bindingTable</I> that are associated with <I>object</I>.
@@ -161,9 +161,11 @@ the object is skipped.
 <B>Tk_BindEvent</B> continues through all of the objects, handling
 exceptions such as errors, <B><A HREF="../TclCmd/break.htm">break</A></B>, and <B><A HREF="../TclCmd/continue.htm">continue</A></B> as
 described in the documentation for <B><A HREF="../TkCmd/bind.htm">bind</A></B>.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#binding">binding</A>, <A href="../Keywords/E.htm#event">event</A>, <A href="../Keywords/O.htm#object">object</A>, <A href="../Keywords/S.htm#script">script</A>
-<div class="copy">Copyright &copy; 1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

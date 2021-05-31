@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_MeasureChars manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> MeasureChar</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> MeasureChar</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="MeasureChar.htm#M2" NAME="L462">NAME</A>
-<DL><DD>Tk_MeasureChars, Tk_TextWidth, Tk_DrawChars, Tk_UnderlineChars &mdash; routines to measure and display simple single-line strings.</DD></DL>
-<DD><A HREF="MeasureChar.htm#M3" NAME="L463">SYNOPSIS</A>
+<DD><A HREF="MeasureChar.htm#M2" NAME="L460">NAME</A>
+<DL><DD>Tk_MeasureChars, Tk_TextWidth, Tk_DrawChars, Tk_UnderlineChars - routines to measure and display simple single-line strings.</DD></DL>
+<DD><A HREF="MeasureChar.htm#M3" NAME="L461">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>int
@@ -18,15 +18,15 @@
 <DD><B>Tk_DrawChars(</B><I>display, drawable, gc, tkfont, string, numBytes, x, y</I><B>)</B>
 <DD><B>Tk_UnderlineChars(</B><I>display, drawable, gc, tkfont, string, x, y, firstByte, lastByte</I><B>)</B>
 </DL>
-<DD><A HREF="MeasureChar.htm#M4" NAME="L464">ARGUMENTS</A>
+<DD><A HREF="MeasureChar.htm#M4" NAME="L462">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="MeasureChar.htm#M5" NAME="L465">DESCRIPTION</A>
-<DD><A HREF="MeasureChar.htm#M6" NAME="L466">SEE ALSO</A>
-<DD><A HREF="MeasureChar.htm#M7" NAME="L467">KEYWORDS</A>
+<DD><A HREF="MeasureChar.htm#M5" NAME="L463">DESCRIPTION</A>
+<DD><A HREF="MeasureChar.htm#M6" NAME="L464">SEE ALSO</A>
+<DD><A HREF="MeasureChar.htm#M7" NAME="L465">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_MeasureChars, Tk_TextWidth, Tk_DrawChars, Tk_UnderlineChars &mdash; routines to measure and display simple single-line strings.
+Tk_MeasureChars, Tk_TextWidth, Tk_DrawChars, Tk_UnderlineChars - routines to measure and display simple single-line strings.
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 int<BR>
@@ -37,7 +37,7 @@ int<BR>
 <B>Tk_UnderlineChars(</B><I>display, drawable, gc, tkfont, string, x, y, firstByte, lastByte</I><B>)</B><BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
-<DT><A HREF="../TkLib/GetFont.htm">Tk_Font</A> <B>tkfont</B> (in)<DD>
+<DT>Tk_Font <B>tkfont</B> (in)<DD>
 Token for font in which text is to be drawn or measured.  Must have been
 returned by a previous call to <B><A HREF="../TkLib/GetFont.htm">Tk_GetFont</A></B>.
 <P><DT>const char <B>*string</B> (in)<DD>
@@ -136,6 +136,7 @@ text, the appropriate underlined font should be constructed and used.
 <B><A HREF="../TkCmd/font.htm">font</A></B>, <B>FontId</B>
 <H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/F.htm#font">font</A>, <A href="../Keywords/M.htm#measurement">measurement</A>
-<div class="copy">Copyright &copy; 1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

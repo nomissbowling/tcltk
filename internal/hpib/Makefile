@@ -4,7 +4,7 @@ SOURCES.c = tclHPIB.c tclAppInit.c tclConfig.c tclSRQ.c
 SOURCES.h = tclHPIB.h tclConfig.h
 OBJECTS   = $(SOURCES.c:%.c=%.o)
 INCLUDES  = -I"$(INSTALLDIR)/include"
-LDLIBS  = -ltcl8.6 -lsicl
+LDLIBS  = -ltcl8.5 -lsicl
 LDFLAGS = -L"$(INSTALLDIR)/lib"
 
 ## Compiler flags

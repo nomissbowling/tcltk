@@ -3,27 +3,10 @@
 <HEAD><TITLE>Tcl_DoWhenIdle manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> DoWhenIdle</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
-<DL>
-<DD><A HREF="DoWhenIdle.htm#M2" NAME="L226">NAME</A>
-<DL><DD>Tcl_DoWhenIdle, Tcl_CancelIdleCall &mdash; invoke a procedure when there are no pending events</DD></DL>
-<DD><A HREF="DoWhenIdle.htm#M3" NAME="L227">SYNOPSIS</A>
-<DL>
-<DD><B>#include &lt;tcl.h&gt;</B>
-<DD><B>Tcl_DoWhenIdle</B>(<I>proc, clientData</I>)
-<DD><B>Tcl_CancelIdleCall</B>(<I>proc, clientData</I>)
-</DL>
-<DD><A HREF="DoWhenIdle.htm#M4" NAME="L228">ARGUMENTS</A>
-<DL class="arguments">
-</DL>
-<DD><A HREF="DoWhenIdle.htm#M5" NAME="L229">DESCRIPTION</A>
-<DD><A HREF="DoWhenIdle.htm#M6" NAME="L230">BUGS</A>
-<DD><A HREF="DoWhenIdle.htm#M7" NAME="L231">SEE ALSO</A>
-<DD><A HREF="DoWhenIdle.htm#M8" NAME="L232">KEYWORDS</A>
-</DL>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> DoWhenIdle</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_DoWhenIdle, Tcl_CancelIdleCall &mdash; invoke a procedure when there are no pending events
+Tcl_DoWhenIdle, Tcl_CancelIdleCall - invoke a procedure when there are no pending events
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 <B>Tcl_DoWhenIdle</B>(<I>proc, clientData</I>)<BR>
@@ -50,10 +33,7 @@ use <B><A HREF="../TclLib/DoOneEvent.htm">Tcl_DoOneEvent</A></B> to dispatch eve
 <P>
 <I>Proc</I> should have arguments and result that match the
 type <B>Tcl_IdleProc</B>:
-<P>
-<PRE>typedef void <B>Tcl_IdleProc</B>(
-        ClientData <I>clientData</I>);</PRE>
-<P>
+<PRE>typedef void Tcl_IdleProc(ClientData <I>clientData</I>);</PRE>
 The <I>clientData</I> parameter to <I>proc</I> is a copy of the <I>clientData</I>
 argument given to <B>Tcl_DoWhenIdle</B>.  Typically, <I>clientData</I>
 points to a data structure containing application-specific information about
@@ -88,11 +68,11 @@ continuously.  This will interact badly with certain features of Tk
 that attempt to wait for all idle callbacks to complete.  If you would
 like for an idle callback to reschedule itself continuously, it is
 better to use a timer handler with a zero timeout period.
-<H3><A NAME="M7">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/after.htm">after</A></B>, <B><A HREF="../TclLib/CrtFileHdlr.htm">Tcl_CreateFileHandler</A></B>, <B><A HREF="../TclLib/CrtTimerHdlr.htm">Tcl_CreateTimerHandler</A></B>
-<H3><A NAME="M8">KEYWORDS</A></H3>
+
+<H3><A NAME="M7">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#callback">callback</A>, <A href="../Keywords/D.htm#defer">defer</A>, <A href="../Keywords/I.htm#idle callback">idle callback</A>
-<div class="copy">Copyright &copy; 1990 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

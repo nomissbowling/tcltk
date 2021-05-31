@@ -3,11 +3,11 @@
 <HEAD><TITLE>Tk_CreateImageType manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> CrtImgType</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> CrtImgType</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="CrtImgType.htm#M2" NAME="L120">NAME</A>
-<DL><DD>Tk_CreateImageType, Tk_GetImageMasterData, Tk_InitImageArgs &mdash; define new kind of image</DD></DL>
+<DL><DD>Tk_CreateImageType, Tk_GetImageMasterData, Tk_InitImageArgs - define new kind of image</DD></DL>
 <DD><A HREF="CrtImgType.htm#M3" NAME="L121">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
@@ -32,7 +32,7 @@
 <DD><A HREF="CrtImgType.htm#M15" NAME="L133">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_CreateImageType, Tk_GetImageMasterData, Tk_InitImageArgs &mdash; define new kind of image
+Tk_CreateImageType, Tk_GetImageMasterData, Tk_InitImageArgs - define new kind of image
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 <B>Tk_CreateImageType</B>(<I>typePtr</I>)<BR>
@@ -41,11 +41,10 @@ ClientData<BR>
 <B>Tk_InitImageArgs</B>(<I>interp, argc, argvPtr</I>)<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
-<DT>const Tk_ImageType <B>*typePtr</B> (in)<DD>
+<DT>Tk_ImageType <B>*typePtr</B> (in)<DD>
 Structure that defines the new type of image.
-For Tk 8.4 and earlier this must be static: a
+Must be static: a
 pointer to this structure is retained by the image code.
-In Tk 8.5, this limitation was relaxed.
 <P><DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter in which image was created.
 <P><DT>const char <B>*name</B> (in)<DD>
@@ -53,7 +52,7 @@ Name of existing image.
 <P><DT>Tk_ImageType <B>**typePtrPtr</B> (out)<DD>
 Points to word in which to store a pointer to type information for
 the given image, if it exists.
-<P><DT>int <B><A HREF="../TclCmd/tclvars.htm">argc</A></B> (in)<DD>
+<P><DT>int <B>argc</B> (in)<DD>
 Number of arguments
 <P><DT>char <B>***argvPtr</B> (in/out)<DD>
 Pointer to argument list
@@ -76,13 +75,13 @@ The first data structure is a Tk_ImageType structure, which contains
 the name of the image type and pointers to five procedures provided
 by the image manager to deal with images of this type:
 <PRE>typedef struct Tk_ImageType {
-    const char *<I>name</I>;
+    char *<I>name</I>;
     Tk_ImageCreateProc *<I>createProc</I>;
     Tk_ImageGetProc *<I>getProc</I>;
     Tk_ImageDisplayProc *<I>displayProc</I>;
     Tk_ImageFreeProc *<I>freeProc</I>;
     Tk_ImageDeleteProc *<I>deleteProc</I>;
-} <B>Tk_ImageType</B>;</PRE>
+} Tk_ImageType;</PRE>
 The fields of this structure will be described in later subsections
 of this entry.
 <P>
@@ -108,26 +107,29 @@ option specified for a widget or canvas item.
 <P>
 The following subsections describe the fields of a Tk_ImageType
 in more detail.
+
 <H4><A NAME="M6">NAME</A></H4>
+<P>
 <I>typePtr-&gt;name</I> provides a name for the image type.
 Once <B>Tk_CreateImageType</B> returns, this name may be used
 in <B><A HREF="../TkCmd/image.htm">image create</A></B> commands to create images of the new
 type.
 If there already existed an image type by this name then
 the new image type replaces the old one.
+
 <H4><A NAME="M7">CREATEPROC</A></H4>
 <I>typePtr-&gt;createProc</I> provides the address of a procedure for
 Tk to call whenever <B><A HREF="../TkCmd/image.htm">image create</A></B> is invoked to create
 an image of the new type.
 <I>typePtr-&gt;createProc</I> must match the following prototype:
-<PRE>typedef int <B>Tk_ImageCreateProc</B>(
-        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
-        const char *<I>name</I>,
-        int <I>objc</I>,
-        <A HREF="../TclLib/Object.htm">Tcl_Obj</A> *const <I>objv</I>[],
-        const Tk_ImageType *<I>typePtr</I>,
-        <A HREF="../TkLib/GetImage.htm">Tk_ImageMaster</A> <I>master</I>,
-        ClientData *<I>masterDataPtr</I>);</PRE>
+<PRE>typedef int Tk_ImageCreateProc(
+    <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
+    char *<I>name</I>,
+    int <I>objc</I>,
+    Tcl_Obj *const <I>objv</I>[],
+    Tk_ImageType *<I>typePtr</I>,
+    Tk_ImageMaster <I>master</I>,
+    ClientData *<I>masterDataPtr</I>);</PRE>
 The <I>interp</I> argument is the interpreter in which the <B><A HREF="../TkCmd/image.htm">image</A></B>
 command was invoked, and <I>name</I> is the name for the new image,
 which was either specified explicitly in the <B><A HREF="../TkCmd/image.htm">image</A></B> command
@@ -147,18 +149,19 @@ Typically the value is a pointer to the master data
 structure for the image.
 <P>
 If <I>createProc</I> encounters an error, it should leave an error
-message in the interpreter result and return <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B>;  otherwise
-it should return <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B>.
+message in the interpreter result and return <B>TCL_ERROR</B>;  otherwise
+it should return <B>TCL_OK</B>.
 <P>
 <I>createProc</I> should call <B><A HREF="../TkLib/ImgChanged.htm">Tk_ImageChanged</A></B> in order to set the
 size of the image and request an initial redisplay.
+
 <H4><A NAME="M8">GETPROC</A></H4>
 <I>typePtr-&gt;getProc</I> is invoked by Tk whenever a widget
 calls <B><A HREF="../TkLib/GetImage.htm">Tk_GetImage</A></B> to use a particular image.
 This procedure must match the following prototype:
-<PRE>typedef ClientData <B>Tk_ImageGetProc</B>(
-        <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
-        ClientData <I>masterData</I>);</PRE>
+<PRE>typedef ClientData Tk_ImageGetProc(
+    Tk_Window <I>tkwin</I>,
+    ClientData <I>masterData</I>);</PRE>
 The <I>tkwin</I> argument identifies the window in which the
 image will be used and <I>masterData</I> is the value
 returned by <I>createProc</I> when the image master was created.
@@ -169,20 +172,21 @@ display the image in the given window.
 is typically the address of the instance data structure.
 Tk will pass this value back to the image manager when invoking
 its <I>displayProc</I> and <I>freeProc</I> procedures.
+
 <H4><A NAME="M9">DISPLAYPROC</A></H4>
 <I>typePtr-&gt;displayProc</I> is invoked by Tk whenever an image needs
 to be displayed (i.e., whenever a widget calls <B><A HREF="../TkLib/GetImage.htm">Tk_RedrawImage</A></B>).
 <I>displayProc</I> must match the following prototype:
-<PRE>typedef void <B>Tk_ImageDisplayProc</B>(
-        ClientData <I>instanceData</I>,
-        Display *<I>display</I>,
-        Drawable <I>drawable</I>,
-        int <I>imageX</I>,
-        int <I>imageY</I>,
-        int <I>width</I>,
-        int <I>height</I>,
-        int <I>drawableX</I>,
-        int <I>drawableY</I>);</PRE>
+<PRE>typedef void Tk_ImageDisplayProc(
+    ClientData <I>instanceData</I>,
+    Display *<I>display</I>,
+    Drawable <I>drawable</I>,
+    int <I>imageX</I>,
+    int <I>imageY</I>,
+    int <I>width</I>,
+    int <I>height</I>,
+    int <I>drawableX</I>,
+    int <I>drawableY</I>);</PRE>
 The <I>instanceData</I> will be the same as the value returned by
 <I>getProc</I> when the instance was created.
 <I>display</I> and <I>drawable</I> indicate where to display the
@@ -198,6 +202,7 @@ as specified in the most recent call to <B><A HREF="../TkLib/ImgChanged.htm">Tk_
 the image should be displayed;  <I>displayProc</I> should display
 the given region of the image so that point (<I>imageX</I>, <I>imageY</I>)
 in the image appears at (<I>drawableX</I>, <I>drawableY</I>) in <I>drawable</I>.
+
 <H4><A NAME="M10">FREEPROC</A></H4>
 <I>typePtr-&gt;freeProc</I> contains the address of a procedure that
 Tk will invoke when an image instance is released (i.e., when
@@ -206,14 +211,15 @@ This can happen, for example, when a widget is deleted or a image item
 in a canvas is deleted, or when the image displayed in a widget or
 canvas item is changed.
 <I>freeProc</I> must match the following prototype:
-<PRE>typedef void <B>Tk_ImageFreeProc</B>(
-        ClientData <I>instanceData</I>,
-        Display *<I>display</I>);</PRE>
+<PRE>typedef void Tk_ImageFreeProc(
+    ClientData <I>instanceData</I>,
+    Display *<I>display</I>);</PRE>
 The <I>instanceData</I> will be the same as the value returned by
 <I>getProc</I> when the instance was created, and <I>display</I>
 is the display containing the window for the instance.
 <I>freeProc</I> should release any resources associated with the
 image instance, since the instance will never be used again.
+
 <H4><A NAME="M11">DELETEPROC</A></H4>
 <I>typePtr-&gt;deleteProc</I> is a procedure that Tk invokes when an
 image is being deleted (i.e. when the <B><A HREF="../TkCmd/image.htm">image delete</A></B> command
@@ -221,13 +227,14 @@ is invoked).
 Before invoking <I>deleteProc</I> Tk will invoke <I>freeProc</I> for
 each of the image's instances.
 <I>deleteProc</I> must match the following prototype:
-<PRE>typedef void <B>Tk_ImageDeleteProc</B>(
-        ClientData <I>masterData</I>);</PRE>
+<PRE>typedef void Tk_ImageDeleteProc(
+    ClientData <I>masterData</I>);</PRE>
 The <I>masterData</I> argument will be the same as the value
 stored in <I>*masterDataPtr</I> by <I>createProc</I> when the
 image was created.
 <I>deleteProc</I> should release any resources associated with
 the image.
+
 <H3><A NAME="M12">TK_GETIMAGEMASTERDATA</A></H3>
 The procedure <B>Tk_GetImageMasterData</B> may be invoked to retrieve
 information about an image.  For example, an image manager can use this
@@ -240,17 +247,18 @@ and the return value is the ClientData value returned by the
 <I>createProc</I> when the image was created (this is typically a
 pointer to the image master data structure).  If no such image exists
 then NULL is returned and NULL is stored at <I>*typePtrPtr</I>.
+
 <H3><A NAME="M13">LEGACY INTERFACE SUPPORT</A></H3>
 In Tk 8.2 and earlier, the definition of <B>Tk_ImageCreateProc</B>
 was incompatibly different, with the following prototype:
-<PRE>typedef int <B>Tk_ImageCreateProc</B>(
-        <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
-        char *<I>name</I>,
-        int <I>argc</I>,
-        char **<I>argv</I>,
-        Tk_ImageType *<I>typePtr</I>,
-        <A HREF="../TkLib/GetImage.htm">Tk_ImageMaster</A> <I>master</I>,
-        ClientData *<I>masterDataPtr</I>);</PRE>
+<PRE>typedef int Tk_ImageCreateProc(
+    <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>,
+    char *<I>name</I>,
+    int <I>argc</I>,
+    char **<I>argv</I>,
+    Tk_ImageType *<I>typePtr</I>,
+    Tk_ImageMaster <I>master</I>,
+    ClientData *<I>masterDataPtr</I>);</PRE>
 Legacy programs and libraries dating from those days may still
 contain code that defines extended Tk image types using the old
 interface.  The Tk header file will still support this legacy
@@ -273,11 +281,13 @@ use Tk 8.4 headers and stub libraries to do so.
 <P>
 Any new code written today should not make use of the legacy
 interfaces.  Expect their support to go away in Tk 9.
+
 <H3><A NAME="M14">SEE ALSO</A></H3>
 <B><A HREF="../TkLib/ImgChanged.htm">Tk_ImageChanged</A></B>, <B><A HREF="../TkLib/GetImage.htm">Tk_GetImage</A></B>, <B><A HREF="../TkLib/GetImage.htm">Tk_FreeImage</A></B>, <B><A HREF="../TkLib/GetImage.htm">Tk_RedrawImage</A></B>, <B><A HREF="../TkLib/GetImage.htm">Tk_SizeOfImage</A></B>
 <H3><A NAME="M15">KEYWORDS</A></H3>
 <A href="../Keywords/I.htm#image manager">image manager</A>, <A href="../Keywords/I.htm#image type">image type</A>, <A href="../Keywords/I.htm#instance">instance</A>, <A href="../Keywords/M.htm#master">master</A>
-<div class="copy">Copyright &copy; 1994 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994 The Regents of the University of California.
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

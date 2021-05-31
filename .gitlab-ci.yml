@@ -1,8 +1,8 @@
 stages:
-  - deploy
+  - debian
 
-debian.bionic:
-  stage: deploy
+debian.xenial:
+  stage: debian
   only:
   - /^version-.*$/
   script:
@@ -14,20 +14,31 @@ debian.bionic:
   - ./build-deb -allowdirty -nobranchname -outdir $debdir
   - scp $debdir/* www-data@gse.auk.cvclab.lan:/cmdata/www/builds/TCLTK/
   - rm -rf $debdir
-  environment:
-    name: production
-    url: http://gse.auk.cvclab.lan/builds/?dir=TCLTK
   tags:
-   - ubuntu18
+   - ubuntu16
 
-debian.focal:
-  stage: deploy
+debian.bionic:
+  stage: debian
   only:
   - /^version-.*$/
   script:
   - rm -rf ../gse4-service ./rcompile ./release
   - ./compile-base
-  - ./compile-extras
+  - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.auk.cvclab.lan/gse/gse4-service.git ../gse4-service
+  - debdir=$(mktemp -d)
+  - ./build-deb -allowdirty -nobranchname -outdir $debdir
+  - scp $debdir/* www-data@gse.auk.cvclab.lan:/cmdata/www/builds/TCLTK/
+  - rm -rf $debdir
+  tags:
+   - ubuntu18
+
+debian.focal:
+  stage: debian
+  only:
+  - /^version-.*$/
+  script:
+  - rm -rf ../gse4-service ./rcompile ./release
+  - ./compile-base
   - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.auk.cvclab.lan/gse/gse4-service.git ../gse4-service
   - debdir=$(mktemp -d)
   - ./build-deb -allowdirty -nobranchname -outdir $debdir

@@ -8,7 +8,7 @@ LDLIBS  = -lXcursor -ltk8.6
 LDFLAGS = -L"$(INSTALLDIR)/lib"
 
 ## Compiler flags
-CFLAGS += -g -fPIC
+CFLAGS += -g
 CC = gcc
 
 ## Targets

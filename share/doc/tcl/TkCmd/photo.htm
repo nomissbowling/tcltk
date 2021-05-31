@@ -3,110 +3,91 @@
 <HEAD><TITLE>photo manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> photo</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> photo</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="photo.htm#M2" NAME="L1164">NAME</A>
-<DL><DD>photo &mdash; Full-color images</DD></DL>
-<DD><A HREF="photo.htm#M3" NAME="L1165">SYNOPSIS</A>
+<DD><A HREF="photo.htm#M2" NAME="L1101">NAME</A>
+<DL><DD>photo - Full-color images</DD></DL>
+<DD><A HREF="photo.htm#M3" NAME="L1102">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="photo.htm#M4" NAME="L1166">DESCRIPTION</A>
-<DD><A HREF="photo.htm#M5" NAME="L1167">CREATING PHOTOS</A>
+<DD><A HREF="photo.htm#M4" NAME="L1103">DESCRIPTION</A>
+<DD><A HREF="photo.htm#M5" NAME="L1104">CREATING PHOTOS</A>
 <DL class="creating photos">
-<DD><A HREF="photo.htm#M6" NAME="L1168"><B>-data </B><I>string</I></A>
-<DD><A HREF="photo.htm#M7" NAME="L1169"><B>-format </B><I>format-name</I></A>
-<DD><A HREF="photo.htm#M8" NAME="L1170"><B>-file </B><I>name</I></A>
-<DD><A HREF="photo.htm#M9" NAME="L1171"><B>-gamma </B><I>value</I></A>
-<DD><A HREF="photo.htm#M10" NAME="L1172"><B>-height </B><I>number</I></A>
-<DD><A HREF="photo.htm#M11" NAME="L1173"><B>-palette </B><I>palette-spec</I></A>
-<DD><A HREF="photo.htm#M12" NAME="L1174"><B>-width </B><I>number</I></A>
+<DD><A HREF="photo.htm#M6" NAME="L1105"><B>-data </B><I>string</I></A>
+<DD><A HREF="photo.htm#M7" NAME="L1106"><B>-format </B><I>format-name</I></A>
+<DD><A HREF="photo.htm#M8" NAME="L1107"><B>-file </B><I>name</I></A>
+<DD><A HREF="photo.htm#M9" NAME="L1108"><B>-gamma </B><I>value</I></A>
+<DD><A HREF="photo.htm#M10" NAME="L1109"><B>-height </B><I>number</I></A>
+<DD><A HREF="photo.htm#M11" NAME="L1110"><B>-palette </B><I>palette-spec</I></A>
+<DD><A HREF="photo.htm#M12" NAME="L1111"><B>-width </B><I>number</I></A>
 </DL>
-<DD><A HREF="photo.htm#M13" NAME="L1175">IMAGE COMMAND</A>
+<DD><A HREF="photo.htm#M13" NAME="L1112">IMAGE COMMAND</A>
 <DL class="image command">
-<DD><A HREF="photo.htm#M14" NAME="L1176"><I>imageName </I><B>blank</B></A>
-<DD><A HREF="photo.htm#M15" NAME="L1177"><I>imageName </I><B>cget</B> <I>option</I></A>
-<DD><A HREF="photo.htm#M16" NAME="L1178"><I>imageName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A>
-<DD><A HREF="photo.htm#M17" NAME="L1179"><I>imageName </I><B>copy</B> <I>sourceImage</I> ?<I>option value(s) ...</I>?</A>
+<DD><A HREF="photo.htm#M14" NAME="L1113"><I>imageName </I><B>blank</B></A>
+<DD><A HREF="photo.htm#M15" NAME="L1114"><I>imageName </I><B>cget</B> <I>option</I></A>
+<DD><A HREF="photo.htm#M16" NAME="L1115"><I>imageName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A>
+<DD><A HREF="photo.htm#M17" NAME="L1116"><I>imageName </I><B>copy</B> <I>sourceImage</I> ?<I>option value(s) ...</I>?</A>
 <DL class="image command">
-<DD><A HREF="photo.htm#M18" NAME="L1180"><B>-from </B><I>x1 y1 x2 y2</I></A>
-<DD><A HREF="photo.htm#M19" NAME="L1181"><B>-to </B><I>x1 y1 x2 y2</I></A>
-<DD><A HREF="photo.htm#M20" NAME="L1182"><B>-shrink</B></A>
-<DD><A HREF="photo.htm#M21" NAME="L1183"><B>-zoom </B><I>x y</I></A>
-<DD><A HREF="photo.htm#M22" NAME="L1184"><B>-subsample </B><I>x y</I></A>
-<DD><A HREF="photo.htm#M23" NAME="L1185"><B>-compositingrule </B><I>rule</I></A>
+<DD><A HREF="photo.htm#M18" NAME="L1117"><B>-from </B><I>x1 y1 x2 y2</I></A>
+<DD><A HREF="photo.htm#M19" NAME="L1118"><B>-to </B><I>x1 y1 x2 y2</I></A>
+<DD><A HREF="photo.htm#M20" NAME="L1119"><B>-shrink</B></A>
+<DD><A HREF="photo.htm#M21" NAME="L1120"><B>-zoom </B><I>x y</I></A>
+<DD><A HREF="photo.htm#M22" NAME="L1121"><B>-subsample </B><I>x y</I></A>
+<DD><A HREF="photo.htm#M23" NAME="L1122"><B>-compositingrule </B><I>rule</I></A>
 </DL>
-<DD><A HREF="photo.htm#M24" NAME="L1186"><I>imageName </I><B>data</B> ?<I>option value(s) ...</I>?</A>
+<DD><A HREF="photo.htm#M24" NAME="L1123"><I>imageName </I><B>data ?</B><I>option value(s) ...</I>?</A>
 <DL class="image command">
-<DD><A HREF="photo.htm#M25" NAME="L1187"><B>-background</B><I> color</I></A>
-<DD><A HREF="photo.htm#M26" NAME="L1188"><B>-format</B><I> format-name</I></A>
-<DD><A HREF="photo.htm#M27" NAME="L1189"><B>-from </B><I>x1 y1 x2 y2</I></A>
-<DD><A HREF="photo.htm#M28" NAME="L1190"><B>-grayscale</B></A>
+<DD><A HREF="photo.htm#M25" NAME="L1124"><B>-background</B><I> color</I></A>
+<DD><A HREF="photo.htm#M26" NAME="L1125"><B>-format</B><I> format-name</I></A>
+<DD><A HREF="photo.htm#M27" NAME="L1126"><B>-from </B><I>x1 y1 x2 y2</I></A>
+<DD><A HREF="photo.htm#M28" NAME="L1127"><B>-grayscale</B></A>
 </DL>
-<DD><A HREF="photo.htm#M29" NAME="L1191"><I>imageName </I><B>get</B> <I>x y</I></A>
-<DD><A HREF="photo.htm#M30" NAME="L1192"><I>imageName </I><B>put</B> <I>data</I> ?<I>option value(s) ...</I>?</A>
+<DD><A HREF="photo.htm#M29" NAME="L1128"><I>imageName </I><B>get</B> <I>x y</I></A>
+<DD><A HREF="photo.htm#M30" NAME="L1129"><I>imageName </I><B>put</B> <I>data</I> ?<I>option value(s) ...</I>?</A>
 <DL class="image command">
-<DD><A HREF="photo.htm#M31" NAME="L1193"><B>-format </B><I>format-name</I></A>
-<DD><A HREF="photo.htm#M32" NAME="L1194"><B>-to </B><I>x1 y1</I> ?<I>x2 y2</I>?</A>
+<DD><A HREF="photo.htm#M31" NAME="L1130"><B>-format </B><I>format-name</I></A>
+<DD><A HREF="photo.htm#M32" NAME="L1131"><B>-to </B><I>x1 y1</I> ?<I>x2 y2</I>?</A>
 </DL>
-<DD><A HREF="photo.htm#M33" NAME="L1195"><I>imageName </I><B>read</B> <I>filename</I> ?<I>option value(s) ...</I>?</A>
+<DD><A HREF="photo.htm#M33" NAME="L1132"><I>imageName </I><B>read</B> <I>filename</I> ?<I>option value(s) ...</I>?</A>
 <DL class="image command">
-<DD><A HREF="photo.htm#M34" NAME="L1196"><B>-format </B><I>format-name</I></A>
-<DD><A HREF="photo.htm#M35" NAME="L1197"><B>-from </B><I>x1 y1 x2 y2</I></A>
-<DD><A HREF="photo.htm#M36" NAME="L1198"><B>-shrink</B></A>
-<DD><A HREF="photo.htm#M37" NAME="L1199"><B>-to </B><I>x y</I></A>
+<DD><A HREF="photo.htm#M34" NAME="L1133"><B>-format </B><I>format-name</I></A>
+<DD><A HREF="photo.htm#M35" NAME="L1134"><B>-from </B><I>x1 y1 x2 y2</I></A>
+<DD><A HREF="photo.htm#M36" NAME="L1135"><B>-shrink</B></A>
+<DD><A HREF="photo.htm#M37" NAME="L1136"><B>-to </B><I>x y</I></A>
 </DL>
-<DD><A HREF="photo.htm#M38" NAME="L1200"><I>imageName </I><B>redither</B></A>
-<DD><A HREF="photo.htm#M39" NAME="L1201"><I>imageName </I><B>transparency </B><I>subcommand </I>?<I>arg arg ...</I>?</A>
+<DD><A HREF="photo.htm#M38" NAME="L1137"><I>imageName </I><B>redither</B></A>
+<DD><A HREF="photo.htm#M39" NAME="L1138"><I>imageName </I><B>transparency </B><I>subcommand ?arg arg ...?</I></A>
 <DL class="image command">
-<DD><A HREF="photo.htm#M40" NAME="L1202"><I>imageName </I><B>transparency get </B><I>x y</I></A>
-<DD><A HREF="photo.htm#M41" NAME="L1203"><I>imageName </I><B>transparency set </B><I>x y boolean</I></A>
+<DD><A HREF="photo.htm#M40" NAME="L1139"><I>imageName </I><B>transparency get </B><I>x y</I></A>
+<DD><A HREF="photo.htm#M41" NAME="L1140"><I>imageName </I><B>transparency set </B><I>x y boolean</I></A>
 </DL>
-<DD><A HREF="photo.htm#M42" NAME="L1204"><I>imageName </I><B>write </B><I>filename</I> ?<I>option value(s) ...</I>?</A>
+<DD><A HREF="photo.htm#M42" NAME="L1141"><I>imageName </I><B>write </B><I>filename</I> ?<I>option value(s) ...</I>?</A>
 <DL class="image command">
-<DD><A HREF="photo.htm#M43" NAME="L1205"><B>-background</B><I> color</I></A>
-<DD><A HREF="photo.htm#M44" NAME="L1206"><B>-format</B><I> format-name</I></A>
-<DD><A HREF="photo.htm#M45" NAME="L1207"><B>-from </B><I>x1 y1 x2 y2</I></A>
-<DD><A HREF="photo.htm#M46" NAME="L1208"><B>-grayscale</B></A>
+<DD><A HREF="photo.htm#M43" NAME="L1142"><B>-background</B><I> color</I></A>
+<DD><A HREF="photo.htm#M44" NAME="L1143"><B>-format</B><I> format-name</I></A>
+<DD><A HREF="photo.htm#M45" NAME="L1144"><B>-from </B><I>x1 y1 x2 y2</I></A>
+<DD><A HREF="photo.htm#M46" NAME="L1145"><B>-grayscale</B></A>
 </DL>
 </DL>
-<DD><A HREF="photo.htm#M47" NAME="L1209">IMAGE FORMATS</A>
-<DD><A HREF="photo.htm#M48" NAME="L1210">FORMAT SUBOPTIONS</A>
-<DL class="format suboptions">
-<DD><A HREF="photo.htm#M49" NAME="L1211"><B>gif -index</B><I> indexValue</I></A>
-<DD><A HREF="photo.htm#M50" NAME="L1212"><B>png -alpha</B><I> alphaValue</I></A>
-</DL>
-<DD><A HREF="photo.htm#M51" NAME="L1213">COLOR ALLOCATION</A>
-<DD><A HREF="photo.htm#M52" NAME="L1214">CREDITS</A>
-<DD><A HREF="photo.htm#M53" NAME="L1215">EXAMPLE</A>
-<DD><A HREF="photo.htm#M54" NAME="L1216">SEE ALSO</A>
-<DD><A HREF="photo.htm#M55" NAME="L1217">KEYWORDS</A>
+<DD><A HREF="photo.htm#M47" NAME="L1146">IMAGE FORMATS</A>
+<DD><A HREF="photo.htm#M48" NAME="L1147">COLOR ALLOCATION</A>
+<DD><A HREF="photo.htm#M49" NAME="L1148">CREDITS</A>
+<DD><A HREF="photo.htm#M50" NAME="L1149">EXAMPLE</A>
+<DD><A HREF="photo.htm#M51" NAME="L1150">SEE ALSO</A>
+<DD><A HREF="photo.htm#M52" NAME="L1151">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-photo &mdash; Full-color images
+photo - Full-color images
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>image create photo </B>?<I>name</I>? ?<I>options</I>?<BR>
-<BR>
-<I>imageName </I><B>blank</B><BR>
-<I>imageName </I><B>cget </B><I>option</I><BR>
-<I>imageName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?<BR>
-<I>imageName </I><B>copy </B><I>sourceImage</I> ?<I>option value(s) ...</I>?<BR>
-<I>imageName </I><B>data</B> ?<I>option value(s) ...</I>?<BR>
-<I>imageName </I><B>get </B><I>x y</I><BR>
-<I>imageName </I><B>put </B><I>data</I> ?<I>option value(s) ...</I>?<BR>
-<I>imageName </I><B>read </B><I>filename</I> ?<I>option value(s) ...</I>?<BR>
-<I>imageName </I><B>redither</B><BR>
-<I>imageName </I><B>transparency </B><I>subcommand </I>?<I>arg arg ...</I>?<BR>
-<I>imageName </I><B>write </B><I>filename</I> ?<I>option value(s) ...</I>?<BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
 A photo is an image whose pixels can display any color or be
 transparent.  A photo image is stored internally in full color (32
 bits per pixel), and is displayed using dithering if necessary.  Image
 data for a photo image can be obtained from a file or a string, or it
 can be supplied from
-C code through a procedural interface.  At present, only
-PNG,
-GIF and PPM/PGM
+C code through a procedural interface.  At present, only GIF and PPM/PGM
 formats are supported, but an interface exists to allow additional
 image file formats to be added easily.  A photo image is transparent
 in regions where no image data has been supplied
@@ -121,8 +102,7 @@ Photos support the following <I>options</I>:
 <DT><A NAME="M6"><B>-data </B><I>string</I></A><DD>
 Specifies the contents of the image as a string.  The string should
 contain binary data or, for some formats, base64-encoded data (this is
-currently guaranteed to be supported for PNG and GIF images). The
-format of the
+currently guaranteed to be supported for GIF images).  The format of the
 string must be one of those for which there is an image file format
 handler that will accept string data.  If both the <B>-data</B>
 and <B>-file</B> options are specified, the <B>-file</B> option takes
@@ -193,7 +173,7 @@ window it is displayed in will show through.
 Returns the current value of the configuration option given
 by <I>option</I>.
 <I>Option</I> may have any of the values accepted by the
-<B><A HREF="../TkCmd/image.htm">image create</A></B> <B>photo</B> command.
+<B>image create photo</B> command.
 <P><DT><A NAME="M16"><I>imageName </I><B>configure</B> ?<I>option</I>? ?<I>value option value ...</I>?</A><DD>
 Query or modify the configuration options for the image.
 If no <I>option</I> is specified, returns a list describing all of
@@ -206,7 +186,7 @@ one or more <I>option-value</I> pairs are specified, then the command
 modifies the given option(s) to have the given value(s);  in
 this case the command returns an empty string.
 <I>Option</I> may have any of the values accepted by the
-<B><A HREF="../TkCmd/image.htm">image create</A></B> <B>photo</B> command.
+<B>image create photo</B> command.
 <P><DT><A NAME="M17"><I>imageName </I><B>copy</B> <I>sourceImage</I> ?<I>option value(s) ...</I>?</A><DD>
 Copies a region from the image called <I>sourceImage</I> (which must
 be a photo image) to the image called <I>imageName</I>, possibly with
@@ -261,7 +241,7 @@ is set, the old contents of the destination image are discarded and
 the source image is used as-is.  The default compositing rule is
 <I>overlay</I>.
 <P></DL>
-<P><DT><A NAME="M24"><I>imageName </I><B>data</B> ?<I>option value(s) ...</I>?</A><DD>
+<P><DT><A NAME="M24"><I>imageName </I><B>data ?</B><I>option value(s) ...</I>?</A><DD>
 Returns image data in the form of a string. The following options
 may be specified:
 <P>
@@ -369,7 +349,7 @@ dithered image may not be exactly correct.  Normally the difference is
 not noticeable, but if it is a problem, this command can be used to
 recalculate the dithered image in each window where the image is
 displayed.
-<P><DT><A NAME="M39"><I>imageName </I><B>transparency </B><I>subcommand </I>?<I>arg arg ...</I>?</A><DD>
+<P><DT><A NAME="M39"><I>imageName </I><B>transparency </B><I>subcommand ?arg arg ...?</I></A><DD>
 Allows examination and manipulation of the transparency information in
 the photo image.  Several subcommands are available:
 <P>
@@ -395,9 +375,8 @@ Specifies the name of the image file format handler to be used to
 write the data to the file.  Specifically, this subcommand searches
 for the first handler whose name matches an initial substring of
 <I>format-name</I> and which has the capability to write an image
-file.  If this option is not given, the format is guessed from
-the file extension. If that cannot be determined, this subcommand
-uses the first handler that has the capability to write an image file.
+file.  If this option is not given, this subcommand uses the first
+handler that has the capability to write an image file.
 <P><DT><A NAME="M45"><B>-from </B><I>x1 y1 x2 y2</I></A><DD>
 Specifies a rectangular region of <I>imageName</I> to be written to the
 image file.  If only <I>x1</I> and <I>y1</I> are specified, the region
@@ -415,8 +394,8 @@ The photo image code is structured to allow handlers for additional
 image file formats to be added easily.  The photo image code maintains
 a list of these handlers.  Handlers are added to the list by
 registering them with a call to <B><A HREF="../TkLib/CrtPhImgFmt.htm">Tk_CreatePhotoImageFormat</A></B>.  The
-standard Tk distribution comes with handlers for PPM/PGM, PNG and GIF
-formats, which are automatically registered on initialization.
+standard Tk distribution comes with handlers for PPM/PGM and GIF formats,
+which are automatically registered on initialization.
 <P>
 When reading an image file or processing
 string data specified with the <B>-data</B> configuration option, the
@@ -440,24 +419,7 @@ that, which the handler can use, for example, to specify which variant
 to use of the formats supported by the handler.
 Note that not all image handlers may support writing transparency data
 to a file, even where the target image format does.
-<H4><A NAME="M48">FORMAT SUBOPTIONS</A></H4>
-Some image formats support sub-options, which are specified at the time that
-the image is loaded using additional words in the <B>-format</B> option. At
-the time of writing, the following are supported:
-<P>
-<DL class="format suboptions">
-<DT><A NAME="M49"><B>gif -index</B><I> indexValue</I></A><DD>
-When parsing a multi-part GIF image, Tk normally only accesses the first
-image. By giving the <B>-index</B> sub-option, the <I>indexValue</I>'th value
-may be used instead. The <I>indexValue</I> must be an integer from 0 up to the
-number of image parts in the GIF data.
-<P><DT><A NAME="M50"><B>png -alpha</B><I> alphaValue</I></A><DD>
-An additional alpha filtering for the overall image, which allows the
-background on which the image is displayed to show through. This usually also
-has the effect of desaturating the image. The <I>alphaValue</I> must be between
-0.0 and 1.0.
-<P></DL>
-<H3><A NAME="M51">COLOR ALLOCATION</A></H3>
+<H3><A NAME="M48">COLOR ALLOCATION</A></H3>
 When a photo image is displayed in a window, the photo image code
 allocates colors to use to display the image and dithers the image, if
 necessary, to display a reasonable approximation to the image using
@@ -485,14 +447,13 @@ each primary color to try to allocate.  It can also be used to force
 the image to be displayed in shades of gray, even on a color display,
 by giving a single number rather than three numbers separated by
 slashes.
-<H3><A NAME="M52">CREDITS</A></H3>
+<H3><A NAME="M49">CREDITS</A></H3>
 The photo image type was designed and implemented by Paul Mackerras,
 based on his earlier photo widget and some suggestions from
 John Ousterhout.
-<H3><A NAME="M53">EXAMPLE</A></H3>
+<H3><A NAME="M50">EXAMPLE</A></H3>
 Load an image from a file and tile it to the size of a window, which
 is useful for producing a tiled background:
-<P>
 <PRE># These lines should be called once
 <B>image create photo</B> untiled -file &quot;theFile.ppm&quot;
 <B>image create photo</B> tiled
@@ -502,20 +463,12 @@ is useful for producing a tiled background:
 set width  [winfo width .someWidget]
 set height [winfo height .someWidget]
 tiled <B>copy</B> untiled -to 0 0 $width $height -shrink</PRE>
-<P>
-The PNG image loader allows the application of an additional alpha factor
-during loading, which is useful for generating images suitable for disabled
-buttons:
-<P>
-<PRE><B>image create photo</B> icon -file &quot;icon.png&quot;
-<B>image create photo</B> iconDisabled -file &quot;icon.png&quot; &#92;
-        -format &quot;png -alpha 0.5&quot;
-button .b -image icon -disabledimage iconDisabled</PRE>
-<H3><A NAME="M54">SEE ALSO</A></H3>
+<H3><A NAME="M51">SEE ALSO</A></H3>
 <B><A HREF="../TkCmd/image.htm">image</A></B>
-<H3><A NAME="M55">KEYWORDS</A></H3>
+<H3><A NAME="M52">KEYWORDS</A></H3>
 <A href="../Keywords/P.htm#photo">photo</A>, <A href="../Keywords/I.htm#image">image</A>, <A href="../Keywords/C.htm#color">color</A>
-<div class="copy">Copyright &copy; 1994 The Australian National University
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1994 The Australian National University
 Copyright &copy; 1994-1997 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

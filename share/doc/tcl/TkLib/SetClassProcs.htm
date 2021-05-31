@@ -3,18 +3,18 @@
 <HEAD><TITLE>Tk_SetClassProcs manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> SetClassProcs</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> SetClassProcs</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_SetClassProcs &mdash; register widget specific procedures
+Tk_SetClassProcs - register widget specific procedures
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 <B>Tk_SetClassProcs</B>(<I>tkwin, procs, instanceData</I>)<BR>
 <H3><A NAME="M4">ARGUMENTS</A></H3>
 <DL class="arguments">
-<DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window to modify.
-<P><DT>const Tk_ClassProcs <B>*procs</B> (in)<DD>
+<P><DT>Tk_ClassProcs <B>*procs</B> (in)<DD>
 Pointer to data structure containing widget specific procedures.
 The data structure pointed to by <I>procs</I> must be static:
 Tk keeps a reference to it as long as the window exists.
@@ -31,7 +31,7 @@ The structure pointed to by <I>procs</I> contains the following:
     Tk_ClassWorldChangedProc *<I>worldChangedProc</I>;
     Tk_ClassCreateProc *<I>createProc</I>;
     Tk_ClassModalProc *<I>modalProc</I>;
-} <B>Tk_ClassProcs</B>;</PRE>
+} Tk_ClassProcs;</PRE>
 The <I>size</I> field is used to simplify future expansion of the
 structure. It should always be set to (literally) <B>sizeof(Tk_ClassProcs)</B>.
 <P>
@@ -41,8 +41,8 @@ when a font alias (see the <B><A HREF="../TkCmd/font.htm">font</A></B> manual en
 widgets configured to use that font alias must update their display
 accordingly.  <I>worldChangedProc</I> should have arguments and results
 that match the type <B>Tk_ClassWorldChangedProc</B>:
-<PRE>typedef void <B>Tk_ClassWorldChangedProc</B>(
-        ClientData <I>instanceData</I>);</PRE>
+<PRE>typedef void Tk_ClassWorldChangedProc(
+    ClientData <I>instanceData</I>);</PRE>
 The <I>instanceData</I> parameter passed to the <I>worldChangedProc</I>
 will be identical to the <I>instanceData</I> parameter passed to
 <B>Tk_SetClassProcs</B>.
@@ -50,10 +50,10 @@ will be identical to the <I>instanceData</I> parameter passed to
 <I>createProc</I> is used to create platform-dependant windows.  It is
 invoked by <B><A HREF="../TkLib/CrtWindow.htm">Tk_MakeWindowExist</A></B>.  <I>createProc</I> should have
 arguments and results that match the type <B>Tk_ClassCreateProc</B>:
-<PRE>typedef Window <B>Tk_ClassCreateProc</B>(
-        <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
-        Window <I>parent</I>,
-        ClientData <I>instanceData</I>);</PRE>
+<PRE>typedef Window Tk_ClassCreateProc(
+    Tk_Window <I>tkwin</I>,
+    Window <I>parent</I>,
+    ClientData <I>instanceData</I>);</PRE>
 The <I>tkwin</I> and <I>instanceData</I> parameters will be identical to
 the <I>tkwin</I> and <I>instanceData</I> parameters passed to
 <B>Tk_SetClassProcs</B>.  The <I>parent</I> parameter will be the parent
@@ -63,15 +63,17 @@ created window.
 <I>modalProc</I> is invoked after all bindings on a widget have been
 triggered in order to handle a modal loop.  <I>modalProc</I> should
 have arguments and results that match the type <B>Tk_ClassModalProc</B>:
-<PRE>typedef void <B>Tk_ClassModalProc</B>(
-        <A HREF="../TkLib/WindowId.htm">Tk_Window</A> <I>tkwin</I>,
-        XEvent *<I>eventPtr</I>);</PRE>
+<PRE>typedef void Tk_ClassModalProc(
+    Tk_Window <I>tkwin</I>,
+    XEvent *<I>eventPtr</I>);</PRE>
 The <I>tkwin</I> parameter to <I>modalProc</I> will be identical to the
 <I>tkwin</I> parameter passed to <B>Tk_SetClassProcs</B>.  The
 <I>eventPtr</I> parameter will be a pointer to an XEvent structure
 describing the event being processed.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#callback">callback</A>, <A href="../Keywords/C.htm#class">class</A>
-<div class="copy">Copyright &copy; 2000 Ajuba Solutions.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 2000 Ajuba Solutions.
 </div>
 </BODY></HTML>

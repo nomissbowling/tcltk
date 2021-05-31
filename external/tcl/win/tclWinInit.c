@@ -17,7 +17,7 @@
 #include <lmcons.h>
 
 /*
- * GetUserNameW() is found in advapi32.dll
+ * GetUserName() is found in advapi32.dll
  */
 #ifdef _MSC_VER
 #   pragma comment(lib, "advapi32.lib")
@@ -76,19 +76,19 @@ typedef struct {
 #define PROCESSOR_ARCHITECTURE_UNKNOWN		0xFFFF
 #endif
 
-
 /*
- * Windows version dependend functions
+ * The following arrays contain the human readable strings for the Windows
+ * platform and processor values.
  */
-TclWinProcs tclWinProcs;
 
-/*
- * The following arrays contain the human readable strings for the
- * processor values.
- */
+
+#define NUMPLATFORMS 4
+static char* platforms[NUMPLATFORMS] = {
+    "Win32s", "Windows 95", "Windows NT", "Windows CE"
+};
 
 #define NUMPROCESSORS 15
-static const char *const processors[NUMPROCESSORS] = {
+static char* processors[NUMPROCESSORS] = {
     "intel", "mips", "alpha", "ppc", "shx", "arm", "ia64", "alpha64", "msil",
     "amd64", "ia32_on_win64", "neutral", "arm64", "arm32_on_win64", "ia32_on_arm64"
 };
@@ -105,13 +105,8 @@ static TclInitProcessGlobalValueProc	InitializeSourceLibraryDir;
 static ProcessGlobalValue sourceLibraryDir =
 	{0, 0, NULL, NULL, InitializeSourceLibraryDir, NULL, NULL};
 
-static void		AppendEnvironment(Tcl_Obj *listPtr, const char *lib);
-
-#if TCL_UTF_MAX < 4
-static void		ToUtf(const WCHAR *wSrc, char *dst);
-#else
-#define ToUtf(wSrc, dst) WideCharToMultiByte(CP_UTF8, 0, wSrc, -1, dst, MAX_PATH * TCL_UTF_MAX, NULL, NULL)
-#endif
+static void		AppendEnvironment(Tcl_Obj *listPtr, CONST char *lib);
+static int		ToUtf(CONST WCHAR *wSrc, char *dst);
 
 /*
  *---------------------------------------------------------------------------
@@ -137,15 +132,14 @@ TclpInitPlatform(void)
 {
     WSADATA wsaData;
     WORD wVersionRequested = MAKEWORD(2, 2);
-    HMODULE handle;
 
     tclPlatform = TCL_PLATFORM_WINDOWS;
 
-    /*
-     * Initialize the winsock library. On Windows XP and higher this
-     * can never fail.
-     */
-    WSAStartup(wVersionRequested, &wsaData);
+	/*
+	 * Initialize the winsock library. On Windows XP and higher this
+	 * can never fail.
+	 */
+	WSAStartup(wVersionRequested, &wsaData);
 
 #ifdef STATIC_BUILD
     /*
@@ -154,19 +148,8 @@ TclpInitPlatform(void)
      * invoked.
      */
 
-    TclWinInit(GetModuleHandleW(NULL));
+    TclWinInit(GetModuleHandle(NULL));
 #endif
-
-    /*
-     * Fill available functions depending on windows version
-     */
-    handle = GetModuleHandleW(L"KERNEL32");
-    tclWinProcs.cancelSynchronousIo =
-	    (BOOL (WINAPI *)(HANDLE))(void *)GetProcAddress(handle,
-	    "CancelSynchronousIo");
-    tclWinProcs.createSymbolicLink =
-	    (BOOLEAN (WINAPI *)(LPCWSTR, LPCWSTR, DWORD))(void *)GetProcAddress(handle,
-	    "CreateSymbolicLinkW");
 }
 
 /*
@@ -195,9 +178,9 @@ TclpInitLibraryPath(
 #define LIBRARY_SIZE	    64
     Tcl_Obj *pathPtr;
     char installLib[LIBRARY_SIZE];
-    const char *bytes;
+    char *bytes;
 
-    TclNewObj(pathPtr);
+    pathPtr = Tcl_NewObj();
 
     /*
      * Initialize the substring used when locating the script library. The
@@ -232,8 +215,8 @@ TclpInitLibraryPath(
 
     *encodingPtr = NULL;
     bytes = Tcl_GetStringFromObj(pathPtr, lengthPtr);
-    *valuePtr = (char *)ckalloc(*lengthPtr + 1);
-    memcpy(*valuePtr, bytes, *lengthPtr + 1);
+    *valuePtr = ckalloc((unsigned int)(*lengthPtr)+1);
+    memcpy(*valuePtr, bytes, (size_t)(*lengthPtr)+1);
     Tcl_DecrRefCount(pathPtr);
 }
 
@@ -259,14 +242,14 @@ TclpInitLibraryPath(
 static void
 AppendEnvironment(
     Tcl_Obj *pathPtr,
-    const char *lib)
+    CONST char *lib)
 {
     int pathc;
     WCHAR wBuf[MAX_PATH];
-    char buf[MAX_PATH * 3];
+    char buf[MAX_PATH * TCL_UTF_MAX];
     Tcl_Obj *objPtr;
     Tcl_DString ds;
-    const char **pathv;
+    CONST char **pathv;
     char *shortlib;
 
     /*
@@ -276,7 +259,7 @@ AppendEnvironment(
 
     for (shortlib = (char *) &lib[strlen(lib)-1]; shortlib>lib ; shortlib--) {
 	if (*shortlib == '/') {
-	    if ((size_t)(shortlib - lib) == strlen(lib) - 1) {
+	    if ((unsigned)(shortlib - lib) == strlen(lib) - 1) {
 		Tcl_Panic("last character in lib cannot be '/'");
 	    }
 	    shortlib++;
@@ -307,11 +290,13 @@ AppendEnvironment(
 	Tcl_SplitPath(buf, &pathc, &pathv);
 
 	/*
-	 * The lstrcmpiA() will work even if pathv[pathc-1] is random UTF-8
+	 * The lstrcmpi() will work even if pathv[pathc-1] is random UTF-8
 	 * chars because I know shortlib is ascii.
 	 */
 
 	if ((pathc > 0) && (lstrcmpiA(shortlib, pathv[pathc - 1]) != 0)) {
+	    CONST char *str;
+
 	    /*
 	     * TCL_LIBRARY is set but refers to a different tcl installation
 	     * than the current version. Try fiddling with the specified
@@ -321,13 +306,14 @@ AppendEnvironment(
 
 	    pathv[pathc - 1] = shortlib;
 	    Tcl_DStringInit(&ds);
-	    (void) Tcl_JoinPath(pathc, pathv, &ds);
-	    objPtr = TclDStringToObj(&ds);
+	    str = Tcl_JoinPath(pathc, pathv, &ds);
+	    objPtr = Tcl_NewStringObj(str, Tcl_DStringLength(&ds));
+	    Tcl_DStringFree(&ds);
 	} else {
 	    objPtr = Tcl_NewStringObj(buf, -1);
 	}
 	Tcl_ListObjAppendElement(NULL, pathPtr, objPtr);
-	ckfree(pathv);
+	ckfree((char *) pathv);
     }
 }
 
@@ -376,9 +362,9 @@ InitializeDefaultLibraryDir(
     TclWinNoBackslash(name);
     sprintf(end + 1, "lib/tcl%s", TCL_VERSION);
     *lengthPtr = strlen(name);
-    *valuePtr = (char *)ckalloc(*lengthPtr + 1);
+    *valuePtr = ckalloc(*lengthPtr + 1);
     *encodingPtr = NULL;
-    memcpy(*valuePtr, name, *lengthPtr + 1);
+    memcpy(*valuePtr, name, (size_t) *lengthPtr + 1);
 }
 
 /*
@@ -427,9 +413,9 @@ InitializeSourceLibraryDir(
     TclWinNoBackslash(name);
     sprintf(end + 1, "../library");
     *lengthPtr = strlen(name);
-    *valuePtr = (char *)ckalloc(*lengthPtr + 1);
+    *valuePtr = ckalloc((unsigned int) *lengthPtr + 1);
     *encodingPtr = NULL;
-    memcpy(*valuePtr, name, *lengthPtr + 1);
+    memcpy(*valuePtr, name, (size_t) *lengthPtr + 1);
 }
 
 /*
@@ -437,7 +423,7 @@ InitializeSourceLibraryDir(
  *
  * ToUtf --
  *
- *	Convert a wchar string to a UTF string.
+ *	Convert a char string to a UTF string.
  *
  * Results:
  *	None.
@@ -448,19 +434,46 @@ InitializeSourceLibraryDir(
  *---------------------------------------------------------------------------
  */
 
-#if TCL_UTF_MAX < 4
-static void
+static int
 ToUtf(
-    const WCHAR *wSrc,
+    CONST WCHAR *wSrc,
     char *dst)
 {
+    char *start;
+
+    start = dst;
     while (*wSrc != '\0') {
 	dst += Tcl_UniCharToUtf(*wSrc, dst);
 	wSrc++;
     }
     *dst = '\0';
+    return (int) (dst - start);
 }
-#endif
+
+/*
+ *---------------------------------------------------------------------------
+ *
+ * TclWinEncodingsCleanup --
+ *
+ *	Reset information to its original state in finalization to allow for
+ *	reinitialization to be possible. This must not be called until after
+ *	the filesystem has been finalised, or exit crashes may occur when
+ *	using virtual filesystems.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Static information reset to startup state.
+ *
+ *---------------------------------------------------------------------------
+ */
+
+void
+TclWinEncodingsCleanup(void)
+{
+    TclWinResetInterfaceEncodings();
+}
 
 /*
  *---------------------------------------------------------------------------
@@ -491,31 +504,31 @@ TclpSetInitialEncodings(void)
 {
     Tcl_DString encodingName;
 
+    TclpSetInterfaces();
     Tcl_SetSystemEncoding(NULL,
 	    Tcl_GetEncodingNameFromEnvironment(&encodingName));
     Tcl_DStringFree(&encodingName);
 }
 
-void TclWinSetInterfaces(
-    int dummy)			/* Not used. */
+void
+TclpSetInterfaces(void)
 {
-    (void)dummy;
+    int platformId, useWide;
+
+    platformId = TclWinGetPlatformId();
+    useWide = ((platformId == VER_PLATFORM_WIN32_NT)
+	    || (platformId == VER_PLATFORM_WIN32_CE));
+    TclWinSetInterfaces(useWide);
 }
 
-const char *
+CONST char *
 Tcl_GetEncodingNameFromEnvironment(
     Tcl_DString *bufPtr)
 {
-    UINT acp = GetACP();
-
     Tcl_DStringInit(bufPtr);
-    if (acp == CP_UTF8) {
-	Tcl_DStringAppend(bufPtr, "utf-8", 5);
-    } else {
-	Tcl_DStringSetLength(bufPtr, 2+TCL_INTEGER_SPACE);
-	wsprintfA(Tcl_DStringValue(bufPtr), "cp%d", GetACP());
-	Tcl_DStringSetLength(bufPtr, strlen(Tcl_DStringValue(bufPtr)));
-    }
+    Tcl_DStringSetLength(bufPtr, 2+TCL_INTEGER_SPACE);
+    wsprintfA(Tcl_DStringValue(bufPtr), "cp%d", GetACP());
+    Tcl_DStringSetLength(bufPtr, strlen(Tcl_DStringValue(bufPtr)));
     return Tcl_DStringValue(bufPtr);
 }
 
@@ -530,12 +543,12 @@ TclpGetUserName(
 	WCHAR szUserName[UNLEN+1];
 	DWORD cchUserNameLen = UNLEN;
 
-	if (!GetUserNameW(szUserName, &cchUserNameLen)) {
+	if (!tclWinProcs->getUserName((LPTSTR)szUserName, &cchUserNameLen)) {
 	    return NULL;
 	}
 	cchUserNameLen--;
-	cchUserNameLen *= sizeof(WCHAR);
-	Tcl_WinTCharToUtf((TCHAR *)szUserName, cchUserNameLen, bufferPtr);
+	if (tclWinProcs->useWide) cchUserNameLen *= sizeof(WCHAR);
+	Tcl_WinTCharToUtf((LPTSTR)szUserName, cchUserNameLen, bufferPtr);
     }
     return Tcl_DStringValue(bufferPtr);
 }
@@ -561,7 +574,7 @@ void
 TclpSetVariables(
     Tcl_Interp *interp)		/* Interp to initialize. */
 {
-    const char *ptr;
+    CONST char *ptr;
     char buffer[TCL_INTEGER_SPACE * 2];
     union {
 	SYSTEM_INFO info;
@@ -575,9 +588,9 @@ TclpSetVariables(
 	    TclGetProcessGlobalValue(&defaultLibraryDir), TCL_GLOBAL_ONLY);
 
     if (!osInfoInitialized) {
-	HMODULE handle = GetModuleHandleW(L"NTDLL");
+	HMODULE handle = GetModuleHandle(TEXT("NTDLL"));
 	int(__stdcall *getversion)(void *) =
-		(int(__stdcall *)(void *))(void *)GetProcAddress(handle, "RtlGetVersion");
+		(int(__stdcall *)(void *)) GetProcAddress(handle, "RtlGetVersion");
 	osInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOW);
 	if (!getversion || getversion(&osInfo)) {
 	    GetVersionExW(&osInfo);
@@ -592,8 +605,10 @@ TclpSetVariables(
 
     Tcl_SetVar2(interp, "tcl_platform", "platform", "windows",
 	    TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp, "tcl_platform", "os",
-	    "Windows NT", TCL_GLOBAL_ONLY);
+    if (osInfo.dwPlatformId < NUMPLATFORMS) {
+	Tcl_SetVar2(interp, "tcl_platform", "os",
+		platforms[osInfo.dwPlatformId], TCL_GLOBAL_ONLY);
+    }
     wsprintfA(buffer, "%d.%d", osInfo.dwMajorVersion, osInfo.dwMinorVersion);
     Tcl_SetVar2(interp, "tcl_platform", "osVersion", buffer, TCL_GLOBAL_ONLY);
     if (sys.oemId.wProcessorArchitecture < NUMPROCESSORS) {
@@ -649,12 +664,6 @@ TclpSetVariables(
     Tcl_SetVar2(interp, "tcl_platform", "user", ptr ? ptr : "",
 	    TCL_GLOBAL_ONLY);
     Tcl_DStringFree(&ds);
-
-    /*
-     * Define what the platform PATH separator is. [TIP #315]
-     */
-
-    Tcl_SetVar2(interp, "tcl_platform","pathSeparator", ";", TCL_GLOBAL_ONLY);
 }
 
 /*
@@ -663,7 +672,7 @@ TclpSetVariables(
  * TclpFindVariable --
  *
  *	Locate the entry in environ for a given name. On Unix this routine is
- *	case sensitive, on Windows this matches mixed case.
+ *	case sensitive, on Windows this matches mioxed case.
  *
  * Results:
  *	The return value is the index in environ of an entry with the name
@@ -679,7 +688,7 @@ TclpSetVariables(
 
 int
 TclpFindVariable(
-    const char *name,		/* Name of desired environment variable
+    CONST char *name,		/* Name of desired environment variable
 				 * (UTF-8). */
     int *lengthPtr)		/* Used to return length of name (for
 				 * successful searches) or number of non-NULL
@@ -687,8 +696,7 @@ TclpFindVariable(
 				 * searches). */
 {
     int i, length, result = -1;
-    const WCHAR *env;
-    const char *p1, *p2;
+    register CONST char *env, *p1, *p2;
     char *envUpper, *nameUpper;
     Tcl_DString envString;
 
@@ -697,21 +705,19 @@ TclpFindVariable(
      */
 
     length = strlen(name);
-    nameUpper = (char *)ckalloc(length + 1);
-    memcpy(nameUpper, name, length+1);
+    nameUpper = (char *) ckalloc((unsigned) length+1);
+    memcpy(nameUpper, name, (size_t) length+1);
     Tcl_UtfToUpper(nameUpper);
 
     Tcl_DStringInit(&envString);
-    for (i = 0, env = _wenviron[i];
-	env != NULL;
-	i++, env = _wenviron[i]) {
+    for (i = 0, env = environ[i]; env != NULL; i++, env = environ[i]) {
 	/*
 	 * Chop the env string off after the equal sign, then Convert the name
 	 * to all upper case, so we do not have to convert all the characters
 	 * after the equal sign.
 	 */
 
-	envUpper = Tcl_WinTCharToUtf((TCHAR *)env, -1, &envString);
+	envUpper = Tcl_ExternalToUtfDString(NULL, env, -1, &envString);
 	p1 = strchr(envUpper, '=');
 	if (p1 == NULL) {
 	    continue;

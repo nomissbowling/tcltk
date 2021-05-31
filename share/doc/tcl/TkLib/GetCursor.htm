@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_AllocCursorFromObj manual page - Tk Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> GetCursor</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> GetCursor</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="GetCursor.htm#M2" NAME="L286">NAME</A>
-<DL><DD>Tk_AllocCursorFromObj, Tk_GetCursor, Tk_GetCursorFromObj, Tk_GetCursorFromData, Tk_NameOfCursor, Tk_FreeCursorFromObj, Tk_FreeCursor &mdash; maintain database of cursors</DD></DL>
-<DD><A HREF="GetCursor.htm#M3" NAME="L287">SYNOPSIS</A>
+<DD><A HREF="GetCursor.htm#M2" NAME="L281">NAME</A>
+<DL><DD>Tk_AllocCursorFromObj, Tk_GetCursor, Tk_GetCursorFromObj, Tk_GetCursorFromData, Tk_NameOfCursor, Tk_FreeCursorFromObj, Tk_FreeCursor - maintain database of cursors</DD></DL>
+<DD><A HREF="GetCursor.htm#M3" NAME="L282">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>Tk_Cursor
@@ -24,21 +24,21 @@
 <DD><B>Tk_FreeCursorFromObj(</B><I>tkwin, objPtr</I><B>)</B>
 <DD><B>Tk_FreeCursor(</B><I>display, cursor</I><B>)</B>
 </DL>
-<DD><A HREF="GetCursor.htm#M4" NAME="L288">ARGUMENTS</A>
+<DD><A HREF="GetCursor.htm#M4" NAME="L283">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="GetCursor.htm#M5" NAME="L289">DESCRIPTION</A>
+<DD><A HREF="GetCursor.htm#M5" NAME="L284">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="GetCursor.htm#M6" NAME="L290"><I>name</I> [<I>fgColor</I> [<I>bgColor</I>]]</A>
-<DD><A HREF="GetCursor.htm#M7" NAME="L291"><B>@</B><I>sourceName maskName fgColor bgColor</I></A>
-<DD><A HREF="GetCursor.htm#M8" NAME="L292"><B>@</B><I>sourceName fgColor</I></A>
-<DD><A HREF="GetCursor.htm#M9" NAME="L293"><B>@</B><I>sourceName</I></A>
+<DD><A HREF="GetCursor.htm#M6" NAME="L285"><I>name</I> [<I>fgColor</I> [<I>bgColor</I>]]</A>
+<DD><A HREF="GetCursor.htm#M7" NAME="L286"><B>@</B><I>sourceName maskName fgColor bgColor</I></A>
+<DD><A HREF="GetCursor.htm#M8" NAME="L287"><B>@</B><I>sourceName fgColor</I></A>
+<DD><A HREF="GetCursor.htm#M9" NAME="L288"><B>@</B><I>sourceName</I></A>
 </DL>
-<DD><A HREF="GetCursor.htm#M10" NAME="L294">BUGS</A>
-<DD><A HREF="GetCursor.htm#M11" NAME="L295">KEYWORDS</A>
+<DD><A HREF="GetCursor.htm#M10" NAME="L289">BUGS</A>
+<DD><A HREF="GetCursor.htm#M11" NAME="L290">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_AllocCursorFromObj, Tk_GetCursor, Tk_GetCursorFromObj, Tk_GetCursorFromData, Tk_NameOfCursor, Tk_FreeCursorFromObj, Tk_FreeCursor &mdash; maintain database of cursors
+Tk_AllocCursorFromObj, Tk_GetCursor, Tk_GetCursorFromObj, Tk_GetCursorFromData, Tk_NameOfCursor, Tk_FreeCursorFromObj, Tk_FreeCursor - maintain database of cursors
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 Tk_Cursor<BR>
@@ -57,9 +57,9 @@ const char *<BR>
 <DL class="arguments">
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter to use for error reporting.
-<P><DT><A HREF="../TkLib/WindowId.htm">Tk_Window</A> <B>tkwin</B> (in)<DD>
+<P><DT>Tk_Window <B>tkwin</B> (in)<DD>
 Token for window in which the cursor will be used.
-<P><DT><A HREF="../TclLib/Object.htm">Tcl_Obj</A> <B>*objPtr</B> (in/out)<DD>
+<P><DT>Tcl_Obj <B>*objPtr</B> (in/out)<DD>
 Description of cursor;  see below for possible values.  Internal rep will be
 modified to cache pointer to corresponding Tk_Cursor.
 <P><DT>char <B>*name</B> (in)<DD>
@@ -135,7 +135,7 @@ in preference to black and white cursors.
 <P><DT><A NAME="M7"><B>@</B><I>sourceName maskName fgColor bgColor</I></A><DD>
 In this form, <I>sourceName</I> and <I>maskName</I> are the names of
 files describing cursors for the cursor's source bits and mask.
-Each file must be in standard X11 cursor format.
+Each file must be in standard X11 or X10 cursor format.
 <I>FgColor</I> and <I>bgColor</I> 
 indicate the colors to use for the
 cursor, in any of the forms acceptable to <B><A HREF="../TkLib/GetColor.htm">Tk_GetColor</A></B>.  This
@@ -227,6 +227,7 @@ with its Tk_Cursor token.
 There should be exactly one call to <B>Tk_FreeCursor</B> for
 each call to <B>Tk_AllocCursorFromObj</B>, <B>Tk_GetCursor</B>,
 or <B>Tk_GetCursorFromData</B>.
+
 <H3><A NAME="M10">BUGS</A></H3>
 In determining whether an existing cursor can be used to satisfy
 a new request, <B>Tk_AllocCursorFromObj</B>, <B>Tk_GetCursor</B>,
@@ -241,9 +242,11 @@ a different file.  Similarly, <B>Tk_GetCursorFromData</B> assumes
 that if the same <I>source</I> pointer is used in two different calls,
 then the pointers refer to the same data;  it does not check to
 see if the actual data values have changed.
+
 <H3><A NAME="M11">KEYWORDS</A></H3>
 <A href="../Keywords/C.htm#cursor">cursor</A>
-<div class="copy">Copyright &copy; 1990 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990 The Regents of the University of California.
 Copyright &copy; 1994-1998 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_SetAssocData manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> AssocData</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> AssocData</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="AssocData.htm#M2" NAME="L31">NAME</A>
-<DL><DD>Tcl_GetAssocData, Tcl_SetAssocData, Tcl_DeleteAssocData &mdash; manage associations of string keys and user specified data with Tcl interpreters</DD></DL>
-<DD><A HREF="AssocData.htm#M3" NAME="L32">SYNOPSIS</A>
+<DD><A HREF="AssocData.htm#M2" NAME="L28">NAME</A>
+<DL><DD>Tcl_GetAssocData, Tcl_SetAssocData, Tcl_DeleteAssocData - manage associations of string keys and user specified data with Tcl interpreters</DD></DL>
+<DD><A HREF="AssocData.htm#M3" NAME="L29">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD>ClientData
@@ -16,14 +16,14 @@
 <DD><B>Tcl_SetAssocData</B>(<I>interp, key, delProc, clientData</I>)
 <DD><B>Tcl_DeleteAssocData</B>(<I>interp, key</I>)
 </DL>
-<DD><A HREF="AssocData.htm#M4" NAME="L33">ARGUMENTS</A>
+<DD><A HREF="AssocData.htm#M4" NAME="L30">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="AssocData.htm#M5" NAME="L34">DESCRIPTION</A>
-<DD><A HREF="AssocData.htm#M6" NAME="L35">KEYWORDS</A>
+<DD><A HREF="AssocData.htm#M5" NAME="L31">DESCRIPTION</A>
+<DD><A HREF="AssocData.htm#M6" NAME="L32">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_GetAssocData, Tcl_SetAssocData, Tcl_DeleteAssocData &mdash; manage associations of string keys and user specified data with Tcl interpreters
+Tcl_GetAssocData, Tcl_SetAssocData, Tcl_DeleteAssocData - manage associations of string keys and user specified data with Tcl interpreters
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 ClientData<BR>
@@ -70,11 +70,9 @@ If the <I>deleteProc</I> argument is non-NULL it specifies the address of a
 procedure to invoke if the interpreter is deleted before the association
 is deleted.  <I>DeleteProc</I> should have arguments and result that match
 the type <B>Tcl_InterpDeleteProc</B>:
-<P>
-<PRE>typedef void <B>Tcl_InterpDeleteProc</B>(
+<PRE>typedef void Tcl_InterpDeleteProc(
         ClientData <I>clientData</I>,
         <A HREF="../TclLib/Interp.htm">Tcl_Interp</A> *<I>interp</I>);</PRE>
-<P>
 When <I>deleteProc</I> is invoked the <I>clientData</I> and <I>interp</I>
 arguments will be the same as the corresponding arguments passed to
 <B>Tcl_SetAssocData</B>.
@@ -92,6 +90,7 @@ returns <B>NULL</B>.
 the given interpreter.  Then it calls the deletion procedure.
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/A.htm#association">association</A>, <A href="../Keywords/D.htm#data">data</A>, <A href="../Keywords/D.htm#deletion procedure">deletion procedure</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/K.htm#key">key</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

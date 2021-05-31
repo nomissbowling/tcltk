@@ -1,0 +1,59 @@
+<HTML>
+<HEAD>
+   <TITLE>TclExcept - assert</TITLE>
+</HEAD>
+<BODY>
+
+<H3>
+NAME</H3>
+assert - Evaluate assertions and throw errors if failed. Useful for debugging
+and validity testing.
+<H3>
+SYNOPSIS</H3>
+
+<PRE><B>assert</B><I> conditions</I></PRE>
+
+<H3>
+DESCRIPTION</H3>
+This command is used to perform a series of tests inside a Tcl script (usually
+validity tests, such as range testing and type checking). The argument
+<I>conditions</I> is a newline-separated Tcl string containing a sequence
+of conditions (ie boolean expressions) to be checked. The syntax of these
+conditions is the same that is used by the <B>if</B> and <B>expr</B> commands.
+<B>Assert</B> will test these conditions sequentially until a test fails,
+in this case an exception is thrown. If all tests are successful then <B>assert</B>
+returns a null string.
+
+<P><B>Assert</B> is exception-aware. That means it throws exceptions that
+can be handled by <B><A HREF="try.htm">try</A></B> statements. The exception
+type thrown is <B>Assertion</B>.
+<H3>
+KNOWN BUGS/LIMITATIONS</H3>
+Conditions cannot spawn multiple lines, even if they are well-formed Tcl
+lists. This is due to the condition block being split at each newline character.
+For an expression to spawn several lines, each line must end with a backslash
+"<TT>\</TT>" character. For example:
+<UL>
+<PRE><B>assert {
+&nbsp;&nbsp;&nbsp; (1 ==&nbsp; 1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + 0)
+}</B></PRE>
+</UL>
+is invalid, whereas
+<UL>
+<PRE><B>assert {
+&nbsp;&nbsp;&nbsp; (1 ==&nbsp; 1 \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + 0)
+}</B></PRE>
+</UL>
+is allowed. This in inconsistent with <B>expr</B>, where both forms are
+allowed, so this is likely to change in future versions (if enough people
+ask for that ;-).
+<H3>
+SEE ALSO</H3>
+expr(n), if(n), <A HREF="try.htm">try</A>
+<H3>
+KEYWORDS</H3>
+assertion, debugging, validity
+</BODY>
+</HTML>

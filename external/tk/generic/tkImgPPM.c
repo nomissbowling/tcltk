@@ -34,14 +34,14 @@
  * The format record for the PPM file format:
  */
 
-static int		FileMatchPPM(Tcl_Channel chan, const char *fileName,
+static int		FileMatchPPM(Tcl_Channel chan, CONST char *fileName,
 			    Tcl_Obj *format, int *widthPtr, int *heightPtr,
 			    Tcl_Interp *interp);
 static int		FileReadPPM(Tcl_Interp *interp, Tcl_Channel chan,
-			    const char *fileName, Tcl_Obj *format,
+			    CONST char *fileName, Tcl_Obj *format,
 			    Tk_PhotoHandle imageHandle, int destX, int destY,
 			    int width, int height, int srcX, int srcY);
-static int		FileWritePPM(Tcl_Interp *interp, const char *fileName,
+static int		FileWritePPM(Tcl_Interp *interp, CONST char *fileName,
 			    Tcl_Obj *format, Tk_PhotoImageBlock *blockPtr);
 static int		StringWritePPM(Tcl_Interp *interp, Tcl_Obj *format,
 			    Tk_PhotoImageBlock *blockPtr);
@@ -60,7 +60,6 @@ Tk_PhotoImageFormat tkImgFmtPPM = {
     StringReadPPM,		/* stringReadProc */
     FileWritePPM,		/* fileWriteProc */
     StringWritePPM,		/* stringWriteProc */
-    NULL
 };
 
 /*
@@ -94,13 +93,13 @@ static int		ReadPPMStringHeader(Tcl_Obj *dataObj, int *widthPtr,
 static int
 FileMatchPPM(
     Tcl_Channel chan,		/* The image file, open for reading. */
-    TCL_UNUSED(const char *),	/* The name of the image file. */
-    TCL_UNUSED(Tcl_Obj *),		/* User-specified format string, or NULL. */
+    CONST char *fileName,	/* The name of the image file. */
+    Tcl_Obj *format,		/* User-specified format string, or NULL. */
     int *widthPtr, int *heightPtr,
 				/* The dimensions of the image are returned
 				 * here if the file is a valid raw PPM
 				 * file. */
-    TCL_UNUSED(Tcl_Interp *))		/* unused */
+    Tcl_Interp *interp)		/* unused */
 {
     int dummy;
 
@@ -130,8 +129,8 @@ static int
 FileReadPPM(
     Tcl_Interp *interp,		/* Interpreter to use for reporting errors. */
     Tcl_Channel chan,		/* The image file, open for reading. */
-    const char *fileName,	/* The name of the image file. */
-    TCL_UNUSED(Tcl_Obj *),		/* User-specified format string, or NULL. */
+    CONST char *fileName,	/* The name of the image file. */
+    Tcl_Obj *format,		/* User-specified format string, or NULL. */
     Tk_PhotoHandle imageHandle,	/* The photo image to write into. */
     int destX, int destY,	/* Coordinates of top-left pixel in photo
 				 * image to be written to. */
@@ -147,22 +146,21 @@ FileReadPPM(
 
     type = ReadPPMFileHeader(chan, &fileWidth, &fileHeight, &maxIntensity);
     if (type == 0) {
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"couldn't read raw PPM header from file \"%s\"", fileName));
-	Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "NO_HEADER", NULL);
+	Tcl_AppendResult(interp, "couldn't read raw PPM header from file \"",
+		fileName, "\"", NULL);
 	return TCL_ERROR;
     }
     if ((fileWidth <= 0) || (fileHeight <= 0)) {
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"PPM image file \"%s\" has dimension(s) <= 0", fileName));
-	Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "DIMENSIONS", NULL);
+	Tcl_AppendResult(interp, "PPM image file \"", fileName,
+		"\" has dimension(s) <= 0", NULL);
 	return TCL_ERROR;
     }
     if ((maxIntensity <= 0) || (maxIntensity > 0xffff)) {
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"PPM image file \"%s\" has bad maximum intensity value %d",
-		fileName, maxIntensity));
-	Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "INTENSITY", NULL);
+	char buffer[TCL_INTEGER_SPACE];
+
+	sprintf(buffer, "%d", maxIntensity);
+	Tcl_AppendResult(interp, "PPM image file \"", fileName,
+		"\" has bad maximum intensity value ", buffer, NULL);
 	return TCL_ERROR;
     } else if (maxIntensity > 0x00ff) {
 	bytesPerChannel = 2;
@@ -211,7 +209,7 @@ FileReadPPM(
 	nLines = 1;
     }
     nBytes = nLines * block.pitch;
-    pixelPtr = (unsigned char *)ckalloc(nBytes);
+    pixelPtr = (unsigned char *) ckalloc((unsigned) nBytes);
     block.pixelPtr = pixelPtr + srcX * block.pixelSize;
 
     for (h = height; h > 0; h -= nLines) {
@@ -221,13 +219,11 @@ FileReadPPM(
 	}
 	count = Tcl_Read(chan, (char *) pixelPtr, nBytes);
 	if (count != nBytes) {
-	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "error reading PPM image file \"%s\": %s", fileName,
-		    Tcl_Eof(chan)?"not enough data":Tcl_PosixError(interp)));
-	    if (Tcl_Eof(chan)) {
-		Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "EOF", NULL);
-	    }
-	    ckfree(pixelPtr);
+	    Tcl_AppendResult(interp, "error reading PPM image file \"",
+		    fileName, "\": ",
+		    Tcl_Eof(chan) ? "not enough data" : Tcl_PosixError(interp),
+		    NULL);
+	    ckfree((char *) pixelPtr);
 	    return TCL_ERROR;
 	}
 	if (maxIntensity < 0x00ff) {
@@ -249,13 +245,13 @@ FileReadPPM(
 	block.height = nLines;
 	if (Tk_PhotoPutBlock(interp, imageHandle, &block, destX, destY,
 		width, nLines, TK_PHOTO_COMPOSITE_SET) != TCL_OK) {
-	    ckfree(pixelPtr);
+	    ckfree((char *) pixelPtr);
 	    return TCL_ERROR;
 	}
 	destY += nLines;
     }
 
-    ckfree(pixelPtr);
+    ckfree((char *) pixelPtr);
     return TCL_OK;
 }
 
@@ -280,8 +276,8 @@ FileReadPPM(
 static int
 FileWritePPM(
     Tcl_Interp *interp,
-    const char *fileName,
-    TCL_UNUSED(Tcl_Obj *),
+    CONST char *fileName,
+    Tcl_Obj *format,
     Tk_PhotoImageBlock *blockPtr)
 {
     Tcl_Channel chan;
@@ -323,8 +319,8 @@ FileWritePPM(
 	    pixelPtr = pixLinePtr;
 	    for (w = blockPtr->width; w > 0; w--) {
 		if (    Tcl_Write(chan,(char *)&pixelPtr[0], 1) == -1 ||
-			Tcl_Write(chan,(char *)&pixelPtr[greenOffset],1) == -1 ||
-			Tcl_Write(chan,(char *)&pixelPtr[blueOffset],1) == -1) {
+			Tcl_Write(chan,(char *)&pixelPtr[greenOffset],1)==-1 ||
+			Tcl_Write(chan,(char *)&pixelPtr[blueOffset],1) ==-1) {
 		    goto writeerror;
 		}
 		pixelPtr += blockPtr->pixelSize;
@@ -339,8 +335,8 @@ FileWritePPM(
     chan = NULL;
 
   writeerror:
-    Tcl_SetObjResult(interp, Tcl_ObjPrintf("error writing \"%s\": %s",
-	    fileName, Tcl_PosixError(interp)));
+    Tcl_AppendResult(interp, "error writing \"", fileName, "\": ",
+	    Tcl_PosixError(interp), NULL);
     if (chan != NULL) {
 	Tcl_Close(NULL, chan);
     }
@@ -368,7 +364,7 @@ FileWritePPM(
 static int
 StringWritePPM(
     Tcl_Interp *interp,
-    TCL_UNUSED(Tcl_Obj *),
+    Tcl_Obj *format,
     Tk_PhotoImageBlock *blockPtr)
 {
     int w, h, size, greenOffset, blueOffset;
@@ -444,12 +440,12 @@ StringWritePPM(
 static int
 StringMatchPPM(
     Tcl_Obj *dataObj,		/* The image data. */
-    TCL_UNUSED(Tcl_Obj *),		/* User-specified format string, or NULL. */
+    Tcl_Obj *format,		/* User-specified format string, or NULL. */
     int *widthPtr, int *heightPtr,
 				/* The dimensions of the image are returned
 				 * here if the file is a valid raw PPM
 				 * file. */
-    TCL_UNUSED(Tcl_Interp *))		/* unused */
+    Tcl_Interp *interp)		/* unused */
 {
     int dummy;
 
@@ -479,7 +475,7 @@ static int
 StringReadPPM(
     Tcl_Interp *interp,		/* Interpreter to use for reporting errors. */
     Tcl_Obj *dataObj,		/* The image data. */
-    TCL_UNUSED(Tcl_Obj *),		/* User-specified format string, or NULL. */
+    Tcl_Obj *format,		/* User-specified format string, or NULL. */
     Tk_PhotoHandle imageHandle,	/* The photo image to write into. */
     int destX, int destY,	/* Coordinates of top-left pixel in photo
 				 * image to be written to. */
@@ -496,22 +492,22 @@ StringReadPPM(
     type = ReadPPMStringHeader(dataObj, &fileWidth, &fileHeight,
 	    &maxIntensity, &dataBuffer, &dataSize);
     if (type == 0) {
-	Tcl_SetObjResult(interp, Tcl_NewStringObj(
-		"couldn't read raw PPM header from string", -1));
-	Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "NO_HEADER", NULL);
+	Tcl_AppendResult(interp, "couldn't read raw PPM header from string",
+		NULL);
 	return TCL_ERROR;
     }
     if ((fileWidth <= 0) || (fileHeight <= 0)) {
-	Tcl_SetObjResult(interp, Tcl_NewStringObj(
-		"PPM image data has dimension(s) <= 0", -1));
-	Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "DIMENSIONS", NULL);
+	Tcl_AppendResult(interp, "PPM image data has dimension(s) <= 0",
+		NULL);
 	return TCL_ERROR;
     }
     if ((maxIntensity <= 0) || (maxIntensity > 0xffff)) {
-	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"PPM image data has bad maximum intensity value %d",
-		maxIntensity));
-	Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "INTENSITY", NULL);
+	char buffer[TCL_INTEGER_SPACE];
+
+	sprintf(buffer, "%d", maxIntensity);
+	Tcl_AppendResult(interp,
+		"PPM image data has bad maximum intensity value ", buffer,
+		NULL);
 	return TCL_ERROR;
     } else if (maxIntensity > 0x00ff) {
 	bytesPerChannel = 2;
@@ -554,9 +550,7 @@ StringReadPPM(
 	 */
 
 	if (block.pitch*height > dataSize) {
-	    Tcl_SetObjResult(interp, Tcl_NewStringObj(
-		    "truncated PPM data", -1));
-	    Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "TRUNCATED", NULL);
+	    Tcl_AppendResult(interp, "truncated PPM data", NULL);
 	    return TCL_ERROR;
 	}
 	block.pixelPtr = dataBuffer + srcX * block.pixelSize;
@@ -578,7 +572,7 @@ StringReadPPM(
 	nLines = 1;
     }
     nBytes = nLines * block.pitch;
-    pixelPtr = (unsigned char *)ckalloc(nBytes);
+    pixelPtr = (unsigned char *) ckalloc((unsigned) nBytes);
     block.pixelPtr = pixelPtr + srcX * block.pixelSize;
 
     for (h = height; h > 0; h -= nLines) {
@@ -589,10 +583,8 @@ StringReadPPM(
 	    nBytes = nLines * block.pitch;
 	}
 	if (dataSize < nBytes) {
-	    ckfree(pixelPtr);
-	    Tcl_SetObjResult(interp, Tcl_NewStringObj(
-		    "truncated PPM data", -1));
-	    Tcl_SetErrorCode(interp, "TK", "IMAGE", "PPM", "TRUNCATED", NULL);
+	    ckfree((char *) pixelPtr);
+	    Tcl_AppendResult(interp, "truncated PPM data", NULL);
 	    return TCL_ERROR;
 	}
 	if (maxIntensity < 0x00ff) {
@@ -600,6 +592,7 @@ StringReadPPM(
 		*p = (((int) *dataBuffer) * 255)/maxIntensity;
 	    }
 	} else {
+	    unsigned char *p;
 	    unsigned int value;
 
 	    for (p = pixelPtr,count=nBytes; count > 1; count-=2, p += 2) {
@@ -612,13 +605,13 @@ StringReadPPM(
 	block.height = nLines;
 	if (Tk_PhotoPutBlock(interp, imageHandle, &block, destX, destY,
 		width, nLines, TK_PHOTO_COMPOSITE_SET) != TCL_OK) {
-	    ckfree(pixelPtr);
+	    ckfree((char *) pixelPtr);
 	    return TCL_ERROR;
 	}
 	destY += nLines;
     }
 
-    ckfree(pixelPtr);
+    ckfree((char *) pixelPtr);
     return TCL_OK;
 }
 

@@ -40,11 +40,6 @@
 #endif
 
 /*
- * Rounding controls. (Thanks a lot, Intel!)
- */
-
-#ifdef __i386
-/*
  * gcc on x86 needs access to rounding controls, because of a questionable
  * feature where it retains intermediate results as IEEE 'long double' values
  * somewhat unpredictably. It is tempting to include fpu_control.h, but that
@@ -52,43 +47,20 @@
  * and ix86-isms are factored out here.
  */
 
-#if defined(__GNUC__)
-typedef unsigned int	fpu_control_t __attribute__ ((__mode__ (__HI__)));
-
-#define _FPU_GETCW(cw)	__asm__ __volatile__ ("fnstcw %0" : "=m" (*&cw))
-#define _FPU_SETCW(cw)	__asm__ __volatile__ ("fldcw %0" : : "m" (*&cw))
-#   define FPU_IEEE_ROUNDING	0x027F
+#if defined(__GNUC__) && defined(__i386)
+typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
+#define _FPU_GETCW(cw) __asm__ __volatile__ ("fnstcw %0" : "=m" (*&cw))
+#define _FPU_SETCW(cw) __asm__ __volatile__ ("fldcw %0" : : "m" (*&cw))
+#   define FPU_IEEE_ROUNDING	0x027f
 #   define ADJUST_FPU_CONTROL_WORD
-#define TCL_IEEE_DOUBLE_ROUNDING \
-    fpu_control_t roundTo53Bits = FPU_IEEE_ROUNDING;	\
-    fpu_control_t oldRoundingMode;			\
-    _FPU_GETCW(oldRoundingMode);			\
-    _FPU_SETCW(roundTo53Bits)
-#define TCL_DEFAULT_DOUBLE_ROUNDING \
-    _FPU_SETCW(oldRoundingMode)
-
-/*
- * Sun ProC needs sunmath for rounding control on x86 like gcc above.
- */
-#elif defined(__sun)
-#include <sunmath.h>
-#define TCL_IEEE_DOUBLE_ROUNDING \
-    ieee_flags("set","precision","double",NULL)
-#define TCL_DEFAULT_DOUBLE_ROUNDING \
-    ieee_flags("clear","precision",NULL,NULL)
-
-/*
- * Other platforms are assumed to always operate in full IEEE mode, so we make
- * the macros to go in and out of that mode do nothing.
- */
-
-#else /* !__GNUC__ && !__sun */
-#define TCL_IEEE_DOUBLE_ROUNDING	((void) 0)
-#define TCL_DEFAULT_DOUBLE_ROUNDING	((void) 0)
 #endif
-#else /* !__i386 */
-#define TCL_IEEE_DOUBLE_ROUNDING	((void) 0)
-#define TCL_DEFAULT_DOUBLE_ROUNDING	((void) 0)
+
+/* Sun ProC needs sunmath for rounding control on x86 like gcc above.
+ *
+ *
+ */
+#if defined(__sun) && defined(__i386) && !defined(__GNUC__)
+#include <sunmath.h>
 #endif
 
 /*
@@ -106,10 +78,10 @@ typedef unsigned int	fpu_control_t __attribute__ ((__mode__ (__HI__)));
  */
 
 #ifdef __hppa
-#   define NAN_START	0x7FF4
+#   define NAN_START	0x7ff4
 #   define NAN_MASK	(((Tcl_WideUInt) 1) << 50)
 #else
-#   define NAN_START	0x7FF8
+#   define NAN_START	0x7ff8
 #   define NAN_MASK	(((Tcl_WideUInt) 1) << 51)
 #endif
 
@@ -131,23 +103,23 @@ typedef unsigned int	fpu_control_t __attribute__ ((__mode__ (__HI__)));
 #define SIGN_BIT 	0x80000000
 				/* Mask for the sign bit in the first word of
 				 * a double. */
-#define EXP_MASK	0x7FF00000
+#define EXP_MASK	0x7ff00000
 				/* Mask for the exponent field in the first
 				 * word of a double. */
 #define EXP_SHIFT	20	/* Shift count to make the exponent an
 				 * integer. */
 #define HIDDEN_BIT	(((Tcl_WideUInt) 0x00100000) << 32)
 				/* Hidden 1 bit for the significand. */
-#define HI_ORDER_SIG_MASK 0x000FFFFF
+#define HI_ORDER_SIG_MASK 0x000fffff
 				/* Mask for the high-order part of the
 				 * significand in the first word of a
 				 * double. */
 #define SIG_MASK	(((Tcl_WideUInt) HI_ORDER_SIG_MASK << 32) \
-			| 0xFFFFFFFF)
+			| 0xffffffff)
 				/* Mask for the 52-bit significand. */
 #define FP_PRECISION	53	/* Number of bits of significand plus the
 				 * hidden bit. */
-#define EXPONENT_BIAS	0x3FF	/* Bias of the exponent 0. */
+#define EXPONENT_BIAS	0x3ff	/* Bias of the exponent 0. */
 
 /*
  * Derived quantities.
@@ -305,9 +277,7 @@ static double		MakeHighPrecisionDouble(int signum,
 static double		MakeLowPrecisionDouble(int signum,
 			    Tcl_WideUInt significand, int nSigDigs,
 			    long exponent);
-#ifdef IEEE_FLOATING_POINT
 static double		MakeNaN(int signum, Tcl_WideUInt tag);
-#endif
 static double		RefineApproximation(double approx,
 			    mp_int *exactSignificand, int exponent);
 static void		MulPow5(mp_int *, unsigned, mp_int *);
@@ -366,13 +336,11 @@ static char *		StrictBignumConversion(Double *dPtr, int convType,
 			    int s2, int s5, int k, int len,
 			    int ilim, int ilim1, int *decpt,
 			    char **endPtr);
-static double		BignumToBiasedFrExp(const mp_int *big, int *machexp);
+static double		BignumToBiasedFrExp(mp_int *big, int *machexp);
 static double		Pow10TimesFrExp(int exponent, double fraction,
 			    int *machexp);
 static double		SafeLdExp(double fraction, int exponent);
-#ifdef IEEE_FLOATING_POINT
 static Tcl_WideUInt	Nokia770Twiddle(Tcl_WideUInt w);
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -401,9 +369,6 @@ static Tcl_WideUInt	Nokia770Twiddle(Tcl_WideUInt w);
  *	- TCL_PARSE_SCAN_PREFIXES:	ignore the prefixes 0b and 0o that are
  *		not part of the [scan] command's vocabulary. Use only in
  *		combination with TCL_PARSE_INTEGER_ONLY.
- *	- TCL_PARSE_BINARY_ONLY:	parse only in the binary format, whether
- *		or not a prefix is present that would lead to binary parsing.
- *		Use only in combination with TCL_PARSE_INTEGER_ONLY.
  *	- TCL_PARSE_OCTAL_ONLY:		parse only in the octal format, whether
  *		or not a prefix is present that would lead to octal parsing.
  *		Use only in combination with TCL_PARSE_INTEGER_ONLY.
@@ -598,8 +563,6 @@ TclParseNumber(
 		break;
 	    } else if (flags & TCL_PARSE_HEXADECIMAL_ONLY) {
 		goto zerox;
-	    } else if (flags & TCL_PARSE_BINARY_ONLY) {
-		goto zerob;
 	    } else if (flags & TCL_PARSE_OCTAL_ONLY) {
 		goto zeroo;
 	    } else if (isdigit(UCHAR(c))) {
@@ -635,7 +598,7 @@ TclParseNumber(
 	    acceptPoint = p;
 	    acceptLen = len;
 	    if (c == 'x' || c == 'X') {
-		if (flags & (TCL_PARSE_OCTAL_ONLY|TCL_PARSE_BINARY_ONLY)) {
+		if (flags & TCL_PARSE_OCTAL_ONLY) {
 		    goto endgame;
 		}
 		state = ZERO_X;
@@ -653,9 +616,6 @@ TclParseNumber(
 		}
 		state = ZERO_B;
 		break;
-	    }
-	    if (flags & TCL_PARSE_BINARY_ONLY) {
-		goto zerob;
 	    }
 	    if (c == 'o' || c == 'O') {
 		explicitOctal = 1;
@@ -841,9 +801,7 @@ TclParseNumber(
 	    acceptState = state;
 	    acceptPoint = p;
 	    acceptLen = len;
-	    /* FALLTHRU */
 	case ZERO_B:
-	zerob:
 	    if (c == '0') {
 		numTrailZeros++;
 		state = BINARY;
@@ -1254,7 +1212,7 @@ TclParseNumber(
 	    if (!octalSignificandOverflow) {
 		if (octalSignificandWide >
 			(Tcl_WideUInt)(((~(unsigned long)0) >> 1) + signum)) {
-#ifndef TCL_WIDE_INT_IS_LONG
+#ifndef NO_WIDE_TYPE
 		    if (octalSignificandWide <= (MOST_BITS + signum)) {
 			objPtr->typePtr = &tclWideIntType;
 			if (signum) {
@@ -1283,7 +1241,7 @@ TclParseNumber(
 	    }
 	    if (octalSignificandOverflow) {
 		if (signum) {
-		    (void)mp_neg(&octalSignificandBig, &octalSignificandBig);
+		    mp_neg(&octalSignificandBig, &octalSignificandBig);
 		}
 		TclSetBignumIntRep(objPtr, &octalSignificandBig);
 	    }
@@ -1301,7 +1259,7 @@ TclParseNumber(
 	    if (!significandOverflow) {
 		if (significandWide >
 			(Tcl_WideUInt)(((~(unsigned long)0) >> 1) + signum)) {
-#ifndef TCL_WIDE_INT_IS_LONG
+#ifndef NO_WIDE_TYPE
 		    if (significandWide <= MOST_BITS+signum) {
 			objPtr->typePtr = &tclWideIntType;
 			if (signum) {
@@ -1330,7 +1288,7 @@ TclParseNumber(
 	    }
 	    if (significandOverflow) {
 		if (signum) {
-		    (void)mp_neg(&significandBig, &significandBig);
+		    mp_neg(&significandBig, &significandBig);
 		}
 		TclSetBignumIntRep(objPtr, &significandBig);
 	    }
@@ -1349,9 +1307,9 @@ TclParseNumber(
 
 	    objPtr->typePtr = &tclDoubleType;
 	    if (exponentSignum) {
-		/*
+		/* 
 		 * At this point exponent>=0, so the following calculation
-		 * cannot underflow.
+		 * cannot underflow. 
 		 */
 		exponent = -exponent;
 	    }
@@ -1377,7 +1335,7 @@ TclParseNumber(
 		}
 	    }
 
-	    /*
+	    /* 
 	     * The desired number is now significandWide * 10**exponent
 	     * or significandBig * 10**exponent, depending on whether
 	     * the significand has overflowed a wide int.
@@ -1420,9 +1378,11 @@ TclParseNumber(
 
     if (status != TCL_OK) {
 	if (interp != NULL) {
-	    Tcl_Obj *msg = Tcl_ObjPrintf("expected %s but got \"",
-		    expected);
+	    Tcl_Obj *msg;
 
+	    TclNewLiteralStringObj(msg, "expected ");
+	    Tcl_AppendToObj(msg, expected, -1);
+	    Tcl_AppendToObj(msg, " but got \"", -1);
 	    Tcl_AppendLimitedToObj(msg, bytes, numBytes, 50, "");
 	    Tcl_AppendToObj(msg, "\"", -1);
 	    if (state == BAD_OCTAL) {
@@ -1586,7 +1546,15 @@ MakeLowPrecisionDouble(
      * ulp, so we need to change rounding mode to 53-bits.
      */
 
-    TCL_IEEE_DOUBLE_ROUNDING;
+#if defined(__GNUC__) && defined(__i386)
+    fpu_control_t roundTo53Bits = 0x027f;
+    fpu_control_t oldRoundingMode;
+    _FPU_GETCW(oldRoundingMode);
+    _FPU_SETCW(roundTo53Bits);
+#endif
+#if defined(__sun) && defined(__i386) && !defined(__GNUC__)
+    ieee_flags("set","precision","double",NULL);
+#endif
 
     /*
      * Test for the easy cases.
@@ -1662,7 +1630,12 @@ MakeLowPrecisionDouble(
      * On gcc on x86, restore the floating point mode word.
      */
 
-    TCL_DEFAULT_DOUBLE_ROUNDING;
+#if defined(__GNUC__) && defined(__i386)
+    _FPU_SETCW(oldRoundingMode);
+#endif
+#if defined(__sun) && defined(__i386) && !defined(__GNUC__)
+    ieee_flags("clear","precision",NULL,NULL);
+#endif
 
     return retval;
 }
@@ -1703,7 +1676,15 @@ MakeHighPrecisionDouble(
      * ulp, so we need to change rounding mode to 53-bits.
      */
 
-    TCL_IEEE_DOUBLE_ROUNDING;
+#if defined(__GNUC__) && defined(__i386)
+    fpu_control_t roundTo53Bits = 0x027f;
+    fpu_control_t oldRoundingMode;
+    _FPU_GETCW(oldRoundingMode);
+    _FPU_SETCW(roundTo53Bits);
+#endif
+#if defined(__sun) && defined(__i386) && !defined(__GNUC__)
+    ieee_flags("set","precision","double",NULL);
+#endif
 
     /*
      * Quick checks for zero, and over/underflow. Be careful to avoid
@@ -1765,8 +1746,12 @@ MakeHighPrecisionDouble(
      * On gcc on x86, restore the floating point mode word.
      */
 
-    TCL_DEFAULT_DOUBLE_ROUNDING;
-
+#if defined(__GNUC__) && defined(__i386)
+    _FPU_SETCW(oldRoundingMode);
+#endif
+#if defined(__sun) && defined(__i386) && !defined(__GNUC__)
+    ieee_flags("clear","precision",NULL,NULL);
+#endif
     return retval;
 }
 
@@ -1900,7 +1885,7 @@ RefineApproximation(
 
     /*
      * Compute twoMv as 2*M*v, where v is the approximate value.
-     * This is done by bit-whacking to calculate 2**(M2+1)*significand,
+     * This is done by bit-whacking to calculate 2**(M2+1)*significand, 
      * and then multiplying by 5**M5.
      */
 
@@ -1935,7 +1920,7 @@ RefineApproximation(
     }
     mp_mul_2d(&twoMd, M2+exponent+1, &twoMd);
 
-    /*
+    /* 
      * Now let twoMd = twoMd - twoMv, the difference between the exact and
      * approximate values.
      */
@@ -2003,7 +1988,7 @@ RefineApproximation(
 	}
     }
 
-    /*
+    /* 
      * Reduce the numerator and denominator of the corrector term so that
      * they will fit in the floating point precision.
      */
@@ -2101,16 +2086,16 @@ NormalizeRightward(
     int rv = 0;
     Tcl_WideUInt w = *wPtr;
 
-    if (!(w & (Tcl_WideUInt) 0xFFFFFFFF)) {
+    if (!(w & (Tcl_WideUInt) 0xffffffff)) {
 	w >>= 32; rv += 32;
     }
-    if (!(w & (Tcl_WideUInt) 0xFFFF)) {
+    if (!(w & (Tcl_WideUInt) 0xffff)) {
 	w >>= 16; rv += 16;
     }
-    if (!(w & (Tcl_WideUInt) 0xFF)) {
+    if (!(w & (Tcl_WideUInt) 0xff)) {
 	w >>= 8; rv += 8;
     }
-    if (!(w & (Tcl_WideUInt) 0xF)) {
+    if (!(w & (Tcl_WideUInt) 0xf)) {
 	w >>= 4; rv += 4;
     }
     if (!(w & 0x3)) {
@@ -2144,21 +2129,21 @@ RequiredPrecision(
     int rv;
     unsigned long wi;
 
-    if (w & ((Tcl_WideUInt) 0xFFFFFFFF << 32)) {
+    if (w & ((Tcl_WideUInt) 0xffffffff << 32)) {
 	wi = (unsigned long) (w >> 32); rv = 32;
     } else {
 	wi = (unsigned long) w; rv = 0;
     }
-    if (wi & 0xFFFF0000) {
+    if (wi & 0xffff0000) {
 	wi >>= 16; rv += 16;
     }
-    if (wi & 0xFF00) {
+    if (wi & 0xff00) {
 	wi >>= 8; rv += 8;
     }
-    if (wi & 0xF0) {
+    if (wi & 0xf0) {
 	wi >>= 4; rv += 4;
     }
-    if (wi & 0xC) {
+    if (wi & 0xc) {
 	wi >>= 2; rv += 2;
     }
     if (wi & 0x2) {
@@ -2603,7 +2588,7 @@ AdjustRange(
 	 * The number must be reduced to bring it into range.
 	 */
 
-	ds = tens[k & 0xF];
+	ds = tens[k & 0xf];
 	j = k >> 4;
 	if (j & BLETCH) {
 	    j &= (BLETCH-1);
@@ -2624,7 +2609,7 @@ AdjustRange(
 	 * The number must be increased to bring it into range.
 	 */
 
-	d *= tens[j1 & 0xF];
+	d *= tens[j1 & 0xf];
 	i = 0;
 	for (j = j1>>4; j; j>>=1) {
 	    if (j & 1) {
@@ -2849,7 +2834,7 @@ QuickConversion(
 	}
 	ilim = ilim1;
 	--k;
-	d = d * 10.0;
+	d *= 10.0;
 	++ieps;
     }
 
@@ -2866,7 +2851,7 @@ QuickConversion(
 
     retval = ckalloc(len + 1);
     if (ilim == 0) {
-	d = d - 5.;
+	d -= 5.;
 	if (d > eps.d) {
 	    *retval = '1';
 	    *decpt = k;
@@ -3255,7 +3240,7 @@ ShouldBankerRoundUpPowD(
 }
 
 /*
- *----------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
  *
  * ShouldBankerRoundUpToNextPowD --
  *
@@ -3597,11 +3582,12 @@ StrictBignumConversionPowD(
 	if (i == ilim) {
 	    if (ShouldBankerRoundUpPowD(&b, sd, digit&1)) {
 		s = BumpUp(s, retval, &k);
+	    } else {
+		while (*--s == '0') {
+		    /* do nothing */
+		}
+		++s;
 	    }
-	    while (*--s == '0') {
-		/* do nothing */
-	    }
-	    ++s;
 	    break;
 	}
 
@@ -4060,24 +4046,22 @@ StrictBignumConversion(
 	    }
 	    i += g;
 
-	    /*
-	     * Have we converted all the requested digits?
-	     */
+	    /* Have we converted all the requested digits? */
 
 	    if (i == ilim) {
 		mp_mul_2d(&b, 1, &b);
 		if (ShouldBankerRoundUp(&b, &S, digit&1)) {
 		    s = BumpUp(s, retval, &k);
+		} else {
+		    while (*--s == '0') {
+			/* do nothing */
+		    }
+		    ++s;
 		}
-		break;
+	    break;
 	    }
 	}
     }
-    while (*--s == '0') {
-	/* do nothing */
-    }
-    ++s;
-
     /*
      * Endgame - store the location of the decimal point and the end of the
      * string.
@@ -4110,8 +4094,8 @@ StrictBignumConversion(
  *	to 1 if a minus sign should be printed with the number, or 0 if a plus
  *	sign (or no sign) should appear.
  *
- * This function is a service routine that produces the string of digits for
- * floating-point-to-decimal conversion. It can do a number of things
+ * This function is a service routine that produces the string of digits
+ * for floating-point-to-decimal conversion. It can do a number of things
  * according to the 'flags' argument. Valid values for 'flags' include:
  *	TCL_DD_SHORTEST - This is the default for floating point conversion if
  *		::tcl_precision is 0. It constructs the shortest string of
@@ -4545,9 +4529,9 @@ TclInitDoubleConversion(void)
 #ifdef IEEE_FLOATING_POINT
     bitwhack.dv = 1.000000238418579;
 				/* 3ff0 0000 4000 0000 */
-    if ((bitwhack.iv >> 32) == 0x3FF00000) {
+    if ((bitwhack.iv >> 32) == 0x3ff00000) {
 	n770_fp = 0;
-    } else if ((bitwhack.iv & 0xFFFFFFFF) == 0x3FF00000) {
+    } else if ((bitwhack.iv & 0xffffffff) == 0x3ff00000) {
 	n770_fp = 1;
     } else {
 	Tcl_Panic("unknown floating point word order on this machine");
@@ -4576,7 +4560,7 @@ TclFinalizeDoubleConversion(void)
 {
     int i;
 
-    ckfree(pow10_wide);
+    ckfree((char *) pow10_wide);
     for (i=0; i<9; ++i) {
 	mp_clear(pow5 + i);
     }
@@ -4661,7 +4645,7 @@ Tcl_InitBignumFromDouble(
 
 double
 TclBignumToDouble(
-    const mp_int *a)			/* Integer to convert. */
+    mp_int *a)			/* Integer to convert. */
 {
     mp_int b;
     int bits, shift, i, lsb;
@@ -4774,7 +4758,7 @@ TclBignumToDouble(
 
 double
 TclCeil(
-    const mp_int *a)			/* Integer to convert. */
+    mp_int *a)			/* Integer to convert. */
 {
     double r = 0.0;
     mp_int b;
@@ -4831,7 +4815,7 @@ TclCeil(
 
 double
 TclFloor(
-    const mp_int *a)			/* Integer to convert. */
+    mp_int *a)			/* Integer to convert. */
 {
     double r = 0.0;
     mp_int b;
@@ -4887,7 +4871,7 @@ TclFloor(
 
 static double
 BignumToBiasedFrExp(
-    const mp_int *a,		/* Integer to convert. */
+    mp_int *a,		/* Integer to convert. */
     int *machexp)		/* Power of two. */
 {
     mp_int b;
@@ -4966,7 +4950,7 @@ Pow10TimesFrExp(
 	 * Multiply by 10**exponent.
 	 */
 
-	retval = frexp(retval * pow10vals[exponent&0xF], &j);
+	retval = frexp(retval * pow10vals[exponent&0xf], &j);
 	expt += j;
 	for (i=4; i<9; ++i) {
 	    if (exponent & (1<<i)) {
@@ -4979,7 +4963,7 @@ Pow10TimesFrExp(
 	 * Divide by 10**-exponent.
 	 */
 
-	retval = frexp(retval / pow10vals[(-exponent) & 0xF], &j);
+	retval = frexp(retval / pow10vals[(-exponent) & 0xf], &j);
 	expt += j;
 	for (i=4; i<9; ++i) {
 	    if ((-exponent) & (1<<i)) {
@@ -5090,14 +5074,13 @@ TclFormatNaN(
  *
  *----------------------------------------------------------------------
  */
-#ifdef IEEE_FLOATING_POINT
+
 static Tcl_WideUInt
 Nokia770Twiddle(
     Tcl_WideUInt w)		/* Number to transpose. */
 {
-    return (((w >> 32) & 0xFFFFFFFF) | (w << 32));
+    return (((w >> 32) & 0xffffffff) | (w << 32));
 }
-#endif
 
 /*
  *----------------------------------------------------------------------

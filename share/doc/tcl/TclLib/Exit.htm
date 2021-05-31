@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tcl_Exit manual page - Tcl Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl C API, version 8.6.0</a> <small>&gt;</small> Exit</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TclLib</a> <small>&gt;</small> Exit</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="Exit.htm#M2" NAME="L288">NAME</A>
-<DL><DD>Tcl_Exit, Tcl_Finalize, Tcl_CreateExitHandler, Tcl_DeleteExitHandler, Tcl_ExitThread, Tcl_FinalizeThread, Tcl_CreateThreadExitHandler, Tcl_DeleteThreadExitHandler, Tcl_SetExitProc &mdash; end the application or thread (and invoke exit handlers)</DD></DL>
-<DD><A HREF="Exit.htm#M3" NAME="L289">SYNOPSIS</A>
+<DD><A HREF="Exit.htm#M2" NAME="L257">NAME</A>
+<DL><DD>Tcl_Exit, Tcl_Finalize, Tcl_CreateExitHandler, Tcl_DeleteExitHandler, Tcl_ExitThread, Tcl_FinalizeThread, Tcl_CreateThreadExitHandler, Tcl_DeleteThreadExitHandler, Tcl_SetExitProc - end the application or thread (and invoke exit handlers)</DD></DL>
+<DD><A HREF="Exit.htm#M3" NAME="L258">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tcl.h&gt;</B>
 <DD><B>Tcl_Exit</B>(<I>status</I>)
@@ -22,15 +22,14 @@
 <DD>Tcl_ExitProc *
 <DD><B>Tcl_SetExitProc</B>(<I>proc</I>)
 </DL>
-<DD><A HREF="Exit.htm#M4" NAME="L290">ARGUMENTS</A>
+<DD><A HREF="Exit.htm#M4" NAME="L259">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="Exit.htm#M5" NAME="L291">DESCRIPTION</A>
-<DD><A HREF="Exit.htm#M6" NAME="L292">SEE ALSO</A>
-<DD><A HREF="Exit.htm#M7" NAME="L293">KEYWORDS</A>
+<DD><A HREF="Exit.htm#M5" NAME="L260">DESCRIPTION</A>
+<DD><A HREF="Exit.htm#M6" NAME="L261">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tcl_Exit, Tcl_Finalize, Tcl_CreateExitHandler, Tcl_DeleteExitHandler, Tcl_ExitThread, Tcl_FinalizeThread, Tcl_CreateThreadExitHandler, Tcl_DeleteThreadExitHandler, Tcl_SetExitProc &mdash; end the application or thread (and invoke exit handlers)
+Tcl_Exit, Tcl_Finalize, Tcl_CreateExitHandler, Tcl_DeleteExitHandler, Tcl_ExitThread, Tcl_FinalizeThread, Tcl_CreateThreadExitHandler, Tcl_DeleteThreadExitHandler, Tcl_SetExitProc - end the application or thread (and invoke exit handlers)
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tcl.h&gt;</B><BR>
 <B>Tcl_Exit</B>(<I>status</I>)<BR>
@@ -82,8 +81,12 @@ exit from the current process.
 It is useful for cleaning up when a process is finished using <B><A HREF="../TclCmd/Tcl.htm">Tcl</A></B> but
 wishes to continue executing, and when <B><A HREF="../TclCmd/Tcl.htm">Tcl</A></B> is used in a dynamically
 loaded extension that is about to be unloaded.
-Your code should always invoke <B>Tcl_Finalize</B> when <B><A HREF="../TclCmd/Tcl.htm">Tcl</A></B> is being
-unloaded, to ensure proper cleanup. <B>Tcl_Finalize</B> can be safely called
+On some systems <B><A HREF="../TclCmd/Tcl.htm">Tcl</A></B> is automatically notified when it is being
+unloaded, and it calls <B>Tcl_Finalize</B> internally; on these systems it
+not necessary for the caller to explicitly call <B>Tcl_Finalize</B>.
+However, to ensure portability, your code should always invoke
+<B>Tcl_Finalize</B> when <B><A HREF="../TclCmd/Tcl.htm">Tcl</A></B> is being unloaded, to ensure that the
+code will work on all platforms. <B>Tcl_Finalize</B> can be safely called
 more than once.
 <P>
 <B>Tcl_ExitThread</B> is used to terminate the current thread and invoke
@@ -100,10 +103,7 @@ by <B>Tcl_FinalizeThread</B> and <B>Tcl_ExitThread</B>.
 This provides a hook for cleanup operations such as flushing buffers
 and freeing global memory.
 <I>Proc</I> should match the type <B>Tcl_ExitProc</B>:
-<P>
-<PRE>typedef void <B>Tcl_ExitProc</B>(
-        ClientData <I>clientData</I>);</PRE>
-<P>
+<PRE>typedef void Tcl_ExitProc(ClientData <I>clientData</I>);</PRE>
 The <I>clientData</I> parameter to <I>proc</I> is a
 copy of the <I>clientData</I> argument given to
 <B>Tcl_CreateExitHandler</B> or <B>Tcl_CreateThreadExitHandler</B> when
@@ -118,6 +118,7 @@ previously-created exit handler.  It removes the handler
 indicated by <I>proc</I> and <I>clientData</I> so that no call
 to <I>proc</I> will be made.  If no such handler exists then
 <B>Tcl_DeleteExitHandler</B> or <B>Tcl_DeleteThreadExitHandler</B> does nothing.
+<P>
 <P>
 <B>Tcl_Finalize</B> and <B>Tcl_Exit</B> execute all registered exit handlers,
 in reverse order from the order in which they were registered.
@@ -142,10 +143,10 @@ finalization of Tcl's subsystems via <B>Tcl_Finalize</B> at an
 appropriate time.  The argument passed to <I>proc</I> when it is
 invoked will be the exit status code (as passed to <B>Tcl_Exit</B>)
 cast to a ClientData value.
-<H3><A NAME="M6">SEE ALSO</A></H3>
-<B><A HREF="../TclCmd/exit.htm">exit</A></B>
-<H3><A NAME="M7">KEYWORDS</A></H3>
-<A href="../Keywords/A.htm#abort">abort</A>, <A href="../Keywords/C.htm#callback">callback</A>, <A href="../Keywords/C.htm#cleanup">cleanup</A>, <A href="../Keywords/D.htm#dynamic loading">dynamic loading</A>, <A href="../Keywords/E.htm#end application">end application</A>, <A href="../Keywords/E.htm#exit">exit</A>, <A href="../Keywords/U.htm#unloading">unloading</A>, <A href="../Keywords/T.htm#thread">thread</A>
-<div class="copy">Copyright &copy; 1995-1996 Sun Microsystems, Inc.
+
+<H3><A NAME="M6">KEYWORDS</A></H3>
+<A href="../Keywords/C.htm#callback">callback</A>, <A href="../Keywords/C.htm#cleanup">cleanup</A>, <A href="../Keywords/D.htm#dynamic loading">dynamic loading</A>, <A href="../Keywords/E.htm#end application">end application</A>, <A href="../Keywords/E.htm#exit">exit</A>, <A href="../Keywords/U.htm#unloading">unloading</A>, <A href="../Keywords/T.htm#thread">thread</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1995-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

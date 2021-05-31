@@ -3,29 +3,29 @@
 <HEAD><TITLE>tk_dialog manual page - Tk Built-In Commands</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk Commands, version 8.6.0</a> <small>&gt;</small> dialog</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkCmd</a> <small>&gt;</small> dialog</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="dialog.htm#M2" NAME="L480">NAME</A>
-<DL><DD>tk_dialog &mdash; Create modal dialog and wait for response</DD></DL>
-<DD><A HREF="dialog.htm#M3" NAME="L481">SYNOPSIS</A>
+<DD><A HREF="dialog.htm#M2" NAME="L460">NAME</A>
+<DL><DD>tk_dialog - Create modal dialog and wait for response</DD></DL>
+<DD><A HREF="dialog.htm#M3" NAME="L461">SYNOPSIS</A>
 <DL>
 </DL>
-<DD><A HREF="dialog.htm#M4" NAME="L482">DESCRIPTION</A>
+<DD><A HREF="dialog.htm#M4" NAME="L462">DESCRIPTION</A>
 <DL class="description">
-<DD><A HREF="dialog.htm#M5" NAME="L483"><I>window</I></A>
-<DD><A HREF="dialog.htm#M6" NAME="L484"><I>title</I></A>
-<DD><A HREF="dialog.htm#M7" NAME="L485"><I>text</I></A>
-<DD><A HREF="dialog.htm#M8" NAME="L486"><I>bitmap</I></A>
-<DD><A HREF="dialog.htm#M9" NAME="L487"><I>default</I></A>
-<DD><A HREF="dialog.htm#M10" NAME="L488"><I>string</I></A>
+<DD><A HREF="dialog.htm#M5" NAME="L463"><I>window</I></A>
+<DD><A HREF="dialog.htm#M6" NAME="L464"><I>title</I></A>
+<DD><A HREF="dialog.htm#M7" NAME="L465"><I>text</I></A>
+<DD><A HREF="dialog.htm#M8" NAME="L466"><I>bitmap</I></A>
+<DD><A HREF="dialog.htm#M9" NAME="L467"><I>default</I></A>
+<DD><A HREF="dialog.htm#M10" NAME="L468"><I>string</I></A>
 </DL>
-<DD><A HREF="dialog.htm#M11" NAME="L489">EXAMPLE</A>
-<DD><A HREF="dialog.htm#M12" NAME="L490">SEE ALSO</A>
-<DD><A HREF="dialog.htm#M13" NAME="L491">KEYWORDS</A>
+<DD><A HREF="dialog.htm#M11" NAME="L469">EXAMPLE</A>
+<DD><A HREF="dialog.htm#M12" NAME="L470">SEE ALSO</A>
+<DD><A HREF="dialog.htm#M13" NAME="L471">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-tk_dialog &mdash; Create modal dialog and wait for response
+tk_dialog - Create modal dialog and wait for response
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>tk_dialog </B><I>window title text bitmap default string string ...</I><BR>
 <H3><A NAME="M4">DESCRIPTION</A></H3>
@@ -41,8 +41,7 @@ Text to appear in the window manager's title bar for the dialog.
 <P><DT><A NAME="M7"><I>text</I></A><DD>
 Message to appear in the top portion of the dialog box.
 <P><DT><A NAME="M8"><I>bitmap</I></A><DD>
-If non-empty, specifies a bitmap (in a form suitable for <A HREF="../TkLib/GetBitmap.htm">Tk_GetBitmap</A>)
-to display in the top portion of
+If non-empty, specifies a bitmap to display in the top portion of
 the dialog, to the left of the text.
 If this is an empty string then no bitmap is displayed in the dialog.
 <P><DT><A NAME="M9"><I>default</I></A><DD>
@@ -75,7 +74,8 @@ in any way except to invoke the dialog box.
 <B>tk_messageBox</B>
 <H3><A NAME="M13">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#bitmap">bitmap</A>, <A href="../Keywords/D.htm#dialog">dialog</A>, <A href="../Keywords/M.htm#modal">modal</A>
-<div class="copy">Copyright &copy; 1992 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1992 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

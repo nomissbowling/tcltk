@@ -3,12 +3,12 @@
 <HEAD><TITLE>Tk_GetCapStyle manual page - Library Procedures</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tk C API, version 8.6.0</a> <small>&gt;</small> GetCapStyl</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">TkLib</a> <small>&gt;</small> GetCapStyl</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
-<DD><A HREF="GetCapStyl.htm#M2" NAME="L266">NAME</A>
-<DL><DD>Tk_GetCapStyle, Tk_NameOfCapStyle &mdash; translate between strings and cap styles</DD></DL>
-<DD><A HREF="GetCapStyl.htm#M3" NAME="L267">SYNOPSIS</A>
+<DD><A HREF="GetCapStyl.htm#M2" NAME="L261">NAME</A>
+<DL><DD>Tk_GetCapStyle, Tk_NameOfCapStyle - translate between strings and cap styles</DD></DL>
+<DD><A HREF="GetCapStyl.htm#M3" NAME="L262">SYNOPSIS</A>
 <DL>
 <DD><B>#include &lt;tk.h&gt;</B>
 <DD>int
@@ -16,14 +16,14 @@
 <DD>const char *
 <DD><B>Tk_NameOfCapStyle(</B><I>cap</I><B>)</B>
 </DL>
-<DD><A HREF="GetCapStyl.htm#M4" NAME="L268">ARGUMENTS</A>
+<DD><A HREF="GetCapStyl.htm#M4" NAME="L263">ARGUMENTS</A>
 <DL class="arguments">
 </DL>
-<DD><A HREF="GetCapStyl.htm#M5" NAME="L269">DESCRIPTION</A>
-<DD><A HREF="GetCapStyl.htm#M6" NAME="L270">KEYWORDS</A>
+<DD><A HREF="GetCapStyl.htm#M5" NAME="L264">DESCRIPTION</A>
+<DD><A HREF="GetCapStyl.htm#M6" NAME="L265">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-Tk_GetCapStyle, Tk_NameOfCapStyle &mdash; translate between strings and cap styles
+Tk_GetCapStyle, Tk_NameOfCapStyle - translate between strings and cap styles
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>#include &lt;tk.h&gt;</B><BR>
 int<BR>
@@ -35,12 +35,11 @@ const char *<BR>
 <DT><A HREF="../TclLib/Interp.htm">Tcl_Interp</A> <B>*interp</B> (in)<DD>
 Interpreter to use for error reporting.
 <P><DT>const char <B>*string</B> (in)<DD>
-String containing name of cap style - one of
-&#8220;<B>butt</B>&#8221;,
-&#8220;<B>projecting</B>&#8221;,
+String containing name of cap style: one of
+&#8220;butt&#8221;,
+&#8220;projecting&#8221;,
 or
-&#8220;<B>round</B>&#8221;
-- or a unique abbreviation of one.
+&#8220;round&#8221;.
 <P><DT>int <B>*capPtr</B> (out)<DD>
 Pointer to location in which to store X cap style corresponding to
 <I>string</I>.
@@ -57,11 +56,11 @@ how the end-points of lines should be capped.
 See the X documentation for information on what each style
 implies.
 <P>
-Under normal circumstances the return value is <B><A HREF="../TclCmd/catch.htm">TCL_OK</A></B> and
+Under normal circumstances the return value is <B>TCL_OK</B> and
 <I>interp</I> is unused.
 If <I>string</I> does not contain a valid cap style
 or an abbreviation of one of these names, then an error message is
-stored in interpreter <I>interp</I>'s result, <B><A HREF="../TclCmd/catch.htm">TCL_ERROR</A></B> is returned, and
+stored in <I>interp-&gt;result</I>, <B>TCL_ERROR</B> is returned, and
 <I>*capPtr</I> is unmodified.
 <P>
 <B>Tk_NameOfCapStyle</B> is the logical inverse of <B>Tk_GetCapStyle</B>.
@@ -70,9 +69,11 @@ statically-allocated string corresponding to <I>cap</I>.
 If <I>cap</I> is not a legal cap style, then
 &#8220;unknown cap style&#8221;
 is returned.
+
 <H3><A NAME="M6">KEYWORDS</A></H3>
 <A href="../Keywords/B.htm#butt">butt</A>, <A href="../Keywords/C.htm#cap style">cap style</A>, <A href="../Keywords/P.htm#projecting">projecting</A>, <A href="../Keywords/R.htm#round">round</A>
-<div class="copy">Copyright &copy; 1990 The Regents of the University of California.
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1990 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

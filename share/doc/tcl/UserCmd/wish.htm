@@ -3,11 +3,11 @@
 <HEAD><TITLE>wish manual page - Tk Applications</TITLE>
 <link rel="stylesheet" href="../docs.css" type="text/css" media="all">
 </HEAD>
-<BODY><H2><a href="../contents.htm">Tcl8.6.0/Tk8.6.0 Documentation</a> <small>&gt;</small> <a href="contents.htm">Tcl/Tk Applications</a> <small>&gt;</small> wish</H2>
-<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../ItclCmd/contents.htm">[incr Tcl] Package Commands</A> | <A HREF="../Sqlite3Cmd/contents.htm">SQLite Package Commands</A> | <A HREF="../TdbcCmd/contents.htm">TDBC Package Commands</A> | <A HREF="../TdbcmysqlCmd/contents.htm">tdbc::mysql Package Commands</A> | <A HREF="../TdbcodbcCmd/contents.htm">tdbc::odbc Package Commands</A> | <A HREF="../TdbcpostgresCmd/contents.htm">tdbc::postgres Package Commands</A> | <A HREF="../Tdbcsqlite3Cmd/contents.htm">tdbc::sqlite3 Package Commands</A> | <A HREF="../ThreadCmd/contents.htm">Thread Package Commands</A> | <A HREF="../TclLib/contents.htm">Tcl C API</A> | <A HREF="../TkLib/contents.htm">Tk C API</A> | <A HREF="../ItclLib/contents.htm">[incr Tcl] Package C API</A> | <A HREF="../TdbcLib/contents.htm">TDBC Package C API</A></H3>
+<BODY><H2><a href="../contents.htm">Tcl8.5.13/Tk8.5.13 Documentation</a> <small>&gt;</small> <a href="contents.htm">UserCmd</a> <small>&gt;</small> wish</H2>
+<H3><A HREF="../UserCmd/contents.htm">Tcl/Tk Applications</A> | <A HREF="../TclCmd/contents.htm">Tcl Commands</A> | <A HREF="../TkCmd/contents.htm">Tk Commands</A> | <A HREF="../TclLib/contents.htm">Tcl Library</A> | <A HREF="../TkLib/contents.htm">Tk Library</A></H3>
 <DL>
 <DD><A HREF="wish.htm#M2" NAME="L15">NAME</A>
-<DL><DD>wish &mdash; Simple windowing shell</DD></DL>
+<DL><DD>wish - Simple windowing shell</DD></DL>
 <DD><A HREF="wish.htm#M3" NAME="L16">SYNOPSIS</A>
 <DL>
 </DL>
@@ -36,11 +36,10 @@
 </DL>
 <DD><A HREF="wish.htm#M23" NAME="L36">SCRIPT FILES</A>
 <DD><A HREF="wish.htm#M24" NAME="L37">PROMPTS</A>
-<DD><A HREF="wish.htm#M25" NAME="L38">SEE ALSO</A>
-<DD><A HREF="wish.htm#M26" NAME="L39">KEYWORDS</A>
+<DD><A HREF="wish.htm#M25" NAME="L38">KEYWORDS</A>
 </DL>
 <H3><A NAME="M2">NAME</A></H3>
-wish &mdash; Simple windowing shell
+wish - Simple windowing shell
 <H3><A NAME="M3">SYNOPSIS</A></H3>
 <B>wish</B> ?<B>-encoding </B><I>name</I>? ?<I>fileName arg arg ...</I>?<BR>
 <H3><A NAME="M4">OPTIONS</A></H3>
@@ -55,7 +54,7 @@ using the default colormap for the screen.
 Display (and screen) on which to display window.
 <P><DT><A NAME="M8"><B>-geometry </B><I>geometry</I></A><DD>
 Initial geometry to use for window.  If this option is specified, its
-value is stored in the <B><A HREF="../TkCmd/tkvars.htm">geometry</A></B> global variable of the application's
+value is stored in the <B>geometry</B> global variable of the application's
 Tcl interpreter.
 <P><DT><A NAME="M9"><B>-name </B><I>name</I></A><DD>
 Use <I>name</I> as the title to be displayed in the window, and
@@ -80,7 +79,7 @@ Specifies the visual to use for the window.
 <I>Visual</I> may have any of the forms supported by the <B><A HREF="../TkLib/GetVisual.htm">Tk_GetVisual</A></B>
 procedure.
 <P><DT><A NAME="M13"><B>--</B></A><DD>
-Pass all remaining arguments through to the script's <B><A HREF="../TclCmd/tclvars.htm">argv</A></B>
+Pass all remaining arguments through to the script's <B>argv</B>
 variable without interpreting them.
 This provides a mechanism for passing arguments such as <B>-name</B>
 to a script instead of having <B>wish</B> interpret them.
@@ -91,7 +90,7 @@ language, the Tk toolkit, and a main program that reads commands
 from standard input or from a file.
 It creates a main window and then processes Tcl commands.
 If <B>wish</B> is invoked with arguments, then the first few
-arguments, ?<B>-encoding </B><I>name</I>? ?<I>fileName</I>?, specify the
+arguments, ?<B>-encoding </B><I>name</I>? ?<I>fileName</I>? specify the
 name of a script file, and, optionally, the
 encoding of the text data stored in that script file.  A value
 for <I>fileName</I> is recognized if the appropriate argument
@@ -125,9 +124,9 @@ is instead a windowed program. Because of this, it additionally
 provides access to its own <B><A HREF="../TkCmd/console.htm">console</A></B> command.
 <H3><A NAME="M15">OPTION PROCESSING</A></H3>
 <B>Wish</B> automatically processes all of the command-line options
-described in the <B><A HREF="#M4">OPTIONS</A></B> summary above.
+described in the <B><A HREF="../TkCmd/options.htm">OPTIONS</A></B> summary above.
 Any other command-line arguments besides these are passed through
-to the application using the <B><A HREF="../TclCmd/tclvars.htm">argc</A></B> and <B><A HREF="../TclCmd/tclvars.htm">argv</A></B> variables
+to the application using the <B>argc</B> and <B>argv</B> variables
 described later.
 <H3><A NAME="M16">APPLICATION NAME AND CLASS</A></H3>
 The name of the application, which is used for purposes such as
@@ -153,7 +152,7 @@ not including the options described above.
 <P><DT><A NAME="M19"><B>argv</B></A><DD>
 Contains a Tcl list whose elements are the <I>arg</I> arguments
 that follow a <B>--</B> option or do not match any of the
-options described in <B><A HREF="#M4">OPTIONS</A></B> above, in order, or an empty string
+options described in <B><A HREF="../TkCmd/options.htm">OPTIONS</A></B> above, in order, or an empty string
 if there are no such arguments.
 <P><DT><A NAME="M20"><B>argv0</B></A><DD>
 Contains <I>fileName</I> if it was specified.
@@ -230,11 +229,10 @@ The variable <B>tcl_prompt2</B> is used in a similar way when
 a newline is typed but the current command is not yet complete;
 if <B>tcl_prompt2</B> is not set then no prompt is output for
 incomplete commands.
-<H3><A NAME="M25">SEE ALSO</A></H3>
-<B><A HREF="../UserCmd/tclsh.htm">tclsh</A></B>, <B><A HREF="../TkCmd/toplevel.htm">toplevel</A></B>, <B><A HREF="../TkLib/Tk_Main.htm">Tk_Main</A></B>, <B><A HREF="../TkLib/MainLoop.htm">Tk_MainLoop</A></B>, <B><A HREF="../TkLib/MainWin.htm">Tk_MainWindow</A></B>
-<H3><A NAME="M26">KEYWORDS</A></H3>
-<A href="../Keywords/A.htm#application">application</A>, <A href="../Keywords/A.htm#argument">argument</A>, <A href="../Keywords/I.htm#interpreter">interpreter</A>, <A href="../Keywords/P.htm#prompt">prompt</A>, <A href="../Keywords/S.htm#script file">script file</A>, <A href="../Keywords/S.htm#shell">shell</A>, <A href="../Keywords/T.htm#toolkit">toolkit</A>, <A href="../Keywords/T.htm#toplevel">toplevel</A>
-<div class="copy">Copyright &copy; 1991-1994 The Regents of the University of California.
+<H3><A NAME="M25">KEYWORDS</A></H3>
+<A href="../Keywords/S.htm#shell">shell</A>, <A href="../Keywords/T.htm#toolkit">toolkit</A>
+<div class="copy">Copyright &copy; 1995-1997 Roger E. Critchlow Jr.
+Copyright &copy; 1991-1994 The Regents of the University of California.
 Copyright &copy; 1994-1996 Sun Microsystems, Inc.
 </div>
 </BODY></HTML>

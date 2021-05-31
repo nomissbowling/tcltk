@@ -14,7 +14,7 @@
  * 	Add script-level access to configure application-wide blink rate.
  */
 
-#include "tkInt.h"
+#include <tk.h>
 #include "ttkTheme.h"
 #include "ttkWidget.h"
 
@@ -49,15 +49,15 @@ static void CursorManagerDeleteProc(ClientData clientData, Tcl_Interp *interp)
 static CursorManager *GetCursorManager(Tcl_Interp *interp)
 {
     static const char *cm_key = "ttk::CursorManager";
-    CursorManager *cm = Tcl_GetAssocData(interp, cm_key,0);
+    CursorManager *cm = (CursorManager *) Tcl_GetAssocData(interp, cm_key,0);
 
     if (!cm) {
-	cm = ckalloc(sizeof(*cm));
+	cm = (CursorManager*)ckalloc(sizeof(*cm));
 	cm->timer = 0;
 	cm->owner = 0;
 	cm->onTime = DEF_CURSOR_ON_TIME;
 	cm->offTime = DEF_CURSOR_OFF_TIME;
-	Tcl_SetAssocData(interp, cm_key, CursorManagerDeleteProc, cm);
+	Tcl_SetAssocData(interp,cm_key,CursorManagerDeleteProc,(ClientData)cm);
     }
     return cm;
 }

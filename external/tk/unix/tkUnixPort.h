@@ -17,20 +17,37 @@
 
 #define __UNIX__ 1
 
+/*
+ * Macro to use instead of "void" for arguments that must have
+ * type "void *" in ANSI C;  maps them to type "char *" in
+ * non-ANSI systems.  This macro may be used in some of the include
+ * files below, which is why it is defined here.
+ */
+
+#ifndef VOID
+#   ifdef __STDC__
+#       define VOID void
+#   else
+#       define VOID char
+#   endif
+#endif
+
 #include <stdio.h>
-#include <pwd.h>
-#include <assert.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <ctype.h>
+#include <fcntl.h>
+#ifndef NO_LIMITS_H
+#   include <limits.h>
+#else
+#   include "../compat/limits.h"
+#endif
 #include <math.h>
-#include <string.h>
-#include <limits.h>
+#include <pwd.h>
 #ifdef NO_STDLIB_H
 #   include "../compat/stdlib.h"
 #else
 #   include <stdlib.h>
 #endif
+#include <string.h>
 #include <sys/types.h>
 #include <sys/file.h>
 #ifdef HAVE_SYS_SELECT_H
@@ -45,9 +62,9 @@
 #   include <time.h>
 #else
 #   if HAVE_SYS_TIME_H
-#	include <sys/time.h>
+#       include <sys/time.h>
 #   else
-#	include <time.h>
+#       include <time.h>
 #   endif
 #endif
 #if HAVE_INTTYPES_H
@@ -192,9 +209,14 @@
 #endif
 
 /*
- * Used by tkWindow.c
- */
+ * The following declaration is used to get access to a private Tcl interface
+ * that is needed for portability reasons.
+ *
+ * Disabled for now to determined whether we really still need this.
 
-#define TkpHandleMapOrUnmap(tkwin, event)  Tk_HandleEvent(event)
+#ifndef _TCLINT
+#include <tclInt.h>
+#endif
+ */
 
 #endif /* _UNIXPORT */

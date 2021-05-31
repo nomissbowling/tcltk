@@ -34,25 +34,36 @@ if [ ! -d $COMPILEDIR/$MODULE ] || [ -n "$SW_FORCECOPY" ] ; then
     rsync -a --exclude "*/.git" $EXTSRCDIR/$MODULE $COMPILEDIR/
     echo done
 fi
-## patch to MINGW64
-find $COMPILEDIR/$MODULE -name configure | xargs sed -i "s|MINGW32_|MINGW64_|g"
 
 ## change to compile dir
 cd $COMPILEDIR/$MODULE
 
 ## configure and make
-autoconf
 (CFLAGS="$CFLAGS" ./configure --prefix=$INSTALLDIR --enable-threads --mandir=$iSHAREDIR $CONFIGURE_SWITCH)
 ## --with-tcl=$INSTALLDIR/lib --disable-xft
 make
 make install
 
 echo -n "Copying extras ... "
+## postprocess
+cd $INSTALLDIR/bin
+if [ -z "$WINDIR" ]; then
+    mv wish8.5 wish85
+    rsync -a wish85 wish
+else
+    if [ -n "$SW_DEBUG" ]; then
+        mv wish85g.exe wish85.exe
+        rsync -a wish85.exe wish.exe
+    else
+        rsync -a wish85.exe wish.exe
+    fi
+fi
+  
 ## copy licence file
 rsync -a $EXTSRCDIR/$MODULE/license.terms $iLICENCEDIR/$MODULE.licence
-rsync -a $EXTSRCDIR/$MODULE/LICENSES/COPYRIGHT.f2c $iLICENCEDIR/$MODULE.f2c.licence
-rsync -a $EXTSRCDIR/$MODULE/LICENSES/COPYRIGHT.hsfft $iLICENCEDIR/$MODULE.hsfft.licence
-rsync -a $EXTSRCDIR/$MODULE/LICENSES/COPYRIGHT.lapack $iLICENCEDIR/$MODULE.lapack.licence
+rsync -a $EXTSRCDIR/$MODULE/COPYRIGHT.f2c $iLICENCEDIR/f2c.licence
+rsync -a $EXTSRCDIR/$MODULE/COPYRIGHT.hsfft $iLICENCEDIR/hsfft.licence
+rsync -a $EXTSRCDIR/$MODULE/COPYRIGHT.lapack $iLICENCEDIR/lapack.licence
 echo done
 
 ## fini

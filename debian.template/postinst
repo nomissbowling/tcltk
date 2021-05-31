@@ -34,9 +34,9 @@ case "$1" in
         chmod -R ugo-sw,ugo+rX $INSTDIR
         chmod ugo+x $INSTDIR/bin/*
         echo done
-        
+
         ## change root path of execs
-        echo -n "Changing root path of executables and libraries ... "
+        echo -n "Changing root path of executables and libraries ... "        
         for FILE in $(find $INSTDIR -type f -name '*.so' | xargs grep -l "/$BINDIR/lib"); do
             chrpath -r $INSTDIR/lib $FILE | true
         done
