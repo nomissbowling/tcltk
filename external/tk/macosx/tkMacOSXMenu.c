@@ -3,10 +3,10 @@
  *
  *	This module implements the Mac-platform specific features of menus.
  *
- * Copyright (c) 1996-1997 by Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2012 Adrian Robert.
+ * Copyright © 1996-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009 Apple Inc.
+ * Copyright © 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2012 Adrian Robert.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -91,9 +91,6 @@ static const struct {
 #undef ACCEL
 #undef sl
 
-static int gNoTkMenus = 0;	/* This is used by Tk_MacOSXTurnOffMenus as
-				 * the flag that Tk is not to draw any
-				 * menus. */
 static int inPostMenu = 0;
 static SInt32 menuMarkColumnWidth = 0, menuIconTrailingEdgeMargin = 0;
 static SInt32 menuTextLeadingEdgeMargin = 0, menuTextTrailingEdgeMargin = 0;
@@ -515,10 +512,6 @@ TKBackgroundLoop *backgroundLoop = nil;
 
 - (void) tkSetMainMenu: (TKMenu *) menu
 {
-    if (gNoTkMenus) {
-	return;
-    }
-
     TKMenu *applicationMenu = nil;
 
     if (menu) {
@@ -716,8 +709,19 @@ TkpConfigureMenuEntry(
     NSMenu *submenu = nil;
     int imageWidth, imageHeight;
     GC gc = (mePtr->textGC ? mePtr->textGC : mePtr->menuPtr->textGC);
-    Tcl_Obj *fontPtr = (mePtr->fontPtr ? mePtr->fontPtr :
-	    mePtr->menuPtr->fontPtr);
+    Tcl_Obj *fontPtr = (mePtr->fontPtr ?
+			mePtr->fontPtr : mePtr->menuPtr->fontPtr);
+    static unsigned long defaultBg, defaultFg;
+    static int initialized = 0;
+
+    if (!initialized) {
+	TkColor *tkColPtr = TkpGetColor(NULL, DEF_MENU_BG_COLOR);
+	defaultBg = tkColPtr->color.pixel;
+	ckfree(tkColPtr);
+	tkColPtr = TkpGetColor(NULL, DEF_MENU_FG);
+	defaultFg = tkColPtr->color.pixel;
+	ckfree(tkColPtr);
+    }
 
     if (mePtr->image) {
     	Tk_SizeOfImage(mePtr->image, &imageWidth, &imageHeight);
@@ -736,14 +740,9 @@ TkpConfigureMenuEntry(
     [menuItem setImage:image];
     if ((!image || mePtr->compound != COMPOUND_NONE) && mePtr->labelPtr &&
 	    mePtr->labelLength) {
-	Tcl_DString ds;
-	Tcl_DStringInit(&ds);
-	Tcl_UtfToUniCharDString(Tcl_GetString(mePtr->labelPtr),
-				mePtr->labelLength, &ds);
-	title = [[NSString alloc]
-		    initWithCharacters:(unichar *)Tcl_DStringValue(&ds)
-				length:Tcl_DStringLength(&ds)>>1];
-	Tcl_DStringFree(&ds);
+	title = [[[NSString alloc] initWithBytes:Tcl_GetString(mePtr->labelPtr)
+		length:mePtr->labelLength encoding:NSUTF8StringEncoding]
+		autorelease];
 	if ([title hasSuffix:@"..."]) {
 	    title = [NSString stringWithFormat:@"%@%C",
 		    [title substringToIndex:[title length] - 3], 0x2026];
@@ -833,7 +832,7 @@ TkpConfigureMenuEntry(
 		     * have been added by the system.  See [7185d26cf4].
 		     */
 
-		    for (int i = 0; i < menuRefPtr->menuPtr->numEntries; i++) {
+		    for (TkSizeT i = 0; i < menuRefPtr->menuPtr->numEntries; i++) {
 			TkMenuEntry *submePtr = menuRefPtr->menuPtr->entries[i];
 			NSMenuItem *item = (NSMenuItem *) submePtr->platformEntryData;
 			[item setEnabled:(submePtr->state != ENTRY_DISABLED)];
@@ -1150,8 +1149,8 @@ TkpSetMainMenubar(
 
 	if (winPtr->wmInfoPtr &&
 		winPtr->wmInfoPtr->menuPtr &&
-		winPtr->wmInfoPtr->menuPtr->masterMenuPtr) {
-	    menubar = winPtr->wmInfoPtr->menuPtr->masterMenuPtr->tkwin;
+		winPtr->wmInfoPtr->menuPtr->mainMenuPtr) {
+	    menubar = winPtr->wmInfoPtr->menuPtr->mainMenuPtr->tkwin;
 	}
 
 	/*
@@ -1205,15 +1204,15 @@ static void
 CheckForSpecialMenu(
     TkMenu *menuPtr)		/* The menu we are checking */
 {
-    if (!menuPtr->masterMenuPtr->tkwin) {
+    if (!menuPtr->mainMenuPtr->tkwin) {
 	return;
     }
     for (TkMenuEntry *cascadeEntryPtr = menuPtr->menuRefPtr->parentEntryPtr;
 	    cascadeEntryPtr;
 	    cascadeEntryPtr = cascadeEntryPtr->nextCascadePtr) {
 	if (cascadeEntryPtr->menuPtr->menuType == MENUBAR
-		&& cascadeEntryPtr->menuPtr->masterMenuPtr->tkwin) {
-	    TkMenu *mainMenuPtr = cascadeEntryPtr->menuPtr->masterMenuPtr;
+		&& cascadeEntryPtr->menuPtr->mainMenuPtr->tkwin) {
+	    TkMenu *mainMenuPtr = cascadeEntryPtr->menuPtr->mainMenuPtr;
 	    int i = 0;
 	    Tcl_DString ds;
 
@@ -1223,7 +1222,7 @@ CheckForSpecialMenu(
 		Tcl_DStringAppend(&ds, specialMenus[i].name,
 			specialMenus[i].len);
 		if (strcmp(Tcl_DStringValue(&ds),
-			Tk_PathName(menuPtr->masterMenuPtr->tkwin)) == 0) {
+			Tk_PathName(menuPtr->mainMenuPtr->tkwin)) == 0) {
 		    cascadeEntryPtr->entryFlags |= specialMenus[i].flag;
 		} else {
 		    cascadeEntryPtr->entryFlags &= ~specialMenus[i].flag;
@@ -1382,7 +1381,7 @@ TkpComputeStandardMenuGeometry(
      * Do nothing if this menu is a clone.
      */
 
-    if (menuPtr->tkwin == NULL || menuPtr->masterMenuPtr != menuPtr) {
+    if (menuPtr->tkwin == NULL || menuPtr->mainMenuPtr != menuPtr) {
 	return;
     }
 
@@ -1688,30 +1687,6 @@ TkMacOSXClearMenubarActive(void)
 	    RecursivelyClearActiveMenu(menuPtr);
 	}
     }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * Tk_MacOSXTurnOffMenus --
- *
- *	Turns off all the menu drawing code. This is more than just disabling
- *	the "menu" command, this means that Tk will NEVER touch the menubar.
- *	It is needed in the Plugin, where Tk does not own the menubar.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	A flag is set which will disable all menu drawing.
- *
- *----------------------------------------------------------------------
- */
-
-void
-Tk_MacOSXTurnOffMenus(void)
-{
-    gNoTkMenus = 1;
 }
 
 /*

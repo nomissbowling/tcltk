@@ -3,9 +3,9 @@
  *
  *	This file contains Macintosh specific cursor related routines.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009 Apple Inc.
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -187,15 +187,6 @@ static const struct CursorName cursorNames[] = {
 
 static TkMacOSXCursor *gCurrentCursor = NULL;
 				/* A pointer to the current cursor. */
-static int gResizeOverride = false;
-				/* A boolean indicating whether we should use
-				 * the resize cursor during installations. */
-static int gTkOwnsCursor = true;/* A boolean indicating whether Tk owns the
-				 * cursor. If not (for instance, in the case
-				 * where a Tk window is embedded in another
-				 * app's window, and the cursor is out of the
-				 * Tk window, we will not attempt to adjust
-				 * the cursor. */
 
 /*
  * Declarations of procedures local to this file
@@ -489,17 +480,15 @@ TkpFreeCursor(
  *----------------------------------------------------------------------
  */
 
-void
+static void
 TkMacOSXInstallCursor(
-    int resizeOverride)
+    void)
 {
     TkMacOSXCursor *macCursorPtr = gCurrentCursor;
     static int cursorHidden = 0;
     int cursorNone = 0;
 
-    gResizeOverride = resizeOverride;
-
-    if (resizeOverride || !macCursorPtr) {
+    if (!macCursorPtr) {
 	[[NSCursor arrowCursor] set];
     } else {
 	switch (macCursorPtr->type) {
@@ -547,10 +536,6 @@ TkpSetCursor(
 {
     int cursorChanged = 1;
 
-    if (!gTkOwnsCursor) {
-	return;
-    }
-
     if (cursor == NULL) {
 	/*
 	 * This is a little tricky. We can't really tell whether
@@ -569,31 +554,8 @@ TkpSetCursor(
     }
 
     if (Tk_MacOSXIsAppInFront() && cursorChanged) {
-	TkMacOSXInstallCursor(gResizeOverride);
+	TkMacOSXInstallCursor();
     }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * Tk_MacOSXTkOwnsCursor --
- *
- *	Sets whether Tk has the right to adjust the cursor.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	May keep Tk from changing the cursor.
- *
- *----------------------------------------------------------------------
- */
-
-void
-Tk_MacOSXTkOwnsCursor(
-    int tkOwnsIt)
-{
-    gTkOwnsCursor = tkOwnsIt;
 }
 
 /*

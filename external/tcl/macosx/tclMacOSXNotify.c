@@ -5,9 +5,9 @@
  *	based notifier, which is the lowest-level part of the Tcl event loop.
  *	This file works together with generic/tclNotify.c.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009, Apple Inc.
+ * Copyright © 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -97,13 +97,54 @@ SpinLockLockInit(void)
 	Tcl_Panic("SpinLockLockInit: no spinlock API available");
     }
 }
-#define SpinLockLock(p) 	lockLock(p)
-#define SpinLockUnlock(p)	lockUnlock(p)
-#define SpinLockTry(p)		lockTry(p)
-#else
-#define SpinLockLock(p) 	OSSpinLockLock(p)
-#define SpinLockUnlock(p)	OSSpinLockUnlock(p)
-#define SpinLockTry(p)		OSSpinLockTry(p)
+
+/*
+ * Wrappers so that we get warnings in just one small part of this file.
+ */
+
+static inline void
+SpinLockLock(
+    VOLATILE OSSpinLock *lock)
+{
+    lockLock(lock);
+}
+static inline void
+SpinLockUnlock(
+    VOLATILE OSSpinLock *lock)
+{
+    lockUnlock(lock);
+}
+static inline bool
+SpinLockTry(
+    VOLATILE OSSpinLock *lock)
+{
+    return lockTry(lock);
+}
+
+#else /* !HAVE_WEAK_IMPORT */
+
+/*
+ * Wrappers so that we get warnings in just one small part of this file.
+ */
+
+static inline void
+SpinLockLock(
+    OSSpinLock *lock)
+{
+    OSSpinLockLock(lock);
+}
+static inline void
+SpinLockUnlock(
+    OSSpinLock *lock)
+{
+    OSSpinLockUnlock(lock);
+}
+static inline bool
+SpinLockTry(
+    OSSpinLock *lock)
+{
+    return OSSpinLockTry(lock);
+}
 #endif /* HAVE_WEAK_IMPORT */
 #define SPINLOCK_INIT		OS_SPINLOCK_INIT
 
@@ -113,12 +154,34 @@ SpinLockLockInit(void)
  */
 
 typedef uint32_t OSSpinLock;
-extern void		_spin_lock(OSSpinLock *lock);
-extern void		_spin_unlock(OSSpinLock *lock);
-extern int		_spin_lock_try(OSSpinLock *lock);
-#define SpinLockLock(p) 	_spin_lock(p)
-#define SpinLockUnlock(p)	_spin_unlock(p)
-#define SpinLockTry(p)		_spin_lock_try(p)
+
+static inline void
+SpinLockLock(
+    OSSpinLock *lock)
+{
+    extern void _spin_lock(OSSpinLock *lock);
+
+    _spin_lock(lock);
+}
+
+static inline void
+SpinLockUnlock(
+    OSSpinLock *lock)
+{
+    extern void _spin_unlock(OSSpinLock *lock);
+
+    _spin_unlock(lock);
+}
+
+static inline int
+SpinLockTry(
+    OSSpinLock *lock)
+{
+    extern int _spin_lock_try(OSSpinLock *lock);
+
+    return _spin_lock_try(lock);
+}
+
 #define SPINLOCK_INIT		0
 
 #pragma GCC diagnostic pop
@@ -176,7 +239,7 @@ static OSSpinLock notifierLock     = SPINLOCK_INIT;
 
 #define SpinLockLockDbg(p) \
     if (!SpinLockTry(p)) {						\
-	Tcl_WideInt s = TclpGetWideClicks(), e;				\
+	long long s = TclpGetWideClicks(), e;				\
 									\
 	SpinLockLock(p);						\
 	e = TclpGetWideClicks();					\
@@ -428,8 +491,7 @@ static CFStringRef tclEventsOnlyRunLoopMode = NULL;
  */
 
 static void		StartNotifierThread(void);
-static void		NotifierThreadProc(ClientData clientData)
-			    __attribute__ ((__noreturn__));
+static TCL_NORETURN void NotifierThreadProc(ClientData clientData);
 static int		FileHandlerEventProc(Tcl_Event *evPtr, int flags);
 static void		TimerWakeUp(CFRunLoopTimerRef timer, void *info);
 static void		QueueFileEvents(void *info);
@@ -472,7 +534,58 @@ MODULE_SCOPE long tclMacOSXDarwinRelease;
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_InitNotifier --
+ * LookUpFileHandler --
+ *
+ *	Look up the file handler structure (and optionally the previous one in
+ *	the chain) associated with a file descriptor.
+ *
+ * Returns:
+ *	A pointer to the file handler, or NULL if it can't be found.
+ *
+ * Side effects:
+ *	If prevPtrPtr is non-NULL, it will be written to if the file handler
+ *	is found.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static inline FileHandler *
+LookUpFileHandler(
+    ThreadSpecificData *tsdPtr,	/* Where to look things up. */
+    int fd,			/* What we are looking for. */
+    FileHandler **prevPtrPtr)	/* If non-NULL, where to report the previous
+				 * pointer. */
+{
+    FileHandler *filePtr, *prevPtr;
+
+    /*
+     * Find the entry for the given file (and return if there isn't one).
+     */
+
+    for (prevPtr = NULL, filePtr = tsdPtr->firstFileHandlerPtr; ;
+	    prevPtr = filePtr, filePtr = filePtr->nextPtr) {
+	if (filePtr == NULL) {
+	    return NULL;
+	}
+	if (filePtr->fd == fd) {
+	    break;
+	}
+    }
+
+    /*
+     * Report what we've found to our caller.
+     */
+
+    if (prevPtrPtr) {
+	*prevPtrPtr = prevPtr;
+    }
+    return filePtr;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TclpInitNotifier --
  *
  *	Initializes the platform specific notifier state.
  *
@@ -486,22 +599,16 @@ MODULE_SCOPE long tclMacOSXDarwinRelease;
  */
 
 ClientData
-Tcl_InitNotifier(void)
+TclpInitNotifier(void)
 {
-    ThreadSpecificData *tsdPtr;
-
-    if (tclNotifierHooks.initNotifierProc) {
-	return tclNotifierHooks.initNotifierProc();
-    }
-
-    tsdPtr = TCL_TSD_INIT(&dataKey);
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
 #ifdef WEAK_IMPORT_SPINLOCKLOCK
     /*
      * Initialize support for weakly imported spinlock API.
      */
     if (pthread_once(&spinLockLockInitControl, SpinLockLockInit)) {
-	Tcl_Panic("Tcl_InitNotifier: pthread_once failed");
+	Tcl_Panic("Tcl_InitNotifier: %s", "pthread_once failed");
     }
 #endif
 
@@ -528,7 +635,8 @@ Tcl_InitNotifier(void)
 	runLoopSource = CFRunLoopSourceCreate(NULL, LONG_MIN,
 		&runLoopSourceContext);
 	if (!runLoopSource) {
-	    Tcl_Panic("Tcl_InitNotifier: could not create CFRunLoopSource");
+	    Tcl_Panic("Tcl_InitNotifier: %s",
+		    "could not create CFRunLoopSource");
 	}
 	CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopCommonModes);
 	CFRunLoopAddSource(runLoop, runLoopSource, tclEventsOnlyRunLoopMode);
@@ -540,8 +648,8 @@ Tcl_InitNotifier(void)
 		LONG_MIN, UpdateWaitingListAndServiceEvents,
 		&runLoopObserverContext);
 	if (!runLoopObserver) {
-	    Tcl_Panic("Tcl_InitNotifier: could not create "
-		    "CFRunLoopObserver");
+	    Tcl_Panic("Tcl_InitNotifier: %s",
+		    "could not create CFRunLoopObserver");
 	}
 	CFRunLoopAddObserver(runLoop, runLoopObserver, kCFRunLoopCommonModes);
 
@@ -558,8 +666,8 @@ Tcl_InitNotifier(void)
 		LONG_MIN, UpdateWaitingListAndServiceEvents,
 		&runLoopObserverContext);
 	if (!runLoopObserverTcl) {
-	    Tcl_Panic("Tcl_InitNotifier: could not create "
-		    "CFRunLoopObserver");
+	    Tcl_Panic("Tcl_InitNotifier: %s",
+		    "could not create CFRunLoopObserver");
 	}
 	CFRunLoopAddObserver(runLoop, runLoopObserverTcl,
 		tclEventsOnlyRunLoopMode);
@@ -588,7 +696,7 @@ Tcl_InitNotifier(void)
 	int result = pthread_atfork(AtForkPrepare, AtForkParent, AtForkChild);
 
 	if (result) {
-	    Tcl_Panic("Tcl_InitNotifier: pthread_atfork failed");
+	    Tcl_Panic("Tcl_InitNotifier: %s", "pthread_atfork failed");
 	}
 	atForkInit = 1;
     }
@@ -601,20 +709,20 @@ Tcl_InitNotifier(void)
 	 */
 
 	if (pipe(fds) != 0) {
-	    Tcl_Panic("Tcl_InitNotifier: could not create trigger pipe");
+	    Tcl_Panic("Tcl_InitNotifier: %s", "could not create trigger pipe");
 	}
 
 	status = fcntl(fds[0], F_GETFL);
 	status |= O_NONBLOCK;
 	if (fcntl(fds[0], F_SETFL, status) < 0) {
-	    Tcl_Panic("Tcl_InitNotifier: could not make receive pipe non "
-		    "blocking");
+	    Tcl_Panic("Tcl_InitNotifier: %s",
+		    "could not make receive pipe non-blocking");
 	}
 	status = fcntl(fds[1], F_GETFL);
 	status |= O_NONBLOCK;
 	if (fcntl(fds[1], F_SETFL, status) < 0) {
-	    Tcl_Panic("Tcl_InitNotifier: could not make trigger pipe non "
-		    "blocking");
+	    Tcl_Panic("Tcl_InitNotifier: %s",
+		    "could not make trigger pipe non-blocking");
 	}
 
 	receivePipe = fds[0];
@@ -638,7 +746,7 @@ Tcl_InitNotifier(void)
 /*
  *----------------------------------------------------------------------
  *
- * TclMacOSXNotifierAddRunLoopMode --
+ * Tcl_MacOSXNotifierAddRunLoopMode --
  *
  *	Add the tcl notifier RunLoop source, observer and timer (if any)
  *	to the given RunLoop mode.
@@ -653,7 +761,7 @@ Tcl_InitNotifier(void)
  */
 
 void
-TclMacOSXNotifierAddRunLoopMode(
+Tcl_MacOSXNotifierAddRunLoopMode(
     const void *runLoopMode)
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
@@ -700,7 +808,7 @@ StartNotifierThread(void)
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 	pthread_attr_setstacksize(&attr, 60 * 1024);
 	result = pthread_create(&notifierThread, &attr,
-		(void * (*)(void *))NotifierThreadProc, NULL);
+		(void * (*)(void *)) NotifierThreadProc, NULL);
 	pthread_attr_destroy(&attr);
 	if (result) {
 	    Tcl_Panic("StartNotifierThread: unable to start notifier thread");
@@ -714,7 +822,7 @@ StartNotifierThread(void)
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_FinalizeNotifier --
+ * TclpFinalizeNotifier --
  *
  *	This function is called to cleanup the notifier state before a thread
  *	is terminated.
@@ -730,17 +838,10 @@ StartNotifierThread(void)
  */
 
 void
-Tcl_FinalizeNotifier(
-    ClientData clientData)
+TclpFinalizeNotifier(
+    TCL_UNUSED(ClientData))
 {
-    ThreadSpecificData *tsdPtr;
-
-    if (tclNotifierHooks.finalizeNotifierProc) {
-	tclNotifierHooks.finalizeNotifierProc(clientData);
-	return;
-    }
-
-    tsdPtr = TCL_TSD_INIT(&dataKey);
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
     LOCK_NOTIFIER_INIT;
     notifierCount--;
@@ -814,7 +915,7 @@ Tcl_FinalizeNotifier(
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_AlertNotifier --
+ * TclpAlertNotifier --
  *
  *	Wake up the specified notifier from any thread. This routine is called
  *	by the platform independent notifier code whenever the Tcl_ThreadAlert
@@ -831,15 +932,10 @@ Tcl_FinalizeNotifier(
  */
 
 void
-Tcl_AlertNotifier(
+TclpAlertNotifier(
     ClientData clientData)
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)clientData;
-
-    if (tclNotifierHooks.alertNotifierProc) {
-	tclNotifierHooks.alertNotifierProc(clientData);
-	return;
-    }
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) clientData;
 
     LOCK_NOTIFIER_TSD;
     if (tsdPtr->runLoop) {
@@ -852,7 +948,7 @@ Tcl_AlertNotifier(
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_SetTimer --
+ * TclpSetTimer --
  *
  *	This function sets the current notifier timer value.
  *
@@ -866,17 +962,12 @@ Tcl_AlertNotifier(
  */
 
 void
-Tcl_SetTimer(
+TclpSetTimer(
     const Tcl_Time *timePtr)		/* Timeout value, may be NULL. */
 {
     ThreadSpecificData *tsdPtr;
     CFRunLoopTimerRef runLoopTimer;
     CFTimeInterval waitTime;
-
-    if (tclNotifierHooks.setTimerProc) {
-	tclNotifierHooks.setTimerProc(timePtr);
-	return;
-    }
 
     tsdPtr = TCL_TSD_INIT(&dataKey);
     runLoopTimer = tsdPtr->runLoopTimer;
@@ -887,7 +978,7 @@ Tcl_SetTimer(
 	Tcl_Time vTime = *timePtr;
 
 	if (vTime.sec != 0 || vTime.usec != 0) {
-	    tclScaleTimeProcPtr(&vTime, tclTimeClientData);
+	    TclScaleTime(&vTime);
 	    waitTime = vTime.sec + 1.0e-6 * vTime.usec;
 	} else {
 	    waitTime = 0;
@@ -918,15 +1009,15 @@ Tcl_SetTimer(
 
 static void
 TimerWakeUp(
-    CFRunLoopTimerRef timer,
-    void *info)
+    TCL_UNUSED(CFRunLoopTimerRef),
+    TCL_UNUSED(ClientData))
 {
 }
 
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_ServiceModeHook --
+ * TclpServiceModeHook --
  *
  *	This function is invoked whenever the service mode changes.
  *
@@ -940,18 +1031,11 @@ TimerWakeUp(
  */
 
 void
-Tcl_ServiceModeHook(
+TclpServiceModeHook(
     int mode)			/* Either TCL_SERVICE_ALL, or
 				 * TCL_SERVICE_NONE. */
 {
-    ThreadSpecificData *tsdPtr;
-
-    if (tclNotifierHooks.serviceModeHookProc) {
-	tclNotifierHooks.serviceModeHookProc(mode);
-	return;
-    }
-
-    tsdPtr = TCL_TSD_INIT(&dataKey);
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
     if (mode == TCL_SERVICE_ALL && !tsdPtr->runLoopTimer) {
 	if (!tsdPtr->runLoop) {
@@ -971,9 +1055,9 @@ Tcl_ServiceModeHook(
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_CreateFileHandler --
+ * TclpCreateFileHandler --
  *
- *	This function registers a file handler with the select notifier.
+ *	This function registers a file handler with the notifier.
  *
  * Results:
  *	None.
@@ -985,7 +1069,7 @@ Tcl_ServiceModeHook(
  */
 
 void
-Tcl_CreateFileHandler(
+TclpCreateFileHandler(
     int fd,			/* Handle of stream to watch. */
     int mask,			/* OR'ed combination of TCL_READABLE,
 				 * TCL_WRITABLE, and TCL_EXCEPTION: indicates
@@ -995,24 +1079,11 @@ Tcl_CreateFileHandler(
 				 * event. */
     ClientData clientData)	/* Arbitrary data to pass to proc. */
 {
-    ThreadSpecificData *tsdPtr;
-    FileHandler *filePtr;
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    FileHandler *filePtr = LookUpFileHandler(tsdPtr, fd, NULL);
 
-    if (tclNotifierHooks.createFileHandlerProc) {
-	tclNotifierHooks.createFileHandlerProc(fd, mask, proc, clientData);
-	return;
-    }
-
-    tsdPtr = TCL_TSD_INIT(&dataKey);
-
-    for (filePtr = tsdPtr->firstFileHandlerPtr; filePtr != NULL;
-	    filePtr = filePtr->nextPtr) {
-	if (filePtr->fd == fd) {
-	    break;
-	}
-    }
     if (filePtr == NULL) {
-	filePtr = (FileHandler *)ckalloc(sizeof(FileHandler));
+	filePtr = (FileHandler *) ckalloc(sizeof(FileHandler));
 	filePtr->fd = fd;
 	filePtr->readyMask = 0;
 	filePtr->nextPtr = tsdPtr->firstFileHandlerPtr;
@@ -1051,7 +1122,7 @@ Tcl_CreateFileHandler(
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_DeleteFileHandler --
+ * TclpDeleteFileHandler --
  *
  *	Cancel a previously-arranged callback arrangement for a file.
  *
@@ -1065,47 +1136,34 @@ Tcl_CreateFileHandler(
  */
 
 void
-Tcl_DeleteFileHandler(
+TclpDeleteFileHandler(
     int fd)			/* Stream id for which to remove callback
 				 * function. */
 {
     FileHandler *filePtr, *prevPtr;
-    int i, numFdBits;
-    ThreadSpecificData *tsdPtr;
-
-    if (tclNotifierHooks.deleteFileHandlerProc) {
-	tclNotifierHooks.deleteFileHandlerProc(fd);
-	return;
-    }
-
-    tsdPtr = TCL_TSD_INIT(&dataKey);
-    numFdBits = -1;
+    int i, numFdBits = -1;
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
     /*
      * Find the entry for the given file (and return if there isn't one).
      */
 
-    for (prevPtr = NULL, filePtr = tsdPtr->firstFileHandlerPtr; ;
-	    prevPtr = filePtr, filePtr = filePtr->nextPtr) {
-	if (filePtr == NULL) {
-	    return;
-	}
-	if (filePtr->fd == fd) {
-	    break;
-	}
+    filePtr = LookUpFileHandler(tsdPtr, fd, &prevPtr);
+    if (filePtr == NULL) {
+	return;
     }
 
     /*
      * Find current max fd.
      */
 
-    if (fd+1 == tsdPtr->numFdBits) {
+    if (fd + 1 == tsdPtr->numFdBits) {
 	numFdBits = 0;
-	for (i = fd-1; i >= 0; i--) {
+	for (i = fd - 1; i >= 0; i--) {
 	    if (FD_ISSET(i, &tsdPtr->checkMasks.readable)
 		    || FD_ISSET(i, &tsdPtr->checkMasks.writable)
 		    || FD_ISSET(i, &tsdPtr->checkMasks.exceptional)) {
-		numFdBits = i+1;
+		numFdBits = i + 1;
 		break;
 	    }
 	}
@@ -1188,12 +1246,8 @@ FileHandlerEventProc(
      */
 
     tsdPtr = TCL_TSD_INIT(&dataKey);
-    for (filePtr = tsdPtr->firstFileHandlerPtr; filePtr != NULL;
-	    filePtr = filePtr->nextPtr) {
-	if (filePtr->fd != fileEvPtr->fd) {
-	    continue;
-	}
-
+    filePtr = LookUpFileHandler(tsdPtr, fileEvPtr->fd, NULL);
+    if (filePtr != NULL) {
 	/*
 	 * The code is tricky for two reasons:
 	 * 1. The file handler's desired events could have changed since the
@@ -1222,7 +1276,6 @@ FileHandlerEventProc(
 	    UNLOCK_NOTIFIER_TSD;
 	    filePtr->proc(filePtr->clientData, mask);
 	}
-	break;
     }
     return 1;
 }
@@ -1230,7 +1283,7 @@ FileHandlerEventProc(
 /*
  *----------------------------------------------------------------------
  *
- * Tcl_WaitForEvent --
+ * TclpWaitForEvent --
  *
  *	This function is called by Tcl_DoOneEvent to wait for new events on
  *	the message queue. If the block time is 0, then Tcl_WaitForEvent just
@@ -1247,7 +1300,7 @@ FileHandlerEventProc(
  */
 
 int
-Tcl_WaitForEvent(
+TclpWaitForEvent(
     const Tcl_Time *timePtr)		/* Maximum block time, or NULL. */
 {
     int result, polling, runLoopRunning;
@@ -1255,9 +1308,6 @@ Tcl_WaitForEvent(
     SInt32 runLoopStatus;
     ThreadSpecificData *tsdPtr;
 
-    if (tclNotifierHooks.waitForEventProc) {
-	return tclNotifierHooks.waitForEventProc(timePtr);
-    }
     result = -1;
     polling = 0;
     waitTime = CF_TIMEINTERVAL_FOREVER;
@@ -1281,10 +1331,9 @@ Tcl_WaitForEvent(
 	 */
 
 	if (vTime.sec != 0 || vTime.usec != 0) {
-	    tclScaleTimeProcPtr(&vTime, tclTimeClientData);
+	    TclScaleTime(&vTime);
 	    waitTime = vTime.sec + 1.0e-6 * vTime.usec;
 	} else {
-
 	    /*
 	     * The max block time was set to 0.
 	     *
@@ -1295,8 +1344,8 @@ Tcl_WaitForEvent(
 	     * or timers are ready to fire immediately, only one (possibly two
 	     * if one is a version 0 source) will be fired, regardless of the
 	     * value of returnAfterSourceHandled."  This can cause some chanio
-	     * tests to fail.  So we use a small positive waitTime unless there
-	     * is another RunLoop running.
+	     * tests to fail.  So we use a small positive waitTime unless
+	     * there is another RunLoop running.
 	     */
 
 	    polling = 1;
@@ -1369,7 +1418,7 @@ QueueFileEvents(
 {
     SelectMasks readyMasks;
     FileHandler *filePtr;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)info;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) info;
 
     /*
      * Queue all detected file events.
@@ -1408,7 +1457,8 @@ QueueFileEvents(
 	 */
 
 	if (filePtr->readyMask == 0) {
-	    FileHandlerEvent *fileEvPtr = (FileHandlerEvent *)ckalloc(sizeof(FileHandlerEvent));
+	    FileHandlerEvent *fileEvPtr = (FileHandlerEvent *)
+		    ckalloc(sizeof(FileHandlerEvent));
 
 	    fileEvPtr->header.proc = FileHandlerEventProc;
 	    fileEvPtr->fd = filePtr->fd;
@@ -1423,8 +1473,8 @@ QueueFileEvents(
  *
  * UpdateWaitingListAndServiceEvents --
  *
- *	CFRunLoopObserver callback for updating waitingList and
- *	servicing Tcl events.
+ *	CFRunLoopObserver callback for updating waitingList and servicing Tcl
+ *	events.
  *
  * Results:
  *	None.
@@ -1437,11 +1487,12 @@ QueueFileEvents(
 
 static void
 UpdateWaitingListAndServiceEvents(
-    CFRunLoopObserverRef observer,
+    TCL_UNUSED(CFRunLoopObserverRef),
     CFRunLoopActivity activity,
     void *info)
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)info;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) info;
+
     if (tsdPtr->sleeping) {
 	return;
     }
@@ -1564,8 +1615,7 @@ Tcl_Sleep(
 
     vdelay.sec = ms / 1000;
     vdelay.usec = (ms % 1000) * 1000;
-    tclScaleTimeProcPtr(&vdelay, tclTimeClientData);
-
+    TclScaleTime(&vdelay);
 
     if (tsdPtr->runLoop) {
 	CFTimeInterval waitTime;
@@ -1791,7 +1841,7 @@ TclUnixWaitForFile(
  *
  * Result:
  *	None. Once started, this routine never exits. It dies with the overall
- *	process.
+ *	process or terminates its own thread (on notifier termination).
  *
  * Side effects:
  *	The trigger pipe used to signal the notifier thread is created when
@@ -1800,9 +1850,9 @@ TclUnixWaitForFile(
  *----------------------------------------------------------------------
  */
 
-static void
+static TCL_NORETURN void
 NotifierThreadProc(
-    ClientData clientData)	/* Not used. */
+    TCL_UNUSED(ClientData))
 {
     ThreadSpecificData *tsdPtr;
     fd_set readableMask, writableMask, exceptionalMask;
@@ -2028,9 +2078,9 @@ AtForkChild(void)
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
     /*
-     * If a child process unlocks an os_unfair_lock that was created in its parent
-     * the child will exit with an illegal instruction error.  So we reinitialize
-     * the lock in the child rather than attempt to unlock it.
+     * If a child process unlocks an os_unfair_lock that was created in its
+     * parent the child will exit with an illegal instruction error.  So we
+     * reinitialize the lock in the child rather than attempt to unlock it.
      */
 
 #if defined(USE_OS_UNFAIR_LOCK)
@@ -2076,10 +2126,10 @@ AtForkChild(void)
 #else /* HAVE_COREFOUNDATION */
 
 void
-TclMacOSXNotifierAddRunLoopMode(
+Tcl_MacOSXNotifierAddRunLoopMode(
     const void *runLoopMode)
 {
-    Tcl_Panic("TclMacOSXNotifierAddRunLoopMode: "
+    Tcl_Panic("Tcl_MacOSXNotifierAddRunLoopMode: "
 	    "Tcl not built with CoreFoundation support");
 }
 

@@ -1,9 +1,8 @@
 /*
- * Copyright (c) 2004, Joe English
+ * Copyright © 2004 Joe English
  */
 
 #include "tkInt.h"
-
 #include "ttkTheme.h"
 #include "ttkWidget.h"
 #include "ttkManager.h"
@@ -54,31 +53,31 @@ typedef struct
  * relevant to the tab.
  *
  * PaneOptionSpecs includes additional options for child window placement
- * and is used to configure the content window.
+ * and is used to configure the pane.
  */
-static Tk_OptionSpec TabOptionSpecs[] =
+static const Tk_OptionSpec TabOptionSpecs[] =
 {
     {TK_OPTION_STRING_TABLE, "-state", "", "",
-	"normal", -1,Tk_Offset(Tab,state),
+	"normal", TCL_INDEX_NONE, offsetof(Tab,state),
 	0, (void *)TabStateStrings, 0 },
     {TK_OPTION_STRING, "-text", "text", "Text", "",
-	Tk_Offset(Tab,textObj), -1, 0,0,GEOMETRY_CHANGED },
+	offsetof(Tab,textObj), TCL_INDEX_NONE, 0, 0, GEOMETRY_CHANGED },
     {TK_OPTION_STRING, "-image", "image", "Image", NULL/*default*/,
-	Tk_Offset(Tab,imageObj), -1, TK_OPTION_NULL_OK,0,GEOMETRY_CHANGED },
+	offsetof(Tab,imageObj), TCL_INDEX_NONE, TK_OPTION_NULL_OK, 0, GEOMETRY_CHANGED },
     {TK_OPTION_STRING_TABLE, "-compound", "compound", "Compound",
-	NULL, Tk_Offset(Tab,compoundObj), -1,
-	TK_OPTION_NULL_OK, (void *)ttkCompoundStrings, GEOMETRY_CHANGED },
+	NULL, offsetof(Tab,compoundObj), TCL_INDEX_NONE,
+	TK_OPTION_NULL_OK,(void *)ttkCompoundStrings,GEOMETRY_CHANGED },
     {TK_OPTION_INT, "-underline", "underline", "Underline", "-1",
-	Tk_Offset(Tab,underlineObj), -1, 0,0,GEOMETRY_CHANGED },
+	offsetof(Tab,underlineObj), TCL_INDEX_NONE, 0, 0, GEOMETRY_CHANGED },
     {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0 }
 };
 
-static Tk_OptionSpec PaneOptionSpecs[] =
+static const Tk_OptionSpec PaneOptionSpecs[] =
 {
     {TK_OPTION_STRING, "-padding", "padding", "Padding", "0",
-	Tk_Offset(Tab,paddingObj), -1, 0,0,GEOMETRY_CHANGED },
+	offsetof(Tab,paddingObj), TCL_INDEX_NONE, 0, 0, GEOMETRY_CHANGED },
     {TK_OPTION_STRING, "-sticky", "sticky", "Sticky", "nsew",
-	Tk_Offset(Tab,stickyObj), -1, 0,0,GEOMETRY_CHANGED },
+	offsetof(Tab,stickyObj), TCL_INDEX_NONE, 0, 0, GEOMETRY_CHANGED },
 
     WIDGET_INHERIT_OPTIONS(TabOptionSpecs)
 };
@@ -95,11 +94,11 @@ typedef struct
     Ttk_Manager *mgr;		/* Geometry manager */
     Tk_OptionTable tabOptionTable;	/* Tab options */
     Tk_OptionTable paneOptionTable;	/* Tab+pane options */
-    int currentIndex;		/* index of currently selected tab */
-    int activeIndex;		/* index of currently active tab */
+    TkSizeT currentIndex;		/* index of currently selected tab */
+    TkSizeT activeIndex;		/* index of currently active tab */
     Ttk_Layout tabLayout;	/* Sublayout for tabs */
 
-    Ttk_Box clientArea;		/* Where to pack content widgets */
+    Ttk_Box clientArea;		/* Where to pack content windows */
 } NotebookPart;
 
 typedef struct
@@ -108,16 +107,16 @@ typedef struct
     NotebookPart notebook;
 } Notebook;
 
-static Tk_OptionSpec NotebookOptionSpecs[] =
+static const Tk_OptionSpec NotebookOptionSpecs[] =
 {
     {TK_OPTION_INT, "-width", "width", "Width", "0",
-	Tk_Offset(Notebook,notebook.widthObj),-1,
+	offsetof(Notebook,notebook.widthObj),TCL_INDEX_NONE,
 	0,0,GEOMETRY_CHANGED },
     {TK_OPTION_INT, "-height", "height", "Height", "0",
-	Tk_Offset(Notebook,notebook.heightObj),-1,
+	offsetof(Notebook,notebook.heightObj),TCL_INDEX_NONE,
 	0,0,GEOMETRY_CHANGED },
     {TK_OPTION_STRING, "-padding", "padding", "Padding", NULL,
-	Tk_Offset(Notebook,notebook.paddingObj),-1,
+	offsetof(Notebook,notebook.paddingObj),TCL_INDEX_NONE,
 	TK_OPTION_NULL_OK,0,GEOMETRY_CHANGED },
 
     WIDGET_TAKEFOCUS_TRUE,
@@ -194,7 +193,7 @@ static Tab *CreateTab(Tcl_Interp *interp, Notebook *nb, Tk_Window window)
     Tab *record = (Tab *)ckalloc(sizeof(Tab));
     memset(record, 0, sizeof(Tab));
 
-    if (Tk_InitOptions(interp, (char *)record, optionTable, window) != TCL_OK) {
+    if (Tk_InitOptions(interp, record, optionTable, window) != TCL_OK) {
 	ckfree(record);
 	return NULL;
     }
@@ -218,7 +217,7 @@ static int ConfigureTab(
     Tk_SavedOptions savedOptions;
     int mask = 0;
 
-    if (Tk_SetOptions(interp, (void *)tab, nb->notebook.paneOptionTable,
+    if (Tk_SetOptions(interp, tab, nb->notebook.paneOptionTable,
 	    objc, objv, window, &savedOptions, &mask) != TCL_OK)
     {
 	return TCL_ERROR;
@@ -255,9 +254,9 @@ error:
  * 	Return the index of the tab at point x,y,
  * 	or -1 if no tab at that point.
  */
-static int IdentifyTab(Notebook *nb, int x, int y)
+static TkSizeT IdentifyTab(Notebook *nb, int x, int y)
 {
-    int index;
+    TkSizeT index;
     for (index = 0; index < Ttk_NumberContent(nb->notebook.mgr); ++index) {
 	Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr,index);
 	if (	tab->state != TAB_STATE_HIDDEN
@@ -266,14 +265,14 @@ static int IdentifyTab(Notebook *nb, int x, int y)
 	    return index;
 	}
     }
-    return -1;
+    return TCL_INDEX_NONE;
 }
 
 /*
  * ActivateTab --
  * 	Set the active tab index, redisplay if necessary.
  */
-static void ActivateTab(Notebook *nb, int index)
+static void ActivateTab(Notebook *nb, TkSizeT index)
 {
     if (index != nb->notebook.activeIndex) {
 	nb->notebook.activeIndex = index;
@@ -288,11 +287,11 @@ static void ActivateTab(Notebook *nb, int index)
  *	The USER1 bit is set for the leftmost visible tab, and USER2
  * 	is set for the rightmost visible tab.
  */
-static Ttk_State TabState(Notebook *nb, int index)
+static Ttk_State TabState(Notebook *nb, TkSizeT index)
 {
     Ttk_State state = nb->core.state;
     Tab *itab = (Tab *)Ttk_ContentData(nb->notebook.mgr, index);
-    int i = 0;
+    TkSizeT i = 0;
 
     if (index == nb->notebook.currentIndex) {
 	state |= TTK_STATE_SELECTED;
@@ -313,7 +312,7 @@ static Ttk_State TabState(Notebook *nb, int index)
 	}
 	break;
     }
-    for (i = Ttk_NumberContent(nb->notebook.mgr) - 1; i != -1; --i) {
+    for (i = Ttk_NumberContent(nb->notebook.mgr) - 1; i != TCL_INDEX_NONE; --i) {
 	Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, i);
 	if (tab->state == TAB_STATE_HIDDEN) {
 	    continue;
@@ -352,7 +351,7 @@ static void TabrowSize(
 {
     Ttk_Layout tabLayout = nb->notebook.tabLayout;
     int tabrowWidth = 0, tabrowHeight = 0;
-    int i;
+    TkSizeT i;
 
     for (i = 0; i < Ttk_NumberContent(nb->notebook.mgr); ++i) {
 	Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, i);
@@ -392,7 +391,7 @@ static int NotebookSize(void *clientData, int *widthPtr, int *heightPtr)
     int clientWidth = 0, clientHeight = 0,
     	reqWidth = 0, reqHeight = 0,
 	tabrowWidth = 0, tabrowHeight = 0;
-    int i;
+    TkSizeT i;
 
     NotebookStyleOptions(nb, &nbstyle);
 
@@ -572,7 +571,7 @@ static void NotebookDoLayout(void *recordPtr)
  * 	Set the position and size of a child widget
  * 	based on the current client area and content window options:
  */
-static void NotebookPlaceContent(Notebook *nb, int index)
+static void NotebookPlaceContent(Notebook *nb, TkSizeT index)
 {
     Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, index);
     Tk_Window window = Ttk_ContentWindow(nb->notebook.mgr, index);
@@ -590,8 +589,8 @@ static void NotebookPlaceContent(Notebook *nb, int index)
 static void NotebookPlaceContents(void *recordPtr)
 {
     Notebook *nb = (Notebook *)recordPtr;
-    int currentIndex = nb->notebook.currentIndex;
-    if (currentIndex >= 0) {
+    TkSizeT currentIndex = nb->notebook.currentIndex;
+    if (currentIndex != TCL_INDEX_NONE) {
 	NotebookDoLayout(nb);
 	NotebookPlaceContent(nb, currentIndex);
     }
@@ -601,10 +600,10 @@ static void NotebookPlaceContents(void *recordPtr)
  * SelectTab(nb, index) --
  * 	Change the currently-selected tab.
  */
-static void SelectTab(Notebook *nb, int index)
+static void SelectTab(Notebook *nb, TkSizeT index)
 {
     Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, index);
-    int currentIndex = nb->notebook.currentIndex;
+    TkSizeT currentIndex = nb->notebook.currentIndex;
 
     if (index == currentIndex) {
 	return;
@@ -620,7 +619,7 @@ static void SelectTab(Notebook *nb, int index)
 	tab->state = TAB_STATE_NORMAL;
     }
 
-    if (currentIndex >= 0) {
+    if (currentIndex != TCL_INDEX_NONE) {
 	Ttk_UnmapContent(nb->notebook.mgr, currentIndex);
     }
 
@@ -632,7 +631,7 @@ static void SelectTab(Notebook *nb, int index)
     NotebookPlaceContent(nb, index);
     TtkRedisplayWidget(&nb->core);
 
-    TtkSendVirtualEvent(nb->core.tkwin, "NotebookTabChanged");
+    Tk_SendVirtualEvent(nb->core.tkwin, "NotebookTabChanged", NULL);
 }
 
 /* NextTab --
@@ -642,12 +641,12 @@ static void SelectTab(Notebook *nb, int index)
  */
 static int NextTab(Notebook *nb, int index)
 {
-    int nTabs = Ttk_NumberContent(nb->notebook.mgr);
-    int nextIndex;
+    TkSizeT nTabs = Ttk_NumberContent(nb->notebook.mgr);
+    TkSizeT nextIndex;
 
     /* Scan forward for following usable tab:
      */
-    for (nextIndex = index + 1; nextIndex < nTabs; ++nextIndex) {
+    for (nextIndex = index + 1; nextIndex + 1 < nTabs + 1; ++nextIndex) {
 	Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, nextIndex);
 	if (tab->state == TAB_STATE_NORMAL) {
 	    return nextIndex;
@@ -656,7 +655,7 @@ static int NextTab(Notebook *nb, int index)
 
     /* Not found -- scan backwards.
      */
-    for (nextIndex = index - 1; nextIndex >= 0; --nextIndex) {
+    for (nextIndex = index - 1; nextIndex != TCL_INDEX_NONE; --nextIndex) {
 	Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, nextIndex);
 	if (tab->state == TAB_STATE_NORMAL) {
 	    return nextIndex;
@@ -677,14 +676,14 @@ static int NextTab(Notebook *nb, int index)
  */
 static void SelectNearestTab(Notebook *nb)
 {
-    int currentIndex = nb->notebook.currentIndex;
-    int nextIndex = NextTab(nb, currentIndex);
+    TkSizeT currentIndex = nb->notebook.currentIndex;
+    TkSizeT nextIndex = NextTab(nb, currentIndex);
 
-    if (currentIndex >= 0) {
+    if (currentIndex != TCL_INDEX_NONE) {
 	Ttk_UnmapContent(nb->notebook.mgr, currentIndex);
     }
     if (currentIndex != nextIndex) {
-	TtkSendVirtualEvent(nb->core.tkwin, "NotebookTabChanged");
+	Tk_SendVirtualEvent(nb->core.tkwin, "NotebookTabChanged", NULL);
     }
 
     nb->notebook.currentIndex = nextIndex;
@@ -696,7 +695,7 @@ static void SelectNearestTab(Notebook *nb)
  * 	Select the next tab if the current one is being removed.
  * 	Adjust currentIndex to account for removed content window.
  */
-static void TabRemoved(void *managerData, int index)
+static void TabRemoved(void *managerData, TkSizeT index)
 {
     Notebook *nb = (Notebook *)managerData;
     Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, index);
@@ -705,7 +704,7 @@ static void TabRemoved(void *managerData, int index)
 	SelectNearestTab(nb);
     }
 
-    if (index < nb->notebook.currentIndex) {
+    if (index + 1 < nb->notebook.currentIndex + 1) {
 	--nb->notebook.currentIndex;
     }
 
@@ -716,7 +715,7 @@ static void TabRemoved(void *managerData, int index)
 
 static int TabRequest(
     TCL_UNUSED(void *),
-    TCL_UNUSED(int),
+    TCL_UNUSED(TkSizeT),
     TCL_UNUSED(int),
     TCL_UNUSED(int))
 {
@@ -728,7 +727,7 @@ static int TabRequest(
  */
 static int AddTab(
     Tcl_Interp *interp, Notebook *nb,
-    int destIndex, Tk_Window window,
+    TkSizeT destIndex, Tk_Window window,
     int objc, Tcl_Obj *const objv[])
 {
     Tab *tab;
@@ -736,7 +735,7 @@ static int AddTab(
 	return TCL_ERROR;
     }
 #if 0 /* can't happen */
-    if (Ttk_ContentIndex(nb->notebook.mgr, window) >= 0) {
+    if (Ttk_ContentIndex(nb->notebook.mgr, window) != TCL_INDEX_NONE) {
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf("%s already added",
 	    Tk_PathName(window)));
 	Tcl_SetErrorCode(interp, "TTK", "NOTEBOOK", "PRESENT", NULL);
@@ -759,9 +758,9 @@ static int AddTab(
 
     /* Adjust indices and/or autoselect first tab:
      */
-    if (nb->notebook.currentIndex < 0) {
+    if (nb->notebook.currentIndex == TCL_INDEX_NONE) {
 	SelectTab(nb, destIndex);
-    } else if (nb->notebook.currentIndex >= destIndex) {
+    } else if (nb->notebook.currentIndex + 1 >= destIndex + 1) {
 	++nb->notebook.currentIndex;
     }
 
@@ -796,7 +795,7 @@ static void NotebookEventHandler(ClientData clientData, XEvent *eventPtr)
 	Tk_DeleteEventHandler(nb->core.tkwin,
 	    NotebookEventMask, NotebookEventHandler, clientData);
     } else if (eventPtr->type == MotionNotify) {
-	int index = IdentifyTab(nb, eventPtr->xmotion.x, eventPtr->xmotion.y);
+	TkSizeT index = IdentifyTab(nb, eventPtr->xmotion.x, eventPtr->xmotion.y);
 	ActivateTab(nb, index);
     } else if (eventPtr->type == LeaveNotify) {
 	ActivateTab(nb, -1);
@@ -824,12 +823,12 @@ static void NotebookEventHandler(ClientData clientData, XEvent *eventPtr)
  *	See also: GetTabIndex.
  */
 static int FindTabIndex(
-    Tcl_Interp *interp, Notebook *nb, Tcl_Obj *objPtr, int *index_rtn)
+    Tcl_Interp *interp, Notebook *nb, Tcl_Obj *objPtr, TkSizeT *index_rtn)
 {
     const char *string = Tcl_GetString(objPtr);
     int x, y;
 
-    *index_rtn = -1;
+    *index_rtn = TCL_INDEX_NONE;
 
     /* Check for @x,y ...
      */
@@ -852,6 +851,12 @@ static int FindTabIndex(
     {
 	return TCL_OK;
     }
+    if (*index_rtn == Ttk_NumberContent(nb->notebook.mgr)) {
+	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
+		"Invalid tab specification %s", string));
+	Tcl_SetErrorCode(interp, "TTK", "NOTEBOOK", "SPEC", NULL);
+	return TCL_ERROR;
+    }
 
     /* Nothing matched; Ttk_GetContentIndexFromObj will have left error message.
      */
@@ -864,11 +869,17 @@ static int FindTabIndex(
  * 	Returns TCL_ERROR if the tab does not exist.
  */
 static int GetTabIndex(
-    Tcl_Interp *interp, Notebook *nb, Tcl_Obj *objPtr, int *index_rtn)
+    Tcl_Interp *interp, Notebook *nb, Tcl_Obj *objPtr, TkSizeT *index_rtn)
 {
     int status = FindTabIndex(interp, nb, objPtr, index_rtn);
+	if (status == TCL_OK && *index_rtn + 1 >= Ttk_NumberContent(nb->notebook.mgr) + 1) {
+	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
+		"tab index %s out of bounds", Tcl_GetString(objPtr)));
+	    Tcl_SetErrorCode(interp, "TTK", "NOTEBOOK", "INDEX", NULL);
+	    return TCL_ERROR;
+	}
 
-    if (status == TCL_OK && *index_rtn < 0) {
+    if (status == TCL_OK && *index_rtn == TCL_INDEX_NONE) {
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 	    "tab '%s' not found", Tcl_GetString(objPtr)));
 	Tcl_SetErrorCode(interp, "TTK", "NOTEBOOK", "TAB", NULL);
@@ -926,18 +937,16 @@ static int NotebookInsertCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
     Notebook *nb = (Notebook *)recordPtr;
-    int current = nb->notebook.currentIndex;
-    int nContent = Ttk_NumberContent(nb->notebook.mgr);
-    int srcIndex, destIndex;
+    TkSizeT current = nb->notebook.currentIndex;
+    TkSizeT nContent = Ttk_NumberContent(nb->notebook.mgr);
+    TkSizeT srcIndex, destIndex;
 
     if (objc < 4) {
-	Tcl_WrongNumArgs(interp, 2,objv, "index slave ?-option value ...?");
+	Tcl_WrongNumArgs(interp, 2,objv, "index window ?-option value ...?");
 	return TCL_ERROR;
     }
 
-    if (!strcmp(Tcl_GetString(objv[2]), "end")) {
-	destIndex = Ttk_NumberContent(nb->notebook.mgr);
-    } else if (TCL_OK != Ttk_GetContentIndexFromObj(
+    if (TCL_OK != Ttk_GetContentIndexFromObj(
 		interp, nb->notebook.mgr, objv[2], &destIndex)) {
 	return TCL_ERROR;
     }
@@ -953,13 +962,15 @@ static int NotebookInsertCommand(
 	}
 
 	srcIndex = Ttk_ContentIndex(nb->notebook.mgr, window);
-	if (srcIndex < 0) {	/* New content window */
+	if (srcIndex == TCL_INDEX_NONE) {	/* New content window */
 	    return AddTab(interp, nb, destIndex, window, objc-4,objv+4);
 	}
     } else if (Ttk_GetContentIndexFromObj(
 		interp, nb->notebook.mgr, objv[3], &srcIndex) != TCL_OK)
     {
 	return TCL_ERROR;
+    } else if (srcIndex + 1 >= Ttk_NumberContent(nb->notebook.mgr) + 1) {
+	srcIndex = Ttk_NumberContent(nb->notebook.mgr) - 1;
     }
 
     /* Move existing content window:
@@ -972,19 +983,19 @@ static int NotebookInsertCommand(
 	return TCL_ERROR;
     }
 
-    if (destIndex >= nContent) {
+    if (destIndex + 1 >= nContent + 1) {
 	destIndex  = nContent - 1;
     }
     Ttk_ReorderContent(nb->notebook.mgr, srcIndex, destIndex);
 
     /* Adjust internal indexes:
      */
-    nb->notebook.activeIndex = -1;
+    nb->notebook.activeIndex = TCL_INDEX_NONE;
     if (current == srcIndex) {
 	nb->notebook.currentIndex = destIndex;
-    } else if (destIndex <= current && current < srcIndex) {
+    } else if (destIndex + 1 <= current + 1 && current + 1 < srcIndex + 1) {
 	++nb->notebook.currentIndex;
-    } else if (srcIndex < current && current <= destIndex) {
+    } else if (srcIndex + 1 < current + 1 && current + 1 <= destIndex + 1) {
 	--nb->notebook.currentIndex;
     }
 
@@ -1000,7 +1011,7 @@ static int NotebookForgetCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
     Notebook *nb = (Notebook *)recordPtr;
-    int index;
+    TkSizeT index;
 
     if (objc != 3) {
 	Tcl_WrongNumArgs(interp, 2, objv, "tab");
@@ -1024,7 +1035,7 @@ static int NotebookHideCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
     Notebook *nb = (Notebook *)recordPtr;
-    int index;
+    TkSizeT index;
     Tab *tab;
 
     if (objc != 3) {
@@ -1053,13 +1064,13 @@ static int NotebookHideCommand(
 static int NotebookIdentifyCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-    static const char *whatTable[] = { "element", "tab", NULL };
+    static const char *const whatTable[] = { "element", "tab", NULL };
     enum { IDENTIFY_ELEMENT, IDENTIFY_TAB };
     int what = IDENTIFY_ELEMENT;
     Notebook *nb = (Notebook *)recordPtr;
     Ttk_Element element = NULL;
     int x, y;
-    int tabIndex;
+    TkSizeT tabIndex;
 
     if (objc < 4 || objc > 5) {
 	Tcl_WrongNumArgs(interp, 2,objv, "?what? x y");
@@ -1075,7 +1086,7 @@ static int NotebookIdentifyCommand(
     }
 
     tabIndex = IdentifyTab(nb, x, y);
-    if (tabIndex >= 0) {
+    if (tabIndex != TCL_INDEX_NONE) {
 	Tab *tab = (Tab *)Ttk_ContentData(nb->notebook.mgr, tabIndex);
 	Ttk_State state = TabState(nb, tabIndex);
 	Ttk_Layout tabLayout = nb->notebook.tabLayout;
@@ -1095,9 +1106,8 @@ static int NotebookIdentifyCommand(
 	    }
 	    break;
 	case IDENTIFY_TAB:
-	    if (tabIndex >= 0) {
-		Tcl_SetObjResult(interp, Tcl_NewIntObj(tabIndex));
-	    }
+	    if (tabIndex != TCL_INDEX_NONE)
+	    Tcl_SetObjResult(interp, TkNewIndexObj(tabIndex));
 	    break;
     }
     return TCL_OK;
@@ -1112,7 +1122,7 @@ static int NotebookIndexCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
     Notebook *nb = (Notebook *)recordPtr;
-    int index;
+    TkSizeT index;
     int status;
 
     if (objc != 3) {
@@ -1120,18 +1130,10 @@ static int NotebookIndexCommand(
 	return TCL_ERROR;
     }
 
-    /*
-     * Special-case for "end":
-     */
-    if (!strcmp("end", Tcl_GetString(objv[2]))) {
-	int nContent = Ttk_NumberContent(nb->notebook.mgr);
-	Tcl_SetObjResult(interp, Tcl_NewIntObj(nContent));
-	return TCL_OK;
-    }
-
     status = FindTabIndex(interp, nb, objv[2], &index);
-    if (status == TCL_OK && index >= 0) {
-	Tcl_SetObjResult(interp, Tcl_NewIntObj(index));
+	if (status == TCL_OK) {
+	if (index != TCL_INDEX_NONE)
+	Tcl_SetObjResult(interp, TkNewIndexObj(index));
     }
 
     return status;
@@ -1147,14 +1149,15 @@ static int NotebookSelectCommand(
     Notebook *nb = (Notebook *)recordPtr;
 
     if (objc == 2) {
-	if (nb->notebook.currentIndex >= 0) {
+	if (nb->notebook.currentIndex != TCL_INDEX_NONE) {
 	    Tk_Window pane = Ttk_ContentWindow(
 		nb->notebook.mgr, nb->notebook.currentIndex);
 	    Tcl_SetObjResult(interp, Tcl_NewStringObj(Tk_PathName(pane), -1));
 	}
 	return TCL_OK;
     } else if (objc == 3) {
-	int index, status = GetTabIndex(interp, nb, objv[2], &index);
+	TkSizeT index;
+	int status = GetTabIndex(interp, nb, objv[2], &index);
 	if (status == TCL_OK) {
 	    SelectTab(nb, index);
 	}
@@ -1173,7 +1176,7 @@ static int NotebookTabsCommand(
     Notebook *nb = (Notebook *)recordPtr;
     Ttk_Manager *mgr = nb->notebook.mgr;
     Tcl_Obj *result;
-    int i;
+    TkSizeT i;
 
     if (objc != 2) {
 	Tcl_WrongNumArgs(interp, 2, objv, "");
@@ -1197,7 +1200,7 @@ static int NotebookTabCommand(
 {
     Notebook *nb = (Notebook *)recordPtr;
     Ttk_Manager *mgr = nb->notebook.mgr;
-    int index;
+    TkSizeT index;
     Tk_Window window;
     Tab *tab;
 
@@ -1239,8 +1242,8 @@ static int NotebookTabCommand(
  */
 static const Ttk_Ensemble NotebookCommands[] = {
     { "add",    	NotebookAddCommand,0 },
-    { "configure",	TtkWidgetConfigureCommand,0 },
     { "cget",		TtkWidgetCgetCommand,0 },
+    { "configure",	TtkWidgetConfigureCommand,0 },
     { "forget",		NotebookForgetCommand,0 },
     { "hide",		NotebookHideCommand,0 },
     { "identify",	NotebookIdentifyCommand,0 },
@@ -1249,6 +1252,7 @@ static const Ttk_Ensemble NotebookCommands[] = {
     { "instate",	TtkWidgetInstateCommand,0 },
     { "select",		NotebookSelectCommand,0 },
     { "state",  	TtkWidgetStateCommand,0 },
+    { "style",		TtkWidgetStyleCommand,0 },
     { "tab",   		NotebookTabCommand,0 },
     { "tabs",   	NotebookTabsCommand,0 },
     { 0,0,0 }
@@ -1268,8 +1272,8 @@ static void NotebookInitialize(Tcl_Interp *interp, void *recordPtr)
     nb->notebook.tabOptionTable = Tk_CreateOptionTable(interp,TabOptionSpecs);
     nb->notebook.paneOptionTable = Tk_CreateOptionTable(interp,PaneOptionSpecs);
 
-    nb->notebook.currentIndex = -1;
-    nb->notebook.activeIndex = -1;
+    nb->notebook.currentIndex = TCL_INDEX_NONE;
+    nb->notebook.activeIndex = TCL_INDEX_NONE;
     nb->notebook.tabLayout = 0;
 
     nb->notebook.clientArea = Ttk_MakeBox(0,0,1,1);
@@ -1354,8 +1358,8 @@ static void DisplayTab(Notebook *nb, int index, Drawable d)
 static void NotebookDisplay(void *clientData, Drawable d)
 {
     Notebook *nb = (Notebook *)clientData;
-    int nContent = Ttk_NumberContent(nb->notebook.mgr);
-    int index;
+    TkSizeT nContent = Ttk_NumberContent(nb->notebook.mgr);
+    TkSizeT index;
 
     /* Draw notebook background (base layout):
      */
@@ -1369,7 +1373,7 @@ static void NotebookDisplay(void *clientData, Drawable d)
 	    DisplayTab(nb, index, d);
 	}
     }
-    if (nb->notebook.currentIndex >= 0) {
+    if (nb->notebook.currentIndex != TCL_INDEX_NONE) {
 	DisplayTab(nb, nb->notebook.currentIndex, d);
     }
 }
@@ -1378,7 +1382,7 @@ static void NotebookDisplay(void *clientData, Drawable d)
  * +++ Widget specification and layout definitions.
  */
 
-static WidgetSpec NotebookWidgetSpec =
+static const WidgetSpec NotebookWidgetSpec =
 {
     "TNotebook",		/* className */
     sizeof(Notebook),		/* recordSize */

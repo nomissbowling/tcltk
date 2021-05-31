@@ -18,18 +18,22 @@
 /* See [Bug 3354324]: file mtime sets wrong time */
 #   define __MINGW_USE_VC2005_COMPAT
 #endif
+#if defined(_MSC_VER) && defined(_WIN64) && !defined(STATIC_BUILD) \
+	&& !defined(MP_32BIT) && !defined(MP_64BIT)
+#   define MP_64BIT
+#endif
 
 /*
  * We must specify the lower version we intend to support.
  *
- * WINVER = 0x0501 means Windows XP and above
+ * WINVER = 0x0601 means Windows 7 and above
  */
 
 #ifndef WINVER
-#   define WINVER 0x0501
+#   define WINVER 0x0601
 #endif
 #ifndef _WIN32_WINNT
-#   define _WIN32_WINNT 0x0501
+#   define _WIN32_WINNT 0x0601
 #endif
 
 #define WIN32_LEAN_AND_MEAN
@@ -53,15 +57,6 @@ typedef DWORD_PTR * PDWORD_PTR;
 #ifdef HAVE_WSPIAPI_H
 #   include <wspiapi.h>
 #endif
-
-#ifdef CHECK_UNICODE_CALLS
-#   define _UNICODE
-#   define UNICODE
-#   define __TCHAR_DEFINED
-    typedef float *_TCHAR;
-#   define _TCHAR_DEFINED
-    typedef float *TCHAR;
-#endif /* CHECK_UNICODE_CALLS */
 
 /*
  *  Pull in the typedef of TCHAR for windows.
@@ -97,6 +92,11 @@ typedef DWORD_PTR * PDWORD_PTR;
 #   include <inttypes.h>
 #endif
 #include <limits.h>
+#ifdef HAVE_STDINT_H
+#   include <stdint.h>
+#else
+#   include "../compat/stdint.h"
+#endif
 
 #ifndef __GNUC__
 #    define strncasecmp _strnicmp
@@ -111,11 +111,7 @@ typedef DWORD_PTR * PDWORD_PTR;
 #ifndef __MWERKS__
 #include <sys/stat.h>
 #include <sys/timeb.h>
-#   ifdef __BORLANDC__
-#	include <utime.h>
-#   else
-#	include <sys/utime.h>
-#   endif /* __BORLANDC__ */
+#include <sys/utime.h>
 #endif /* __MWERKS__ */
 
 /*
@@ -454,44 +450,18 @@ typedef DWORD_PTR * PDWORD_PTR;
 
 #if defined(_MSC_VER) || defined(__MSVCRT__)
 #   define environ _environ
-#   if defined(_MSC_VER) && (_MSC_VER < 1600)
-#	define hypot _hypot
-#   endif
 #   define exception _exception
 #   undef EDEADLOCK
-#   if defined(_MSC_VER) && (_MSC_VER >= 1700)
+#   if defined(_MSC_VER)
 #	define timezone _timezone
 #   endif
 #endif /* _MSC_VER || __MSVCRT__ */
 
-/*
- * Borland's timezone and environ functions.
- */
-
-#ifdef  __BORLANDC__
-#   define timezone _timezone
-#   define environ  _environ
-#endif /* __BORLANDC__ */
-
-#ifdef __WATCOMC__
-#   if !defined(__CHAR_SIGNED__)
-#	error "You must use the -j switch to ensure char is signed."
-#   endif
-#endif
-
-
-/*
- * MSVC 8.0 started to mark many standard C library functions depreciated
- * including the *printf family and others. Tell it to shut up.
- * (_MSC_VER is 1200 for VC6, 1300 or 1310 for vc7.net, 1400 for 8.0)
- */
 #if defined(_MSC_VER)
 #   pragma warning(disable:4146)
 #   pragma warning(disable:4244)
-#   if _MSC_VER >= 1400
-#	pragma warning(disable:4267)
-#	pragma warning(disable:4996)
-#   endif
+#   pragma warning(disable:4267)
+#   pragma warning(disable:4996)
 #endif
 
 /*
@@ -559,7 +529,7 @@ typedef DWORD_PTR * PDWORD_PTR;
  * address platform-specific issues.
  */
 
-#define TclpReleaseFile(file)	ckfree((char *) file)
+#define TclpReleaseFile(file)	ckfree(file)
 
 /*
  * The following macros and declarations wrap the C runtime library

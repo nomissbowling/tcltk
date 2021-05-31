@@ -4,8 +4,8 @@
  *	Implements a generic transformation exposing the underlying API at the
  *	script level. Contributed by Andreas Kupries.
  *
- * Copyright (c) 2000 Ajuba Solutions
- * Copyright (c) 1999-2000 Andreas Kupries (a.kupries@westend.com)
+ * Copyright © 2000 Ajuba Solutions
+ * Copyright © 1999-2000 Andreas Kupries (a.kupries@westend.com)
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -22,15 +22,15 @@
 static int		TransformBlockModeProc(ClientData instanceData,
 			    int mode);
 static int		TransformCloseProc(ClientData instanceData,
-			    Tcl_Interp *interp);
-static int		TransformClose2Proc(ClientData instanceData,
 			    Tcl_Interp *interp, int flags);
 static int		TransformInputProc(ClientData instanceData, char *buf,
 			    int toRead, int *errorCodePtr);
 static int		TransformOutputProc(ClientData instanceData,
 			    const char *buf, int toWrite, int *errorCodePtr);
+#ifndef TCL_NO_DEPRECATED
 static int		TransformSeekProc(ClientData instanceData, long offset,
 			    int mode, int *errorCodePtr);
+#endif
 static int		TransformSetOptionProc(ClientData instanceData,
 			    Tcl_Interp *interp, const char *optionName,
 			    const char *value);
@@ -41,8 +41,8 @@ static void		TransformWatchProc(ClientData instanceData, int mask);
 static int		TransformGetFileHandleProc(ClientData instanceData,
 			    int direction, ClientData *handlePtr);
 static int		TransformNotifyProc(ClientData instanceData, int mask);
-static Tcl_WideInt	TransformWideSeekProc(ClientData instanceData,
-			    Tcl_WideInt offset, int mode, int *errorCodePtr);
+static long long	TransformWideSeekProc(ClientData instanceData,
+			    long long offset, int mode, int *errorCodePtr);
 
 /*
  * Forward declarations of internal procedures. Secondly the procedures for
@@ -121,15 +121,19 @@ static inline void	ResultAdd(ResultBuffer *r, unsigned char *buf,
 static const Tcl_ChannelType transformChannelType = {
     "transform",		/* Type name. */
     TCL_CHANNEL_VERSION_5,	/* v5 channel */
-    TransformCloseProc,		/* Close proc. */
+    TCL_CLOSE2PROC,		/* Close proc. */
     TransformInputProc,		/* Input proc. */
     TransformOutputProc,	/* Output proc. */
+#ifndef TCL_NO_DEPRECATED
     TransformSeekProc,		/* Seek proc. */
+#else
+    NULL,			/* Seek proc. */
+#endif
     TransformSetOptionProc,	/* Set option proc. */
     TransformGetOptionProc,	/* Get option proc. */
     TransformWatchProc,		/* Initialize notifier. */
     TransformGetFileHandleProc,	/* Get OS handles out of channel. */
-    TransformClose2Proc,	/* close2proc */
+    TransformCloseProc,		/* close2proc */
     TransformBlockModeProc,	/* Set blocking/nonblocking mode.*/
     NULL,			/* Flush proc. */
     TransformNotifyProc,	/* Handling of events bubbling up. */
@@ -213,7 +217,7 @@ struct TransformChannelData {
 				 * a transformation of incoming data. Also
 				 * serves as buffer of all data not yet
 				 * consumed by the reader. */
-    int refCount;
+    size_t refCount;
 };
 
 static void
@@ -227,7 +231,7 @@ static void
 ReleaseData(
     TransformChannelData *dataPtr)
 {
-    if (--dataPtr->refCount) {
+    if (dataPtr->refCount-- > 1) {
 	return;
     }
     ResultClear(&dataPtr->result);
@@ -253,7 +257,6 @@ ReleaseData(
  *----------------------------------------------------------------------
  */
 
-	/* ARGSUSED */
 int
 TclChannelTransform(
     Tcl_Interp *interp,		/* Interpreter for result. */
@@ -518,7 +521,7 @@ TransformBlockModeProc(
 /*
  *----------------------------------------------------------------------
  *
- * TransformCloseProc/TransformClose2Proc --
+ * TransformCloseProc --
  *
  *	Trap handler. Called by the generic IO system during destruction of
  *	the transformation channel.
@@ -535,9 +538,14 @@ TransformBlockModeProc(
 static int
 TransformCloseProc(
     ClientData instanceData,
-    Tcl_Interp *interp)
+    Tcl_Interp *interp,
+	int flags)
 {
-    TransformChannelData *dataPtr = instanceData;
+    TransformChannelData *dataPtr = (TransformChannelData *)instanceData;
+
+    if ((flags & (TCL_CLOSE_READ | TCL_CLOSE_WRITE)) != 0) {
+	return EINVAL;
+    }
 
     /*
      * Important: In this procedure 'dataPtr->self' already points to the
@@ -593,18 +601,6 @@ TransformCloseProc(
     dataPtr->self = NULL;
     ReleaseData(dataPtr);
     return TCL_OK;
-}
-
-static int
-TransformClose2Proc(
-    ClientData instanceData,
-    Tcl_Interp *interp,
-	int flags)
-{
-    if ((flags & (TCL_CLOSE_READ | TCL_CLOSE_WRITE)) == 0) {
-	return TransformCloseProc(instanceData, interp);
-    }
-    return EINVAL;
 }
 
 /*
@@ -842,6 +838,7 @@ TransformOutputProc(
  *----------------------------------------------------------------------
  */
 
+#ifndef TCL_NO_DEPRECATED
 static int
 TransformSeekProc(
     ClientData instanceData,	/* The channel to manipulate. */
@@ -888,6 +885,7 @@ TransformSeekProc(
     return parentSeekProc(Tcl_GetChannelInstanceData(parent), offset, mode,
 	    errorCodePtr);
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -909,20 +907,22 @@ TransformSeekProc(
  *----------------------------------------------------------------------
  */
 
-static Tcl_WideInt
+static long long
 TransformWideSeekProc(
     ClientData instanceData,	/* The channel to manipulate. */
-    Tcl_WideInt offset,		/* Size of movement. */
+    long long offset,		/* Size of movement. */
     int mode,			/* How to move. */
     int *errorCodePtr)		/* Location of error flag. */
 {
     TransformChannelData *dataPtr = (TransformChannelData *)instanceData;
     Tcl_Channel parent = Tcl_GetStackedChannel(dataPtr->self);
     const Tcl_ChannelType *parentType	= Tcl_GetChannelType(parent);
+#ifndef TCL_NO_DEPRECATED
     Tcl_DriverSeekProc *parentSeekProc = Tcl_ChannelSeekProc(parentType);
+#endif
     Tcl_DriverWideSeekProc *parentWideSeekProc =
 	    Tcl_ChannelWideSeekProc(parentType);
-    ClientData parentData = Tcl_GetChannelInstanceData(parent);
+    void *parentData = Tcl_GetChannelInstanceData(parent);
 
     if ((offset == 0) && (mode == SEEK_CUR)) {
 	/*
@@ -932,10 +932,14 @@ TransformWideSeekProc(
 
 	if (parentWideSeekProc != NULL) {
 	    return parentWideSeekProc(parentData, offset, mode, errorCodePtr);
+#ifndef TCL_NO_DEPRECATED
+	} else if (parentSeekProc) {
+	    return parentSeekProc(parentData, 0, mode, errorCodePtr);
+#endif
+	} else {
+	    *errorCodePtr = EINVAL;
+	    return -1;
 	}
-
-	return Tcl_LongAsWide(parentSeekProc(parentData, 0, mode,
-		errorCodePtr));
     }
 
     /*
@@ -963,25 +967,29 @@ TransformWideSeekProc(
      * If we have a wide seek capability, we should stick with that.
      */
 
-    if (parentWideSeekProc != NULL) {
+    if (parentWideSeekProc == NULL) {
+	/*
+	 * We're transferring to narrow seeks at this point; this is a bit complex
+	 * because we have to check whether the seek is possible first (i.e.
+	 * whether we are losing information in truncating the bits of the
+	 * offset). Luckily, there's a defined error for what happens when trying
+	 * to go out of the representable range.
+	 */
+
+#ifndef TCL_NO_DEPRECATED
+	if (offset<LONG_MIN || offset>LONG_MAX) {
+	    *errorCodePtr = EOVERFLOW;
+	    return -1;
+	}
+
+	return parentSeekProc(parentData, offset,
+		mode, errorCodePtr);
+#else
+	*errorCodePtr = EINVAL;
+	return -1;
+#endif
+    }
 	return parentWideSeekProc(parentData, offset, mode, errorCodePtr);
-    }
-
-    /*
-     * We're transferring to narrow seeks at this point; this is a bit complex
-     * because we have to check whether the seek is possible first (i.e.
-     * whether we are losing information in truncating the bits of the
-     * offset). Luckily, there's a defined error for what happens when trying
-     * to go out of the representable range.
-     */
-
-    if (offset<Tcl_LongAsWide(LONG_MIN) || offset>Tcl_LongAsWide(LONG_MAX)) {
-	*errorCodePtr = EOVERFLOW;
-	return Tcl_LongAsWide(-1);
-    }
-
-    return Tcl_LongAsWide(parentSeekProc(parentData, Tcl_WideAsLong(offset),
-	    mode, errorCodePtr));
 }
 
 /*
@@ -1087,7 +1095,6 @@ TransformGetOptionProc(
  *----------------------------------------------------------------------
  */
 
-	/* ARGSUSED */
 static void
 TransformWatchProc(
     ClientData instanceData,	/* Channel to watch. */

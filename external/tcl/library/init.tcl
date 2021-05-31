@@ -3,10 +3,13 @@
 # Default system startup file for Tcl-based applications.  Defines
 # "unknown" procedure and auto-load facilities.
 #
-# Copyright (c) 1991-1993 The Regents of the University of California.
-# Copyright (c) 1994-1996 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 Scriptics Corporation.
-# Copyright (c) 2004 Kevin B. Kenny.  All rights reserved.
+# Copyright © 1991-1993 The Regents of the University of California.
+# Copyright © 1994-1996 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
+# Copyright © 2004 Kevin B. Kenny.
+# Copyright © 2018 Sean Woods
+#
+# All rights reserved.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -16,7 +19,7 @@
 if {[info commands package] == ""} {
     error "version mismatch: library\nscripts expect Tcl version 7.5b1 or later but the loaded version is\nonly [info patchlevel]"
 }
-package require -exact Tcl 8.6.11
+package require -exact tcl 8.7a4
 
 # Compute the auto path to use in this interpreter.
 # The values on the path come from several locations:
@@ -78,81 +81,10 @@ namespace eval tcl {
 	}
 	unset Dir Path
     }
-
-    # TIP #255 min and max functions
-    namespace eval mathfunc {
-	proc min {args} {
-	    if {![llength $args]} {
-		return -code error \
-		    "not enough arguments to math function \"min\""
-	    }
-	    set val Inf
-	    foreach arg $args {
-		# This will handle forcing the numeric value without
-		# ruining the internal type of a numeric object
-		if {[catch {expr {double($arg)}} err]} {
-		    return -code error $err
-		}
-		if {$arg < $val} {set val $arg}
-	    }
-	    return $val
-	}
-	proc max {args} {
-	    if {![llength $args]} {
-		return -code error \
-		    "not enough arguments to math function \"max\""
-	    }
-	    set val -Inf
-	    foreach arg $args {
-		# This will handle forcing the numeric value without
-		# ruining the internal type of a numeric object
-		if {[catch {expr {double($arg)}} err]} {
-		    return -code error $err
-		}
-		if {$arg > $val} {set val $arg}
-	    }
-	    return $val
-	}
-	namespace export min max
-    }
 }
 
-# Windows specific end of initialization
+namespace eval tcl::Pkg {}
 
-if {(![interp issafe]) && ($tcl_platform(platform) eq "windows")} {
-    namespace eval tcl {
-	proc EnvTraceProc {lo n1 n2 op} {
-	    global env
-	    set x $env($n2)
-	    set env($lo) $x
-	    set env([string toupper $lo]) $x
-	}
-	proc InitWinEnv {} {
-	    global env tcl_platform
-	    foreach p [array names env] {
-		set u [string toupper $p]
-		if {$u ne $p} {
-		    switch -- $u {
-			COMSPEC -
-			PATH {
-			    set temp $env($p)
-			    unset env($p)
-			    set env($u) $temp
-			    trace add variable env($p) write \
-				    [namespace code [list EnvTraceProc $p]]
-			    trace add variable env($u) write \
-				    [namespace code [list EnvTraceProc $p]]
-			}
-		    }
-		}
-	    }
-	    if {![info exists env(COMSPEC)]} {
-		set env(COMSPEC) cmd.exe
-	    }
-	}
-	InitWinEnv
-    }
-}
 
 # Setup the unknown package handler
 
@@ -180,7 +112,7 @@ if {[interp issafe]} {
 	foreach cmd {add format scan} {
 	    proc ::tcl::clock::$cmd args {
 		variable TclLibDir
-		source -encoding utf-8 [file join $TclLibDir clock.tcl]
+		source [file join $TclLibDir clock.tcl]
 		return [uplevel 1 [info level 0]]
 	    }
 	}
@@ -282,9 +214,9 @@ proc unknown args {
 		set errInfo [dict get $opts -errorinfo]
 		set errCode [dict get $opts -errorcode]
 		set cinfo $args
-		if {[string bytelength $cinfo] > 150} {
+		if {[string length [encoding convertto utf-8 $cinfo]] > 150} {
 		    set cinfo [string range $cinfo 0 150]
-		    while {[string bytelength $cinfo] > 150} {
+		    while {[string length [encoding convertto utf-8 $cinfo]] > 150} {
 			set cinfo [string range $cinfo 0 end-1]
 		    }
 		    append cinfo ...
@@ -463,6 +395,22 @@ proc auto_load {cmd {namespace {}}} {
     return 0
 }
 
+# ::tcl::Pkg::source --
+# This procedure provides an alternative "source" command, which doesn't
+# register the file for the "package files" command. Safe interpreters
+# don't have to do anything special.
+#
+# Arguments:
+# filename
+
+proc ::tcl::Pkg::source {filename} {
+    if {[interp issafe]} {
+	uplevel 1 [list ::source $filename]
+    } else {
+	uplevel 1 [list ::source -nopkg $filename]
+    }
+}
+
 # auto_load_index --
 # Loads the contents of tclIndex files on the auto_path directory
 # list.  This is usually invoked within auto_load to load the index
@@ -494,7 +442,7 @@ proc auto_load_index {} {
 	    continue
 	} else {
 	    set error [catch {
-		fconfigure $f -eofchar \032
+		fconfigure $f -encoding utf-8 -eofchar "\032 {}"
 		set id [gets $f]
 		if {$id eq "# Tcl autoload index file, version 2.0"} {
 		    eval [read $f]
@@ -506,7 +454,7 @@ proc auto_load_index {} {
 			}
 			set name [lindex $line 0]
 			set auto_index($name) \
-				"source [file join $dir [lindex $line 1]]"
+				"::tcl::Pkg::source [file join $dir [lindex $line 1]]"
 		    }
 		} else {
 		    error "[file join $dir tclIndex] isn't a proper Tcl index file"
@@ -680,10 +628,7 @@ proc auto_execok name {
 	set windir $env(WINDIR)
     }
     if {[info exists windir]} {
-	if {$tcl_platform(os) eq "Windows NT"} {
-	    append path "$windir/system32;"
-	}
-	append path "$windir/system;$windir;"
+	append path "$windir/system32;$windir/system;$windir;"
     }
 
     foreach var {PATH Path path} {

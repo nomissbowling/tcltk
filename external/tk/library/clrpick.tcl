@@ -3,7 +3,7 @@
 #	Color selection dialog for platforms that do not support a
 #	standard color selection dialog.
 #
-# Copyright (c) 1996 Sun Microsystems, Inc.
+# Copyright © 1996 Sun Microsystems, Inc.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -316,7 +316,7 @@ proc ::tk::dialog::color::BuildDialog {w} {
 
     # Accelerator bindings
     bind $lab <<AltUnderlined>> [list focus $ent]
-    bind $w <KeyPress-Escape> [list tk::ButtonInvoke $data(cancelBtn)]
+    bind $w <Escape> [list tk::ButtonInvoke $data(cancelBtn)]
     bind $w <Alt-Key> [list tk::AltKeyInDialog $w %A]
 
     wm protocol $w WM_DELETE_WINDOW [list tk::dialog::color::CancelCmd $w]

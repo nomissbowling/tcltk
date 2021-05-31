@@ -5,11 +5,11 @@
  *	application and the window manager. Among other things, it implements
  *	the "wm" command and passes geometry information to the window manager.
  *
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2010 Kevin Walzer/WordTech Communications LLC.
- * Copyright (c) 2017-2019 Marc Culler.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009, Apple Inc.
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2010 Kevin Walzer/WordTech Communications LLC.
+ * Copyright © 2017-2019 Marc Culler.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -18,7 +18,7 @@
 #include "tkMacOSXPrivate.h"
 #include "tkScrollbar.h"
 #include "tkMacOSXWm.h"
-#include "tkMacOSXEvent.h"
+#include "tkMacOSXInt.h"
 #include "tkMacOSXDebug.h"
 #include "tkMacOSXConstants.h"
 
@@ -183,7 +183,7 @@ static void TopLevelReqProc(ClientData dummy, Tk_Window tkwin);
 static const Tk_GeomMgr wmMgrType = {
     "wm",			/* name */
     TopLevelReqProc,		/* requestProc */
-    NULL,			/* lostSlaveProc */
+    NULL,			/* lostContentProc */
 };
 
 /*
@@ -776,7 +776,7 @@ TkWmNewWindow(
  */
 static Tk_RestrictAction
 MapUnmapRestrictProc(
-    ClientData arg,
+    TCL_UNUSED(void*),
     XEvent *eventPtr)
 {
     return (eventPtr->type==MapNotify || eventPtr->type==UnmapNotify ?
@@ -1226,7 +1226,7 @@ Tk_WmObjCmd(
 	    return TCL_ERROR;
 	}
 	if (objc == 2) {
-	    Tcl_SetObjResult(interp, Tcl_NewBooleanObj(wmTracing));
+	    Tcl_SetObjResult(interp, Tcl_NewWideIntObj(wmTracing != 0));
 	    return TCL_OK;
 	}
 	return Tcl_GetBooleanFromObj(interp, objv[2], &wmTracing);
@@ -1362,10 +1362,10 @@ WmAspectCmd(
 	if (wmPtr->sizeHintsFlags & PAspect) {
 	    Tcl_Obj *results[4];
 
-	    results[0] = Tcl_NewIntObj(wmPtr->minAspect.x);
-	    results[1] = Tcl_NewIntObj(wmPtr->minAspect.y);
-	    results[2] = Tcl_NewIntObj(wmPtr->maxAspect.x);
-	    results[3] = Tcl_NewIntObj(wmPtr->maxAspect.y);
+	    results[0] = Tcl_NewWideIntObj(wmPtr->minAspect.x);
+	    results[1] = Tcl_NewWideIntObj(wmPtr->minAspect.y);
+	    results[2] = Tcl_NewWideIntObj(wmPtr->maxAspect.x);
+	    results[3] = Tcl_NewWideIntObj(wmPtr->maxAspect.y);
 	    Tcl_SetObjResult(interp, Tcl_NewListObj(4, results));
 	}
 	return TCL_OK;
@@ -1568,20 +1568,20 @@ WmGetAttribute(
 	result = Tcl_NewBooleanObj([macWindow styleMask] & NSFullScreenWindowMask);
 	break;
     case WMATT_MODIFIED:
-	result = Tcl_NewBooleanObj([macWindow isDocumentEdited]);
+	result = Tcl_NewWideIntObj([macWindow isDocumentEdited] != 0);
 	break;
     case WMATT_NOTIFY:
-	result = Tcl_NewBooleanObj(tkMacOSXWmAttrNotifyVal);
+	result = Tcl_NewWideIntObj(tkMacOSXWmAttrNotifyVal != 0);
 	break;
     case WMATT_TITLEPATH:
 	result = Tcl_NewStringObj([[macWindow representedFilename] UTF8String],
 		-1);
 	break;
     case WMATT_TOPMOST:
-	result = Tcl_NewBooleanObj(wmPtr->flags & WM_TOPMOST);
+	result = Tcl_NewWideIntObj((wmPtr->flags & WM_TOPMOST) != 0);
 	break;
     case WMATT_TRANSPARENT:
-	result = Tcl_NewBooleanObj(wmPtr->flags & WM_TRANSPARENT);
+	result = Tcl_NewWideIntObj((wmPtr->flags & WM_TRANSPARENT) != 0);
 	break;
     case WMATT_TYPE:
 	result = Tcl_NewStringObj("unsupported", -1);
@@ -1764,7 +1764,7 @@ WmColormapwindowsCmd(
 		break;
 	    }
 	    Tcl_ListObjAppendElement(NULL, resultObj,
-		    TkNewWindowObj((Tk_Window)wmPtr->cmapList[i]));
+		    Tk_NewWindowObj((Tk_Window)wmPtr->cmapList[i]));
 	}
 	Tcl_SetObjResult(interp, resultObj);
 	return TCL_OK;
@@ -2216,10 +2216,10 @@ WmGridCmd(
 	if (wmPtr->sizeHintsFlags & PBaseSize) {
 	    Tcl_Obj *results[4];
 
-	    results[0] = Tcl_NewIntObj(wmPtr->reqGridWidth);
-	    results[1] = Tcl_NewIntObj(wmPtr->reqGridHeight);
-	    results[2] = Tcl_NewIntObj(wmPtr->widthInc);
-	    results[3] = Tcl_NewIntObj(wmPtr->heightInc);
+	    results[0] = Tcl_NewWideIntObj(wmPtr->reqGridWidth);
+	    results[1] = Tcl_NewWideIntObj(wmPtr->reqGridHeight);
+	    results[2] = Tcl_NewWideIntObj(wmPtr->widthInc);
+	    results[3] = Tcl_NewWideIntObj(wmPtr->heightInc);
 	    Tcl_SetObjResult(interp, Tcl_NewListObj(4, results));
 	}
 	return TCL_OK;
@@ -2450,13 +2450,13 @@ WmIconifyCmd(
 	return TCL_ERROR;
     } else if (wmPtr->iconFor != NULL) {
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"can't iconify %s: it is an icon for %s",
+		"can't iconify \"%s\": it is an icon for \"%s\"",
 		winPtr->pathName, Tk_PathName(wmPtr->iconFor)));
 	Tcl_SetErrorCode(interp, "TK", "WM", "ICONIFY", "ICON", NULL);
 	return TCL_ERROR;
     } else if (winPtr->flags & TK_EMBEDDED) {
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"can't iconify %s: it is an embedded window",
+		"can't iconify \"%s\": it is an embedded window",
 		winPtr->pathName));
 	Tcl_SetErrorCode(interp, "TK", "WM", "ICONIFY", "EMBEDDED", NULL);
 	return TCL_ERROR;
@@ -2725,8 +2725,8 @@ WmIconpositionCmd(
 	if (wmPtr->hints.flags & IconPositionHint) {
 	    Tcl_Obj *results[2];
 
-	    results[0] = Tcl_NewIntObj(wmPtr->hints.icon_x);
-	    results[1] = Tcl_NewIntObj(wmPtr->hints.icon_y);
+	    results[0] = Tcl_NewWideIntObj(wmPtr->hints.icon_x);
+	    results[1] = Tcl_NewWideIntObj(wmPtr->hints.icon_y);
 	    Tcl_SetObjResult(interp, Tcl_NewListObj(2, results));
 	}
 	return TCL_OK;
@@ -2782,7 +2782,7 @@ WmIconwindowCmd(
 
     if (objc == 3) {
 	if (wmPtr->icon != NULL) {
-	    Tcl_SetObjResult(interp, TkNewWindowObj(wmPtr->icon));
+	    Tcl_SetObjResult(interp, Tk_NewWindowObj(wmPtr->icon));
 	}
 	return TCL_OK;
     }
@@ -2962,8 +2962,8 @@ WmMaxsizeCmd(
 	Tcl_Obj *results[2];
 
 	GetMaxSize(winPtr, &width, &height);
-	results[0] = Tcl_NewIntObj(width);
-	results[1] = Tcl_NewIntObj(height);
+	results[0] = Tcl_NewWideIntObj(width);
+	results[1] = Tcl_NewWideIntObj(height);
 	Tcl_SetObjResult(interp, Tcl_NewListObj(2, results));
 	return TCL_OK;
     }
@@ -3016,8 +3016,8 @@ WmMinsizeCmd(
 	Tcl_Obj *results[2];
 
 	GetMinSize(winPtr, &width, &height);
-	results[0] = Tcl_NewIntObj(width);
-	results[1] = Tcl_NewIntObj(height);
+	results[0] = Tcl_NewWideIntObj(width);
+	results[1] = Tcl_NewWideIntObj(height);
 	Tcl_SetObjResult(interp, Tcl_NewListObj(2, results));
 	return TCL_OK;
     }
@@ -3069,7 +3069,7 @@ WmOverrideredirectCmd(
 
     if (objc == 3) {
 	Tcl_SetObjResult(interp, Tcl_NewBooleanObj(
-		Tk_Attributes((Tk_Window)winPtr)->override_redirect));
+		Tk_Attributes((Tk_Window) winPtr)->override_redirect));
 	return TCL_OK;
     }
 
@@ -3287,8 +3287,10 @@ WmResizableCmd(
     if (objc == 3) {
 	Tcl_Obj *results[2];
 
-	results[0] = Tcl_NewBooleanObj(!(wmPtr->flags & WM_WIDTH_NOT_RESIZABLE));
-	results[1] = Tcl_NewBooleanObj(!(wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE));
+	results[0] = Tcl_NewWideIntObj(
+		(wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) == 0);
+	results[1] = Tcl_NewWideIntObj(
+		(wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE) == 0);
 	Tcl_SetObjResult(interp, Tcl_NewListObj(2, results));
 	return TCL_OK;
     }
@@ -3438,7 +3440,7 @@ WmStackorderCmd(
 	    resultObj = Tcl_NewObj();
 	    for (windowPtr = windows; *windowPtr ; windowPtr++) {
 		Tcl_ListObjAppendElement(NULL, resultObj,
-		    TkNewWindowObj((Tk_Window)*windowPtr));
+			Tk_NewWindowObj((Tk_Window)*windowPtr));
 	    }
 	    Tcl_SetObjResult(interp, resultObj);
 	    ckfree(windows);
@@ -3513,7 +3515,7 @@ WmStackorderCmd(
 	} else { /* OPT_ISBELOW */
 	    result = index1 < index2;
 	}
-	Tcl_SetObjResult(interp, Tcl_NewBooleanObj(result));
+	Tcl_SetObjResult(interp, Tcl_NewWideIntObj(result != 0));
 	return TCL_OK;
     }
 }
@@ -3558,14 +3560,14 @@ WmStateCmd(
     if (objc == 4) {
 	if (wmPtr->iconFor != NULL) {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "can't change state of %s: it is an icon for %s",
+		    "can't change state of \"%s\": it is an icon for \"%s\"",
 		    Tcl_GetString(objv[2]), Tk_PathName(wmPtr->iconFor)));
 	    Tcl_SetErrorCode(interp, "TK", "WM", "STATE", "ICON", NULL);
 	    return TCL_ERROR;
 	}
 	if (winPtr->flags & TK_EMBEDDED) {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "can't change state of %s: it is an embedded window",
+		    "can't change state of \"%s\": it is an embedded window",
 		    winPtr->pathName));
 	    Tcl_SetErrorCode(interp, "TK", "WM", "STATE", "EMBEDDED", NULL);
 	    return TCL_ERROR;
@@ -3718,7 +3720,7 @@ WmTransientCmd(
     Transient *transient;
 
     if ((objc != 3) && (objc != 4)) {
-	Tcl_WrongNumArgs(interp, 2, objv, "window ?master?");
+	Tcl_WrongNumArgs(interp, 2, objv, "window ?window?");
 	return TCL_ERROR;
     }
     if (objc == 3) {
@@ -3734,6 +3736,7 @@ WmTransientCmd(
 	if (TkGetWindowFromObj(interp, tkwin, objv[3], &container) != TCL_OK) {
 	    return TCL_ERROR;
 	}
+	RemoveTransient(winPtr);
 	containerPtr = (TkWindow*) container;
 	while (!Tk_TopWinHierarchy(containerPtr)) {
             /*
@@ -3760,7 +3763,7 @@ WmTransientCmd(
 
 	if (wmPtr2 != NULL && wmPtr2->iconFor != NULL) {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "can't make \"%s\" a master: it is an icon for %s",
+		    "can't make \"%s\" a container: it is an icon for %s",
 		    Tcl_GetString(objv[3]), Tk_PathName(wmPtr2->iconFor)));
 	    Tcl_SetErrorCode(interp, "TK", "WM", "TRANSIENT", "ICON", NULL);
 	    return TCL_ERROR;
@@ -3770,7 +3773,7 @@ WmTransientCmd(
 		w = (TkWindow *)w->wmInfoPtr->container) {
 	    if (w == winPtr) {
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "setting \"%s\" as master creates a transient/master cycle",
+		    "can't set \"%s\" as container: would cause management loop",
 		    Tk_PathName(containerPtr)));
 		Tcl_SetErrorCode(interp, "TK", "WM", "TRANSIENT", "SELF", NULL);
 		return TCL_ERROR;
@@ -4633,27 +4636,6 @@ Tk_GetRootCoords(
 
 	    otherPtr = TkpGetOtherWindow(winPtr);
 	    if (otherPtr == NULL) {
-		if (tkMacOSXEmbedHandler->getOffsetProc != NULL) {
-		    Point theOffset;
-
-		    /*
-		     * We do not require that the changes.x & changes.y for a
-		     * non-Tk container window be kept up to date. So we
-		     * first subtract off the possibly bogus values that have
-		     * been added on at the top of this pass through the
-		     * loop, and then call out to the getOffsetProc to give
-		     * us the correct offset.
-		     */
-
-		    x -= winPtr->changes.x + winPtr->changes.border_width;
-		    y -= winPtr->changes.y + winPtr->changes.border_width;
-
-		    tkMacOSXEmbedHandler->getOffsetProc((Tk_Window)winPtr,
-			    &theOffset);
-
-		    x += theOffset.h;
-		    y += theOffset.v;
-		}
 		break;
 	    }
 
@@ -5535,12 +5517,15 @@ Tk_MacOSXGetTkWindow(
     void *w)
 {
     Window window = None;
-    TkDisplay *dispPtr = TkGetDisplayList();
     if ([(NSWindow *)w respondsToSelector: @selector (tkWindow)]) {
 	window = [(TKWindow *)w tkWindow];
     }
-    return (window != None ?
-	    Tk_IdToWindow(dispPtr->display, window) : NULL);
+    if (window) {
+	TkDisplay *dispPtr = TkGetDisplayList();
+	return Tk_IdToWindow(dispPtr->display, window);
+    } else {
+	return NULL;
+    }
 }
 
 /*
@@ -5944,7 +5929,14 @@ WmWinTabbingId(
     int objc,			/* Number of arguments. */
     Tcl_Obj * const objv[])	/* Argument objects. */
 {
-#if !(MAC_OS_X_VERSION_MAX_ALLOWED < 101200)
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
+    (void) interp;
+    (void) winPtr;
+    (void) objc;
+    (void) objv;
+    return TCL_OK;
+#endif
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101200
     Tcl_Obj *result = NULL;
     NSString *idString;
     NSWindow *win = TkMacOSXGetNSWindowForDrawable(winPtr->window);
@@ -6023,6 +6015,13 @@ WmWinAppearance(
     int objc,			/* Number of arguments. */
     Tcl_Obj * const objv[])	/* Argument objects. */
 {
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= 1090
+    (void) interp;
+    (void) winPtr;
+    (void) objc;
+    (void) objv;
+    return TCL_OK;
+#endif
 #if MAC_OS_X_VERSION_MAX_ALLOWED > 1090
     static const char *const appearanceStrings[] = {
 	"aqua", "darkaqua", "auto", NULL
@@ -6173,14 +6172,7 @@ TkMacOSXMakeRealWindowExist(
 	    return;
 	}
 
-	if (tkMacOSXEmbedHandler == NULL) {
-	    Tcl_Panic("TkMacOSXMakeRealWindowExist could not find container");
-	}
-	if (tkMacOSXEmbedHandler->containerExistProc &&
-		tkMacOSXEmbedHandler->containerExistProc((Tk_Window)winPtr)
-		!= TCL_OK) {
-	    Tcl_Panic("ContainerExistProc could not make container");
-	}
+	Tcl_Panic("TkMacOSXMakeRealWindowExist could not find container");
 	return;
 
 	/*
@@ -6271,6 +6263,7 @@ TkMacOSXMakeRealWindowExist(
     	Tk_ChangeWindowAttributes((Tk_Window)winPtr, CWOverrideRedirect, &atts);
     	ApplyContainerOverrideChanges(winPtr, NULL);
     }
+    [window display];
 }
 
 /*
@@ -6442,6 +6435,19 @@ TkpWmSetState(
 
     macWin = TkMacOSXGetNSWindowForDrawable(winPtr->window);
 
+    /*
+     * Make sure windows are updated before the state change.  As an exception,
+     * do not process idle tasks before withdrawing a window.  The purpose of
+     * this is to support the common paradigm of immediately withdrawing the
+     * root window.  Processing idle tasks before changing the state causes the
+     * root to briefly flash on the screen, which users of this paradigm find
+     * annoying.  Not processing the events does not guarantee that the window
+     * will not appear but makes it more likely.
+     */
+
+    if (state != WithdrawnState) {
+	while (Tcl_DoOneEvent(TCL_IDLE_EVENTS)) {};
+    }
     if (state == WithdrawnState) {
 	Tk_UnmapWindow((Tk_Window)winPtr);
     } else if (state == IconicState) {
@@ -6462,8 +6468,9 @@ TkpWmSetState(
 	[macWin orderFront:NSApp];
 	TkMacOSXZoomToplevel(macWin, state == NormalState ? inZoomIn : inZoomOut);
     }
+
     /*
-     * Make sure windows are updated after the state change.
+     * Make sure windows are updated after the state change too.
      */
 
     while (Tcl_DoOneEvent(TCL_IDLE_EVENTS)){}

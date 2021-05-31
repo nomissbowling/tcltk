@@ -3,10 +3,10 @@
  *
  *	Contains the Mac implementation of the common dialog boxes.
  *
- * Copyright (c) 1996-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2017 Christian Gollwitzer.
+ * Copyright © 1996-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009 Apple Inc.
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2017 Christian Gollwitzer.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -1550,7 +1550,7 @@ Tk_MessageBoxObjCmd(
  *----------------------------------------------------------------------
  */
 
-#include "tkMacOSXEvent.h"
+#include "tkMacOSXInt.h"
 #include "tkMacOSXFont.h"
 
 typedef struct FontchooserData {
@@ -1683,7 +1683,7 @@ FontchooserEvent(
     switch (kind) {
     case FontchooserClosed:
 	if (fcdPtr->parent != NULL) {
-	    TkSendVirtualEvent(fcdPtr->parent, "TkFontchooserVisibility", NULL);
+	    Tk_SendVirtualEvent(fcdPtr->parent, "TkFontchooserVisibility", NULL);
 	    fontchooserInterp = NULL;
 	}
 	break;
@@ -1706,7 +1706,7 @@ FontchooserEvent(
 		    ckfree(tmpv);
 		}
 	    }
-	    TkSendVirtualEvent(fcdPtr->parent, "TkFontchooserFontChanged", NULL);
+	    Tk_SendVirtualEvent(fcdPtr->parent, "TkFontchooserFontChanged", NULL);
 	}
 	break;
     }
@@ -1767,8 +1767,8 @@ FontchooserCget(
 	}
 	break;
     case FontchooserVisible:
-	resObj = Tcl_NewBooleanObj([[[NSFontManager sharedFontManager]
-		fontPanel:NO] isVisible]);
+	resObj = Tcl_NewWideIntObj([[[NSFontManager sharedFontManager]
+		fontPanel:NO] isVisible] != 0);
 	break;
     default:
 	resObj = Tcl_NewObj();
@@ -1915,7 +1915,7 @@ FontchooserConfigureCmd(
 	    [fm setSelectedAttributes:fontPanelFontAttributes
 		    isMultiple:NO];
 	    if ([fp isVisible]) {
-		TkSendVirtualEvent(fcdPtr->parent,
+		Tk_SendVirtualEvent(fcdPtr->parent,
 			"TkFontchooserFontChanged", NULL);
 	    }
 	    break;
@@ -1982,7 +1982,7 @@ FontchooserShowCmd(
     }
     if (![fp isVisible]) {
 	[fm orderFrontFontPanel:NSApp];
-	TkSendVirtualEvent(fcdPtr->parent, "TkFontchooserVisibility", NULL);
+	Tk_SendVirtualEvent(fcdPtr->parent, "TkFontchooserVisibility", NULL);
     }
     fontchooserInterp = interp;
 

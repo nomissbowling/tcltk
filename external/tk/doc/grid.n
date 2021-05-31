@@ -177,7 +177,7 @@ If a content's cell is larger than its requested dimensions, this
 option may be used to position (or stretch) the content within its cell.
 \fIStyle\fR  is a string that contains zero or more of the characters
 \fBn\fR, \fBs\fR, \fBe\fR or \fBw\fR.
-The string can optionally contains spaces or
+The string can optionally contain spaces or
 commas, but they are ignored.  Each letter refers to a side (north, south,
 east, or west) that the content will
 .QW stick
@@ -202,6 +202,14 @@ The content will no longer be managed by the grid geometry manager.
 The configuration options for that window are forgotten, so that if the
 window is managed once more by the grid geometry manager, the initial
 default settings are used.
+.RS
+.PP
+.VS "TIP 518"
+If the last content window of the container becomes unmanaged, this will also send
+the virtual event \fB<<NoManagedChild>>\fR to the container; the container
+may choose to resize itself (or otherwise respond) to such a change.
+.VE "TIP 518"
+.RE
 .TP
 \fBgrid info \fIwindow\fR
 .
@@ -235,7 +243,7 @@ Propagation is enabled by default.
 \fBgrid rowconfigure \fIwindow index \fR?\fI\-option value...\fR?
 .
 Query or set the row properties of the \fIindex\fR row of the
-geometry window, \fIwindow\fR.
+geometry container, \fIwindow\fR.
 The valid options are \fB\-minsize\fR, \fB\-weight\fR, \fB\-uniform\fR
 and \fB\-pad\fR.
 If one or more options are provided, then \fIindex\fR may be given as
@@ -277,6 +285,14 @@ The content will no longer be managed by the grid geometry manager.
 However, the configuration options for that window are remembered,
 so that if the content window is managed once more by the grid
 geometry manager, the previous values are retained.
+.RS
+.PP
+.VS "TIP 518"
+If the last content window of the container becomes unmanaged, this will also send
+the virtual event \fB<<NoManagedChild>>\fR to the container; the container
+may choose to resize itself (or otherwise respond) to such a change.
+.VE "TIP 518"
+.RE
 .TP
 \fBgrid size \fIcontainer\fR
 .
@@ -285,19 +301,17 @@ The size is determined either by the \fIcontent\fR occupying the largest
 row or column, or the largest column or row with a \fB\-minsize\fR,
 \fB\-weight\fR, or \fB\-pad\fR that is non-zero.
 .TP
-\fBgrid slaves \fIwindow\fR ?\fI\-option value\fR?
+\fBgrid content \fIwindow\fR ?\fI\-option value\fR?
 .
 If no options are supplied, a list of all of the content in \fIwindow\fR
-are returned, most recently managed first.
+is returned, most recently managed first.
 \fIOption\fR can be either \fB\-row\fR or \fB\-column\fR which
 causes only the content in the row (or column) specified by \fIvalue\fR
 to be returned.
-.VS "TIP 581"
 .TP
-\fBgrid content \fIwindow\fR ?\fI\-option value\fR?
+\fBgrid slaves \fIwindow\fR ?\fI\-option value\fR?
 .
-Synonym for . \fBgrid slaves \fIwindow\fR ?\fI\-option value\fR?
-.VE "TIP 581"
+Synonym for . \fBgrid content \fIwindow\fR ?\fI\-option value\fR?
 .SH "RELATIVE PLACEMENT"
 .PP
 The \fBgrid\fR command contains a limited set of capabilities that

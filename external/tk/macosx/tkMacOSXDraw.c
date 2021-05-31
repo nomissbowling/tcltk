@@ -4,10 +4,10 @@
  *	This file contains functions that draw to windows. Many of thees
  *	functions emulate Xlib functions.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright (c) 2001-2009 Apple Inc.
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2014-2020 Marc Culler.
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009 Apple Inc.
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2014-2020 Marc Culler.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -27,6 +27,7 @@
 #ifdef TK_MAC_DEBUG
 #define TK_MAC_DEBUG_DRAWING
 #define TK_MAC_DEBUG_IMAGE_DRAWING
+#define TK_MAC_DEBUG_CG
 #endif
 */
 
@@ -226,7 +227,7 @@ CreateNSImageFromPixmap(
 /*
  *----------------------------------------------------------------------
  *
- * TkMacOSXGetCGContextForDrawable --
+ * Tk_MacOSXGetCGContextForDrawable --
  *
  *	Get CGContext for given Drawable, creating one if necessary.
  *
@@ -239,8 +240,8 @@ CreateNSImageFromPixmap(
  *----------------------------------------------------------------------
  */
 
-CGContextRef
-TkMacOSXGetCGContextForDrawable(
+void *
+Tk_MacOSXGetCGContextForDrawable(
     Drawable drawable)
 {
     MacDrawable *macDraw = (MacDrawable *)drawable;
@@ -617,7 +618,6 @@ XDrawRectangle(
     return Success;
 }
 
-#ifdef TK_MACOSXDRAW_UNUSED
 /*
  *----------------------------------------------------------------------
  *
@@ -677,7 +677,6 @@ XDrawRectangles(
     TkMacOSXRestoreDrawingContext(&dc);
     return Success;
 }
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -848,7 +847,6 @@ XDrawArc(
     return Success;
 }
 
-#ifdef TK_MACOSXDRAW_UNUSED
 /*
  *----------------------------------------------------------------------
  *
@@ -929,7 +927,6 @@ XDrawArcs(
     TkMacOSXRestoreDrawingContext(&dc);
     return Success;
 }
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1010,7 +1007,6 @@ XFillArc(
     return Success;
 }
 
-#ifdef TK_MACOSXDRAW_UNUSED
 /*
  *----------------------------------------------------------------------
  *
@@ -1092,24 +1088,6 @@ XFillArcs(
     TkMacOSXRestoreDrawingContext(&dc);
     return Success;
 }
-#endif
-
-#ifdef TK_MACOSXDRAW_UNUSED
-/*
- *----------------------------------------------------------------------
- *
- * XMaxRequestSize --
- *
- *----------------------------------------------------------------------
- */
-
-long
-XMaxRequestSize(
-    Display *display)
-{
-    return (SHRT_MAX / 4);
-}
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1136,7 +1114,7 @@ TkScrollWindow(
     int x, int y,		/* Position rectangle to be scrolled. */
     int width, int height,
     int dx, int dy,		/* Distance rectangle should be moved. */
-    TkRegion damageRgn)		/* Region to accumulate damage in. */
+    Region damageRgn)		/* Region to accumulate damage in. */
 {
     Drawable drawable = Tk_WindowId(tkwin);
     MacDrawable *macDraw = (MacDrawable *)drawable;
@@ -1265,6 +1243,12 @@ TkMacOSXSetupDrawingContext(
     Bool canDraw = true;
     TKContentView *view = nil;
     TkMacOSXDrawingContext dc = {};
+    CGFloat drawingHeight;
+
+#ifdef TK_MAC_DEBUG_CG
+    fprintf(stderr, "TkMacOSXSetupDrawingContext: %s\n",
+	    macDraw->winPtr ? Tk_PathName(macDraw->winPtr) : "None");
+#endif
 
     /*
      * If the drawable is not a pixmap, get the associated NSView.
@@ -1296,13 +1280,10 @@ TkMacOSXSetupDrawingContext(
      */
 
     dc.context = TkMacOSXGetCGContextForDrawable(d);
-    if (dc.context) {
-	dc.portBounds = CGContextGetClipBoundingBox(dc.context);
-    } else {
+    if (!dc.context) {
 	NSRect drawingBounds, currentBounds;
 	dc.view = view;
 	dc.context = GET_CGCONTEXT;
-	dc.portBounds = NSRectToCGRect([view bounds]);
 	if (dc.clipRgn) {
 	    CGRect clipBounds;
 	    CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1, .tx = 0,
@@ -1354,18 +1335,24 @@ TkMacOSXSetupDrawingContext(
      * Finish configuring the drawing context.
      */
 
-    CGAffineTransform t = {
-	.a = 1, .b = 0,
-	.c = 0, .d = -1,
-	.tx = 0,
-	.ty = dc.portBounds.size.height
-    };
+#ifdef TK_MAC_DEBUG_CG
+    fprintf(stderr, "TkMacOSXSetupDrawingContext: pushing GState for %s\n",
+	    macDraw->winPtr ? Tk_PathName(macDraw->winPtr) : "None");
+#endif
 
-    dc.portBounds.origin.x += macDraw->xOff;
-    dc.portBounds.origin.y += macDraw->yOff;
     CGContextSaveGState(dc.context);
     CGContextSetTextDrawingMode(dc.context, kCGTextFill);
-    CGContextConcatCTM(dc.context, t);
+    { /* Restricted scope for t needed for C++ */
+	drawingHeight = view ? [view bounds].size.height :
+	    CGContextGetClipBoundingBox(dc.context).size.height;
+	CGAffineTransform t = {
+	    .a = 1, .b = 0,
+	    .c = 0, .d = -1,
+	    .tx = 0,
+	    .ty = drawingHeight
+	};
+	CGContextConcatCTM(dc.context, t);
+    }
     if (dc.clipRgn) {
 
 #ifdef TK_MAC_DEBUG_DRAWING
@@ -1388,11 +1375,26 @@ TkMacOSXSetupDrawingContext(
 	     */
 
 	    ChkErr(HIShapeReplacePathInCGContext, dc.clipRgn, dc.context);
+
+#ifdef TK_MAC_DEBUG_CG
+	    fprintf(stderr, "Setting complex clip for %s to:\n",
+		    macDraw->winPtr ? Tk_PathName(macDraw->winPtr) : "None");
+	    TkMacOSXPrintRectsInRegion(dc.clipRgn);
+#endif
+
 	    CGContextEOClip(dc.context);
-	}
-	else {
+	} else {
 	    CGRect r;
 	    HIShapeGetBounds(dc.clipRgn, &r);
+
+#ifdef TK_MAC_DEBUG_CG
+	    fprintf(stderr, "Current clip BBox is %s\n",
+		    NSStringFromRect(CGContextGetClipBoundingBox(GET_CGCONTEXT)).UTF8String);
+	    fprintf(stderr, "Setting clip for %s to rect %s:\n",
+		    macDraw->winPtr ? Tk_PathName(macDraw->winPtr) : "None",
+		    NSStringFromRect(r).UTF8String);
+#endif
+
 	    CGContextClipToRect(dc.context, r);
 	}
     }
@@ -1413,8 +1415,8 @@ TkMacOSXSetupDrawingContext(
 
 	TkMacOSXSetColorInContext(gc, gc->foreground, dc.context);
 	if (view) {
-	    CGContextSetPatternPhase(dc.context,
-		CGSizeMake(dc.portBounds.size.width, dc.portBounds.size.height));
+	    CGSize size = NSSizeToCGSize([view bounds].size);
+	    CGContextSetPatternPhase(dc.context, size);
 	}
 	if (gc->function != GXcopy) {
 	    TkMacOSXDbgMsg("Logical functions other than GXcopy are "
@@ -1491,13 +1493,21 @@ TkMacOSXRestoreDrawingContext(
     if (dcPtr->context) {
 	CGContextSynchronize(dcPtr->context);
 	CGContextRestoreGState(dcPtr->context);
+
+#ifdef TK_MAC_DEBUG_CG
+	fprintf(stderr, "TkMacOSXRestoreDrawingContext: popped GState\n");
+#endif
+
     }
     if (dcPtr->clipRgn) {
 	CFRelease(dcPtr->clipRgn);
+	dcPtr->clipRgn = NULL;
     }
+
 #ifdef TK_MAC_DEBUG
     bzero(dcPtr, sizeof(TkMacOSXDrawingContext));
-#endif /* TK_MAC_DEBUG */
+#endif
+
 }
 
 /*
@@ -1548,29 +1558,6 @@ TkMacOSXGetClipRgn(
 	clipRgn = HIShapeCreateCopy(macDraw->visRgn);
     }
     return clipRgn;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXSetUpClippingRgn --
- *
- *	Set up the clipping region so that drawing only occurs on the specified
- *	X subwindow.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-void
-TkMacOSXSetUpClippingRgn(
-    Drawable drawable)		/* Drawable to update. */
-{
 }
 
 /*
@@ -1645,7 +1632,7 @@ ClipToGC(
 {
     if (gc && gc->clip_mask &&
 	    ((TkpClipMask *)gc->clip_mask)->type == TKP_CLIP_REGION) {
-	TkRegion gcClip = ((TkpClipMask *)gc->clip_mask)->value.region;
+	Region gcClip = ((TkpClipMask *)gc->clip_mask)->value.region;
 	int xOffset = ((MacDrawable *)d)->xOff + gc->clip_x_origin;
 	int yOffset = ((MacDrawable *)d)->yOff + gc->clip_y_origin;
 	HIShapeRef clipRgn = *clipRgnPtr, gcClipRgn;
@@ -1735,7 +1722,7 @@ TkpDrawHighlightBorder (
 /*
  *----------------------------------------------------------------------
  *
- * TkpDrawFrame --
+ * TkpDrawFrameEx --
  *
  *	This procedure draws the rectangular frame area. If the user has
  *	requested themeing, it draws with the background theme.
@@ -1750,8 +1737,9 @@ TkpDrawHighlightBorder (
  */
 
 void
-TkpDrawFrame(
+TkpDrawFrameEx(
     Tk_Window tkwin,
+    Drawable drawable,
     Tk_3DBorder border,
     int highlightWidth,
     int borderWidth,
@@ -1769,11 +1757,9 @@ TkpDrawFrame(
 	}
     }
 
-    Tk_Fill3DRectangle(tkwin, Tk_WindowId(tkwin),
-	    border, highlightWidth, highlightWidth,
-	    Tk_Width(tkwin) - 2 * highlightWidth,
-	    Tk_Height(tkwin) - 2 * highlightWidth,
-	    borderWidth, relief);
+    Tk_Fill3DRectangle(tkwin, drawable, border, highlightWidth,
+	    highlightWidth, Tk_Width(tkwin) - 2 * highlightWidth,
+	    Tk_Height(tkwin) - 2 * highlightWidth, borderWidth, relief);
 }
 
 /*

@@ -4,8 +4,8 @@
  *	This file contains miscellaneous utility functions that are used by
  *	the rest of Tk, such as a function for drawing a focus highlight.
  *
- * Copyright (c) 1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -48,10 +48,10 @@ int
 TkStateParseProc(
     ClientData clientData,	/* some flags.*/
     Tcl_Interp *interp,		/* Used for reporting errors. */
-    Tk_Window tkwin,		/* Window containing canvas widget. */
+    TCL_UNUSED(Tk_Window),		/* Window containing canvas widget. */
     const char *value,		/* Value of option. */
     char *widgRec,		/* Pointer to record for item. */
-    int offset)			/* Offset into item. */
+    TkSizeT offset)			/* Offset into item. */
 {
     int c;
     int flags = PTR2INT(clientData);
@@ -125,11 +125,11 @@ TkStateParseProc(
 
 const char *
 TkStatePrintProc(
-    ClientData clientData,	/* Ignored. */
-    Tk_Window tkwin,		/* Window containing canvas widget. */
+    TCL_UNUSED(void *),	/* Ignored. */
+    TCL_UNUSED(Tk_Window),		/* Window containing canvas widget. */
     char *widgRec,		/* Pointer to record for item. */
-    int offset,			/* Offset into item. */
-    Tcl_FreeProc **freeProcPtr)	/* Pointer to variable to fill in with
+    TkSizeT offset,			/* Offset into item. */
+    TCL_UNUSED(Tcl_FreeProc **))	/* Pointer to variable to fill in with
 				 * information about how to reclaim storage
 				 * for return string. */
 {
@@ -169,12 +169,12 @@ TkStatePrintProc(
 
 int
 TkOrientParseProc(
-    ClientData clientData,	/* some flags.*/
+    TCL_UNUSED(void *),	/* some flags.*/
     Tcl_Interp *interp,		/* Used for reporting errors. */
-    Tk_Window tkwin,		/* Window containing canvas widget. */
+    TCL_UNUSED(Tk_Window),		/* Window containing canvas widget. */
     const char *value,		/* Value of option. */
     char *widgRec,		/* Pointer to record for item. */
-    int offset)			/* Offset into item. */
+    TkSizeT offset)			/* Offset into item. */
 {
     int c;
     size_t length;
@@ -227,11 +227,11 @@ TkOrientParseProc(
 
 const char *
 TkOrientPrintProc(
-    ClientData clientData,	/* Ignored. */
-    Tk_Window tkwin,		/* Window containing canvas widget. */
+    TCL_UNUSED(void *),	/* Ignored. */
+    TCL_UNUSED(Tk_Window),		/* Window containing canvas widget. */
     char *widgRec,		/* Pointer to record for item. */
-    int offset,			/* Offset into item. */
-    Tcl_FreeProc **freeProcPtr)	/* Pointer to variable to fill in with
+    TkSizeT offset,			/* Offset into item. */
+    TCL_UNUSED(Tcl_FreeProc **))	/* Pointer to variable to fill in with
 				 * information about how to reclaim storage
 				 * for return string. */
 {
@@ -262,7 +262,7 @@ TkOffsetParseProc(
     Tk_Window tkwin,		/* Window on same display as tile */
     const char *value,		/* Name of image */
     char *widgRec,		/* Widget structure record */
-    int offset)			/* Offset of tile in record */
+    TkSizeT offset)			/* Offset of tile in record */
 {
     Tk_TSOffset *offsetPtr = (Tk_TSOffset *) (widgRec + offset);
     Tk_TSOffset tsoffset;
@@ -409,10 +409,10 @@ TkOffsetParseProc(
 
 const char *
 TkOffsetPrintProc(
-    ClientData clientData,	/* not used */
-    Tk_Window tkwin,		/* not used */
+    TCL_UNUSED(void *),	/* not used */
+    TCL_UNUSED(Tk_Window),		/* not used */
     char *widgRec,		/* Widget structure record */
-    int offset,			/* Offset of tile in record */
+    TkSizeT offset,			/* Offset of tile in record */
     Tcl_FreeProc **freeProcPtr)	/* not used */
 {
     Tk_TSOffset *offsetPtr = (Tk_TSOffset *) (widgRec + offset);
@@ -479,7 +479,7 @@ TkPixelParseProc(
     Tk_Window tkwin,		/* Window on same display as tile */
     const char *value,		/* Name of image */
     char *widgRec,		/* Widget structure record */
-    int offset)			/* Offset of tile in record */
+    TkSizeT offset)			/* Offset of tile in record */
 {
     double *doublePtr = (double *) (widgRec + offset);
     int result;
@@ -510,10 +510,10 @@ TkPixelParseProc(
 
 const char *
 TkPixelPrintProc(
-    ClientData clientData,	/* not used */
-    Tk_Window tkwin,		/* not used */
+    TCL_UNUSED(void *),	/* not used */
+    TCL_UNUSED(Tk_Window),		/* not used */
     char *widgRec,		/* Widget structure record */
-    int offset,			/* Offset of tile in record */
+    TkSizeT offset,			/* Offset of tile in record */
     Tcl_FreeProc **freeProcPtr)	/* not used */
 {
     double *doublePtr = (double *) (widgRec + offset);
@@ -664,16 +664,18 @@ Tk_GetScrollInfo(
 	return TK_SCROLL_MOVETO;
     } else if ((c == 's')
 	    && (strncmp(argv[2], "scroll", length) == 0)) {
+	double d;
 	if (argc != 5) {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		    "wrong # args: should be \"%s %s %s\"",
-		    argv[0], argv[1], "scroll number units|pages"));
+		    argv[0], argv[1], "scroll number pages|units"));
 	    Tcl_SetErrorCode(interp, "TCL", "WRONGARGS", NULL);
 	    return TK_SCROLL_ERROR;
 	}
-	if (Tcl_GetInt(interp, argv[3], intPtr) != TCL_OK) {
+	if (Tcl_GetDouble(interp, argv[3], &d) != TCL_OK) {
 	    return TK_SCROLL_ERROR;
 	}
+	*intPtr = (d > 0) ? ceil(d) : floor(d);
 	length = strlen(argv[4]);
 	c = argv[4][0];
 	if ((c == 'p') && (strncmp(argv[4], "pages", length) == 0)) {
@@ -683,7 +685,7 @@ Tk_GetScrollInfo(
 	}
 
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"bad argument \"%s\": must be units or pages", argv[4]));
+		"bad argument \"%s\": must be pages or units", argv[4]));
 	Tcl_SetErrorCode(interp, "TK", "VALUE", "SCROLL_UNITS", NULL);
 	return TK_SCROLL_ERROR;
     }
@@ -728,8 +730,8 @@ Tk_GetScrollInfoObj(
     int *intPtr)		/* Filled in with number of pages or lines to
 				 * scroll, if any. */
 {
-    const char *arg = Tcl_GetString(objv[2]);
-    size_t length = objv[2]->length;
+    TkSizeT length;
+    const char *arg = Tcl_GetStringFromObj(objv[2], &length);
 
 #define ArgPfxEq(str) \
 	((arg[0] == str[0]) && !strncmp(arg, str, length))
@@ -744,16 +746,20 @@ Tk_GetScrollInfoObj(
 	}
 	return TK_SCROLL_MOVETO;
     } else if (ArgPfxEq("scroll")) {
+	double d;
 	if (objc != 5) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "scroll number units|pages");
+	    Tcl_WrongNumArgs(interp, 2, objv, "scroll number pages|units");
 	    return TK_SCROLL_ERROR;
 	}
-	if (Tcl_GetIntFromObj(interp, objv[3], intPtr) != TCL_OK) {
+	if (Tcl_GetDoubleFromObj(interp, objv[3], &d) != TCL_OK) {
 	    return TK_SCROLL_ERROR;
+	}
+	*intPtr = (d >= 0) ? ceil(d) : floor(d);
+	if (dblPtr) {
+	    *dblPtr = d;
 	}
 
-	arg = Tcl_GetString(objv[4]);
-	length = objv[4]->length;
+	arg = Tcl_GetStringFromObj(objv[4], &length);
 	if (ArgPfxEq("pages")) {
 	    return TK_SCROLL_PAGES;
 	} else if (ArgPfxEq("units")) {
@@ -761,7 +767,7 @@ Tk_GetScrollInfoObj(
 	}
 
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		"bad argument \"%s\": must be units or pages", arg));
+		"bad argument \"%s\": must be pages or units", arg));
 	Tcl_SetErrorCode(interp, "TK", "VALUE", "SCROLL_UNITS", NULL);
 	return TK_SCROLL_ERROR;
     }
@@ -1158,7 +1164,7 @@ TkMakeEnsemble(
 /*
  *----------------------------------------------------------------------
  *
- * TkSendVirtualEvent --
+ * Tk_SendVirtualEvent --
  *
  * 	Send a virtual event notification to the specified target window.
  * 	Equivalent to:
@@ -1171,7 +1177,7 @@ TkMakeEnsemble(
  */
 
 void
-TkSendVirtualEvent(
+Tk_SendVirtualEvent(
     Tk_Window target,
     const char *eventName,
     Tcl_Obj *detail)
@@ -1211,7 +1217,7 @@ TkSendVirtualEvent(
  *---------------------------------------------------------------------------
  */
 
-int
+size_t
 TkUtfToUniChar(
     const char *src,	/* The UTF-8 string. */
     int *chPtr)		/* Filled with the Unicode value represented by
@@ -1219,7 +1225,7 @@ TkUtfToUniChar(
 {
     Tcl_UniChar uniChar = 0;
 
-    int len = Tcl_UtfToUniChar(src, &uniChar);
+    size_t len = Tcl_UtfToUniChar(src, &uniChar);
     if ((uniChar & 0xFC00) == 0xD800) {
 	Tcl_UniChar low = uniChar;
 	/* This can only happen if sizeof(Tcl_UniChar)== 2 and src points
@@ -1253,7 +1259,7 @@ TkUtfToUniChar(
  *---------------------------------------------------------------------------
  */
 
-int TkUniCharToUtf(int ch, char *buf)
+size_t TkUniCharToUtf(int ch, char *buf)
 {
     if ((unsigned)(ch - 0x10000) <= 0xFFFFF) {
 	/* Spit out a 4-byte UTF-8 character or 2 x 3-byte UTF-8 characters, depending on Tcl
@@ -1262,74 +1268,6 @@ int TkUniCharToUtf(int ch, char *buf)
 	return len + Tcl_UniCharToUtf(0xDC00 | (ch & 0x7FF), buf + len);
     }
     return Tcl_UniCharToUtf(ch, buf);
-}
-/*
- *---------------------------------------------------------------------------
- *
- * TkUtfPrev --
- *
- *	Almost the same as Tcl_UtfPrev.
- *	This function is capable of jumping over a upper/lower surrogate pair.
- *	So, might jump back up to 6 bytes.
- *
- * Results:
- *	pointer to the first byte of the current UTF-8 character. A surrogate
- *	pair is also handled as being a single entity.
- *
- * Side effects:
- *	None.
- *
- *---------------------------------------------------------------------------
- */
-
-const char *
-TkUtfPrev(
-    const char *src,	/* The UTF-8 string. */
-    const char *start)		/* Start position of string */
-{
-    const char *p = Tcl_UtfPrev(src, start);
-    const char *first = Tcl_UtfPrev(p, start);
-    int ch;
-
-#if TCL_UTF_MAX == 3
-    if ((src - start > 3) && ((src[-1] & 0xC0) == 0x80) && ((src[-2] & 0xC0) == 0x80)
-	    && ((src[-3] & 0xC0) == 0x80) && (UCHAR(src[-4]) >= 0xF0)) {
-	return src - 4;
-    }
-#endif
-
-    return (first + TkUtfToUniChar(first, &ch) >= src) ? first : p ;
-}
-
-/*
- *---------------------------------------------------------------------------
- *
- * TkUtfAtIndex --
- *
- *	Returns a pointer to the specified character (not byte) position in
- *	a CESU-8 string.  This will never point at a low surrogate.
- *
- * Results:
- *	As above.
- *
- * Side effects:
- *	None.
- *
- *---------------------------------------------------------------------------
- */
-
-const char *
-TkUtfAtIndex(
-    const char *src,	/* The UTF-8 string. */
-    int index)		/* The position of the desired character. */
-{
-    int ch;
-    const char *p = Tcl_UtfAtIndex(src, index);
-    if ((p > src) && (UCHAR(p[-1]) >= 0xF0)) {
-	--p;
-	return p + TkUtfToUniChar(p, &ch);
-    }
-    return p;
 }
 #endif
 /*

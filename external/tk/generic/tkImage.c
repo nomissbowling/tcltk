@@ -4,8 +4,8 @@
  *	This module implements the image protocol, which allows lots of
  *	different kinds of images to be used in lots of different widgets.
  *
- * Copyright (c) 1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -472,7 +472,7 @@ Tk_ImageObjCmd(
 
 	switch ((enum options) index) {
 	case IMAGE_HEIGHT:
-	    Tcl_SetObjResult(interp, Tcl_NewIntObj(modelPtr->height));
+	    Tcl_SetObjResult(interp, Tcl_NewWideIntObj(modelPtr->height));
 	    break;
 	case IMAGE_INUSE:
 	    Tcl_SetObjResult(interp, Tcl_NewBooleanObj(
@@ -485,7 +485,7 @@ Tk_ImageObjCmd(
 	    }
 	    break;
 	case IMAGE_WIDTH:
-	    Tcl_SetObjResult(interp, Tcl_NewIntObj(modelPtr->width));
+	    Tcl_SetObjResult(interp, Tcl_NewWideIntObj(modelPtr->width));
 	    break;
 	default:
 	    Tcl_Panic("can't happen");

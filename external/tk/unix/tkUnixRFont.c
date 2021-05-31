@@ -3,7 +3,7 @@
  *
  *	Alternate implementation of tkUnixFont.c using Xft.
  *
- * Copyright (c) 2002-2003 Keith Packard
+ * Copyright © 2002-2003 Keith Packard
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -55,10 +55,24 @@ typedef struct {
 static Tcl_ThreadDataKey dataKey;
 
 /*
- * Package initialization:
- * 	Nothing to do here except register the fact that we're using Xft in
- * 	the TIP 59 configuration database.
+ *-------------------------------------------------------------------------
+ *
+ * TkpFontPkgInit --
+ *
+ *	This procedure is called when an application is created. It
+ *	initializes all the structures that are used by the
+ *	platform-dependant code on a per application basis.
+ *	Note that this is called before TkpInit() !
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *-------------------------------------------------------------------------
  */
+
 
 static int utf8ToUcs4(const char *source, FcChar32 *c, int numBytes)
 {
@@ -72,12 +86,7 @@ void
 TkpFontPkgInit(
     TkMainInfo *mainPtr)	/* The application being created. */
 {
-    static const Tcl_Config cfg[] = {
-	{ "fontsystem", "xft" },
-	{ 0,0 }
-    };
-
-    Tcl_RegisterConfig(mainPtr->interp, "tk", cfg, "utf-8");
+    (void)mainPtr;
 }
 
 static XftFont *
@@ -198,7 +207,7 @@ GetTkFontAttributes(
 	slant = XFT_SLANT_ROMAN;
     }
 
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
     printf("family %s size %d weight %d slant %d\n",
 	    family, (int)size, weight, slant);
 #endif /* DEBUG_FONTSEL */
@@ -443,7 +452,7 @@ TkpGetNativeFont(
 {
     UnixFtFont *fontPtr;
     FcPattern *pattern;
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
     printf("TkpGetNativeFont %s\n", name);
 #endif /* DEBUG_FONTSEL */
 
@@ -481,7 +490,7 @@ TkpGetFontFromAttributes(
     int weight, slant;
     UnixFtFont *fontPtr;
 
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
     printf("TkpGetFontFromAttributes %s-%d %d %d\n", faPtr->family,
 	    faPtr->size, faPtr->weight, faPtr->slant);
 #endif /* DEBUG_FONTSEL */
@@ -661,9 +670,9 @@ TkpGetSubFonts(
 
 void
 TkpGetFontAttrsForChar(
-    TCL_UNUSED(Tk_Window),		/* Window on the font's display */
+    TCL_UNUSED(Tk_Window),	/* Window on the font's display */
     Tk_Font tkfont,		/* Font to query */
-    int c,			/* Character of interest */
+    int c,         		/* Character of interest */
     TkFontAttributes *faPtr)	/* Output: Font attributes */
 {
     UnixFtFont *fontPtr = (UnixFtFont *) tkfont;
@@ -708,7 +717,7 @@ Tk_MeasureChars(
     int clen, curX, newX, curByte, newByte, sawNonSpace;
     int termByte = 0, termX = 0, errorFlag = 0;
     Tk_ErrorHandler handler;
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
     char string[256];
     int len = 0;
 #endif /* DEBUG_FONTSEL */
@@ -745,7 +754,7 @@ Tk_MeasureChars(
 	    sawNonSpace = 1;
 	}
 
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
 	string[len++] = (char) c;
 #endif /* DEBUG_FONTSEL */
 	ftFont = GetFont(fontPtr, c, 0.0);
@@ -785,7 +794,7 @@ Tk_MeasureChars(
 	curByte = newByte;
     }
     Tk_DeleteErrorHandler(handler);
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
     string[len] = '\0';
     printf("MeasureChars %s length %d bytes %d\n", string, curX, curByte);
 #endif /* DEBUG_FONTSEL */
@@ -925,7 +934,7 @@ Tk_DrawChars(
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (fontPtr->ftDraw == 0) {
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
 	printf("Switch to drawable 0x%x\n", drawable);
 #endif /* DEBUG_FONTSEL */
 	fontPtr->ftDraw = XftDrawCreate(display, drawable,
@@ -1060,7 +1069,7 @@ TkDrawAngledChars(
     int originX, originY;
 
     if (fontPtr->ftDraw == 0) {
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
 	printf("Switch to drawable 0x%x\n", drawable);
 #endif /* DEBUG_FONTSEL */
 	fontPtr->ftDraw = XftDrawCreate(display, drawable,
@@ -1169,7 +1178,7 @@ TkDrawAngledChars(
     double sinA = sin(angle * PI/180.0), cosA = cos(angle * PI/180.0);
 
     if (fontPtr->ftDraw == 0) {
-#if DEBUG_FONTSEL
+#ifdef DEBUG_FONTSEL
 	printf("Switch to drawable 0x%x\n", drawable);
 #endif /* DEBUG_FONTSEL */
 	fontPtr->ftDraw = XftDrawCreate(display, drawable,
@@ -1380,12 +1389,12 @@ TkpDrawAngledCharsInContext(
 
 void
 TkUnixSetXftClipRegion(
-    TkRegion clipRegion)	/* The clipping region to install. */
+    Region clipRegion)	/* The clipping region to install. */
 {
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-    tsdPtr->clipRegion = (Region) clipRegion;
+    tsdPtr->clipRegion = clipRegion;
 }
 
 /*

@@ -4,8 +4,8 @@
  *	This file contains code to implement a simple geometry manager for Tk
  *	based on absolute placement or "rubber-sheet" placement.
  *
- * Copyright (c) 1992-1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1992-1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -81,31 +81,31 @@ typedef struct Content {
 #define IN_MASK		1
 
 static const Tk_OptionSpec optionSpecs[] = {
-    {TK_OPTION_ANCHOR, "-anchor", NULL, NULL, "nw", -1,
-	 Tk_Offset(Content, anchor), 0, 0, 0},
-    {TK_OPTION_STRING_TABLE, "-bordermode", NULL, NULL, "inside", -1,
-	 Tk_Offset(Content, borderMode), 0, borderModeStrings, 0},
-    {TK_OPTION_PIXELS, "-height", NULL, NULL, "", Tk_Offset(Content, heightPtr),
-	 Tk_Offset(Content, height), TK_OPTION_NULL_OK, 0, 0},
-    {TK_OPTION_WINDOW, "-in", NULL, NULL, "", -1, Tk_Offset(Content, inTkwin),
+    {TK_OPTION_ANCHOR, "-anchor", NULL, NULL, "nw", TCL_INDEX_NONE,
+	 offsetof(Content, anchor), 0, 0, 0},
+    {TK_OPTION_STRING_TABLE, "-bordermode", NULL, NULL, "inside", TCL_INDEX_NONE,
+	 offsetof(Content, borderMode), 0, borderModeStrings, 0},
+    {TK_OPTION_PIXELS, "-height", NULL, NULL, "", offsetof(Content, heightPtr),
+	 offsetof(Content, height), TK_OPTION_NULL_OK, 0, 0},
+    {TK_OPTION_WINDOW, "-in", NULL, NULL, "", TCL_INDEX_NONE, offsetof(Content, inTkwin),
 	 0, 0, IN_MASK},
     {TK_OPTION_DOUBLE, "-relheight", NULL, NULL, "",
-	 Tk_Offset(Content, relHeightPtr), Tk_Offset(Content, relHeight),
+	 offsetof(Content, relHeightPtr), offsetof(Content, relHeight),
 	 TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_DOUBLE, "-relwidth", NULL, NULL, "",
-	 Tk_Offset(Content, relWidthPtr), Tk_Offset(Content, relWidth),
+	 offsetof(Content, relWidthPtr), offsetof(Content, relWidth),
 	 TK_OPTION_NULL_OK, 0, 0},
-    {TK_OPTION_DOUBLE, "-relx", NULL, NULL, "0", -1,
-	 Tk_Offset(Content, relX), 0, 0, 0},
-    {TK_OPTION_DOUBLE, "-rely", NULL, NULL, "0", -1,
-	 Tk_Offset(Content, relY), 0, 0, 0},
-    {TK_OPTION_PIXELS, "-width", NULL, NULL, "", Tk_Offset(Content, widthPtr),
-	 Tk_Offset(Content, width), TK_OPTION_NULL_OK, 0, 0},
-    {TK_OPTION_PIXELS, "-x", NULL, NULL, "0", Tk_Offset(Content, xPtr),
-	 Tk_Offset(Content, x), TK_OPTION_NULL_OK, 0, 0},
-    {TK_OPTION_PIXELS, "-y", NULL, NULL, "0", Tk_Offset(Content, yPtr),
-	 Tk_Offset(Content, y), TK_OPTION_NULL_OK, 0, 0},
-    {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, -1, 0, 0, 0}
+    {TK_OPTION_DOUBLE, "-relx", NULL, NULL, "0", TCL_INDEX_NONE,
+	 offsetof(Content, relX), 0, 0, 0},
+    {TK_OPTION_DOUBLE, "-rely", NULL, NULL, "0", TCL_INDEX_NONE,
+	 offsetof(Content, relY), 0, 0, 0},
+    {TK_OPTION_PIXELS, "-width", NULL, NULL, "", offsetof(Content, widthPtr),
+	 offsetof(Content, width), TK_OPTION_NULL_OK, 0, 0},
+    {TK_OPTION_PIXELS, "-x", NULL, NULL, "0", offsetof(Content, xPtr),
+	 offsetof(Content, x), TK_OPTION_NULL_OK, 0, 0},
+    {TK_OPTION_PIXELS, "-y", NULL, NULL, "0", offsetof(Content, yPtr),
+	 offsetof(Content, y), TK_OPTION_NULL_OK, 0, 0},
+    {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, TCL_INDEX_NONE, 0, 0, 0}
 };
 
 /*
@@ -129,7 +129,7 @@ static const Tk_OptionSpec optionSpecs[] = {
 
 typedef struct Container {
     Tk_Window tkwin;		/* Tk's token for container window. */
-    struct Content *contentPtr;	/* First in linked list of content placed
+    struct Content *contentPtr;	/* First in linked list of content windowslaced
 				 * relative to this container. */
     int *abortPtr;		/* If non-NULL, it means that there is a nested
 				 * call to RecomputePlacement already working on
@@ -216,6 +216,9 @@ Tk_PlaceObjCmd(
     static const char *const optionStrings[] = {
 	"configure", "content", "forget", "info", "slaves", NULL
     };
+    static const char *const optionStringsNoDep[] = {
+	"configure", "content", "forget", "info", NULL
+    };
     enum options { PLACE_CONFIGURE, PLACE_CONTENT, PLACE_FORGET, PLACE_INFO, PLACE_SLAVES };
     int index;
 
@@ -247,8 +250,8 @@ Tk_PlaceObjCmd(
 
 	dispPtr = ((TkWindow *) tkwin)->dispPtr;
 	if (!dispPtr->placeInit) {
-	    Tcl_InitHashTable(&dispPtr->masterTable, TCL_ONE_WORD_KEYS);
-	    Tcl_InitHashTable(&dispPtr->slaveTable, TCL_ONE_WORD_KEYS);
+	    Tcl_InitHashTable(&dispPtr->containerTable, TCL_ONE_WORD_KEYS);
+	    Tcl_InitHashTable(&dispPtr->contentTable, TCL_ONE_WORD_KEYS);
 	    dispPtr->placeInit = 1;
 	}
 
@@ -271,13 +274,21 @@ Tk_PlaceObjCmd(
 
     dispPtr = ((TkWindow *) tkwin)->dispPtr;
     if (!dispPtr->placeInit) {
-	Tcl_InitHashTable(&dispPtr->masterTable, TCL_ONE_WORD_KEYS);
-	Tcl_InitHashTable(&dispPtr->slaveTable, TCL_ONE_WORD_KEYS);
+	Tcl_InitHashTable(&dispPtr->containerTable, TCL_ONE_WORD_KEYS);
+	Tcl_InitHashTable(&dispPtr->contentTable, TCL_ONE_WORD_KEYS);
 	dispPtr->placeInit = 1;
     }
 
     if (Tcl_GetIndexFromObjStruct(interp, objv[1], optionStrings,
 	    sizeof(char *), "option", 0, &index) != TCL_OK) {
+	/*
+	 * Call it again without the deprecated ones to get a proper error
+	 * message. This works well since there can't be any ambiguity between
+	 * deprecated and new options.
+	 */
+
+	Tcl_GetIndexFromObjStruct(interp, objv[1], optionStringsNoDep,
+		sizeof(char *), "option", 0, &index);
 	return TCL_ERROR;
     }
 
@@ -290,7 +301,7 @@ Tk_PlaceObjCmd(
 	    if (contentPtr == NULL) {
 		return TCL_OK;
 	    }
-	    objPtr = Tk_GetOptionInfo(interp, (char *)contentPtr, optionTable,
+	    objPtr = Tk_GetOptionInfo(interp, contentPtr, optionTable,
 		    (objc == 4) ? objv[3] : NULL, tkwin);
 	    if (objPtr == NULL) {
 		return TCL_ERROR;
@@ -314,8 +325,8 @@ Tk_PlaceObjCmd(
 	    Tk_UnmaintainGeometry(contentPtr->tkwin, contentPtr->containerPtr->tkwin);
 	}
 	UnlinkContent(contentPtr);
-	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->slaveTable,
-		(void *)tkwin));
+	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->contentTable,
+		tkwin));
 	Tk_DeleteEventHandler(tkwin, StructureNotifyMask, ContentStructureProc,
 		contentPtr);
 	Tk_ManageGeometry(tkwin, NULL, NULL);
@@ -330,8 +341,8 @@ Tk_PlaceObjCmd(
 	}
 	return PlaceInfoCommand(interp, tkwin);
 
-    case PLACE_CONTENT:
-    case PLACE_SLAVES: {
+    case PLACE_SLAVES:
+    case PLACE_CONTENT: {
 	Container *containerPtr;
 
 	if (objc != 3) {
@@ -345,7 +356,7 @@ Tk_PlaceObjCmd(
 	    for (contentPtr = containerPtr->contentPtr; contentPtr != NULL;
 		    contentPtr = contentPtr->nextPtr) {
 		Tcl_ListObjAppendElement(NULL, listPtr,
-			TkNewWindowObj(contentPtr->tkwin));
+			Tk_NewWindowObj(contentPtr->tkwin));
 	    }
 	    Tcl_SetObjResult(interp, listPtr);
 	}
@@ -383,7 +394,7 @@ CreateContent(
     int isNew;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    hPtr = Tcl_CreateHashEntry(&dispPtr->slaveTable, (char *) tkwin, &isNew);
+    hPtr = Tcl_CreateHashEntry(&dispPtr->contentTable, (char *) tkwin, &isNew);
     if (!isNew) {
 	return (Content *)Tcl_GetHashValue(hPtr);
     }
@@ -456,7 +467,7 @@ FindContent(
     Tcl_HashEntry *hPtr;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    hPtr = Tcl_FindHashEntry(&dispPtr->slaveTable, (char *) tkwin);
+    hPtr = Tcl_FindHashEntry(&dispPtr->contentTable, tkwin);
     if (hPtr == NULL) {
 	return NULL;
     }
@@ -468,7 +479,7 @@ FindContent(
  *
  * UnlinkContent --
  *
- *	This function removes a content window from the chain of content in its
+ *	This function removes a content window from the chain of content windows in its
  *	container.
  *
  * Results:
@@ -496,7 +507,7 @@ UnlinkContent(
     } else {
 	for (prevPtr = containerPtr->contentPtr; ; prevPtr = prevPtr->nextPtr) {
 	    if (prevPtr == NULL) {
-		Tcl_Panic("UnlinkContent couldn't find slave to unlink");
+		Tcl_Panic("UnlinkContent couldn't find content to unlink");
 	    }
 	    if (prevPtr->nextPtr == contentPtr) {
 		prevPtr->nextPtr = contentPtr->nextPtr;
@@ -537,7 +548,7 @@ CreateContainer(
     int isNew;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    hPtr = Tcl_CreateHashEntry(&dispPtr->masterTable, (char *)tkwin, &isNew);
+    hPtr = Tcl_CreateHashEntry(&dispPtr->containerTable, (char *)tkwin, &isNew);
     if (isNew) {
 	containerPtr = (Container *)ckalloc(sizeof(Container));
 	containerPtr->tkwin = tkwin;
@@ -579,7 +590,7 @@ FindContainer(
     Tcl_HashEntry *hPtr;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    hPtr = Tcl_FindHashEntry(&dispPtr->masterTable, (char *) tkwin);
+    hPtr = Tcl_FindHashEntry(&dispPtr->containerTable, tkwin);
     if (hPtr == NULL) {
 	return NULL;
     }
@@ -630,7 +641,7 @@ ConfigureContent(
 
     contentPtr = CreateContent(tkwin, table);
 
-    if (Tk_SetOptions(interp, (char *)contentPtr, table, objc, objv,
+    if (Tk_SetOptions(interp, contentPtr, table, objc, objv,
 	    contentPtr->tkwin, &savedOptions, &mask) != TCL_OK) {
 	goto error;
     }
@@ -673,7 +684,7 @@ ConfigureContent(
 
 	/*
 	 * Make sure that the new container is either the logical parent of the
-	 * content or a descendant of that window, and that the container and content
+	 * content window or a descendant of that window, and that the container and content
 	 * aren't the same.
 	 */
 
@@ -683,7 +694,7 @@ ConfigureContent(
 	    }
 	    if (Tk_TopWinHierarchy(ancestor)) {
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-			"can't place %s relative to %s",
+			"can't place \"%s\" relative to \"%s\"",
 			Tk_PathName(contentPtr->tkwin), Tk_PathName(win)));
 		Tcl_SetErrorCode(interp, "TK", "GEOMETRY", "HIERARCHY", NULL);
 		goto error;
@@ -691,7 +702,7 @@ ConfigureContent(
 	}
 	if (contentPtr->tkwin == win) {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "can't place %s relative to itself",
+		    "can't place \"%s\" relative to itself",
 		    Tk_PathName(contentPtr->tkwin)));
 	    Tcl_SetErrorCode(interp, "TK", "GEOMETRY", "LOOP", NULL);
 	    goto error;
@@ -705,7 +716,7 @@ ConfigureContent(
 	     container = (TkWindow *)TkGetContainer(container)) {
 	    if (container == (TkWindow *)contentPtr->tkwin) {
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "can't put %s inside %s, would cause management loop",
+		    "can't put \"%s\" inside \"%s\": would cause management loop",
 	            Tk_PathName(contentPtr->tkwin), Tk_PathName(win)));
 		Tcl_SetErrorCode(interp, "TK", "GEOMETRY", "LOOP", NULL);
 		goto error;
@@ -807,7 +818,7 @@ PlaceInfoCommand(
     if (contentPtr->containerPtr != NULL) {
 	Tcl_AppendToObj(infoObj, "-in", -1);
 	Tcl_ListObjAppendElement(NULL, infoObj,
-		TkNewWindowObj(contentPtr->containerPtr->tkwin));
+		Tk_NewWindowObj(contentPtr->containerPtr->tkwin));
 	Tcl_AppendToObj(infoObj, " ", -1);
     }
     Tcl_AppendPrintfToObj(infoObj,
@@ -888,7 +899,7 @@ RecomputePlacement(
     Tcl_Preserve(containerPtr);
 
     /*
-     * Iterate over all the content for the container. Each content's geometry can
+     * Iterate over all the content windows for the container. Each content's geometry can
      * be computed independently of the other content. Changes to the window's
      * structure could cause almost anything to happen, including deleting the
      * parent or child. If this happens, we'll be told to abort.
@@ -1104,8 +1115,8 @@ PlaceStructureProc(
 	    nextPtr = contentPtr->nextPtr;
 	    contentPtr->nextPtr = NULL;
 	}
-	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->masterTable,
-		(char *) containerPtr->tkwin));
+	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->containerTable,
+		containerPtr->tkwin));
 	if (containerPtr->flags & PARENT_RECONFIG_PENDING) {
 	    Tcl_CancelIdleCall(RecomputePlacement, containerPtr);
 	}
@@ -1171,8 +1182,8 @@ ContentStructureProc(
 	if (contentPtr->containerPtr != NULL) {
 	    UnlinkContent(contentPtr);
 	}
-	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->slaveTable,
-		(char *) contentPtr->tkwin));
+	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->contentTable,
+		contentPtr->tkwin));
 	FreeContent(contentPtr);
     }
 }
@@ -1254,8 +1265,8 @@ PlaceLostContentProc(
     }
     Tk_UnmapWindow(tkwin);
     UnlinkContent(contentPtr);
-    Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->slaveTable,
-	    (char *) tkwin));
+    Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->contentTable,
+	    tkwin));
     Tk_DeleteEventHandler(tkwin, StructureNotifyMask, ContentStructureProc,
 	    contentPtr);
     FreeContent(contentPtr);

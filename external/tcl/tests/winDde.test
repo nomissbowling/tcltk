@@ -4,14 +4,13 @@
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors. No output means no errors were found.
 #
-# Copyright (c) 1999 by Scriptics Corporation.
+# Copyright © 1999 Scriptics Corporation.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
 if {"::tcltest" ni [namespace children]} {
     package require tcltest 2.5
-    #tcltest::configure -verbose {pass start}
     namespace import -force ::tcltest::*
 }
 
@@ -21,10 +20,11 @@ if {[testConstraint win]} {
     if {![catch {
 	    ::tcltest::loadTestedCommands
 	    set ::ddever [package require dde 1.4.4]
-	    set ::ddelib [info loaded "" Dde]}]} {
+	    set ::ddelib [info loaded {} Dde]}]} {
 	testConstraint dde 1
     }
 }
+testConstraint notWine [expr {![info exists ::env(CI_USING_WINE)]}]
 
 
 # -------------------------------------------------------------------------
@@ -37,6 +37,7 @@ proc createChildProcess {ddeServerName args} {
     file delete -force $::scriptName
 
     set f [open $::scriptName w+]
+    fconfigure $f -encoding utf-8
     puts $f [list set ddeServerName $ddeServerName]
     puts $f [list load $::ddelib Dde]
     puts $f {
@@ -96,7 +97,7 @@ proc createChildProcess {ddeServerName args} {
 
     # run the child server script.
     set f [open |[list [interpreter] $::scriptName] r]
-    fconfigure $f -buffering line
+    fconfigure $f -buffering line -encoding utf-8
     gets $f line
     return $f
 }
@@ -162,7 +163,7 @@ test winDde-3.6 {DDE request utf-8} -constraints dde -body {
 } -result 196
 # Set variable a to A with diaeresis (unicode C4) using binary execute
 # and compose utf-8 (e.g. "c3 84" ) manualy
-test winDde-3.7 {DDE request binary} -constraints dde -body {
+test winDde-3.7 {DDE request binary} -constraints {dde notWine} -body {
     set \xe1 "not set"
     dde execute -binary TclEval self [list set \xc3\xa1 \xc3\x84\x00]
     scan [set \xe1] %c

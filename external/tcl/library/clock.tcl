@@ -9,7 +9,7 @@
 #
 #----------------------------------------------------------------------
 #
-# Copyright (c) 2004-2007 Kevin B. Kenny
+# Copyright © 2004-2007 Kevin B. Kenny
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
@@ -3313,7 +3313,7 @@ proc ::tcl::clock::LoadTimeZoneFile { fileName } {
 	    "time zone \":$fileName\" not valid"
     }
     try {
-	source -encoding utf-8 [file join $DataDir $fileName]
+	source [file join $DataDir $fileName]
     } on error {} {
 	return -code error \
 	    -errorcode [list CLOCK badTimeZone :$fileName] \

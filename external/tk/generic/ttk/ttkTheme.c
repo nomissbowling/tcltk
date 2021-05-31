@@ -3,8 +3,8 @@
  *
  *	This file implements the widget styles and themes support.
  *
- * Copyright (c) 2002 Frederic Bonnet
- * Copyright (c) 2003 Joe English
+ * Copyright © 2002 Frederic Bonnet
+ * Copyright © 2003 Joe English
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -95,7 +95,7 @@ Tcl_Obj *Ttk_StyleMap(Ttk_Style style, const char *optionName, Ttk_State state)
 
 /*
  * Ttk_StyleDefault --
- * 	Look up default resource setting the in the specified style.
+ * 	Look up default resource setting in the specified style.
  */
 Tcl_Obj *Ttk_StyleDefault(Ttk_Style style, const char *optionName)
 {
@@ -117,7 +117,7 @@ typedef const Tk_OptionSpec **OptionMap;
 
 struct Ttk_ElementClass_ {
     const char *name;		/* Points to hash table key */
-    Ttk_ElementSpec *specPtr;	/* Template provided during registration. */
+    const Ttk_ElementSpec *specPtr;	/* Template provided during registration. */
     void *clientData;		/* Client data passed in at registration time */
     void *elementRecord;	/* Scratch buffer for element record storage */
     int nResources;		/* #Element options */
@@ -142,7 +142,7 @@ static const Tk_OptionSpec *TTKGetOptionSpec(
 
     /* Make sure widget option has a Tcl_Obj* entry:
      */
-    if (optionSpec->objOffset < 0) {
+    if (optionSpec->objOffset == TCL_INDEX_NONE) {
 	return 0;
     }
 
@@ -181,7 +181,7 @@ BuildOptionMap(Ttk_ElementClass *elementClass, Tk_OptionTable optionTable)
     int i;
 
     for (i = 0; i < elementClass->nResources; ++i) {
-	Ttk_ElementOptionSpec *e = elementClass->specPtr->options+i;
+	const Ttk_ElementOptionSpec *e = elementClass->specPtr->options+i;
 	optionMap[i] = TTKGetOptionSpec(e->optionName, optionTable, e->type);
     }
 
@@ -216,7 +216,7 @@ GetOptionMap(Ttk_ElementClass *elementClass, Tk_OptionTable optionTable)
  * 	from the specified element specification.
  */
 static Ttk_ElementClass *
-NewElementClass(const char *name, Ttk_ElementSpec *specPtr,void *clientData)
+NewElementClass(const char *name, const Ttk_ElementSpec *specPtr, void *clientData)
 {
     Ttk_ElementClass *elementClass = (Ttk_ElementClass *)ckalloc(sizeof(Ttk_ElementClass));
     int i;
@@ -872,7 +872,7 @@ Ttk_ElementClass *Ttk_RegisterElement(
     Tcl_Interp *interp,		/* Where to leave error messages */
     Ttk_Theme theme,		/* Style engine providing the implementation. */
     const char *name,		/* Name of new element */
-    Ttk_ElementSpec *specPtr, 	/* Static template information */
+    const Ttk_ElementSpec *specPtr, 	/* Static template information */
     void *clientData)		/* application-specific data */
 {
     Ttk_ElementClass *elementClass;
@@ -913,7 +913,7 @@ Ttk_ElementClass *Ttk_RegisterElement(
  * 	Register a new element.
  */
 int Ttk_RegisterElementSpec(Ttk_Theme theme,
-    const char *name, Ttk_ElementSpec *specPtr, void *clientData)
+    const char *name, const Ttk_ElementSpec *specPtr, void *clientData)
 {
     return Ttk_RegisterElement(NULL, theme, name, specPtr, clientData)
 	   ? TCL_OK : TCL_ERROR;
@@ -977,16 +977,16 @@ static
 int InitializeElementRecord(
     Ttk_ElementClass *eclass,	/* Element instance to initialize */
     Ttk_Style style,		/* Style table */
-    char *widgetRecord,		/* Source of widget option values */
+    void *widgetRecord,		/* Source of widget option values */
     Tk_OptionTable optionTable,	/* Option table describing widget record */
     Tk_Window tkwin,		/* Corresponding window */
     Ttk_State state)	/* Widget or element state */
 {
-    char *elementRecord = eclass->elementRecord;
+    void *elementRecord = eclass->elementRecord;
     OptionMap optionMap = GetOptionMap(eclass,optionTable);
     int nResources = eclass->nResources;
     Ttk_ResourceCache cache = style->cache;
-    Ttk_ElementOptionSpec *elementOption = eclass->specPtr->options;
+    const Ttk_ElementOptionSpec *elementOption = eclass->specPtr->options;
 
     int i;
     for (i=0; i<nResources; ++i, ++elementOption) {
@@ -1071,7 +1071,7 @@ void
 Ttk_ElementSize(
     Ttk_ElementClass *eclass,		/* Element to query */
     Ttk_Style style,			/* Style settings */
-    char *recordPtr,			/* The widget record. */
+    void *recordPtr,			/* The widget record. */
     Tk_OptionTable optionTable,		/* Description of widget record */
     Tk_Window tkwin,			/* The widget window. */
     Ttk_State state,			/* Current widget state */
@@ -1101,7 +1101,7 @@ void
 Ttk_DrawElement(
     Ttk_ElementClass *eclass,		/* Element instance */
     Ttk_Style style,			/* Style settings */
-    char *recordPtr,			/* The widget record. */
+    void *recordPtr,			/* The widget record. */
     Tk_OptionTable optionTable,		/* Description of option table */
     Tk_Window tkwin,			/* The widget window. */
     Drawable d,				/* Where to draw element. */
@@ -1262,10 +1262,10 @@ usage:
     styleName = Tcl_GetString(objv[2]);
     stylePtr = Ttk_GetStyle(theme, styleName);
 
-    if (objc == 3) {		/* style default $styleName */
+    if (objc == 3) {		/* style configure $styleName */
 	Tcl_SetObjResult(interp, HashTableToDict(&stylePtr->defaultsTable));
 	return TCL_OK;
-    } else if (objc == 4) {	/* style default $styleName -option */
+    } else if (objc == 4) {	/* style configure $styleName -option */
 	const char *optionName = Tcl_GetString(objv[3]);
 	Tcl_HashEntry *entryPtr =
 	    Tcl_FindHashEntry(&stylePtr->defaultsTable, optionName);
@@ -1315,9 +1315,7 @@ static int StyleLookupCmd(
     }
 
     style = Ttk_GetStyle(theme, Tcl_GetString(objv[2]));
-    if (!style) {
-	return TCL_ERROR;
-    }
+
     optionName = Tcl_GetString(objv[3]);
 
     if (objc >= 5) {
@@ -1381,7 +1379,7 @@ static int StyleThemeCreateCmd(
     ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
     StylePackageData *pkgPtr = (StylePackageData *)clientData;
-    static const char *optStrings[] =
+    static const char *const optStrings[] =
     	 { "-parent", "-settings", NULL };
     enum { OP_PARENT, OP_SETTINGS };
     Ttk_Theme parentTheme = pkgPtr->defaultTheme, newTheme;
@@ -1554,8 +1552,8 @@ static int StyleElementOptionsCmd(
     elementName = Tcl_GetString(objv[3]);
     elementClass = Ttk_GetElement(theme, elementName);
     if (elementClass) {
-	Ttk_ElementSpec *specPtr = elementClass->specPtr;
-	Ttk_ElementOptionSpec *option = specPtr->options;
+	const Ttk_ElementSpec *specPtr = elementClass->specPtr;
+	const Ttk_ElementOptionSpec *option = specPtr->options;
 	Tcl_Obj *result = Tcl_NewListObj(0,0);
 
 	while (option->optionName) {
@@ -1612,6 +1610,31 @@ static int StyleLayoutCmd(
     return TCL_OK;
 }
 
+/* + style theme styles ?$theme? --
+ * 	Return list of styles available in $theme.
+ *      Use the current theme if $theme is omitted.
+ */
+static int StyleThemeStylesCmd(
+    TCL_UNUSED(ClientData), Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+    Ttk_Theme themePtr;
+
+    if (objc < 3 || objc > 4) {
+        Tcl_WrongNumArgs(interp, 3, objv, "?theme?");
+        return TCL_ERROR;
+    }
+
+    if (objc == 3) {
+        themePtr = Ttk_GetCurrentTheme(interp);
+    } else {
+        themePtr = Ttk_GetTheme(interp, Tcl_GetString(objv[3]));
+    }
+    if (!themePtr)
+        return TCL_ERROR;
+
+    return TtkEnumerateHashTable(interp, &themePtr->styleTable);
+}
+
 /* + style theme use $theme --
  *  	Sets the current theme to $theme
  */
@@ -1651,6 +1674,7 @@ static const Ttk_Ensemble StyleThemeEnsemble[] = {
     { "create", StyleThemeCreateCmd, 0 },
     { "names", StyleThemeNamesCmd, 0 },
     { "settings", StyleThemeSettingsCmd, 0 },
+    { "styles", StyleThemeStylesCmd, 0 },
     { "use", StyleThemeUseCmd, 0 },
     { NULL, 0, 0 }
 };

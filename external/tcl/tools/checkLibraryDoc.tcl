@@ -3,7 +3,7 @@
 # This script attempts to determine what APIs exist in the source base that
 # have not been documented.  By grepping through all of the doc/*.3 man
 # pages, looking for "Pkg_*" (e.g., Tcl_ or Tk_), and comparing this list
-# against the list of Pkg_ APIs found in the source (e.g., tcl8.6/*/*.[ch])
+# against the list of Pkg_ APIs found in the source (e.g., tcl8.7/*/*.[ch])
 # we create six lists:
 #      1) APIs in Source not in Docs.
 #      2) APIs in Docs not in Source.

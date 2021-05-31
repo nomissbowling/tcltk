@@ -220,6 +220,7 @@ static void updateFromSelect(
 
   assert( pTabList->nSrc>1 );
   if( pSrc ){
+    pSrc->a[0].fg.notCte = 1;
     pSrc->a[0].iCursor = -1;
     pSrc->a[0].pTab->nTabRef--;
     pSrc->a[0].pTab = 0;

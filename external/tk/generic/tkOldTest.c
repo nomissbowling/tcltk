@@ -6,9 +6,9 @@
  *	interfaces.  These commands are not normally included in Tcl/Tk
  *	applications; they're only used for testing.
  *
- * Copyright (c) 1993-1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
- * Copyright (c) 1998-1999 by Scriptics Corporation.
+ * Copyright © 1993-1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1998-1999 Scriptics Corporation.
  * Contributions by Don Porter, NIST, 2007.  (not subject to US copyright)
  *
  * See the file "license.terms" for information on usage and redistribution of
@@ -24,6 +24,7 @@
 #endif
 #include "tkInt.h"
 
+#if !defined(TK_NO_DEPRECATED) && (TCL_MAJOR_VERSION < 9)
 /*
  * The following data structure represents the model for a test image:
  */
@@ -84,7 +85,7 @@ static Tk_ImageType imageType = {
 static int              ImageObjCmd(ClientData dummy,
                             Tcl_Interp *interp, int objc,
             			    Tcl_Obj * const objv[]);
-
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -106,13 +107,16 @@ static int              ImageObjCmd(ClientData dummy,
 
 int
 TkOldTestInit(
-    Tcl_Interp *interp)
+    Tcl_Interp *dummy)
 {
     static int initialized = 0;
+    (void)dummy;
 
     if (!initialized) {
 	initialized = 1;
+#if !defined(TK_NO_DEPRECATED) && (TCL_MAJOR_VERSION < 9)
 	Tk_CreateImageType(&imageType);
+#endif
     }
     return TCL_OK;
 }
@@ -132,8 +136,7 @@ TkOldTestInit(
  *
  *----------------------------------------------------------------------
  */
-
-	/* ARGSUSED */
+#if !defined(TK_NO_DEPRECATED) && (TCL_MAJOR_VERSION < 9)
 static int
 ImageCreate(
     Tcl_Interp *interp,		/* Interpreter for application containing
@@ -151,6 +154,7 @@ ImageCreate(
     TImageModel *timPtr;
     const char *varName;
     int i;
+    (void)typePtr;
 
     varName = "log";
     for (i = 0; i < argc; i += 2) {
@@ -167,14 +171,14 @@ ImageCreate(
 	varName = argv[i+1];
     }
 
-    timPtr = ckalloc(sizeof(TImageModel));
+    timPtr = (TImageModel *)ckalloc(sizeof(TImageModel));
     timPtr->model = model;
     timPtr->interp = interp;
     timPtr->width = 30;
     timPtr->height = 15;
-    timPtr->imageName = ckalloc(strlen(name) + 1);
+    timPtr->imageName = (char *)ckalloc(strlen(name) + 1);
     strcpy(timPtr->imageName, name);
-    timPtr->varName = ckalloc(strlen(varName) + 1);
+    timPtr->varName = (char *)ckalloc(strlen(varName) + 1);
     strcpy(timPtr->varName, varName);
     Tcl_CreateObjCommand(interp, name, ImageObjCmd, timPtr, NULL);
     *clientDataPtr = timPtr;
@@ -199,7 +203,6 @@ ImageCreate(
  *----------------------------------------------------------------------
  */
 
-	/* ARGSUSED */
 static int
 ImageObjCmd(
     ClientData clientData,	/* Main window for application. */
@@ -207,7 +210,7 @@ ImageObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])		/* Argument strings. */
 {
-    TImageModel *timPtr = clientData;
+    TImageModel *timPtr = (TImageModel *)clientData;
     int x, y, width, height;
 
     if (objc < 2) {
@@ -262,7 +265,7 @@ ImageGet(
 				 * used. */
     ClientData clientData)	/* Pointer to TImageModel for image. */
 {
-    TImageModel *timPtr = clientData;
+    TImageModel *timPtr = (TImageModel *)clientData;
     TImageInstance *instPtr;
     char buffer[100];
     XGCValues gcValues;
@@ -271,7 +274,7 @@ ImageGet(
     Tcl_SetVar2(timPtr->interp, timPtr->varName, NULL, buffer,
 	    TCL_GLOBAL_ONLY|TCL_APPEND_VALUE|TCL_LIST_ELEMENT);
 
-    instPtr = ckalloc(sizeof(TImageInstance));
+    instPtr = (TImageInstance *)ckalloc(sizeof(TImageInstance));
     instPtr->modelPtr = timPtr;
     instPtr->fg = Tk_GetColor(timPtr->interp, tkwin, "#ff0000");
     gcValues.foreground = instPtr->fg->pixel;
@@ -309,7 +312,7 @@ ImageDisplay(
 				/* Coordinates in drawable corresponding to
 				 * imageX and imageY. */
 {
-    TImageInstance *instPtr = clientData;
+    TImageInstance *instPtr = (TImageInstance *)clientData;
     char buffer[200 + TCL_INTEGER_SPACE * 6];
 
     sprintf(buffer, "%s display %d %d %d %d %d %d",
@@ -354,7 +357,7 @@ ImageFree(
     ClientData clientData,	/* Pointer to TImageInstance for instance. */
     Display *display)		/* Display where image was to be drawn. */
 {
-    TImageInstance *instPtr = clientData;
+    TImageInstance *instPtr = (TImageInstance *)clientData;
     char buffer[200];
 
     sprintf(buffer, "%s free", instPtr->modelPtr->imageName);
@@ -388,7 +391,7 @@ ImageDelete(
 				 * this function is called, no more instances
 				 * exist. */
 {
-    TImageModel *timPtr = clientData;
+    TImageModel *timPtr = (TImageModel *)clientData;
     char buffer[100];
 
     sprintf(buffer, "%s delete", timPtr->imageName);
@@ -400,6 +403,7 @@ ImageDelete(
     ckfree(timPtr->varName);
     ckfree(timPtr);
 }
+#endif
 
 /*
  * Local Variables:

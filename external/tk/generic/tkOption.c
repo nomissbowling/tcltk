@@ -5,8 +5,8 @@
  *	allows various strings to be associated with windows either by name or
  *	by class or both.
  *
- * Copyright (c) 1990-1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1990-1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -521,7 +521,7 @@ Tk_GetOption(
     if (masqName != NULL) {
 	char *masqClass;
 	Tk_Uid nodeId, winClassId, winNameId;
-	size_t classNameLength;
+	TkSizeT classNameLength;
 	Element *nodePtr, *leafPtr;
 	static const int searchOrder[] = {
 	    EXACT_NODE_NAME, WILDCARD_NODE_NAME, EXACT_NODE_CLASS,
@@ -534,7 +534,7 @@ Tk_GetOption(
 	 * Extract the masquerade class name from the name field.
 	 */
 
-	classNameLength	= (size_t) (masqName - name);
+	classNameLength	= masqName - name;
 	masqClass = (char *)ckalloc(classNameLength + 1);
 	strncpy(masqClass, name, classNameLength);
 	masqClass[classNameLength] = '\0';
@@ -1084,7 +1084,8 @@ ReadOptionFile(
 {
     const char *realName;
     Tcl_Obj *buffer;
-    int result, bufferSize;
+    int result;
+    TkSizeT bufferSize;
     Tcl_Channel chan;
     Tcl_DString newName;
 
@@ -1115,7 +1116,7 @@ ReadOptionFile(
     Tcl_IncrRefCount(buffer);
     Tcl_SetChannelOption(NULL, chan, "-encoding", "utf-8");
     bufferSize = Tcl_ReadChars(chan, buffer, -1, 0);
-    if (bufferSize == -1) {
+    if (bufferSize == TCL_IO_FAILURE) {
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"error reading file \"%s\": %s",
 		fileName, Tcl_PosixError(interp)));

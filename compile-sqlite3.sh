@@ -47,9 +47,9 @@ if [ -z "$WINDIR" ]; then
 else
     sed -i "s|EXTERN int Sqlite3_Init(Tcl_Interp|int Sqlite3_Init(Tcl_Interp|g" $COMPILEDIR/$MODULE/tclsqlite3.c
     if [ -n "$SW_DEBUG" ]; then
-        gcc -v -ggdb -DSQLITE_OS_WIN -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -I$INSTALLDIR/include -L$INSTALLDIR/lib/ -shared tclsqlite3.c -o tclsqlite3.dll -ltcl86g
+        gcc -v -ggdb -DSQLITE_OS_WIN -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -I$INSTALLDIR/include -L$INSTALLDIR/lib/ -shared tclsqlite3.c -o tclsqlite3.dll -ltcl87g
     else
-        gcc -v -DSQLITE_OS_WIN -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -I$INSTALLDIR/include -L$INSTALLDIR/lib/ -shared tclsqlite3.c -o tclsqlite3.dll -ltcl86
+        gcc -v -DSQLITE_OS_WIN -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -I$INSTALLDIR/include -L$INSTALLDIR/lib/ -shared tclsqlite3.c -o tclsqlite3.dll -ltcl87
     fi
 fi
 

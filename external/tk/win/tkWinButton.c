@@ -4,7 +4,7 @@
  *	This file implements the Windows specific portion of the button
  *	widgets.
  *
- * Copyright (c) 1996-1998 by Sun Microsystems, Inc.
+ * Copyright © 1996-1998 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -208,9 +208,10 @@ TkpButtonSetDefaults(void)
 
 TkButton *
 TkpCreateButton(
-    TCL_UNUSED(Tk_Window))
+    Tk_Window tkwin)
 {
     WinButton *butPtr;
+    (void)tkwin;
 
     butPtr = (WinButton *)ckalloc(sizeof(WinButton));
     butPtr->hwnd = NULL;
@@ -1302,7 +1303,7 @@ ButtonProc(
     }
     /* FALLTHRU */
     default:
-	if (Tk_TranslateWinEvent(hwnd, message, wParam, lParam, &result)) {
+	if (TkTranslateWinEvent(hwnd, message, wParam, lParam, &result)) {
 	    return result;
 	}
     }

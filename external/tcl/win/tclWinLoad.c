@@ -5,7 +5,7 @@
  *	the Windows "LoadLibrary" and "GetProcAddress" API for dynamic
  *	loading.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -61,13 +61,12 @@ TclpDlopen(
 				/* Filled with address of Tcl_FSUnloadFileProc
 				 * function which should be used for this
 				 * file. */
-    int flags)
+    TCL_UNUSED(int) /*flags*/)
 {
     HINSTANCE hInstance = NULL;
     const WCHAR *nativeName;
     Tcl_LoadHandle handlePtr;
     DWORD firstError;
-    (void)flags;
 
     /*
      * First try the full path the user gave us. This is particularly
@@ -96,7 +95,8 @@ TclpDlopen(
         firstError = (nativeName == NULL) ?
 		ERROR_MOD_NOT_FOUND : GetLastError();
 
-	nativeName = (WCHAR *)Tcl_WinUtfToTChar(Tcl_GetString(pathPtr), -1, &ds);
+	Tcl_DStringInit(&ds);
+	nativeName = Tcl_UtfToWCharDString(Tcl_GetString(pathPtr), -1, &ds);
 	hInstance = LoadLibraryExW(nativeName, NULL,
 		LOAD_WITH_ALTERED_SEARCH_PATH);
 	Tcl_DStringFree(&ds);
@@ -159,7 +159,7 @@ TclpDlopen(
 		Tcl_AppendToObj(errMsg, "Bad exe format. Possibly a 32/64-bit mismatch.", -1);
                 break;
             default:
-		TclWinConvertError(lastError);
+		Tcl_WinConvertError(lastError);
 		Tcl_AppendToObj(errMsg, Tcl_PosixError(interp), -1);
 	    }
 	    Tcl_SetObjResult(interp, errMsg);
@@ -257,39 +257,6 @@ UnloadFile(
 
     FreeLibrary(hInstance);
     ckfree(loadHandle);
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TclGuessPackageName --
- *
- *	If the "load" command is invoked without providing a package name,
- *	this function is invoked to try to figure it out.
- *
- * Results:
- *	Always returns 0 to indicate that we couldn't figure out a package
- *	name; generic code will then try to guess the package from the file
- *	name. A return value of 1 would have meant that we figured out the
- *	package name and put it in bufPtr.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-int
-TclGuessPackageName(
-    const char *fileName,	/* Name of file containing package (already
-				 * translated to local form if needed). */
-    Tcl_DString *bufPtr)	/* Initialized empty dstring. Append package
-				 * name to this if possible. */
-{
-    (void)fileName;
-    (void)bufPtr;
-
-    return 0;
 }
 
 /*
@@ -412,7 +379,7 @@ InitDLLDirectoryName(void)
 	id *= 16777619;
     }
 
-    TclWinConvertError(lastError);
+    Tcl_WinConvertError(lastError);
     return TCL_ERROR;
 
     /*

@@ -26,7 +26,7 @@ function printHelp {
 function getbranch {
     ## emty return in case of default branch
     case $1 in
-        "tcl"|"tk") echo "core-8-6-branch";;
+        "tcl") echo "core-8-branch";;
         "itcl") echo "itcl-4-0-6-rc";;
         "itk") echo "itk-4-0-2-rc";;
         "tkimg") echo "trunk";;
@@ -37,7 +37,6 @@ function getbranch {
 function getsource {
     case $1 in
         "tcl") echo "https://core.tcl-lang.org/tcl";;
-        "tcltls") echo "https://core.tcl-lang.org/tcltls";;
         "tk") echo "https://core.tcl-lang.org/tk";;
         "thread") echo "https://core.tcl-lang.org/thread";;
         "bwidget") echo "https://core.tcl-lang.org/bwidget";;
@@ -102,7 +101,7 @@ done
 
 ## if no module provided use default
 if [ ${#MODULES[@]} -eq 0 ]; then
-    MODULES=(tclconfig tcl thread tk tcllib tklib tkimg tdbc tdbcodbc tdbcpostgres tdbcmysql tdbcsqlite3 sqlite3 bwidget vectcl photoresize tkcon tcludp itcl itk iwidgets tktable tcltls)
+    MODULES=(tclconfig tcl thread tk tcllib tklib tkimg tdbc tdbcodbc tdbcpostgres tdbcmysql tdbcsqlite3 sqlite3 bwidget vectcl photoresize tkcon tcludp tktable)
 fi
 
 ## go through all repos

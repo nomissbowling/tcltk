@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 Pat Thoyts <patthoyts@users.sourceforge.net>
+ * Copyright © 2004 Pat Thoyts <patthoyts@users.sourceforge.net>
  *
  * ttk::scale widget.
  */
@@ -50,32 +50,32 @@ typedef struct
     ScalePart  scale;
 } Scale;
 
-static Tk_OptionSpec ScaleOptionSpecs[] =
+static const Tk_OptionSpec ScaleOptionSpecs[] =
 {
     {TK_OPTION_STRING, "-command", "command", "Command", "",
-	Tk_Offset(Scale,scale.commandObj), -1,
+	offsetof(Scale,scale.commandObj), TCL_INDEX_NONE,
 	TK_OPTION_NULL_OK,0,0},
     {TK_OPTION_STRING, "-variable", "variable", "Variable", "",
-	Tk_Offset(Scale,scale.variableObj), -1,
-	0,0,0},
+	offsetof(Scale,scale.variableObj), TCL_INDEX_NONE,
+	0, 0, 0},
     {TK_OPTION_STRING_TABLE, "-orient", "orient", "Orient", "horizontal",
-	Tk_Offset(Scale,scale.orientObj),
-	Tk_Offset(Scale,scale.orient), 0,
+	offsetof(Scale,scale.orientObj),
+	offsetof(Scale,scale.orient), 0,
 	(void *)ttkOrientStrings, STYLE_CHANGED },
 
     {TK_OPTION_DOUBLE, "-from", "from", "From", "0",
-	Tk_Offset(Scale,scale.fromObj), -1, 0, 0, 0},
+	offsetof(Scale,scale.fromObj), TCL_INDEX_NONE, 0, 0, 0},
     {TK_OPTION_DOUBLE, "-to", "to", "To", "1.0",
-	Tk_Offset(Scale,scale.toObj), -1, 0, 0, 0},
+	offsetof(Scale,scale.toObj), TCL_INDEX_NONE, 0, 0, 0},
     {TK_OPTION_DOUBLE, "-value", "value", "Value", "0",
-	Tk_Offset(Scale,scale.valueObj), -1, 0, 0, 0},
+	offsetof(Scale,scale.valueObj), TCL_INDEX_NONE, 0, 0, 0},
     {TK_OPTION_PIXELS, "-length", "length", "Length",
-	DEF_SCALE_LENGTH, Tk_Offset(Scale,scale.lengthObj), -1, 0, 0,
+	DEF_SCALE_LENGTH, offsetof(Scale,scale.lengthObj), TCL_INDEX_NONE, 0, 0,
     	GEOMETRY_CHANGED},
 
     {TK_OPTION_STRING, "-state", "state", "State",
-	"normal", Tk_Offset(Scale,scale.stateObj), -1,
-        0,0,STATE_CHANGED},
+	"normal", offsetof(Scale,scale.stateObj), TCL_INDEX_NONE,
+        0, 0, STATE_CHANGED},
 
     WIDGET_TAKEFOCUS_TRUE,
     WIDGET_INHERIT_OPTIONS(ttkCoreOptionSpecs)
@@ -110,10 +110,11 @@ static void ScaleVariableChanged(void *recordPtr, const char *value)
 /* ScaleInitialize --
  * 	Scale widget initialization hook.
  */
-static void ScaleInitialize(Tcl_Interp *dummy, void *recordPtr)
+static void ScaleInitialize(
+    TCL_UNUSED(Tcl_Interp *),
+    void *recordPtr)
 {
     Scale *scalePtr = (Scale *)recordPtr;
-    (void)dummy;
 
     TtkTrackElementState(&scalePtr->core);
 }
@@ -163,12 +164,12 @@ static int ScaleConfigure(Tcl_Interp *interp, void *recordPtr, int mask)
  * 	Post-configuration hook.
  */
 static int ScalePostConfigure(
-    Tcl_Interp *dummy, void *recordPtr, int mask)
+    TCL_UNUSED(Tcl_Interp *),
+    void *recordPtr,
+    TCL_UNUSED(int))
 {
     Scale *scale = (Scale *)recordPtr;
     int status = TCL_OK;
-    (void)dummy;
-    (void)mask;
 
     if (scale->scale.variableTrace) {
 	status = Ttk_FireTrace(scale->scale.variableTrace);
@@ -376,8 +377,8 @@ ScaleCoordsCommand(
     if (r == TCL_OK) {
 	Tcl_Obj *point[2];
 	XPoint pt = ValueToPoint(scalePtr, value);
-	point[0] = Tcl_NewIntObj(pt.x);
-	point[1] = Tcl_NewIntObj(pt.y);
+	point[0] = Tcl_NewWideIntObj(pt.x);
+	point[1] = Tcl_NewWideIntObj(pt.y);
 	Tcl_SetObjResult(interp, Tcl_NewListObj(2, point));
     }
     return r;
@@ -481,18 +482,19 @@ ValueToPoint(Scale *scalePtr, double value)
 }
 
 static const Ttk_Ensemble ScaleCommands[] = {
-    { "configure",   TtkWidgetConfigureCommand,0 },
     { "cget",        TtkWidgetCgetCommand,0 },
-    { "state",       TtkWidgetStateCommand,0 },
-    { "instate",     TtkWidgetInstateCommand,0 },
-    { "identify",    TtkWidgetIdentifyCommand,0 },
-    { "set",         ScaleSetCommand,0 },
-    { "get",         ScaleGetCommand,0 },
+    { "configure",   TtkWidgetConfigureCommand,0 },
     { "coords",      ScaleCoordsCommand,0 },
+    { "get",         ScaleGetCommand,0 },
+    { "identify",    TtkWidgetIdentifyCommand,0 },
+    { "instate",     TtkWidgetInstateCommand,0 },
+    { "set",         ScaleSetCommand,0 },
+    { "state",       TtkWidgetStateCommand,0 },
+    { "style",		TtkWidgetStyleCommand,0 },
     { 0,0,0 }
 };
 
-static WidgetSpec ScaleWidgetSpec =
+static const WidgetSpec ScaleWidgetSpec =
 {
     "TScale",			/* Class name */
     sizeof(Scale),		/* record size */

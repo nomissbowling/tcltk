@@ -4,7 +4,7 @@
  *	This file implements the generic portion of file manipulation
  *	subcommands of the "file" command.
  *
- * Copyright (c) 1996-1998 Sun Microsystems, Inc.
+ * Copyright © 1996-1998 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -47,7 +47,7 @@ static int		FileForceOption(Tcl_Interp *interp,
 
 int
 TclFileRenameCmd(
-    ClientData clientData,	/* Unused */
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,		/* Interp for error reporting or recursive
 				 * calls in the case of a tricky rename. */
     int objc,			/* Number of arguments. */
@@ -76,7 +76,7 @@ TclFileRenameCmd(
 
 int
 TclFileCopyCmd(
-    ClientData clientData,	/* Unused */
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,		/* Used for error reporting or recursive calls
 				 * in the case of a tricky copy. */
     int objc,			/* Number of arguments. */
@@ -214,7 +214,7 @@ FileCopyRename(
 
 int
 TclFileMakeDirsCmd(
-    ClientData clientData,	/* Unused */
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,		/* Used for error reporting. */
     int objc,			/* Number of arguments */
     Tcl_Obj *const objv[])	/* Argument strings passed to Tcl_FileCmd. */
@@ -338,7 +338,7 @@ TclFileMakeDirsCmd(
 
 int
 TclFileDeleteCmd(
-    ClientData clientData,	/* Unused */
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,		/* Used for error reporting */
     int objc,			/* Number of arguments */
     Tcl_Obj *const objv[])	/* Argument strings passed to Tcl_FileCmd. */
@@ -946,7 +946,7 @@ FileBasename(
 
 int
 TclFileAttrsCmd(
-    ClientData clientData,	/* Unused */
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,		/* The interpreter for error reporting. */
     int objc,			/* Number of command line arguments. */
     Tcl_Obj *const objv[])	/* The command line objects. */
@@ -1085,11 +1085,8 @@ TclFileAttrsCmd(
 	}
 
 	if (Tcl_GetIndexFromObj(interp, objv[0], attributeStrings,
-		"option", 0, &index) != TCL_OK) {
+		"option", TCL_INDEX_TEMP_TABLE, &index) != TCL_OK) {
 	    goto end;
-	}
-	if (attributeStringsAllocated != NULL) {
-	    TclFreeIntRep(objv[0]);
 	}
 	if (Tcl_FSFileAttrsGet(interp, index, filePtr,
 		&objPtr) != TCL_OK) {
@@ -1113,11 +1110,8 @@ TclFileAttrsCmd(
 
 	for (i = 0; i < objc ; i += 2) {
 	    if (Tcl_GetIndexFromObj(interp, objv[i], attributeStrings,
-		    "option", 0, &index) != TCL_OK) {
+		    "option", TCL_INDEX_TEMP_TABLE, &index) != TCL_OK) {
 		goto end;
-	    }
-	    if (attributeStringsAllocated != NULL) {
-		TclFreeIntRep(objv[i]);
 	    }
 	    if (i + 1 == objc) {
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
@@ -1168,7 +1162,7 @@ TclFileAttrsCmd(
 
 int
 TclFileLinkCmd(
-    ClientData clientData,
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,
     int objc,
     Tcl_Obj *const objv[])
@@ -1319,7 +1313,7 @@ TclFileLinkCmd(
 
 int
 TclFileReadLinkCmd(
-    ClientData clientData,
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,
     int objc,
     Tcl_Obj *const objv[])
@@ -1351,7 +1345,7 @@ TclFileReadLinkCmd(
 /*
  *---------------------------------------------------------------------------
  *
- * TclFileTemporaryCmd
+ * TclFileTemporaryCmd --
  *
  *	This function implements the "tempfile" subcommand of the "file"
  *	command.
@@ -1370,7 +1364,7 @@ TclFileReadLinkCmd(
 
 int
 TclFileTemporaryCmd(
-    ClientData clientData,
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,
     int objc,
     Tcl_Obj *const objv[])
@@ -1507,6 +1501,151 @@ TclFileTemporaryCmd(
 	}
     }
     Tcl_SetObjResult(interp, Tcl_NewStringObj(Tcl_GetChannelName(chan), -1));
+    return TCL_OK;
+}
+
+/*
+ *---------------------------------------------------------------------------
+ *
+ * TclFileTempDirCmd --
+ *
+ *	This function implements the "tempdir" subcommand of the "file"
+ *	command.
+ *
+ * Results:
+ *	Returns a standard Tcl result.
+ *
+ * Side effects:
+ *	Creates a temporary directory.
+ *
+ *---------------------------------------------------------------------------
+ */
+
+int
+TclFileTempDirCmd(
+    TCL_UNUSED(ClientData),
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const objv[])
+{
+    Tcl_Obj *dirNameObj;	/* Object that will contain the directory
+				 * name. */
+    Tcl_Obj *baseDirObj = NULL, *nameBaseObj = NULL;
+				/* Pieces of template. Each piece is NULL if
+				 * it is omitted. The platform temporary file
+				 * engine might ignore some pieces. */
+
+    if (objc < 1 || objc > 2) {
+	Tcl_WrongNumArgs(interp, 1, objv, "?template?");
+	return TCL_ERROR;
+    }
+
+    if (objc > 1) {
+	int length;
+	Tcl_Obj *templateObj = objv[1];
+	const char *string = TclGetStringFromObj(templateObj, &length);
+	const int onWindows = (tclPlatform == TCL_PLATFORM_WINDOWS);
+
+	/*
+	 * Treat an empty string as if it wasn't there.
+	 */
+
+	if (length == 0) {
+	    goto makeTemporary;
+	}
+
+	/*
+	 * The template only gives a directory if there is a directory
+	 * separator in it, and only gives a base name if there's at least one
+	 * character after the last directory separator.
+	 */
+
+	if (strchr(string, '/') == NULL
+		&& (!onWindows || strchr(string, '\\') == NULL)) {
+	    /*
+	     * No directory separator, so just assume we have a file name.
+	     * This is a bit wrong on Windows where we could have problems
+	     * with disk name prefixes... but those are much less common in
+	     * naked form so we just pass through and let the OS figure it out
+	     * instead.
+	     */
+
+	    nameBaseObj = templateObj;
+	    Tcl_IncrRefCount(nameBaseObj);
+	} else if (string[length-1] != '/'
+		&& (!onWindows || string[length-1] != '\\')) {
+	    /*
+	     * If the template has a non-terminal directory separator, split
+	     * into dirname and tail.
+	     */
+
+	    baseDirObj = TclPathPart(interp, templateObj, TCL_PATH_DIRNAME);
+	    nameBaseObj = TclPathPart(interp, templateObj, TCL_PATH_TAIL);
+	} else {
+	    /*
+	     * Otherwise, there must be a terminal directory separator, so
+	     * just the directory is given.
+	     */
+
+	    baseDirObj = templateObj;
+	    Tcl_IncrRefCount(baseDirObj);
+	}
+
+	/*
+	 * Only allow creation of temporary directories in the native
+	 * filesystem since they are frequently used for integration with
+	 * external tools or system libraries.
+	 */
+
+	if (baseDirObj != NULL && Tcl_FSGetFileSystemForPath(baseDirObj)
+		!= &tclNativeFilesystem) {
+	    TclDecrRefCount(baseDirObj);
+	    baseDirObj = NULL;
+	}
+    }
+
+    /*
+     * Convert empty parts of the template into unspecified parts.
+     */
+
+    if (baseDirObj && !TclGetString(baseDirObj)[0]) {
+	TclDecrRefCount(baseDirObj);
+	baseDirObj = NULL;
+    }
+    if (nameBaseObj && !TclGetString(nameBaseObj)[0]) {
+	TclDecrRefCount(nameBaseObj);
+	nameBaseObj = NULL;
+    }
+
+    /*
+     * Create and open the temporary file.
+     */
+
+  makeTemporary:
+    dirNameObj = TclpCreateTemporaryDirectory(baseDirObj, nameBaseObj);
+
+    /*
+     * If we created pieces of template, get rid of them now.
+     */
+
+    if (baseDirObj) {
+	TclDecrRefCount(baseDirObj);
+    }
+    if (nameBaseObj) {
+	TclDecrRefCount(nameBaseObj);
+    }
+
+    /*
+     * Deal with results.
+     */
+
+    if (dirNameObj == NULL) {
+	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
+		"can't create temporary directory: %s",
+		Tcl_PosixError(interp)));
+	return TCL_ERROR;
+    }
+    Tcl_SetObjResult(interp, dirNameObj);
     return TCL_OK;
 }
 

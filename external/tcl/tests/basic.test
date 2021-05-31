@@ -9,8 +9,8 @@
 # Sourcing this file into Tcl runs the tests and generates output for
 # errors. No output means no errors were found.
 #
-# Copyright (c) 1997 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1997 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -21,7 +21,7 @@ if {"::tcltest" ni [namespace children]} {
 }
 
 ::tcltest::loadTestedCommands
-catch [list package require -exact Tcltest [info patchlevel]]
+catch [list package require -exact tcl::test [info patchlevel]]
 
 testConstraint testevalex [llength [info commands testevalex]]
 testConstraint testcmdtoken [llength [info commands testcmdtoken]]
@@ -672,7 +672,7 @@ proc l3 {} {
 }
 
 # Do all tests once byte compiled and once with direct string evaluation
-for {set noComp 0} {$noComp <= 1} {incr noComp} {
+foreach noComp {0 1} {
 
 if {$noComp} {
     interp alias {} run {} testevalex
@@ -895,21 +895,17 @@ test basic-48.16.$noComp {expansion: testing for leaks} -setup {
 	rename stress {}
 } -result 0
 
-test basic-48.17.$noComp {expansion: object safety} -setup {
-        set old_precision $::tcl_precision
-        set ::tcl_precision 4
-    } -constraints $constraints -body {
+test basic-48.17.$noComp {expansion: object safety} -constraints $constraints -body {
             set third [expr {1.0/3.0}]
             set l [list $third $third]
             set x [run {list $third {*}$l $third}]
-	    set res [list]
+            set res [list]
             foreach t $x {
                 lappend res [expr {$t * 3.0}]
             }
             set res
     } -cleanup {
-        set ::tcl_precision $old_precision
-        unset old_precision res t l x third
+        unset res t l x third
 } -result {1.0 1.0 1.0 1.0}
 
 test basic-48.18.$noComp {expansion: list semantics} -constraints $constraints -body {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004, Joe English
+ * Copyright © 2004 Joe English
  *
  * ttk::frame and ttk::labelframe widgets.
  */
@@ -26,21 +26,21 @@ typedef struct {
     FramePart	frame;
 } Frame;
 
-static Tk_OptionSpec FrameOptionSpecs[] = {
+static const Tk_OptionSpec FrameOptionSpecs[] = {
     {TK_OPTION_PIXELS, "-borderwidth", "borderWidth", "BorderWidth", NULL,
-	Tk_Offset(Frame,frame.borderWidthObj), -1,
+	offsetof(Frame,frame.borderWidthObj), TCL_INDEX_NONE,
 	TK_OPTION_NULL_OK,0,GEOMETRY_CHANGED },
     {TK_OPTION_STRING, "-padding", "padding", "Pad", NULL,
-	Tk_Offset(Frame,frame.paddingObj), -1,
+	offsetof(Frame,frame.paddingObj), TCL_INDEX_NONE,
 	TK_OPTION_NULL_OK,0,GEOMETRY_CHANGED },
     {TK_OPTION_RELIEF, "-relief", "relief", "Relief", NULL,
-	Tk_Offset(Frame,frame.reliefObj), -1,
+	offsetof(Frame,frame.reliefObj), TCL_INDEX_NONE,
 	TK_OPTION_NULL_OK,0,0 },
     {TK_OPTION_PIXELS, "-width", "width", "Width", "0",
-	Tk_Offset(Frame,frame.widthObj), -1,
+	offsetof(Frame,frame.widthObj), TCL_INDEX_NONE,
 	0,0,GEOMETRY_CHANGED },
     {TK_OPTION_PIXELS, "-height", "height", "Height", "0",
-	Tk_Offset(Frame,frame.heightObj), -1,
+	offsetof(Frame,frame.heightObj), TCL_INDEX_NONE,
 	0,0,GEOMETRY_CHANGED },
 
     WIDGET_TAKEFOCUS_FALSE,
@@ -48,11 +48,12 @@ static Tk_OptionSpec FrameOptionSpecs[] = {
 };
 
 static const Ttk_Ensemble FrameCommands[] = {
-    { "configure",	TtkWidgetConfigureCommand,0 },
     { "cget",   	TtkWidgetCgetCommand,0 },
+    { "configure",	TtkWidgetConfigureCommand,0 },
+    { "identify",	TtkWidgetIdentifyCommand,0 },
     { "instate",	TtkWidgetInstateCommand,0 },
     { "state",  	TtkWidgetStateCommand,0 },
-    { "identify",	TtkWidgetIdentifyCommand,0 },
+    { "style",		TtkWidgetStyleCommand,0 },
     { 0,0,0 }
 };
 
@@ -148,7 +149,7 @@ static int FrameConfigure(Tcl_Interp *interp, void *recordPtr, int mask)
     return TtkCoreConfigure(interp, recordPtr, mask);
 }
 
-static WidgetSpec FrameWidgetSpec = {
+static const WidgetSpec FrameWidgetSpec = {
     "TFrame",			/* className */
     sizeof(Frame),		/* recordSize */
     FrameOptionSpecs,		/* optionSpecs */
@@ -250,18 +251,18 @@ typedef struct {
 
 #define LABELWIDGET_CHANGED 0x100
 
-static Tk_OptionSpec LabelframeOptionSpecs[] = {
+static const Tk_OptionSpec LabelframeOptionSpecs[] = {
     {TK_OPTION_STRING, "-labelanchor", "labelAnchor", "LabelAnchor",
-	"nw", Tk_Offset(Labelframe, label.labelAnchorObj),-1,
+	"nw", offsetof(Labelframe, label.labelAnchorObj),TCL_INDEX_NONE,
         0,0,GEOMETRY_CHANGED},
     {TK_OPTION_STRING, "-text", "text", "Text", "",
-	Tk_Offset(Labelframe,label.textObj), -1,
+	offsetof(Labelframe,label.textObj), TCL_INDEX_NONE,
 	0,0,GEOMETRY_CHANGED },
     {TK_OPTION_INT, "-underline", "underline", "Underline",
-	"-1", Tk_Offset(Labelframe,label.underlineObj), -1,
+	"-1", offsetof(Labelframe,label.underlineObj), TCL_INDEX_NONE,
 	0,0,0 },
     {TK_OPTION_WINDOW, "-labelwidget", "labelWidget", "LabelWidget", NULL,
-	-1, Tk_Offset(Labelframe,label.labelWidget),
+	TCL_INDEX_NONE, offsetof(Labelframe,label.labelWidget),
 	TK_OPTION_NULL_OK,0,LABELWIDGET_CHANGED|GEOMETRY_CHANGED },
 
     WIDGET_INHERIT_OPTIONS(FrameOptionSpecs)
@@ -495,7 +496,7 @@ static void LabelframePlaceContent(void *recordPtr)
 
 static int LabelRequest(
     TCL_UNUSED(void *),
-    TCL_UNUSED(int),
+    TCL_UNUSED(TkSizeT),
     TCL_UNUSED(int),
     TCL_UNUSED(int))
 {
@@ -511,7 +512,7 @@ static int LabelRequest(
  */
 static void LabelRemoved(
     void *managerData,
-    TCL_UNUSED(int))
+    TCL_UNUSED(TkSizeT))
 {
     Labelframe *lframe = (Labelframe *)managerData;
 
@@ -626,7 +627,7 @@ static int LabelframeConfigure(Tcl_Interp *interp,void *recordPtr,int mask)
     return TCL_OK;
 }
 
-static WidgetSpec LabelframeWidgetSpec = {
+static const WidgetSpec LabelframeWidgetSpec = {
     "TLabelframe",		/* className */
     sizeof(Labelframe),		/* recordSize */
     LabelframeOptionSpecs, 	/* optionSpecs */

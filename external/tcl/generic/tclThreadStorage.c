@@ -4,8 +4,8 @@
  *	This file implements platform independent thread storage operations to
  *	work around system limits on the number of thread-specific variables.
  *
- * Copyright (c) 2003-2004 by Joe Mistachkin
- * Copyright (c) 2008 by George Peter Staplin
+ * Copyright © 2003-2004 Joe Mistachkin
+ * Copyright © 2008 George Peter Staplin
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -13,7 +13,7 @@
 
 #include "tclInt.h"
 
-#ifdef TCL_THREADS
+#if TCL_THREADS
 #include <signal.h>
 
 /*
@@ -85,14 +85,14 @@ TSDTableCreate(void)
     TSDTable *tsdTablePtr;
     sig_atomic_t i;
 
-    tsdTablePtr = TclpSysAlloc(sizeof(TSDTable), 0);
+    tsdTablePtr = (TSDTable *)TclpSysAlloc(sizeof(TSDTable), 0);
     if (tsdTablePtr == NULL) {
 	Tcl_Panic("unable to allocate TSDTable");
     }
 
     tsdTablePtr->allocated = 8;
     tsdTablePtr->tablePtr =
-	    TclpSysAlloc(sizeof(void *) * tsdTablePtr->allocated, 0);
+	    (void **)TclpSysAlloc(sizeof(void *) * tsdTablePtr->allocated, 0);
     if (tsdTablePtr->tablePtr == NULL) {
 	Tcl_Panic("unable to allocate TSDTable");
     }
@@ -148,15 +148,15 @@ TSDTableGrow(
     sig_atomic_t atLeast)
 {
     sig_atomic_t newAllocated = tsdTablePtr->allocated * 2;
-    ClientData *newTablePtr;
+    void **newTablePtr;
     sig_atomic_t i;
 
     if (newAllocated <= atLeast) {
 	newAllocated = atLeast + 10;
     }
 
-    newTablePtr = TclpSysRealloc(tsdTablePtr->tablePtr,
-	    sizeof(ClientData) * newAllocated);
+    newTablePtr = (void **)TclpSysRealloc(tsdTablePtr->tablePtr,
+	    sizeof(void *) * newAllocated);
     if (newTablePtr == NULL) {
 	Tcl_Panic("unable to reallocate TSDTable");
     }
@@ -189,7 +189,7 @@ void *
 TclThreadStorageKeyGet(
     Tcl_ThreadDataKey *dataKeyPtr)
 {
-    TSDTable *tsdTablePtr = TclpThreadGetGlobalTSD(tsdGlobal.key);
+    TSDTable *tsdTablePtr = (TSDTable *)TclpThreadGetGlobalTSD(tsdGlobal.key);
     ClientData resultPtr = NULL;
     TSDUnion *keyPtr = (TSDUnion *) dataKeyPtr;
     sig_atomic_t offset = keyPtr->offset;
@@ -223,7 +223,7 @@ TclThreadStorageKeySet(
     Tcl_ThreadDataKey *dataKeyPtr,
     void *value)
 {
-    TSDTable *tsdTablePtr = TclpThreadGetGlobalTSD(tsdGlobal.key);
+    TSDTable *tsdTablePtr = (TSDTable *)TclpThreadGetGlobalTSD(tsdGlobal.key);
     TSDUnion *keyPtr = (TSDUnion *) dataKeyPtr;
 
     if (tsdTablePtr == NULL) {
@@ -288,7 +288,7 @@ TclThreadStorageKeySet(
 void
 TclFinalizeThreadDataThread(void)
 {
-    TSDTable *tsdTablePtr = TclpThreadGetGlobalTSD(tsdGlobal.key);
+    TSDTable *tsdTablePtr = (TSDTable *)TclpThreadGetGlobalTSD(tsdGlobal.key);
 
     if (tsdTablePtr != NULL) {
 	TSDTableDelete(tsdTablePtr);

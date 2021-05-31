@@ -1,7 +1,7 @@
 /*
  * re_*exec and friends - match REs
  *
- * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
+ * Copyright © 1998, 1999 Henry Spencer.  All rights reserved.
  *
  * Development of this software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
@@ -44,7 +44,7 @@ struct sset {			/* state set */
     unsigned hash;		/* hash of bitvector */
 #define	HASH(bv, nw)	(((nw) == 1) ? *(bv) : hash(bv, nw))
 #define	HIT(h,bv,ss,nw)	((ss)->hash == (h) && ((nw) == 1 || \
-	memcmp(VS(bv), VS((ss)->states), (nw)*sizeof(unsigned)) == 0))
+	memcmp((void*)(bv), (void*)((ss)->states), (nw)*sizeof(unsigned)) == 0))
     int flags;
 #define	STARTER		01	/* the initial state set */
 #define	POSTSTATE	02	/* includes the goal state */
@@ -91,7 +91,6 @@ struct smalldfa {
     struct sset *outsarea[FEWSTATES*2 * FEWCOLORS];
     struct arcp incarea[FEWSTATES*2 * FEWCOLORS];
 };
-#define	DOMALLOC	((struct smalldfa *)NULL)	/* force malloc */
 
 /*
  * Internal variables, bundled for easy passing around.
@@ -172,8 +171,8 @@ exec(
 {
     AllocVars(v);
     int st, backref;
-    size_t n;
-    size_t i;
+    int n;
+    int i;
 #define	LOCALMAT	20
     regmatch_t mat[LOCALMAT];
 #define LOCALDFAS	40
@@ -236,7 +235,7 @@ exec(
     v->stop = (chr *)string + len;
     v->err = 0;
     assert(v->g->ntree >= 0);
-    n = (size_t) v->g->ntree;
+    n = v->g->ntree;
     if (n <= LOCALDFAS)
 	v->subdfas = subdfas;
     else
@@ -268,7 +267,7 @@ exec(
     if (st == REG_OKAY && v->pmatch != pmatch && nmatch > 0) {
 	zapallsubs(pmatch, nmatch);
 	n = (nmatch < v->nmatch) ? nmatch : v->nmatch;
-	memcpy(VS(pmatch), VS(v->pmatch), n*sizeof(regmatch_t));
+	memcpy((void*)(pmatch), (void*)(v->pmatch), n*sizeof(regmatch_t));
     }
 
     /*
@@ -278,7 +277,7 @@ exec(
     if (v->pmatch != pmatch && v->pmatch != mat) {
 	FREE(v->pmatch);
     }
-    n = (size_t) v->g->ntree;
+    n = v->g->ntree;
     for (i = 0; i < n; i++) {
 	if (v->subdfas[i] != NULL)
 	    freeDFA(v->subdfas[i]);
@@ -299,7 +298,7 @@ getsubdfa(struct vars * v,
 	  struct subre * t)
 {
     if (v->subdfas[t->id] == NULL) {
-	v->subdfas[t->id] = newDFA(v, &t->cnfa, &v->g->cmap, DOMALLOC);
+	v->subdfas[t->id] = newDFA(v, &t->cnfa, &v->g->cmap, NULL);
 	if (ISERR())
 	    return NULL;
     }
@@ -887,7 +886,7 @@ cbrdissect(
     MDEBUG(("cbackref n%d %d{%d-%d}\n", t->id, n, min, max));
 
     /* get the backreferenced string */
-    if (v->pmatch[n].rm_so == -1) {
+    if (v->pmatch[n].rm_so == TCL_INDEX_NONE) {
 	return REG_NOMATCH;
     }
     brstring = v->start + v->pmatch[n].rm_so;

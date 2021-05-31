@@ -4,9 +4,9 @@
  *	Contains the Windows implementation of the platform-independent font
  *	package interface.
  *
- * Copyright (c) 1994 Software Research Associates, Inc.
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright (c) 1998-1999 by Scriptics Corporation.
+ * Copyright © 1994 Software Research Associates, Inc.
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 1998-1999 Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -2546,22 +2546,6 @@ FamilyExists(
 {
     int result;
     Tcl_DString faceString;
-
-    /*
-     * Just immediately rule out the following fonts, because they look so
-     * ugly on windows. The caller's fallback mechanism will cause the
-     * corresponding appropriate TrueType fonts to be selected.
-     */
-
-    if (strcasecmp(faceName, "Courier") == 0) {
-	return 0;
-    }
-    if (strcasecmp(faceName, "Times") == 0) {
-	return 0;
-    }
-    if (strcasecmp(faceName, "Helvetica") == 0) {
-	return 0;
-    }
 
     Tcl_DStringInit(&faceString);
     Tcl_UtfToWCharDString(faceName, -1, &faceString);

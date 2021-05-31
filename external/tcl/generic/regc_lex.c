@@ -2,7 +2,7 @@
  * lexical analyzer
  * This file is #included by regcomp.c.
  *
- * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
+ * Copyright © 1998, 1999 Henry Spencer.  All rights reserved.
  *
  * Development of this software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
@@ -457,7 +457,7 @@ next(
 	    if (ATEOS()) {
 		FAILW(REG_EESCAPE);
 	    }
-	    (DISCARD)lexescape(v);
+	    (void)lexescape(v);
 	    switch (v->nexttype) {	/* not all escapes okay here */
 	    case PLAIN:
 		return 1;
@@ -716,7 +716,7 @@ next(
 	}
 	RETV(PLAIN, *v->now++);
     }
-    (DISCARD)lexescape(v);
+    (void)lexescape(v);
     if (ISERR()) {
 	FAILW(REG_EESCAPE);
     }
@@ -1141,7 +1141,7 @@ skip(
 /*
  - newline - return the chr for a newline
  * This helps confine use of CHR to this source file.
- ^ static chr newline(NOPARMS);
+ ^ static chr newline(void);
  */
 static chr
 newline(void)

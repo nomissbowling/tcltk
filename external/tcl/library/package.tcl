@@ -3,8 +3,8 @@
 # utility procs formerly in init.tcl which can be loaded on demand
 # for package management.
 #
-# Copyright (c) 1991-1993 The Regents of the University of California.
-# Copyright (c) 1994-1998 Sun Microsystems, Inc.
+# Copyright © 1991-1993 The Regents of the University of California.
+# Copyright © 1994-1998 Sun Microsystems, Inc.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -409,6 +409,7 @@ proc pkg_mkIndex {args} {
     }
 
     set f [open [file join $dir pkgIndex.tcl] w]
+    fconfigure $f -encoding utf-8 -translation lf
     puts $f $index
     close $f
 }
@@ -491,12 +492,16 @@ proc tclPkgUnknown {name args} {
 		set dir [file dirname $file]
 		if {![info exists procdDirs($dir)]} {
 		    try {
-			source $file
+			::tcl::Pkg::source $file
 		    } trap {POSIX EACCES} {} {
 			# $file was not readable; silently ignore
 			continue
 		    } on error msg {
-			tclLog "error reading package index file $file: $msg"
+			if {[regexp {version conflict for package} $msg]} {
+			    # In case of version conflict, silently ignore
+			    continue
+			}
+    			tclLog "error reading package index file $file: $msg"
 		    } on ok {} {
 			set procdDirs($dir) 1
 		    }
@@ -509,11 +514,15 @@ proc tclPkgUnknown {name args} {
 	    # safe interps usually don't have "file exists",
 	    if {([interp issafe] || [file exists $file])} {
 		try {
-		    source $file
+		    ::tcl::Pkg::source $file
 		} trap {POSIX EACCES} {} {
 		    # $file was not readable; silently ignore
 		    continue
 		} on error msg {
+		    if {[regexp {version conflict for package} $msg]} {
+			# In case of version conflict, silently ignore
+			continue
+		    }
 		    tclLog "error reading package index file $file: $msg"
 		} on ok {} {
 		    set procdDirs($dir) 1
@@ -594,11 +603,15 @@ proc tcl::MacOSXPkgUnknown {original name args} {
 	    set dir [file dirname $file]
 	    if {![info exists procdDirs($dir)]} {
 		try {
-		    source $file
+		    ::tcl::Pkg::source $file
 		} trap {POSIX EACCES} {} {
 		    # $file was not readable; silently ignore
 		    continue
 		} on error msg {
+		    if {[regexp {version conflict for package} $msg]} {
+		 	# In case of version conflict, silently ignore
+			continue
+		    }
 		    tclLog "error reading package index file $file: $msg"
 		} on ok {} {
 		    set procdDirs($dir) 1

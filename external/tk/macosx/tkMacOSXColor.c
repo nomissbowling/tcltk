@@ -5,11 +5,11 @@
  *	toolkit, in order to avoid round-trips to the server to
  *	map color names to pixel values.
  *
- * Copyright (c) 1990-1994 The Regents of the University of California.
- * Copyright (c) 1994-1996 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2020 Marc Culler
+ * Copyright © 1990-1994 The Regents of the University of California.
+ * Copyright © 1994-1996 Sun Microsystems, Inc.
+ * Copyright © 2001-2009 Apple Inc.
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2020 Marc Culler
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -336,28 +336,6 @@ GetRGBA(
 	}
 	[color getComponents: rgba];
 	break;
-    case HIText:
-#ifdef __LP64__
-	color = [[NSColor textColor] colorUsingColorSpace:sRGB];
-	[color getComponents: rgba];
-#else
-	{
-	    OSStatus err = noErr;
-	    RGBColor rgb;
-	    err = GetThemeTextColor(kThemeTextColorPushButtonActive, 32,
-                    true, &rgb);
-	    if (err == noErr) {
-		rgba[0] = (CGFloat) rgb.red / 65535;
-		rgba[1] = (CGFloat) rgb.green / 65535;
-		rgba[2] = (CGFloat) rgb.blue / 65535;
-	    }
-	}
-#endif
-	break;
-    case HIBackground:
-	color = [[NSColor windowBackgroundColor] colorUsingColorSpace:sRGB];
-	[color getComponents: rgba];
-	break;
     default:
 	break;
     }
@@ -373,12 +351,6 @@ GetRGBA(
  *      the color is of type rgbColor.  In that case the normalized XColor RGB
  *      values are copied into the CGColorRef.  Otherwise the components are
  *      computed from the SystemColorDatum.
- *
- *      In 64 bit macOS systems there are no HITheme functions which convert
- *      HIText or HIBackground colors to CGColors.  (GetThemeTextColor was
- *      removed, and it was never possible with backgrounds.)  On 64-bit systems
- *      we replace all HIText colors by systemTextColor and all HIBackground
- *      colors by systemWindowBackgroundColor.
  *
  * Results:
  *	True if the function succeeds, false otherwise.
@@ -449,6 +421,8 @@ TkMacOSXInDarkMode(Tk_Window tkwin)
 	}
 	return (name == NSAppearanceNameDarkAqua);
     }
+#else
+    (void) tkwin;
 #endif
     return false;
 }
@@ -506,7 +480,7 @@ TkSetMacColor(
 
 NSColor*
 TkMacOSXGetNSColor(
-    GC gc,
+    TCL_UNUSED(GC),
     unsigned long pixel)		/* Pixel value to convert. */
 {
     CGColorRef cgColor;
@@ -539,15 +513,13 @@ TkMacOSXGetNSColor(
 
 void
 TkMacOSXSetColorInContext(
-    GC gc,
+    TCL_UNUSED(GC),
     unsigned long pixel,
     CGContextRef context)
 {
     OSStatus err = noErr;
     CGColorRef cgColor = nil;
     SystemColorDatum *entry = GetEntryFromPixel(pixel);
-    CGRect rect;
-    HIThemeBackgroundDrawInfo info = {0, kThemeStateActive, 0};
 
     if (entry) {
 	switch (entry->type) {
@@ -558,16 +530,6 @@ TkMacOSXSetColorInContext(
 		err = ChkErr(HIThemeSetStroke, entry->value, NULL, context,
 			kHIThemeOrientationNormal);
 	    }
-	    break;
-	case HIText:
-	    err = ChkErr(HIThemeSetTextFill, entry->value, NULL, context,
-		    kHIThemeOrientationNormal);
-	    break;
-	case HIBackground:
-	    info.kind = entry->value;
-	    rect = CGContextGetClipBoundingBox(context);
-	    err = ChkErr(HIThemeApplyBackground, &rect, &info,
-		    context, kHIThemeOrientationNormal);
 	    break;
 	default:
 	    SetCGColorComponents(entry, pixel, &cgColor);

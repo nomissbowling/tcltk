@@ -4,19 +4,18 @@
 # using safe interpreters. Sourcing this file into tcl runs the tests and
 # generates output for errors. No output means no errors were found.
 #
-# The package http 1.0 is convenient for testing package loading, but will soon
-# be removed.
-# - Tests that use http are replaced here with tests that use example packages
+# The defunct package http 1.0 was convenient for testing package loading.
+# - Tests that used http are replaced here with tests that use example packages
 #   provided in subdirectory auto0 of the tests directory, which are independent
 #   of any changes made to the packages provided with Tcl itself.
 #   - These are tests 7.1 7.2 7.4 9.11 9.13
 #   - Tests 5.* test the example packages themselves before they
 #     are used to test Safe Base interpreters.
-# - Alternative tests using stock packages of Tcl 8.6 are in file
+# - Alternative tests using stock packages of Tcl 8.7 are in file
 #   safe-stock.test.
 #
-# Copyright (c) 1995-1996 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1995-1996 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 #
 # See the file "license.terms" for information on usage and redistribution of
 # this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -25,6 +24,8 @@ if {"::tcltest" ni [namespace children]} {
     package require tcltest 2.5
     namespace import -force ::tcltest::*
 }
+::tcltest::loadTestedCommands
+catch [list package require -exact tcl::test [info patchlevel]]
 
 foreach i [interp children] {
     interp delete $i
@@ -55,22 +56,22 @@ proc mapAndSortList {map listIn} {
 catch {safe::interpConfigure}
 
 # testing that nested and statics do what is advertised (we use a static
-# package - Tcltest - but it might be absent if we're in standard tclsh)
+# package - tcl::test - but it might be absent if we're in standard tclsh)
 
-testConstraint TcltestPackage [expr {![catch {package require Tcltest}]}]
+testConstraint tcl::test [expr {![catch {package require tcl::test}]}]
 
 test safe-1.1 {safe::interpConfigure syntax} -returnCodes error -body {
     safe::interpConfigure
-} -result {no value given for parameter "slave" (use -help for full usage) :
-    slave name () name of the slave}
+} -result {no value given for parameter "child" (use -help for full usage) :
+    child name () name of the child}
 test safe-1.2 {safe::interpCreate syntax} -returnCodes error -body {
     safe::interpCreate -help
 } -result {Usage information:
     Var/FlagName  Type     Value   Help
     ------------  ----     -----   ----
     (-help                         gives this help)
-    ?slave?       name     ()      name of the slave (optional)
-    -accessPath   list     ()      access path for the slave
+    ?child?       name     ()      name of the child (optional)
+    -accessPath   list     ()      access path for the child
     -noStatics    boolflag (false) prevent loading of statically linked pkgs
     -statics      boolean  (true)  loading of statically linked pkgs
     -nestedLoadOk boolflag (false) allow nested loading
@@ -79,7 +80,7 @@ test safe-1.2 {safe::interpCreate syntax} -returnCodes error -body {
 test safe-1.3 {safe::interpInit syntax} -returnCodes error -body {
     safe::interpInit -noStatics
 } -result {bad value "-noStatics" for parameter
-    slave name () name of the slave}
+    child name () name of the child}
 
 test safe-2.1 {creating interpreters, should have no aliases} emptyTest {
     # Disabled this test.  It tests nothing sensible.  [Bug 999612]
@@ -102,7 +103,7 @@ test safe-2.3 {creating safe interpreters, should have no unexpected aliases} -s
     lsort [a aliases]
 } -cleanup {
     interp delete a
-} -result {::tcl::mathfunc::max ::tcl::mathfunc::min clock}
+} -result {clock}
 
 test safe-3.1 {calling safe::interpInit is safe} -setup {
     catch {safe::interpDelete a}
@@ -120,7 +121,7 @@ test safe-3.2 {calling safe::interpCreate on trusted interp} -setup {
     lsort [a aliases]
 } -cleanup {
     safe::interpDelete a
-} -result {::tcl::file::atime ::tcl::file::attributes ::tcl::file::copy ::tcl::file::delete ::tcl::file::dirname ::tcl::file::executable ::tcl::file::exists ::tcl::file::extension ::tcl::file::isdirectory ::tcl::file::isfile ::tcl::file::link ::tcl::file::lstat ::tcl::file::mkdir ::tcl::file::mtime ::tcl::file::nativename ::tcl::file::normalize ::tcl::file::owned ::tcl::file::readable ::tcl::file::readlink ::tcl::file::rename ::tcl::file::rootname ::tcl::file::size ::tcl::file::stat ::tcl::file::tail ::tcl::file::tempfile ::tcl::file::type ::tcl::file::volumes ::tcl::file::writable ::tcl::info::nameofexecutable clock encoding exit glob load source}
+} -result {::tcl::encoding::system ::tcl::file::dirname ::tcl::file::extension ::tcl::file::rootname ::tcl::file::tail ::tcl::info::nameofexecutable clock encoding exit file glob load source}
 test safe-3.3 {calling safe::interpCreate on trusted interp} -setup {
     catch {safe::interpDelete a}
 } -body {
@@ -439,7 +440,7 @@ test safe-8.3 {safe source control on file} -setup {
     safe::interpDelete $i
     rename safe-test-log {}
     unset i log
-} -result {1 {permission denied} {{ERROR for slave a : ".": is a directory}}}
+} -result {1 {permission denied} {{ERROR for child a : ".": is a directory}}}
 test safe-8.4 {safe source control on file} -setup {
     set i "a"
     catch {safe::interpDelete $i}
@@ -455,7 +456,7 @@ test safe-8.4 {safe source control on file} -setup {
     safe::interpDelete $i
     rename safe-test-log {}
     unset i log
-} -result {1 {permission denied} {{ERROR for slave a : "/abc/def": not in access_path}}}
+} -result {1 {permission denied} {{ERROR for child a : "/abc/def": not in access_path}}}
 test safe-8.5 {safe source control on file} -setup {
     set i "a"
     catch {safe::interpDelete $i}
@@ -475,7 +476,7 @@ test safe-8.5 {safe source control on file} -setup {
     safe::interpDelete $i
     rename safe-test-log {}
     unset i log
-} -result [list 1 {no such file or directory} [list "ERROR for slave a : [file join [info library] blah]:no such file or directory"]]
+} -result [list 1 {no such file or directory} [list "ERROR for child a : [file join [info library] blah]:no such file or directory"]]
 test safe-8.6 {safe source control on file} -setup {
     set i "a"
     catch {safe::interpDelete $i}
@@ -493,7 +494,7 @@ test safe-8.6 {safe source control on file} -setup {
     safe::interpDelete $i
     rename safe-test-log {}
     unset i log
-} -result [list 1 {no such file or directory} [list "ERROR for slave a : [file join [info library] blah.tcl]:no such file or directory"]]
+} -result [list 1 {no such file or directory} [list "ERROR for child a : [file join [info library] blah.tcl]:no such file or directory"]]
 test safe-8.7 {safe source control on file} -setup {
     set i "a"
     catch {safe::interpDelete $i}
@@ -513,7 +514,7 @@ test safe-8.7 {safe source control on file} -setup {
     safe::interpDelete $i
     rename safe-test-log {}
     unset i log
-} -result [list 1 {no such file or directory} [list "ERROR for slave a : [file join [info library] xxxxxxxxxxx.tcl]:no such file or directory"]]
+} -result [list 1 {no such file or directory} [list "ERROR for child a : [file join [info library] xxxxxxxxxxx.tcl]:no such file or directory"]]
 test safe-8.8 {safe source forbids -rsrc} emptyTest {
     # Disabled this test.  It was only useful for long unsupported
     # Mac OS 9 systems. [Bug 860a9f1945]
@@ -591,7 +592,7 @@ test safe-9.2 {safe interps' error in deleteHook} -setup {
     catch {rename testDelHook {}}
     rename safe-test-log {}
     unset i log res
-} -result {{} {arg1 arg2 a} {{NOTICE for slave a : About to delete} {ERROR for slave a : Delete hook error (being catched)} {NOTICE for slave a : Deleted}}}
+} -result {{} {arg1 arg2 a} {{NOTICE for child a : About to delete} {ERROR for child a : Delete hook error (being catched)} {NOTICE for child a : Deleted}}}
 test safe-9.3 {dual specification of statics} -returnCodes error -body {
     safe::interpCreate -stat true -nostat
 } -result {conflicting values given for -statics and -noStatics}
@@ -1160,58 +1161,58 @@ test safe-9.24 {interpConfigure change the access path; check module loading; st
         res0 res1 res2}
 # See comments on lsort after test safe-9.20.
 
-catch {teststaticpkg Safepkg1 0 0}
-test safe-10.1 {testing statics loading} -constraints TcltestPackage -setup {
+catch {teststaticlibrary Safepfx1 0 0}
+test safe-10.1 {testing statics loading} -constraints tcl::test -setup {
     set i [safe::interpCreate]
 } -body {
-    interp eval $i {load {} Safepkg1}
+    interp eval $i {load {} Safepfx1}
 } -returnCodes error -cleanup {
     safe::interpDelete $i
-} -result {load of binary library for package Safepkg1 failed: can't use package in a safe interpreter: no Safepkg1_SafeInit procedure}
-test safe-10.1.1 {testing statics loading} -constraints TcltestPackage -setup {
+} -result {load of library for prefix Safepfx1 failed: can't use library in a safe interpreter: no Safepfx1_SafeInit procedure}
+test safe-10.1.1 {testing statics loading} -constraints tcl::test -setup {
     set i [safe::interpCreate]
 } -body {
-    catch {interp eval $i {load {} Safepkg1}} m o
+    catch {interp eval $i {load {} Safepfx1}} m o
     dict get $o -errorinfo
 } -returnCodes ok -cleanup {
     unset -nocomplain m o
     safe::interpDelete $i
-} -result {load of binary library for package Safepkg1 failed: can't use package in a safe interpreter: no Safepkg1_SafeInit procedure
+} -result {load of library for prefix Safepfx1 failed: can't use library in a safe interpreter: no Safepfx1_SafeInit procedure
     invoked from within
-"load {} Safepkg1"
+"load {} Safepfx1"
     invoked from within
-"interp eval $i {load {} Safepkg1}"}
-test safe-10.2 {testing statics loading / -nostatics} -constraints TcltestPackage -body {
+"interp eval $i {load {} Safepfx1}"}
+test safe-10.2 {testing statics loading / -nostatics} -constraints tcl::test -body {
     set i [safe::interpCreate -nostatics]
-    interp eval $i {load {} Safepkg1}
+    interp eval $i {load {} Safepfx1}
 } -returnCodes error -cleanup {
     safe::interpDelete $i
-} -result {permission denied (static package)}
+} -result {permission denied (static library)}
 test safe-10.3 {testing nested statics loading / no nested by default} -setup {
     set i [safe::interpCreate]
-} -constraints TcltestPackage -body {
-    interp eval $i {interp create x; load {} Safepkg1 x}
+} -constraints tcl::test -body {
+    interp eval $i {interp create x; load {} Safepfx1 x}
 } -returnCodes error -cleanup {
     safe::interpDelete $i
 } -result {permission denied (nested load)}
-test safe-10.4 {testing nested statics loading / -nestedloadok} -constraints TcltestPackage -body {
+test safe-10.4 {testing nested statics loading / -nestedloadok} -constraints tcl::test -body {
     set i [safe::interpCreate -nestedloadok]
-    interp eval $i {interp create x; load {} Safepkg1 x}
+    interp eval $i {interp create x; load {} Safepfx1 x}
 } -returnCodes error -cleanup {
     safe::interpDelete $i
-} -result {load of binary library for package Safepkg1 failed: can't use package in a safe interpreter: no Safepkg1_SafeInit procedure}
-test safe-10.4.1 {testing nested statics loading / -nestedloadok} -constraints TcltestPackage -body {
+} -result {load of library for prefix Safepfx1 failed: can't use library in a safe interpreter: no Safepfx1_SafeInit procedure}
+test safe-10.4.1 {testing nested statics loading / -nestedloadok} -constraints tcl::test -body {
     set i [safe::interpCreate -nestedloadok]
-    catch {interp eval $i {interp create x; load {} Safepkg1 x}} m o
+    catch {interp eval $i {interp create x; load {} Safepfx1 x}} m o
     dict get $o -errorinfo
 } -returnCodes ok -cleanup {
     unset -nocomplain m o
     safe::interpDelete $i
-} -result {load of binary library for package Safepkg1 failed: can't use package in a safe interpreter: no Safepkg1_SafeInit procedure
+} -result {load of library for prefix Safepfx1 failed: can't use library in a safe interpreter: no Safepfx1_SafeInit procedure
     invoked from within
-"load {} Safepkg1 x"
+"load {} Safepfx1 x"
     invoked from within
-"interp eval $i {interp create x; load {} Safepkg1 x}"}
+"interp eval $i {interp create x; load {} Safepfx1 x}"}
 
 test safe-11.1 {testing safe encoding} -setup {
     set i [safe::interpCreate]
@@ -1219,14 +1220,14 @@ test safe-11.1 {testing safe encoding} -setup {
     interp eval $i encoding
 } -returnCodes error -cleanup {
     safe::interpDelete $i
-} -result {wrong # args: should be "encoding option ?arg ...?"}
+} -result {wrong # args: should be "encoding subcommand ?arg ...?"}
 test safe-11.1a {testing safe encoding} -setup {
     set i [safe::interpCreate]
 } -body {
     interp eval $i encoding foobar
 } -returnCodes error -cleanup {
     safe::interpDelete $i
-} -match glob -result {bad option "foobar": must be *}
+} -match glob -result {unknown or ambiguous subcommand "foobar": must be *}
 test safe-11.2 {testing safe encoding} -setup {
     set i [safe::interpCreate]
 } -body {
@@ -1281,8 +1282,6 @@ test safe-11.7.1 {testing safe encoding} -setup {
     while executing
 "encoding convertfrom"
     invoked from within
-"::interp invokehidden interp* encoding convertfrom"
-    invoked from within
 "encoding convertfrom"
     invoked from within
 "interp eval $i encoding convertfrom"}
@@ -1304,8 +1303,6 @@ test safe-11.8.1 {testing safe encoding} -setup {
 } -result {wrong # args: should be "encoding convertto ?encoding? data"
     while executing
 "encoding convertto"
-    invoked from within
-"::interp invokehidden interp* encoding convertto"
     invoked from within
 "encoding convertto"
     invoked from within

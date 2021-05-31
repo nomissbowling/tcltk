@@ -154,7 +154,6 @@ what to set the interpreter's background exception handler to. See the
 \fBBACKGROUND EXCEPTION HANDLING\fR section for more details.
 .TP
 \fBinterp\fR \fBcancel \fR?\fB\-unwind\fR? ?\fB\-\|\-\fR? ?\fIpath\fR? ?\fIresult\fR?
-.VS 8.6
 Cancels the script being evaluated in the interpreter identified by
 \fIpath\fR. Without the \fB\-unwind\fR switch the evaluation stack for
 the interpreter is unwound until an enclosing catch command is found or
@@ -167,7 +166,6 @@ switches; it may be needed if \fIpath\fR is an unusual value such
 as \fB\-safe\fR. If \fIresult\fR is present, it will be used as the
 error message string; otherwise, a default error message string will be
 used.
-.VE 8.6
 .TP
 \fBinterp\fR \fBcreate \fR?\fB\-safe\fR? ?\fB\-\|\-\fR? ?\fIpath\fR?
 .
@@ -236,7 +234,7 @@ attempts are silently ignored. This is needed to maintain the
 consistency of the underlying interpreter's state.
 .RE
 .TP
-\fBinterp\fR \fBdelete \fR?\fIpath ...?\fR
+\fBinterp\fR \fBdelete \fR?\fIpath ...\fR?
 .
 Deletes zero or more interpreters given by the optional \fIpath\fR
 arguments, and for each interpreter, it also deletes its children. The
@@ -371,17 +369,15 @@ Both interpreters must close it to close the underlying IO channel; IO
 channels accessible in an interpreter are automatically closed when an
 interpreter is destroyed.
 .TP
-\fBinterp\fR \fBslaves\fR ?\fIpath\fR?
+\fBinterp\fR \fBchildren\fR ?\fIpath\fR?
 .
 Returns a Tcl list of the names of all the child interpreters associated
 with the interpreter identified by \fIpath\fR. If \fIpath\fR is omitted,
 the invoking interpreter is used.
-.VS "TIP 581"
 .TP
-\fBinterp\fR \fBchildren\fR ?\fIpath\fR?
+\fBinterp\fR \fBslaves\fR ?\fIpath\fR?
 .
-Synonym for . \fBinterp\fR \fBslaves\fR ?\fIpath\fR?
-.VE "TIP 581"
+Synonym for . \fBinterp\fR \fBchildren\fR ?\fIpath\fR?
 .TP
 \fBinterp\fR \fBtarget\fR \fIpath alias\fR
 .
@@ -399,7 +395,7 @@ The target command does not have to be defined at the time of this invocation.
 Causes the IO channel identified by \fIchannelId\fR to become available in
 the interpreter identified by \fIdestPath\fR and unavailable in the
 interpreter identified by \fIsrcPath\fR.
-.SH "child COMMAND"
+.SH "CHILD COMMAND"
 .PP
 For each child interpreter created with the \fBinterp\fR command, a
 new Tcl command is created in the parent interpreter with the same
@@ -411,7 +407,7 @@ general form:
 \fIchild command \fR?\fIarg arg ...\fR?
 .CE
 .PP
-\fIchild\fR is the name of the interpreter, and \fIcommand\fR
+\fIChild\fR is the name of the interpreter, and \fIcommand\fR
 and the \fIarg\fRs determine the exact behavior of the command.
 The valid forms of this command are:
 .TP

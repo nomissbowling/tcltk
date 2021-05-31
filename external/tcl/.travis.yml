@@ -27,13 +27,13 @@ jobs:
       env:
         - BUILD_DIR=unix
         - CFGOPT=CFLAGS=-DTCL_UTF_MAX=4
-    - name: "Linux/GCC/Shared: UTF_MAX=6"
+    - name: "Linux/GCC/Shared: NO_DEPRECATED"
       os: linux
       dist: focal
       compiler: gcc
       env:
         - BUILD_DIR=unix
-        - CFGOPT=CFLAGS=-DTCL_UTF_MAX=6
+        - CFGOPT="CFLAGS=-DTCL_NO_DEPRECATED=1"
     - name: "Linux/GCC/Static"
       os: linux
       dist: focal
@@ -83,6 +83,13 @@ jobs:
       compiler: clang
       env:
         - BUILD_DIR=unix
+    - name: "Linux/Clang/Shared:NO_DEPRECATED"
+      os: linux
+      dist: xenial
+      compiler: clang
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="CFLAGS=-DTCL_NO_DEPRECATED=1"
     - name: "Linux/Clang/Static"
       os: linux
       dist: focal
@@ -105,7 +112,7 @@ jobs:
         - BUILD_DIR=unix
         - CFGOPT="--enable-symbols=mem"
 # Testing on Mac, various styles
-    - name: "macOS/Xcode 12/Shared"
+    - name: "macOS/Clang/Xcode 12/Shared"
       os: osx
       osx_image: xcode12.2
       env:
@@ -115,14 +122,25 @@ jobs:
         - make all
         # The styles=develop avoids some weird problems on OSX
         - make test styles=develop
-    - name: "macOS/Xcode 12/Shared/Unix-like"
+    - name: "macOS/Clang/Xcode 12/Shared/Unix-like"
       os: osx
       osx_image: xcode12.2
       env:
         - BUILD_DIR=unix
         - CFGOPT="--enable-dtrace"
+    - name: "macOS/Clang/Xcode 12/Shared/libtommath"
+      os: osx
+      osx_image: xcode12.2
+      env:
+        - BUILD_DIR=macosx
+      install: []
+      script: *mactest
+      addons:
+        homebrew:
+          packages:
+            - libtommath
 # Newer MacOS versions
-    - name: "macOS/Xcode 12/Universal Apps/Shared"
+    - name: "macOS/Clang/Xcode 12/Universal Apps/Shared"
       os: osx
       osx_image: xcode12u
       env:
@@ -130,28 +148,28 @@ jobs:
       install: []
       script: *mactest
 # Older MacOS versions
-    - name: "macOS/Xcode 11/Shared"
+    - name: "macOS/Clang/Xcode 11/Shared"
       os: osx
       osx_image: xcode11.7
       env:
         - BUILD_DIR=macosx
       install: []
       script: *mactest
-    - name: "macOS/Xcode 10/Shared"
+    - name: "macOS/Clang/Xcode 10/Shared"
       os: osx
       osx_image: xcode10.3
       env:
         - BUILD_DIR=macosx
       install: []
       script: *mactest
-    - name: "macOS/Xcode 9/Shared"
+    - name: "macOS/Clang/Xcode 9/Shared"
       os: osx
       osx_image: xcode9.4
       env:
         - BUILD_DIR=macosx
       install: []
       script: *mactest
-    - name: "macOS/Xcode 8/Shared"
+    - name: "macOS/Clang/Xcode 8/Shared"
       os: osx
       osx_image: xcode8.3
       env:
@@ -190,7 +208,7 @@ jobs:
         - BUILD_DIR=win
         - VCDIR="/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Auxiliary/Build"
       before_install: &vcpreinst
-        - touch generic/tclStubInit.c generic/tclOOStubInit.c
+        - touch generic/tclStubInit.c generic/tclOOStubInit.c generic/tclOOScript.h
         - PATH="$PATH:$VCDIR"
         - cd ${BUILD_DIR}
       install: []
@@ -206,6 +224,15 @@ jobs:
       script:
         - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc all tcltest
         - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc test
+    - name: "Windows/MSVC/Shared: NO_DEPRECATED"
+      os: windows
+      compiler: cl
+      env: *vcenv
+      before_install: *vcpreinst
+      install: []
+      script:
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'CHECKS=nodep' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'CHECKS=nodep' '-f' makefile.vc test
     - name: "Windows/MSVC/Static"
       os: windows
       compiler: cl
@@ -213,17 +240,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc test
-    - name: "Windows/MSVC/StaticPackage"
-      os: windows
-      compiler: cl
-      env: *vcenv
-      before_install: *vcpreinst
-      install: []
-      script:
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,staticpkg,msvcrt' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static,staticpkg,msvcrt' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x64 '&&' nmake 'OPTS=static' '-f' makefile.vc test
     - name: "Windows/MSVC/Debug"
       os: windows
       compiler: cl
@@ -261,6 +279,15 @@ jobs:
       script:
         - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc all tcltest
         - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=utfmax' '-f' makefile.vc test
+    - name: "Windows/MSVC-x86/Shared: NO_DEPRECATED"
+      os: windows
+      compiler: cl
+      env: *vcenv
+      before_install: *vcpreinst
+      install: []
+      script:
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'CHECKS=nodep' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'CHECKS=nodep' '-f' makefile.vc test
     - name: "Windows/MSVC-x86/Static"
       os: windows
       compiler: cl
@@ -268,8 +295,8 @@ jobs:
       before_install: *vcpreinst
       install: []
       script:
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc all tcltest
-        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static,msvcrt' '-f' makefile.vc test
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static' '-f' makefile.vc all tcltest
+        - cmd.exe //C vcvarsall.bat x86 '&&' nmake 'OPTS=static' '-f' makefile.vc test
     - name: "Windows/MSVC-x86/Debug"
       os: windows
       compiler: cl
@@ -296,8 +323,8 @@ jobs:
         - BUILD_DIR=win
         - CFGOPT="--enable-64bit"
       before_install: &makepreinst
-        - touch generic/tclStubInit.c generic/tclOOStubInit.c
-        - choco install -y make
+        - touch generic/tclStubInit.c generic/tclOOStubInit.c generic/tclOOScript.h
+        - choco install -y make zip
         - cd ${BUILD_DIR}
     - name: "Windows/GCC/Shared: UTF_MAX=4"
       os: windows
@@ -305,6 +332,13 @@ jobs:
       env:
         - BUILD_DIR=win
         - CFGOPT="--enable-64bit CFLAGS=-DTCL_UTF_MAX=4"
+      before_install: *makepreinst
+    - name: "Windows/GCC/Shared: NO_DEPRECATED"
+      os: windows
+      compiler: gcc
+      env:
+        - BUILD_DIR=win
+        - CFGOPT="--enable-64bit CFLAGS=-DTCL_NO_DEPRECATED=1"
       before_install: *makepreinst
     - name: "Windows/GCC/Static"
       os: windows
@@ -341,6 +375,13 @@ jobs:
         - BUILD_DIR=win
         - CFGOPT="CFLAGS=-DTCL_UTF_MAX=4"
       before_install: *makepreinst
+    - name: "Windows/GCC-x86/Shared: NO_DEPRECATED"
+      os: windows
+      compiler: gcc
+      env:
+        - BUILD_DIR=win
+        - CFGOPT="CFLAGS=-DTCL_NO_DEPRECATED=1"
+      before_install: *makepreinst
     - name: "Windows/GCC-x86/Static"
       os: windows
       compiler: gcc
@@ -372,7 +413,7 @@ jobs:
       script:
         - make dist
 before_install:
-  - touch generic/tclStubInit.c generic/tclOOStubInit.c
+  - touch generic/tclStubInit.c generic/tclOOStubInit.c generic/tclOOScript.h
   - cd ${BUILD_DIR}
 install:
   - mkdir "$HOME/install dir"

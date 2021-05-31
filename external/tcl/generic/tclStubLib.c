@@ -4,8 +4,8 @@
  *	Stub object that will be statically linked into extensions that want
  *	to access Tcl.
  *
- * Copyright (c) 1998-1999 by Scriptics Corporation.
- * Copyright (c) 1998 Paul Duffin.
+ * Copyright © 1998-1999 Scriptics Corporation.
+ * Copyright © 1998 Paul Duffin.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -24,13 +24,10 @@ const TclIntStubs *tclIntStubsPtr = NULL;
 const TclIntPlatStubs *tclIntPlatStubsPtr = NULL;
 
 /*
- * Use our own isDigit to avoid linking to libc on windows
+ * Use our own ISDIGIT to avoid linking to libc on windows
  */
 
-static int isDigit(const int c)
-{
-    return (c >= '0' && c <= '9');
-}
+#define ISDIGIT(c) (((unsigned)((c)-'0')) <= 9)
 
 /*
  *----------------------------------------------------------------------
@@ -54,12 +51,14 @@ MODULE_SCOPE const char *
 Tcl_InitStubs(
     Tcl_Interp *interp,
     const char *version,
-    int exact)
+    int exact,
+    int magic)
 {
-    Interp *iPtr = (Interp *) interp;
+    Interp *iPtr = (Interp *)interp;
     const char *actualVersion = NULL;
     ClientData pkgData = NULL;
     const TclStubs *stubsPtr = iPtr->stubTable;
+    const char *tclName = (((exact&0xFF00) >= 0x900) ? "tcl" : "Tcl");
 
     /*
      * We can't optimize this check by caching tclStubsPtr because that
@@ -67,22 +66,22 @@ Tcl_InitStubs(
      * times. [Bug 615304]
      */
 
-    if (!stubsPtr || (stubsPtr->magic != TCL_STUB_MAGIC)) {
+    if (!stubsPtr || (stubsPtr->magic != (((exact&0xFF00) >= 0x900) ? magic : TCL_STUB_MAGIC))) {
 	iPtr->result = (char *)"interpreter uses an incompatible stubs mechanism";
-	iPtr->freeProc = TCL_STATIC;
+	iPtr->freeProc = 0; /* TCL_STATIC */
 	return NULL;
     }
 
-    actualVersion = stubsPtr->tcl_PkgRequireEx(interp, "Tcl", version, 0, &pkgData);
+    actualVersion = stubsPtr->tcl_PkgRequireEx(interp, tclName, version, 0, &pkgData);
     if (actualVersion == NULL) {
 	return NULL;
     }
-    if (exact) {
+    if (exact&1) {
 	const char *p = version;
 	int count = 0;
 
 	while (*p) {
-	    count += !isDigit(*p++);
+	    count += !ISDIGIT(*p++);
 	}
 	if (count == 1) {
 	    const char *q = actualVersion;
@@ -91,24 +90,28 @@ Tcl_InitStubs(
 	    while (*p && (*p == *q)) {
 		p++; q++;
 	    }
-	    if (*p || isDigit(*q)) {
+	    if (*p || ISDIGIT(*q)) {
 		/* Construct error message */
-		stubsPtr->tcl_PkgRequireEx(interp, "Tcl", version, 1, NULL);
+		stubsPtr->tcl_PkgRequireEx(interp, tclName, version, 1, NULL);
 		return NULL;
 	    }
 	} else {
-	    actualVersion = stubsPtr->tcl_PkgRequireEx(interp, "Tcl", version, 1, NULL);
+	    actualVersion = stubsPtr->tcl_PkgRequireEx(interp, tclName, version, 1, NULL);
 	    if (actualVersion == NULL) {
 		return NULL;
 	    }
 	}
     }
-    tclStubsPtr = (TclStubs *)pkgData;
+    if (((exact&0xFF00) < 0x900)) {
+	/* We are running Tcl 8.x */
+	stubsPtr = (TclStubs *)pkgData;
+    }
+    tclStubsPtr = stubsPtr;
 
-    if (tclStubsPtr->hooks) {
-	tclPlatStubsPtr = tclStubsPtr->hooks->tclPlatStubs;
-	tclIntStubsPtr = tclStubsPtr->hooks->tclIntStubs;
-	tclIntPlatStubsPtr = tclStubsPtr->hooks->tclIntPlatStubs;
+    if (stubsPtr->hooks) {
+	tclPlatStubsPtr = stubsPtr->hooks->tclPlatStubs;
+	tclIntStubsPtr = stubsPtr->hooks->tclIntStubs;
+	tclIntPlatStubsPtr = stubsPtr->hooks->tclIntPlatStubs;
     } else {
 	tclPlatStubsPtr = NULL;
 	tclIntStubsPtr = NULL;

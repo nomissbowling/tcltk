@@ -1,9 +1,9 @@
 # This file is a Tcl script to test entry widgets in Tk.  It is
 # organized in the standard fashion for Tcl tests.
 #
-# Copyright (c) 1994 The Regents of the University of California.
-# Copyright (c) 1994-1997 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1994 The Regents of the University of California.
+# Copyright © 1994-1997 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 # All rights reserved.
 
 package require tcltest 2.2
@@ -4562,7 +4562,7 @@ test panedwindow-22.2 {PanedWindowReqProc, react to pane geometry changes} -setu
     expr {[lindex $result 1] - [lindex $result 0]}
 } -cleanup {
 	deleteWindows
-} -result {10}
+} -result 10
 
 
 test panedwindow-23.1 {ConfigurePanes, can't add panedwindow to itself} -setup {
@@ -5461,7 +5461,7 @@ test panedwindow-27.2 {destroy the window cleanly on rename [Bug #616589]} -setu
     winfo exists .p
 } -cleanup {
 	deleteWindows
-} -result {0}
+} -result 0
 
 
 test panedwindow-28.1 {resizing width} -setup {

@@ -4,7 +4,7 @@
  *	This file implements the Windows specific portion of the scrollbar
  *	widget.
  *
- * Copyright (c) 1996 Sun Microsystems, Inc.
+ * Copyright © 1996 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -497,7 +497,7 @@ ScrollbarProc(
 	int code;
 
 	GetCursorPos(&point);
-	Tk_TranslateWinEvent(NULL, WM_MOUSEMOVE, 0,
+	TkTranslateWinEvent(NULL, WM_MOUSEMOVE, 0,
 		MAKELPARAM(point.x, point.y), &result);
 
 	if (command == SB_ENDSCROLL) {
@@ -564,7 +564,7 @@ ScrollbarProc(
     }
 
     default:
-	if (Tk_TranslateWinEvent(hwnd, message, wParam, lParam, &result)) {
+	if (TkTranslateWinEvent(hwnd, message, wParam, lParam, &result)) {
 	    return result;
 	}
     }
@@ -591,10 +591,11 @@ ScrollbarProc(
 
 void
 TkpConfigureScrollbar(
-    TCL_UNUSED(TkScrollbar *))
+    TkScrollbar *scrollPtr)
 				/* Information about widget; may or may not
 				 * already have values for some fields. */
 {
+    (void)scrollPtr;
 }
 
 /*

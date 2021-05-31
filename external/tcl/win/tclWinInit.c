@@ -3,8 +3,8 @@
  *
  *	Contains the Windows-specific interpreter initialization functions.
  *
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
- * Copyright (c) 1998-1999 by Scriptics Corporation.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1998-1999 Scriptics Corporation.
  * All rights reserved.
  *
  * See the file "license.terms" for information on usage and redistribution of
@@ -78,11 +78,6 @@ typedef struct {
 
 
 /*
- * Windows version dependend functions
- */
-TclWinProcs tclWinProcs;
-
-/*
  * The following arrays contain the human readable strings for the
  * processor values.
  */
@@ -106,12 +101,6 @@ static ProcessGlobalValue sourceLibraryDir =
 	{0, 0, NULL, NULL, InitializeSourceLibraryDir, NULL, NULL};
 
 static void		AppendEnvironment(Tcl_Obj *listPtr, const char *lib);
-
-#if TCL_UTF_MAX < 4
-static void		ToUtf(const WCHAR *wSrc, char *dst);
-#else
-#define ToUtf(wSrc, dst) WideCharToMultiByte(CP_UTF8, 0, wSrc, -1, dst, MAX_PATH * TCL_UTF_MAX, NULL, NULL)
-#endif
 
 /*
  *---------------------------------------------------------------------------
@@ -137,7 +126,6 @@ TclpInitPlatform(void)
 {
     WSADATA wsaData;
     WORD wVersionRequested = MAKEWORD(2, 2);
-    HMODULE handle;
 
     tclPlatform = TCL_PLATFORM_WINDOWS;
 
@@ -156,17 +144,6 @@ TclpInitPlatform(void)
 
     TclWinInit(GetModuleHandleW(NULL));
 #endif
-
-    /*
-     * Fill available functions depending on windows version
-     */
-    handle = GetModuleHandleW(L"KERNEL32");
-    tclWinProcs.cancelSynchronousIo =
-	    (BOOL (WINAPI *)(HANDLE))(void *)GetProcAddress(handle,
-	    "CancelSynchronousIo");
-    tclWinProcs.createSymbolicLink =
-	    (BOOLEAN (WINAPI *)(LPCWSTR, LPCWSTR, DWORD))(void *)GetProcAddress(handle,
-	    "CreateSymbolicLinkW");
 }
 
 /*
@@ -189,13 +166,14 @@ TclpInitPlatform(void)
 void
 TclpInitLibraryPath(
     char **valuePtr,
-    int *lengthPtr,
+    unsigned int *lengthPtr,
     Tcl_Encoding *encodingPtr)
 {
 #define LIBRARY_SIZE	    64
     Tcl_Obj *pathPtr;
     char installLib[LIBRARY_SIZE];
     const char *bytes;
+    int length;
 
     TclNewObj(pathPtr);
 
@@ -231,9 +209,10 @@ TclpInitLibraryPath(
 	    TclGetProcessGlobalValue(&sourceLibraryDir));
 
     *encodingPtr = NULL;
-    bytes = Tcl_GetStringFromObj(pathPtr, lengthPtr);
-    *valuePtr = (char *)ckalloc(*lengthPtr + 1);
-    memcpy(*valuePtr, bytes, *lengthPtr + 1);
+    bytes = TclGetStringFromObj(pathPtr, &length);
+    *lengthPtr = length++;
+    *valuePtr = (char *)ckalloc(length);
+    memcpy(*valuePtr, bytes, length);
     Tcl_DecrRefCount(pathPtr);
 }
 
@@ -292,12 +271,8 @@ AppendEnvironment(
      * this is a unicode string.
      */
 
-    if (GetEnvironmentVariableW(L"TCL_LIBRARY", wBuf, MAX_PATH) == 0) {
-	buf[0] = '\0';
-	GetEnvironmentVariableA("TCL_LIBRARY", buf, MAX_PATH);
-    } else {
-	ToUtf(wBuf, buf);
-    }
+    GetEnvironmentVariableW(L"TCL_LIBRARY", wBuf, MAX_PATH);
+    WideCharToMultiByte(CP_UTF8, 0, wBuf, -1, buf, MAX_PATH * 3, NULL, NULL);
 
     if (buf[0] != '\0') {
 	objPtr = Tcl_NewStringObj(buf, -1);
@@ -351,7 +326,7 @@ AppendEnvironment(
 static void
 InitializeDefaultLibraryDir(
     char **valuePtr,
-    int *lengthPtr,
+    unsigned int *lengthPtr,
     Tcl_Encoding *encodingPtr)
 {
     HMODULE hModule = TclWinGetTclInstance();
@@ -359,11 +334,8 @@ InitializeDefaultLibraryDir(
     char name[(MAX_PATH + LIBRARY_SIZE) * 3];
     char *end, *p;
 
-    if (GetModuleFileNameW(hModule, wName, sizeof(wName)/sizeof(WCHAR)) == 0) {
-	GetModuleFileNameA(hModule, name, sizeof(name));
-    } else {
-	ToUtf(wName, name);
-    }
+    GetModuleFileNameW(hModule, wName, sizeof(wName)/sizeof(WCHAR));
+    WideCharToMultiByte(CP_UTF8, 0, wName, -1, name, sizeof(name), NULL, NULL);
 
     end = strrchr(name, '\\');
     *end = '\0';
@@ -402,7 +374,7 @@ InitializeDefaultLibraryDir(
 static void
 InitializeSourceLibraryDir(
     char **valuePtr,
-    int *lengthPtr,
+    unsigned int *lengthPtr,
     Tcl_Encoding *encodingPtr)
 {
     HMODULE hModule = TclWinGetTclInstance();
@@ -410,11 +382,8 @@ InitializeSourceLibraryDir(
     char name[(MAX_PATH + LIBRARY_SIZE) * 3];
     char *end, *p;
 
-    if (GetModuleFileNameW(hModule, wName, sizeof(wName)/sizeof(WCHAR)) == 0) {
-	GetModuleFileNameA(hModule, name, sizeof(name));
-    } else {
-	ToUtf(wName, name);
-    }
+    GetModuleFileNameW(hModule, wName, sizeof(wName)/sizeof(WCHAR));
+    WideCharToMultiByte(CP_UTF8, 0, wName, -1, name, sizeof(name), NULL, NULL);
 
     end = strrchr(name, '\\');
     *end = '\0';
@@ -431,36 +400,6 @@ InitializeSourceLibraryDir(
     *encodingPtr = NULL;
     memcpy(*valuePtr, name, *lengthPtr + 1);
 }
-
-/*
- *---------------------------------------------------------------------------
- *
- * ToUtf --
- *
- *	Convert a wchar string to a UTF string.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	None.
- *
- *---------------------------------------------------------------------------
- */
-
-#if TCL_UTF_MAX < 4
-static void
-ToUtf(
-    const WCHAR *wSrc,
-    char *dst)
-{
-    while (*wSrc != '\0') {
-	dst += Tcl_UniCharToUtf(*wSrc, dst);
-	wSrc++;
-    }
-    *dst = '\0';
-}
-#endif
 
 /*
  *---------------------------------------------------------------------------
@@ -496,12 +435,6 @@ TclpSetInitialEncodings(void)
     Tcl_DStringFree(&encodingName);
 }
 
-void TclWinSetInterfaces(
-    int dummy)			/* Not used. */
-{
-    (void)dummy;
-}
-
 const char *
 Tcl_GetEncodingNameFromEnvironment(
     Tcl_DString *bufPtr)
@@ -534,8 +467,8 @@ TclpGetUserName(
 	    return NULL;
 	}
 	cchUserNameLen--;
-	cchUserNameLen *= sizeof(WCHAR);
-	Tcl_WinTCharToUtf((TCHAR *)szUserName, cchUserNameLen, bufferPtr);
+	Tcl_DStringInit(bufferPtr);
+	Tcl_WCharToUtfDString(szUserName, cchUserNameLen, bufferPtr);
     }
     return Tcl_DStringValue(bufferPtr);
 }
@@ -677,6 +610,9 @@ TclpSetVariables(
  *----------------------------------------------------------------------
  */
 
+#  define tenviron2utfdstr(string, len, dsPtr) \
+		(char *)Tcl_Char16ToUtfDString((const unsigned short *)(string), ((((len) + 2) >> 1) - 1), (dsPtr))
+
 int
 TclpFindVariable(
     const char *name,		/* Name of desired environment variable
@@ -711,7 +647,8 @@ TclpFindVariable(
 	 * after the equal sign.
 	 */
 
-	envUpper = Tcl_WinTCharToUtf((TCHAR *)env, -1, &envString);
+	Tcl_DStringInit(&envString);
+	envUpper = Tcl_WCharToUtfDString(env, -1, &envString);
 	p1 = strchr(envUpper, '=');
 	if (p1 == NULL) {
 	    continue;

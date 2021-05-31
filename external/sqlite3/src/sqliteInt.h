@@ -1731,7 +1731,6 @@ struct sqlite3 {
 #define SQLITE_SkipScan       0x00004000 /* Skip-scans */
 #define SQLITE_PropagateConst 0x00008000 /* The constant propagation opt */
 #define SQLITE_MinMaxOpt      0x00010000 /* The min/max optimization */
-#define SQLITE_ExistsToIN     0x00020000 /* The EXISTS-to-IN optimization */
 #define SQLITE_AllOpts        0xffffffff /* All optimizations */
 
 /*
@@ -2236,6 +2235,7 @@ struct Table {
 #define TF_Shadow          0x1000    /* True for a shadow table */
 #define TF_HasStat4        0x2000    /* STAT4 info available for this table */
 #define TF_Ephemeral       0x4000    /* An ephemeral table */
+#define TF_Eponymous       0x8000    /* An eponymous virtual table */
 
 /*
 ** Test to see whether or not a table is a virtual table.  This is
@@ -2948,6 +2948,7 @@ struct SrcItem {
     unsigned isRecursive :1;   /* True for recursive reference in WITH */
     unsigned fromDDL :1;       /* Comes from sqlite_schema */
     unsigned isCte :1;         /* This is a CTE */
+    unsigned notCte :1;        /* This item may not match a CTE */
   } fg;
   int iCursor;      /* The VDBE cursor number used to access this table */
   Expr *pOn;        /* The ON clause of a join */
@@ -3793,7 +3794,7 @@ struct Sqlite3Config {
   void (*xVdbeBranch)(void*,unsigned iSrcLine,u8 eThis,u8 eMx);  /* Callback */
   void *pVdbeBranchArg;                                     /* 1st argument */
 #endif
-#ifdef SQLITE_ENABLE_DESERIALIZE
+#ifndef SQLITE_OMIT_DESERIALIZE
   sqlite3_int64 mxMemdbSize;        /* Default max memdb size */
 #endif
 #ifndef SQLITE_UNTESTABLE
@@ -3886,6 +3887,12 @@ void sqlite3WalkWinDefnDummyCallback(Walker*,Select*);
 void sqlite3SelectWalkAssert2(Walker*, Select*);
 #endif
 
+#ifndef SQLITE_OMIT_CTE
+void sqlite3SelectPopWith(Walker*, Select*);
+#else
+# define sqlite3SelectPopWith 0
+#endif
+
 /*
 ** Return code from the parse-tree walking primitives and their
 ** callbacks.
@@ -3919,6 +3926,7 @@ struct Cte {
 */
 struct With {
   int nCte;               /* Number of CTEs in the WITH clause */
+  int bView;              /* Belongs to the outermost Select of a view */
   With *pOuter;           /* Containing WITH clause, or NULL */
   Cte a[1];               /* For each CTE in the WITH clause.... */
 };
@@ -4311,6 +4319,7 @@ void sqlite3ResetOneSchema(sqlite3*,int);
 void sqlite3CollapseDatabaseArray(sqlite3*);
 void sqlite3CommitInternalChanges(sqlite3*);
 void sqlite3DeleteColumnNames(sqlite3*,Table*);
+void sqlite3GenerateColumnNames(Parse *pParse, Select *pSelect);
 int sqlite3ColumnsFromExprList(Parse*,ExprList*,i16*,Column**);
 void sqlite3SelectAddColumnTypeAndCollation(Parse*,Table*,Select*,char);
 Table *sqlite3ResultSetOfSelect(Parse*,Select*,char);
@@ -4689,7 +4698,7 @@ int sqlite3TwoPartName(Parse *, Token *, Token *, Token **);
 const char *sqlite3ErrName(int);
 #endif
 
-#ifdef SQLITE_ENABLE_DESERIALIZE
+#ifndef SQLITE_OMIT_DESERIALIZE
 int sqlite3MemdbInit(void);
 #endif
 

@@ -34,18 +34,18 @@ CFG=tcl - Win32 Debug Static
 # PROP BASE Use_Debug_Libraries 0
 # PROP BASE Output_Dir "Release"
 # PROP BASE Intermediate_Dir "Release\tcl_Dynamic"
-# PROP BASE Cmd_Line "nmake -nologo -f makefile.vc OPTS=none MSVCDIR=IDE"
+# PROP BASE Cmd_Line "nmake -nologo -f makefile.vc MSVCDIR=IDE"
 # PROP BASE Rebuild_Opt "-a"
-# PROP BASE Target_File "Release\tclsh86.exe"
+# PROP BASE Target_File "Release\tclsh87.exe"
 # PROP BASE Bsc_Name ""
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "Release\tcl_Dynamic"
-# PROP Cmd_Line "nmake -nologo -f makefile.vc OPTS=threads MSVCDIR=IDE"
+# PROP Cmd_Line "nmake -nologo -f makefile.vc MSVCDIR=IDE"
 # PROP Rebuild_Opt "clean release"
-# PROP Target_File "Release\tclsh86t.exe"
+# PROP Target_File "Release\tclsh87t.exe"
 # PROP Bsc_Name ""
 # PROP Target_Dir ""
 
@@ -57,7 +57,7 @@ CFG=tcl - Win32 Debug Static
 # PROP BASE Intermediate_Dir "Debug\tcl_Dynamic"
 # PROP BASE Cmd_Line "nmake -nologo -f makefile.vc OPTS=symbols MSVCDIR=IDE"
 # PROP BASE Rebuild_Opt "-a"
-# PROP BASE Target_File "Debug\tclsh86g.exe"
+# PROP BASE Target_File "Debug\tclsh87g.exe"
 # PROP BASE Bsc_Name ""
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -66,7 +66,7 @@ CFG=tcl - Win32 Debug Static
 # PROP Intermediate_Dir "Debug\tcl_Dynamic"
 # PROP Cmd_Line "nmake -nologo -f makefile.vc OPTS=threads,symbols MSVCDIR=IDE"
 # PROP Rebuild_Opt "clean release"
-# PROP Target_File "Debug\tclsh86tg.exe"
+# PROP Target_File "Debug\tclsh87tg.exe"
 # PROP Bsc_Name ""
 # PROP Target_Dir ""
 
@@ -78,7 +78,7 @@ CFG=tcl - Win32 Debug Static
 # PROP BASE Intermediate_Dir "Debug\tcl_Static"
 # PROP BASE Cmd_Line "nmake -nologo -f makefile.vc OPTS=symbols,static MSVCDIR=IDE"
 # PROP BASE Rebuild_Opt "-a"
-# PROP BASE Target_File "Debug\tclsh86sg.exe"
+# PROP BASE Target_File "Debug\tclsh87sg.exe"
 # PROP BASE Bsc_Name ""
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -87,7 +87,7 @@ CFG=tcl - Win32 Debug Static
 # PROP Intermediate_Dir "Debug\tcl_Static"
 # PROP Cmd_Line "nmake -nologo -f makefile.vc OPTS=symbols,static MSVCDIR=IDE"
 # PROP Rebuild_Opt "-a"
-# PROP Target_File "Debug\tclsh86sg.exe"
+# PROP Target_File "Debug\tclsh87sg.exe"
 # PROP Bsc_Name ""
 # PROP Target_Dir ""
 
@@ -99,7 +99,7 @@ CFG=tcl - Win32 Debug Static
 # PROP BASE Intermediate_Dir "Release\tcl_Static"
 # PROP BASE Cmd_Line "nmake -nologo -f makefile.vc OPTS=static MSVCDIR=IDE"
 # PROP BASE Rebuild_Opt "-a"
-# PROP BASE Target_File "Release\tclsh86s.exe"
+# PROP BASE Target_File "Release\tclsh87s.exe"
 # PROP BASE Bsc_Name ""
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
@@ -108,7 +108,7 @@ CFG=tcl - Win32 Debug Static
 # PROP Intermediate_Dir "Release\tcl_Static"
 # PROP Cmd_Line "nmake -nologo -f makefile.vc OPTS=static MSVCDIR=IDE"
 # PROP Rebuild_Opt "-a"
-# PROP Target_File "Release\tclsh86s.exe"
+# PROP Target_File "Release\tclsh87s.exe"
 # PROP Bsc_Name ""
 # PROP Target_Dir ""
 
@@ -148,14 +148,6 @@ SOURCE=..\compat\dlfcn.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\compat\fixstrtod.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\compat\float.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\compat\gettod.c
 # End Source File
 # Begin Source File
@@ -192,10 +184,6 @@ SOURCE=..\compat\strstr.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\compat\strtod.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\compat\strtol.c
 # End Source File
 # Begin Source File
@@ -205,10 +193,6 @@ SOURCE=..\compat\strtoul.c
 # Begin Source File
 
 SOURCE=..\compat\tclErrno.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\compat\unistd.h
 # End Source File
 # Begin Source File
 
@@ -840,7 +824,7 @@ SOURCE=..\doc\SplitPath.3
 # End Source File
 # Begin Source File
 
-SOURCE=..\doc\StaticPkg.3
+SOURCE=..\doc\StaticLibrary.3
 # End Source File
 # Begin Source File
 
@@ -1268,6 +1252,10 @@ SOURCE=..\generic\tclProc.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\generic\tclProcess.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\generic\tclRegexp.c
 # End Source File
 # Begin Source File
@@ -1424,7 +1412,7 @@ SOURCE=.\configure
 # End Source File
 # Begin Source File
 
-SOURCE=.\configure.in
+SOURCE=.\configure.ac
 # End Source File
 # Begin Source File
 
@@ -1453,10 +1441,6 @@ SOURCE=.\rmd.bat
 # Begin Source File
 
 SOURCE=.\rules.vc
-# End Source File
-# Begin Source File
-
-SOURCE=.\tcl.hpj.in
 # End Source File
 # Begin Source File
 
@@ -1525,6 +1509,10 @@ SOURCE=.\tclWinLoad.c
 # Begin Source File
 
 SOURCE=.\tclWinNotify.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tclWinPanic.c
 # End Source File
 # Begin Source File
 

@@ -4,7 +4,7 @@
  *	Contains the Unix implementation of the platform-independent font
  *	package interface.
  *
- * Copyright (c) 1996-1997 Sun Microsystems, Inc.
+ * Copyright © 1996-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -238,6 +238,7 @@ static unsigned		RankAttributes(FontAttributes *wantPtr,
 static void		ReleaseFont(UnixFont *fontPtr);
 static void		ReleaseSubFont(Display *display, SubFont *subFontPtr);
 static int		SeenName(const char *name, Tcl_DString *dsPtr);
+#if TCL_MAJOR_VERSION < 9
 static int		Ucs2beToUtfProc(void *clientData, const char*src,
 			    int srcLen, int flags, Tcl_EncodingState*statePtr,
 			    char *dst, int dstLen, int *srcReadPtr,
@@ -246,6 +247,7 @@ static int		UtfToUcs2beProc(void *clientData, const char*src,
 			    int srcLen, int flags, Tcl_EncodingState*statePtr,
 			    char *dst, int dstLen, int *srcReadPtr,
 			    int *dstWrotePtr, int *dstCharsPtr);
+#endif
 
 /*
  *-------------------------------------------------------------------------
@@ -312,7 +314,9 @@ TkpFontPkgInit(
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     SubFont dummy;
     int i;
+#if TCL_MAJOR_VERSION < 9
     Tcl_Encoding ucs2;
+#endif
 
     if (tsdPtr->controlFamily.encoding == NULL) {
 
@@ -333,6 +337,7 @@ TkpFontPkgInit(
 	 * if it doesn't exist yet. It is used in iso10646 fonts.
 	 */
 
+#if TCL_MAJOR_VERSION < 9
 	ucs2 = Tcl_GetEncoding(NULL, "ucs-2be");
 	if (ucs2 == NULL) {
 	    Tcl_EncodingType ucs2type = {"ucs-2be", Ucs2beToUtfProc, UtfToUcs2beProc, NULL, NULL, 2};
@@ -340,6 +345,7 @@ TkpFontPkgInit(
 	} else {
 	    Tcl_FreeEncoding(ucs2);
 	}
+#endif
 	Tcl_CreateThreadExitHandler(FontPkgCleanup, NULL);
     }
 }
@@ -390,7 +396,7 @@ ControlUtfProc(
     const char *srcStart, *srcEnd;
     char *dstStart, *dstEnd;
     int ch, result;
-    static const char hexChars[] = "0123456789abcdef";
+    static const char hexChars[] = "0123456789ABCDEF";
     static const char mapChars[] = {
 	0, 0, 0, 0, 0, 0, 0,
 	'a', 'b', 't', 'n', 'v', 'f', 'r'
@@ -429,10 +435,10 @@ ControlUtfProc(
 	} else {
 	    /* TODO we can do better here */
 	    dst[1] = 'u';
-	    dst[2] = 'f';
-	    dst[3] = 'f';
-	    dst[4] = 'f';
-	    dst[5] = 'd';
+	    dst[2] = 'F';
+	    dst[3] = 'F';
+	    dst[4] = 'F';
+	    dst[5] = 'D';
 	    dst += 6;
 	}
     }
@@ -458,6 +464,7 @@ ControlUtfProc(
  *-------------------------------------------------------------------------
  */
 
+#if TCL_MAJOR_VERSION < 9
 static int
 Ucs2beToUtfProc(
     TCL_UNUSED(void *),		/* Not used. */
@@ -554,6 +561,14 @@ Ucs2beToUtfProc(
  *-------------------------------------------------------------------------
  */
 
+#if defined(USE_TCL_STUBS)
+/* Since the UCS-2BE encoding is only used when Tk 8.7 is dynamically loaded in Tcl 8.6,
+ * make sure that Tcl_UtfCharComplete is ALWAYS the pre-TIP #575 version,
+ * even though Tk 8.7 is being compiled with -DTCL_NO_DEPRECATED! */
+#   undef Tcl_UtfCharComplete
+#   define Tcl_UtfCharComplete ((int (*)(const char *, int))(void *)((&tclStubsPtr->tcl_PkgProvideEx)[326]))
+#endif
+
 static int
 UtfToUcs2beProc(
     TCL_UNUSED(void *),	/* TableEncodingData that specifies
@@ -627,6 +642,7 @@ UtfToUcs2beProc(
     *dstCharsPtr = numChars;
     return result;
 }
+#endif
 
 /*
  *---------------------------------------------------------------------------
@@ -2109,10 +2125,10 @@ FindSubFontForChar(
 
     nameList = ListFonts(fontPtr->display, "*", &numNames);
     for (i = 0; i < numNames; i++) {
-	fallback = strchr(nameList[i] + 1, '-') + 1;
-	strchr(fallback, '-')[0] = '\0';
-	if (SeenName(fallback, &ds) == 0) {
-	    subFontPtr = CanUseFallback(fontPtr, fallback, ch,
+	char *fallbck = strchr(nameList[i] + 1, '-') + 1;
+	strchr(fallbck, '-')[0] = '\0';
+	if (SeenName(fallbck, &ds) == 0) {
+	    subFontPtr = CanUseFallback(fontPtr, fallbck, ch,
 		    fixSubFontPtrPtr);
 	    if (subFontPtr != NULL) {
 		XFreeFontNames(nameList);

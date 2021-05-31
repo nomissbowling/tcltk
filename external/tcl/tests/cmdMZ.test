@@ -4,16 +4,16 @@
 # commands. Sourcing this file into Tcl runs the tests and generates output
 # for errors. No output means no errors were found.
 #
-# Copyright (c) 1991-1993 The Regents of the University of California.
-# Copyright (c) 1994 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1991-1993 The Regents of the University of California.
+# Copyright © 1994 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 #
 # See the file "license.terms" for information on usage and redistribution of
 # this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-if {[catch {package require tcltest 2.1}]} {
-    puts stderr "Skipping tests in [info script]. tcltest 2.1 required."
-    return
+if {"::tcltest" ni [namespace children]} {
+    package require tcltest 2.5
+    namespace import -force ::tcltest::*
 }
 
 namespace eval ::tcl::test::cmdMZ {
@@ -24,10 +24,6 @@ namespace eval ::tcl::test::cmdMZ {
     namespace import ::tcltest::temporaryDirectory
     namespace import ::tcltest::testConstraint
     namespace import ::tcltest::test
-
-    if {[namespace which -command ::tcl::unsupported::timerate] ne ""} {
-	namespace import ::tcl::unsupported::timerate
-    }
 
     proc ListGlobMatch {expected actual} {
 	if {[llength $expected] != [llength $actual]} {
@@ -63,7 +59,7 @@ test cmdMZ-1.4 {Tcl_PwdObjCmd: failure} -setup {
     # This test fails on various unix platforms (eg Linux) where permissions
     # caching causes this to fail. The caching is strictly incorrect, but we
     # have no control over that.
-    file attr . -permissions 0o000
+    file attr . -permissions 0
     pwd
 } -returnCodes error -cleanup {
     cd $cwd
@@ -239,7 +235,7 @@ test cmdMZ-3.3 {Tcl_SourceObjCmd: error conditions} -constraints {
 test cmdMZ-3.4 {Tcl_SourceObjCmd: error conditions} -constraints {
     unixOrWin
 } -returnCodes error -body {
-    source a b
+    source a b c d e f
 } -match glob -result {wrong # args: should be "source*fileName"}
 test cmdMZ-3.5 {Tcl_SourceObjCmd: error in script} -body {
     set file [makeFile {
@@ -303,19 +299,19 @@ test cmdMZ-4.10 {Tcl_SplitObjCmd: basic split commands} {
 } {]\n}
 test cmdMZ-4.11 {Tcl_SplitObjCmd: basic split commands} {
     apply {{} {
-        set x ab\000c
+        set x ab\x00c
         set y [split $x {}]
 	binary scan $y c* z
         return $z
     }}
 } {97 32 98 32 0 32 99}
 test cmdMZ-4.12 {Tcl_SplitObjCmd: basic split commands} {
-    split "a0ab1b2bbb3\000c4" ab\000c
+    split "a0ab1b2bbb3\x00c4" ab\x00c
 } {{} 0 {} 1 2 {} {} 3 {} 4}
 test cmdMZ-4.13 {Tcl_SplitObjCmd: basic split commands} {
-    # if not UTF-8 aware, result is "a {} {} b qw\xe5 {} N wq"
-    split "a\u4e4eb qw\u5e4e\x4e wq" " \u4e4e"
-} "a b qw\u5e4eN wq"
+    # if not UTF-8 aware, result is "a {} {} b qwå {} N wq"
+    split "a乎b qw幎N wq" " 乎"
+} "a b qw幎N wq"
 
 # The tests for Tcl_StringObjCmd are in string.test
 # The tests for Tcl_SubstObjCmd are in subst.test
@@ -482,6 +478,23 @@ test cmdMZ-6.12 {Tcl_TimeRateObjCmd: done optimization: nested call of self insi
     }
     list [lindex [timerate $m1 1000 5] 2] $x
 } {5 20}
+
+test cmdMZ-try-1.0 {
+
+    fix for issue 45b9faf103f2
+
+    [try] interaction with local variable names produces segmentation violation
+
+} -body {
+    ::apply {{} {
+	set cmd try
+	$cmd {
+	    lindex 5
+	} on ok res {}
+	set res
+    }}
+} -result 5
+
 
 # The tests for Tcl_WhileObjCmd are in while.test
 

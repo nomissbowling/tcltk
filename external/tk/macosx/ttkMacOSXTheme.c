@@ -3,12 +3,12 @@
  *
  *      Tk theme engine for Mac OSX, using the Appearance Manager API.
  *
- * Copyright (c) 2004 Joe English
- * Copyright (c) 2005 Neil Madden
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright 2008-2009, Apple Inc.
- * Copyright 2009 Kevin Walzer/WordTech Communications LLC.
- * Copyright 2019 Marc Culler
+ * Copyright © 2004 Joe English
+ * Copyright © 2005 Neil Madden
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2008-2009 Apple Inc.
+ * Copyright © 2009 Kevin Walzer/WordTech Communications LLC.
+ * Copyright © 2019 Marc Culler
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -41,15 +41,6 @@
     if (!TkMacOSXSetupDrawingContext((d), NULL, &dc)) {	    \
 	return;						    \
     }							    \
-
-#define BEGIN_DRAWING_OR_REDRAW(d) {			      \
-    TkMacOSXDrawingContext dc;				      \
-    if (!TkMacOSXSetupDrawingContext((d), NULL, &dc)) {	      \
-	NSView *view = TkMacOSXGetNSViewForDrawable(d);	      \
-	while (Tcl_DoOneEvent(TCL_IDLE_EVENTS)) {}	      \
-	[(TKContentView *)view addTkDirtyRect:[view bounds]]; \
-	return;						      \
-    }							      \
 
 #define END_DRAWING				\
     TkMacOSXRestoreDrawingContext(&dc);}
@@ -1614,7 +1605,7 @@ static void TabElementDraw(
 	.position = Ttk_StateTableLookup(TabPositionTable, state),
     };
 
-    BEGIN_DRAWING_OR_REDRAW(d)
+    BEGIN_DRAWING(d)
     if (TkMacOSXInDarkMode(tkwin)) {
 	DrawDarkTab(bounds, state, dc.context);
     } else {
@@ -1756,9 +1747,9 @@ typedef struct {
 
 static Ttk_ElementOptionSpec EntryElementOptions[] = {
     {"-background", TK_OPTION_BORDER,
-     Tk_Offset(EntryElement, backgroundObj), ENTRY_DEFAULT_BACKGROUND},
+     offsetof(EntryElement, backgroundObj), ENTRY_DEFAULT_BACKGROUND},
     {"-fieldbackground", TK_OPTION_BORDER,
-     Tk_Offset(EntryElement, fieldbackgroundObj), ENTRY_DEFAULT_BACKGROUND},
+     offsetof(EntryElement, fieldbackgroundObj), ENTRY_DEFAULT_BACKGROUND},
     {NULL, TK_OPTION_BOOLEAN, 0, NULL}
 };
 
@@ -2125,10 +2116,10 @@ typedef struct {
 } TrackElement;
 
 static Ttk_ElementOptionSpec TrackElementOptions[] = {
-    {"-from", TK_OPTION_DOUBLE, Tk_Offset(TrackElement, fromObj), NULL},
-    {"-to", TK_OPTION_DOUBLE, Tk_Offset(TrackElement, toObj), NULL},
-    {"-value", TK_OPTION_DOUBLE, Tk_Offset(TrackElement, valueObj), NULL},
-    {"-orient", TK_OPTION_STRING, Tk_Offset(TrackElement, orientObj), NULL},
+    {"-from", TK_OPTION_DOUBLE, offsetof(TrackElement, fromObj), NULL},
+    {"-to", TK_OPTION_DOUBLE, offsetof(TrackElement, toObj), NULL},
+    {"-value", TK_OPTION_DOUBLE, offsetof(TrackElement, valueObj), NULL},
+    {"-orient", TK_OPTION_STRING, offsetof(TrackElement, orientObj), NULL},
     {NULL, TK_OPTION_BOOLEAN, 0, NULL}
 };
 static void TrackElementSize(
@@ -2156,11 +2147,11 @@ static void TrackElementDraw(
 {
     TrackElementData *data = (TrackElementData *)clientData;
     TrackElement *elem = (TrackElement *)elementRecord;
-    int orientation = TTK_ORIENT_HORIZONTAL;
+    Ttk_Orient orientation = TTK_ORIENT_HORIZONTAL;
     double from = 0, to = 100, value = 0, factor;
     CGRect bounds;
 
-    Ttk_GetOrientFromObj(NULL, elem->orientObj, &orientation);
+    TtkGetOrientFromObj(NULL, elem->orientObj, &orientation);
     Tcl_GetDoubleFromObj(NULL, elem->fromObj, &from);
     Tcl_GetDoubleFromObj(NULL, elem->toObj, &to);
     Tcl_GetDoubleFromObj(NULL, elem->valueObj, &value);
@@ -2267,15 +2258,15 @@ typedef struct {
 
 static Ttk_ElementOptionSpec PbarElementOptions[] = {
     {"-orient", TK_OPTION_STRING,
-     Tk_Offset(PbarElement, orientObj), "horizontal"},
+     offsetof(PbarElement, orientObj), "horizontal"},
     {"-value", TK_OPTION_DOUBLE,
-     Tk_Offset(PbarElement, valueObj), "0"},
+     offsetof(PbarElement, valueObj), "0"},
     {"-maximum", TK_OPTION_DOUBLE,
-     Tk_Offset(PbarElement, maximumObj), "100"},
+     offsetof(PbarElement, maximumObj), "100"},
     {"-phase", TK_OPTION_INT,
-     Tk_Offset(PbarElement, phaseObj), "0"},
+     offsetof(PbarElement, phaseObj), "0"},
     {"-mode", TK_OPTION_STRING,
-     Tk_Offset(PbarElement, modeObj), "determinate"},
+     offsetof(PbarElement, modeObj), "determinate"},
     {NULL, TK_OPTION_BOOLEAN, 0, NULL}
 };
 static void PbarElementSize(
@@ -2301,17 +2292,17 @@ static void PbarElementDraw(
     Ttk_State state)
 {
     PbarElement *pbar = (PbarElement *)elementRecord;
-    int orientation = TTK_ORIENT_HORIZONTAL, phase = 0, kind;
+    Ttk_Orient orientation = TTK_ORIENT_HORIZONTAL;
 
     /*
      * Using 1000 as the maximum should give better than 1 pixel
      * resolution for most progress bars.
      */
 
-    int ivalue, imaximum = 1000;
+    int kind, phase = 0, ivalue, imaximum = 1000;
     CGRect bounds;
 
-    Ttk_GetOrientFromObj(NULL, pbar->orientObj, &orientation);
+    TtkGetOrientFromObj(NULL, pbar->orientObj, &orientation);
     kind = !strcmp("indeterminate", Tcl_GetString(pbar->modeObj)) ?
 	kThemeIndeterminateBar : kThemeProgressBar;
     if (kind == kThemeIndeterminateBar) {
@@ -2388,7 +2379,7 @@ typedef struct
 
 static Ttk_ElementOptionSpec ScrollbarElementOptions[] = {
     {"-orient", TK_OPTION_STRING,
-     Tk_Offset(ScrollbarElement, orientObj), "horizontal"},
+     offsetof(ScrollbarElement, orientObj), "horizontal"},
     {NULL, TK_OPTION_BOOLEAN, 0, NULL}
 };
 static void TroughElementSize(
@@ -2400,10 +2391,10 @@ static void TroughElementSize(
     Ttk_Padding *paddingPtr)
 {
     ScrollbarElement *scrollbar = (ScrollbarElement *)elementRecord;
-    int orientation = TTK_ORIENT_HORIZONTAL;
+    Ttk_Orient orientation = TTK_ORIENT_HORIZONTAL;
     SInt32 thickness = 15;
 
-    Ttk_GetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
+    TtkGetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
     ChkErr(GetThemeMetric, kThemeMetricScrollBarWidth, &thickness);
     if (orientation == TTK_ORIENT_HORIZONTAL) {
 	*minHeight = thickness;
@@ -2441,13 +2432,13 @@ static void TroughElementDraw(
     TCL_UNUSED(Ttk_State))
 {
     ScrollbarElement *scrollbar = (ScrollbarElement *)elementRecord;
-    int orientation = TTK_ORIENT_HORIZONTAL;
+    Ttk_Orient orientation = TTK_ORIENT_HORIZONTAL;
     CGRect bounds = BoxToRect(d, b);
     NSColorSpace *deviceRGB = [NSColorSpace deviceRGBColorSpace];
     NSColor *troughColor;
     CGFloat *rgba = TkMacOSXInDarkMode(tkwin) ? darkTrough : lightTrough;
 
-    Ttk_GetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
+    TtkGetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
     if (orientation == TTK_ORIENT_HORIZONTAL) {
 	bounds = CGRectInset(bounds, 0, 1);
     } else {
@@ -2483,9 +2474,9 @@ static void ThumbElementSize(
     TCL_UNUSED(Ttk_Padding *))
 {
     ScrollbarElement *scrollbar = (ScrollbarElement *)elementRecord;
-    int orientation = TTK_ORIENT_HORIZONTAL;
+    Ttk_Orient orientation = TTK_ORIENT_HORIZONTAL;
 
-    Ttk_GetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
+    TtkGetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
     if (orientation == TTK_ORIENT_VERTICAL) {
 	*minHeight = 18;
 	*minWidth = 8;
@@ -2504,9 +2495,9 @@ static void ThumbElementDraw(
     Ttk_State state)
 {
     ScrollbarElement *scrollbar = (ScrollbarElement *)elementRecord;
-    int orientation = TTK_ORIENT_HORIZONTAL;
+    Ttk_Orient orientation = TTK_ORIENT_HORIZONTAL;
 
-    Ttk_GetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
+    TtkGetOrientFromObj(NULL, scrollbar->orientObj, &orientation);
 
     /*
      * In order to make ttk scrollbars work correctly it is necessary to be
@@ -2806,7 +2797,7 @@ static void FillElementDraw(
 	NSColorSpace *deviceRGB = [NSColorSpace deviceRGBColorSpace];
 	NSColor *bgColor;
 	CGFloat fill[4];
-	BEGIN_DRAWING_OR_REDRAW(d)
+	BEGIN_DRAWING(d)
 	GetBackgroundColor(dc.context, tkwin, 0, fill);
 	bgColor = [NSColor colorWithColorSpace: deviceRGB components: fill
 					 count: 4];
@@ -2906,7 +2897,7 @@ typedef struct {
 
 static Ttk_ElementOptionSpec FieldElementOptions[] = {
     {"-fieldbackground", TK_OPTION_BORDER,
-     Tk_Offset(FieldElement, backgroundObj), "white"},
+     offsetof(FieldElement, backgroundObj), "white"},
     {NULL, TK_OPTION_BOOLEAN, 0, NULL}
 };
 

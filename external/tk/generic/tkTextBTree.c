@@ -5,8 +5,8 @@
  *	for Tk's text widget and implements character and toggle segment
  *	types.
  *
- * Copyright (c) 1992-1994 The Regents of the University of California.
- * Copyright (c) 1994-1995 Sun Microsystems, Inc.
+ * Copyright © 1992-1994 The Regents of the University of California.
+ * Copyright © 1994-1995 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -105,7 +105,7 @@ typedef struct BTree {
     int clients;		/* Number of clients of this B-tree. */
     int pixelReferences;	/* Number of clients of this B-tree which care
 				 * about pixel heights. */
-    int stateEpoch;		/* Updated each time any aspect of the B-tree
+    TkSizeT stateEpoch;	 /* Updated each time any aspect of the B-tree
 				 * changes. */
     TkSharedText *sharedTextPtr;/* Used to find tagTable in consistency
 				 * checking code, and to access list of all
@@ -140,10 +140,10 @@ int tkBTreeDebug = 0;
  * Macros that determine how much space to allocate for new segments:
  */
 
-#define CSEG_SIZE(chars) ((unsigned)(Tk_Offset(TkTextSegment, body) \
-	+ 1 + (chars)))
-#define TSEG_SIZE ((unsigned)(Tk_Offset(TkTextSegment, body) \
-	+ sizeof(TkTextToggle)))
+#define CSEG_SIZE(chars) (offsetof(TkTextSegment, body) \
+	+ 1 + (chars))
+#define TSEG_SIZE (offsetof(TkTextSegment, body) \
+	+ sizeof(TkTextToggle))
 
 /*
  * Forward declarations for functions defined in this file:
@@ -161,7 +161,7 @@ static int		CharDeleteProc(TkTextSegment *segPtr,
 			    TkTextLine *linePtr, int treeGone);
 static TkTextSegment *	CharCleanupProc(TkTextSegment *segPtr,
 			    TkTextLine *linePtr);
-static TkTextSegment *	CharSplitProc(TkTextSegment *segPtr, int index);
+static TkTextSegment *	CharSplitProc(TkTextSegment *segPtr, TkSizeT index);
 static void		CheckNodeConsistency(Node *nodePtr, int references);
 static void		CleanupLine(TkTextLine *linePtr);
 static void		DeleteSummaries(Summary *tagPtr);
@@ -501,7 +501,7 @@ TkBTreeDestroy(
  *----------------------------------------------------------------------
  */
 
-int
+TkSizeT
 TkBTreeEpoch(
     TkTextBTree tree)		/* Tree to get epoch for. */
 {
@@ -1021,7 +1021,7 @@ TkBTreeInsertChars(
 				 * this line). */
     TkTextSegment *segPtr;
     TkTextLine *newLinePtr;
-    int chunkSize;		/* # characters in current chunk. */
+    size_t chunkSize;		/* # characters in current chunk. */
     const char *eol;	/* Pointer to character just after last one in
 				 * current chunk. */
     int changeToLineCount;	/* Counts change to total number of lines in
@@ -1190,14 +1190,14 @@ SplitSeg(
 {
     TkTextSegment *prevPtr, *segPtr;
     TkTextLine *linePtr;
-    int count = indexPtr->byteIndex;
+    TkSizeT count = indexPtr->byteIndex;
 
     linePtr = indexPtr->linePtr;
     prevPtr = NULL;
     segPtr = linePtr->segPtr;
 
     while (segPtr != NULL) {
-	if (segPtr->size > count) {
+	if (segPtr->size + 1 > count + 1) {
 	    if (count == 0) {
 		return prevPtr;
 	    }
@@ -2674,7 +2674,7 @@ TkBTreeStartSearch(
 				/* Where to store information about search's
 				 * progress. */
 {
-    int offset;
+    TkSizeT offset;
     TkTextIndex index0;		/* First index of the tag. */
     TkTextSegment *seg0Ptr;	/* First segment of the tag. */
 
@@ -2770,7 +2770,7 @@ TkBTreeStartSearchBack(
 				/* Where to store information about search's
 				 * progress. */
 {
-    int offset;
+    TkSizeT offset;
     TkTextIndex index0;		/* Last index of the tag. */
     TkTextIndex backOne;	/* One character before starting index. */
     TkTextSegment *seg0Ptr;	/* Last segment of the tag. */
@@ -3264,7 +3264,7 @@ TkBTreeCharTagged(
 
     toggleSegPtr = NULL;
     for (index = 0, segPtr = indexPtr->linePtr->segPtr;
-	    (index + segPtr->size) <= indexPtr->byteIndex;
+	    (index + (int)segPtr->size) <= indexPtr->byteIndex;
 	    index += segPtr->size, segPtr = segPtr->nextPtr) {
 	if (((segPtr->typePtr == &tkTextToggleOnType)
 		|| (segPtr->typePtr == &tkTextToggleOffType))
@@ -3384,7 +3384,7 @@ TkBTreeGetTags(
     linePtr = indexPtr->linePtr;
     index = 0;
     segPtr = linePtr->segPtr;
-    while ((index + segPtr->size) <= indexPtr->byteIndex) {
+    while ((index + (int)segPtr->size) <= indexPtr->byteIndex) {
 	if ((segPtr->typePtr == &tkTextToggleOnType)
 		|| (segPtr->typePtr == &tkTextToggleOffType)) {
 	    IncCount(segPtr->body.toggle.tagPtr, 1, &tagInfo);
@@ -3548,7 +3548,7 @@ TkTextIsElided(
     index = 0;
     linePtr = indexPtr->linePtr;
     segPtr = linePtr->segPtr;
-    while ((index + segPtr->size) <= indexPtr->byteIndex) {
+    while ((index + (int)segPtr->size) <= indexPtr->byteIndex) {
 	if ((segPtr->typePtr == &tkTextToggleOnType)
 		|| (segPtr->typePtr == &tkTextToggleOffType)) {
 	    tagPtr = segPtr->body.toggle.tagPtr;
@@ -3885,7 +3885,7 @@ TkBTreeCheck(
     }
     if (segPtr->size != 1) {
 	Tcl_Panic("TkBTreeCheck: last line has wrong # characters: %d",
-		segPtr->size);
+		(int)segPtr->size);
     }
     if ((segPtr->body.chars[0] != '\n') || (segPtr->body.chars[1] != 0)) {
 	Tcl_Panic("TkBTreeCheck: last line had bad value: %s",
@@ -4565,7 +4565,7 @@ TkBTreeNumPixels(
 static TkTextSegment *
 CharSplitProc(
     TkTextSegment *segPtr,	/* Pointer to segment to split. */
-    int index)			/* Position within segment at which to
+    TkSizeT index)			/* Position within segment at which to
 				 * split. */
 {
     TkTextSegment *newPtr1, *newPtr2;
@@ -4685,7 +4685,7 @@ CharCheckProc(
      * to each other: they should be merged together.
      */
 
-    if (segPtr->size <= 0) {
+    if (segPtr->size + 1 <= 1) {
 	Tcl_Panic("CharCheckProc: segment has size <= 0");
     }
     if (strlen(segPtr->body.chars) != (size_t)segPtr->size) {

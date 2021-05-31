@@ -3,13 +3,14 @@
  *
  *	This file contains the implementation of the "scan" command.
  *
- * Copyright (c) 1998 by Scriptics Corporation.
+ * Copyright © 1998 Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
 #include "tclInt.h"
+#include "tclTomMath.h"
 
 /*
  * Flag values used by Tcl_ScanObjCmd.
@@ -28,15 +29,17 @@
  * character set.
  */
 
+typedef struct {
+    Tcl_UniChar start;
+    Tcl_UniChar end;
+} Range;
+
 typedef struct CharSet {
     int exclude;		/* 1 if this is an exclusion set. */
     int nchars;
     Tcl_UniChar *chars;
     int nranges;
-    struct Range {
-	Tcl_UniChar start;
-	Tcl_UniChar end;
-    } *ranges;
+    Range *ranges;
 } CharSet;
 
 /*
@@ -101,9 +104,9 @@ BuildCharSet(
 	end += TclUtfToUniChar(end, &ch);
     }
 
-    cset->chars = ckalloc(sizeof(Tcl_UniChar) * (end - format - 1));
+    cset->chars = (Tcl_UniChar *)ckalloc(sizeof(Tcl_UniChar) * (end - format - 1));
     if (nranges > 0) {
-	cset->ranges = ckalloc(sizeof(struct Range) * nranges);
+	cset->ranges = (Range *)ckalloc(sizeof(Range) * nranges);
     } else {
 	cset->ranges = NULL;
     }
@@ -259,12 +262,12 @@ ValidateFormat(
     char *end;
     Tcl_UniChar ch = 0;
     int objIndex, xpgSize, nspace = numVars;
-    int *nassign = TclStackAlloc(interp, nspace * sizeof(int));
-    char buf[TCL_UTF_MAX+1] = "";
+    int *nassign = (int *)TclStackAlloc(interp, nspace * sizeof(int));
     Tcl_Obj *errorMsg;		/* Place to build an error messages. Note that
 				 * these are messy operations because we do
 				 * not want to use the formatting engine;
 				 * we're inside there! */
+    char buf[5] = "";
 
     /*
      * Initialize an array that records the number of times a variable is
@@ -415,14 +418,7 @@ ValidateFormat(
 	case 'x':
 	case 'X':
 	case 'b':
-	    break;
 	case 'u':
-	    if (flags & SCAN_BIG) {
-		Tcl_SetObjResult(interp, Tcl_NewStringObj(
-			"unsigned bignum scans are invalid", -1));
-		Tcl_SetErrorCode(interp, "TCL", "FORMAT", "BADUNSIGNED",NULL);
-		goto error;
-	    }
 	    break;
 	    /*
 	     * Bracket terms need special checking
@@ -483,7 +479,7 @@ ValidateFormat(
 		} else {
 		    nspace += 16;	/* formerly STATIC_LIST_SIZE */
 		}
-		nassign = TclStackRealloc(interp, nassign,
+		nassign = (int *)TclStackRealloc(interp, nassign,
 			nspace * sizeof(int));
 		for (i = value; i < nspace; i++) {
 		    nassign[i] = 0;
@@ -566,10 +562,9 @@ ValidateFormat(
  *----------------------------------------------------------------------
  */
 
-	/* ARGSUSED */
 int
 Tcl_ScanObjCmd(
-    ClientData dummy,		/* Not used. */
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
@@ -608,7 +603,7 @@ Tcl_ScanObjCmd(
      */
 
     if (totalVars > 0) {
-	objs = ckalloc(sizeof(Tcl_Obj *) * totalVars);
+	objs = (Tcl_Obj **)ckalloc(sizeof(Tcl_Obj *) * totalVars);
 	for (i = 0; i < totalVars; i++) {
 	    objs[i] = NULL;
 	}
@@ -895,13 +890,13 @@ Tcl_ScanObjCmd(
 	    /*
 	     * Scan an unsigned or signed integer.
 	     */
-	    objPtr = Tcl_NewLongObj(0);
+	    TclNewIntObj(objPtr, 0);
 	    Tcl_IncrRefCount(objPtr);
 	    if (width == 0) {
 		width = ~0;
 	    }
 	    if (TCL_OK != TclParseNumber(NULL, objPtr, NULL, string, width,
-		    &end, TCL_PARSE_INTEGER_ONLY | parseFlag)) {
+		&end, TCL_PARSE_INTEGER_ONLY | TCL_PARSE_NO_UNDERSCORE | parseFlag)) {
 		Tcl_DecrRefCount(objPtr);
 		if (width < 0) {
 		    if (*end == '\0') {
@@ -921,19 +916,49 @@ Tcl_ScanObjCmd(
 	    }
 	    if (flags & SCAN_LONGER) {
 		if (Tcl_GetWideIntFromObj(NULL, objPtr, &wideValue) != TCL_OK) {
-		    wideValue = ~(Tcl_WideUInt)0 >> 1;	/* WIDE_MAX */
+		    wideValue = WIDE_MAX;
 		    if (TclGetString(objPtr)[0] == '-') {
-			wideValue++;	/* WIDE_MAX + 1 = WIDE_MIN */
+			wideValue = WIDE_MIN;
 		    }
 		}
 		if ((flags & SCAN_UNSIGNED) && (wideValue < 0)) {
 		    mp_int big;
-		    TclBNInitBignumFromWideUInt(&big, (Tcl_WideUInt)wideValue);
-		    Tcl_SetBignumObj(objPtr, &big);
+		    if (mp_init_u64(&big, (Tcl_WideUInt)wideValue) != MP_OKAY) {
+			Tcl_SetObjResult(interp, Tcl_NewStringObj(
+				"insufficient memory to create bignum", -1));
+			Tcl_SetErrorCode(interp, "TCL", "MEMORY", NULL);
+			return TCL_ERROR;
+		    } else {
+			Tcl_SetBignumObj(objPtr, &big);
+		    }
 		} else {
-		    Tcl_SetWideIntObj(objPtr, wideValue);
+		    TclSetIntObj(objPtr, wideValue);
 		}
-	    } else if (!(flags & SCAN_BIG)) {
+	    } else if (flags & SCAN_BIG) {
+		if (flags & SCAN_UNSIGNED) {
+		    mp_int big;
+		    int res = Tcl_GetBignumFromObj(interp, objPtr, &big);
+
+		    if (res == TCL_OK) {
+			if (mp_isneg(&big)) {
+			    res = TCL_ERROR;
+			}
+			mp_clear(&big);
+		    }
+
+		    if (res == TCL_ERROR) {
+			if (objs != NULL) {
+			    ckfree(objs);
+			}
+			Tcl_DecrRefCount(objPtr);
+			Tcl_SetObjResult(interp, Tcl_NewStringObj(
+				"unsigned bignum scans are invalid", -1));
+			Tcl_SetErrorCode(interp, "TCL", "FORMAT",
+				"BADUNSIGNED",NULL);
+			return TCL_ERROR;
+		    }
+		}
+	    } else {
 		if (TclGetLongFromObj(NULL, objPtr, &value) != TCL_OK) {
 		    if (TclGetString(objPtr)[0] == '-') {
 			value = LONG_MIN;
@@ -944,13 +969,19 @@ Tcl_ScanObjCmd(
 		if ((flags & SCAN_UNSIGNED) && (value < 0)) {
 #ifdef TCL_WIDE_INT_IS_LONG
 		    mp_int big;
-		    TclBNInitBignumFromWideUInt(&big, (unsigned long)value);
-		    Tcl_SetBignumObj(objPtr, &big);
+		    if (mp_init_u64(&big, (unsigned long)value) != MP_OKAY) {
+			Tcl_SetObjResult(interp, Tcl_NewStringObj(
+				"insufficient memory to create bignum", -1));
+			Tcl_SetErrorCode(interp, "TCL", "MEMORY", NULL);
+			return TCL_ERROR;
+		    } else {
+			Tcl_SetBignumObj(objPtr, &big);
+		    }
 #else
 		    Tcl_SetWideIntObj(objPtr, (unsigned long)value);
 #endif
 		} else {
-		    Tcl_SetLongObj(objPtr, value);
+		    TclSetIntObj(objPtr, value);
 		}
 	    }
 	    objs[objIndex++] = objPtr;
@@ -967,7 +998,7 @@ Tcl_ScanObjCmd(
 		width = ~0;
 	    }
 	    if (TCL_OK != TclParseNumber(NULL, objPtr, NULL, string, width,
-		    &end, TCL_PARSE_DECIMAL_ONLY | TCL_PARSE_NO_WHITESPACE)) {
+		    &end, TCL_PARSE_DECIMAL_ONLY | TCL_PARSE_NO_WHITESPACE | TCL_PARSE_NO_UNDERSCORE)) {
 		Tcl_DecrRefCount(objPtr);
 		if (width < 0) {
 		    if (*end == '\0') {
@@ -986,8 +1017,10 @@ Tcl_ScanObjCmd(
 		double dvalue;
 		if (Tcl_GetDoubleFromObj(NULL, objPtr, &dvalue) != TCL_OK) {
 #ifdef ACCEPT_NAN
-		    if (objPtr->typePtr == &tclDoubleType) {
-			dvalue = objPtr->internalRep.doubleValue;
+		    const Tcl_ObjIntRep *irPtr
+			    = TclFetchIntRep(objPtr, &tclDoubleType);
+		    if (irPtr) {
+			dvalue = irPtr->doubleValue;
 		    } else
 #endif
 		    {
@@ -1056,7 +1089,7 @@ Tcl_ScanObjCmd(
     if (code == TCL_OK) {
 	if (underflow && (nconversions == 0)) {
 	    if (numVars) {
-		TclNewIntObj(objPtr, -1);
+		TclNewIntObj(objPtr, TCL_INDEX_NONE);
 	    } else {
 		if (objPtr) {
 		    Tcl_SetListObj(objPtr, 0, NULL);

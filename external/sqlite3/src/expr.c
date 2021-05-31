@@ -95,18 +95,7 @@ Expr *sqlite3ExprAddCollateToken(
   const Token *pCollName,  /* Name of collating sequence */
   int dequote              /* True to dequote pCollName */
 ){
-  assert( pExpr!=0 || pParse->db->mallocFailed );
-  if( pExpr==0 ) return 0;
-  if( pExpr->op==TK_VECTOR ){
-    ExprList *pList = pExpr->x.pList;
-    if( pList!=0 ){
-      int i;
-      for(i=0; i<pList->nExpr; i++){
-        pList->a[i].pExpr = sqlite3ExprAddCollateToken(pParse,pList->a[i].pExpr,
-                                                       pCollName, dequote);
-      }
-    }
-  }else if( pCollName->n>0 ){
+  if( pCollName->n>0 ){
     Expr *pNew = sqlite3ExprAlloc(pParse->db, TK_COLLATE, pCollName, dequote);
     if( pNew ){
       pNew->pLeft = pExpr;
@@ -456,7 +445,7 @@ int sqlite3ExprVectorSize(Expr *pExpr){
 ** been positioned.
 */
 Expr *sqlite3VectorFieldSubexpr(Expr *pVector, int i){
-  assert( i<sqlite3ExprVectorSize(pVector) );
+  assert( i<sqlite3ExprVectorSize(pVector) || pVector->op==TK_ERROR );
   if( sqlite3ExprIsVector(pVector) ){
     assert( pVector->op2==0 || pVector->op==TK_REGISTER );
     if( pVector->op==TK_SELECT || pVector->op2==TK_SELECT ){
@@ -572,7 +561,7 @@ static int exprVectorRegister(
   int *pRegFree                   /* OUT: Temp register to free */
 ){
   u8 op = pVector->op;
-  assert( op==TK_VECTOR || op==TK_REGISTER || op==TK_SELECT );
+  assert( op==TK_VECTOR || op==TK_REGISTER || op==TK_SELECT || op==TK_ERROR );
   if( op==TK_REGISTER ){
     *ppExpr = sqlite3VectorFieldSubexpr(pVector, iField);
     return pVector->iTable+iField;
@@ -581,8 +570,11 @@ static int exprVectorRegister(
     *ppExpr = pVector->x.pSelect->pEList->a[iField].pExpr;
      return regSelect+iField;
   }
-  *ppExpr = pVector->x.pList->a[iField].pExpr;
-  return sqlite3ExprCodeTemp(pParse, *ppExpr, pRegFree);
+  if( op==TK_VECTOR ){
+    *ppExpr = pVector->x.pList->a[iField].pExpr;
+    return sqlite3ExprCodeTemp(pParse, *ppExpr, pRegFree);
+  }
+  return 0;
 }
 
 /*
@@ -1324,6 +1316,7 @@ static Expr *exprDup(sqlite3 *db, Expr *p, int dupFlags, u8 **pzBuffer){
   if( pzBuffer ){
     zAlloc = *pzBuffer;
     staticFlag = EP_Static;
+    assert( zAlloc!=0 );
   }else{
     zAlloc = sqlite3DbMallocRawNN(db, dupedExprSize(p, dupFlags));
     staticFlag = 0;
@@ -1518,7 +1511,8 @@ ExprList *sqlite3ExprListDup(sqlite3 *db, ExprList *p, int flags){
     ){
       assert( pNewExpr->iColumn==0 || i>0 );
       if( pNewExpr->iColumn==0 ){
-        assert( pOldExpr->pLeft==pOldExpr->pRight );
+        assert( pOldExpr->pLeft==pOldExpr->pRight
+             || ExprHasProperty(pOldExpr->pLeft, EP_Subquery) );
         pPriorSelectCol = pNewExpr->pLeft = pNewExpr->pRight;
       }else{
         assert( i>0 );
@@ -2356,8 +2350,10 @@ int sqlite3ExprIsInteger(Expr *p, int *pValue){
 */
 int sqlite3ExprCanBeNull(const Expr *p){
   u8 op;
+  assert( p!=0 );
   while( p->op==TK_UPLUS || p->op==TK_UMINUS ){
     p = p->pLeft;
+    assert( p!=0 );
   }
   op = p->op;
   if( op==TK_REGISTER ) op = p->op2;
@@ -3100,6 +3096,7 @@ int sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
 
   Vdbe *v = pParse->pVdbe;
   assert( v!=0 );
+  if( pParse->nErr ) return 0;
   testcase( pExpr->op==TK_EXISTS );
   testcase( pExpr->op==TK_SELECT );
   assert( pExpr->op==TK_EXISTS || pExpr->op==TK_SELECT );
@@ -3181,6 +3178,10 @@ int sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
   }
   pSel->iLimit = 0;
   if( sqlite3Select(pParse, pSel, &dest) ){
+    if( pParse->nErr ){
+      pExpr->op2 = pExpr->op;
+      pExpr->op = TK_ERROR;
+    }
     return 0;
   }
   pExpr->iTable = rReg = dest.iSDParm;
@@ -3207,7 +3208,7 @@ int sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
 */
 int sqlite3ExprCheckIN(Parse *pParse, Expr *pIn){
   int nVector = sqlite3ExprVectorSize(pIn->pLeft);
-  if( (pIn->flags & EP_xIsSelect) ){
+  if( (pIn->flags & EP_xIsSelect)!=0 && !pParse->db->mallocFailed ){
     if( nVector!=pIn->x.pSelect->pEList->nExpr ){
       sqlite3SubselectError(pParse, pIn->x.pSelect->pEList->nExpr, nVector);
       return 1;
@@ -4024,7 +4025,7 @@ expr_code_doover:
       ** Expr node to be passed into this function, it will be handled
       ** sanely and not crash.  But keep the assert() to bring the problem
       ** to the attention of the developers. */
-      assert( op==TK_NULL || pParse->db->mallocFailed );
+      assert( op==TK_NULL || op==TK_ERROR || pParse->db->mallocFailed );
       sqlite3VdbeAddOp2(v, OP_Null, 0, target);
       return target;
     }
@@ -4367,7 +4368,8 @@ expr_code_doover:
       if( pExpr->pLeft->iTable==0 ){
         pExpr->pLeft->iTable = sqlite3CodeSubselect(pParse, pExpr->pLeft);
       }
-      assert( pExpr->iTable==0 || pExpr->pLeft->op==TK_SELECT );
+      assert( pExpr->iTable==0 || pExpr->pLeft->op==TK_SELECT
+               || pExpr->pLeft->op==TK_ERROR );
       if( pExpr->iTable!=0
        && pExpr->iTable!=(n = sqlite3ExprVectorSize(pExpr->pLeft))
       ){

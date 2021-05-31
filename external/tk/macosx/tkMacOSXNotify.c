@@ -4,19 +4,20 @@
  *	This file contains the implementation of a tcl event source
  *	for the AppKit event loop.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright 2015 Marc Culler.
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009, Apple Inc.
+ * Copyright © 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2015 Marc Culler.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
 #include "tkMacOSXPrivate.h"
-#include "tkMacOSXEvent.h"
+#include "tkMacOSXInt.h"
 #include "tkMacOSXConstants.h"
-
+#if TCL_MAJOR_VERSION < 9
+#undef Tcl_MacOSXNotifierAddRunLoopMode
 #ifdef USE_TCL_STUBS
 #ifdef __cplusplus
 extern "C" {
@@ -24,7 +25,7 @@ extern "C" {
 /*  Little hack to eliminate the need for "tclInt.h" here:
     Just copy a small portion of TclIntPlatStubs, just
     enough to make it work. See [600b72bfbc] */
-typedef struct {
+typedef struct TclIntPlatStubs {
     int magic;
     void *hooks;
     void (*dummy[19]) (void); /* dummy entries 0-18, not used */
@@ -34,13 +35,14 @@ extern const TclIntPlatStubs *tclIntPlatStubsPtr;
 #ifdef __cplusplus
 }
 #endif
-#define TclMacOSXNotifierAddRunLoopMode \
+#define Tcl_MacOSXNotifierAddRunLoopMode \
 	(tclIntPlatStubsPtr->tclMacOSXNotifierAddRunLoopMode) /* 19 */
 #elif TCL_MINOR_VERSION < 7
     extern void TclMacOSXNotifierAddRunLoopMode(const void *runLoopMode);
+#   define Tcl_MacOSXNotifierAddRunLoopMode TclMacOSXNotifierAddRunLoopMode
 #else
     extern void Tcl_MacOSXNotifierAddRunLoopMode(const void *runLoopMode);
-#   define TclMacOSXNotifierAddRunLoopMode Tcl_MacOSXNotifierAddRunLoopMode
+#endif
 #endif
 #import <objc/objc-auto.h>
 
@@ -181,7 +183,7 @@ void DebugPrintQueue(void)
      * this block should be removed.
      */
 
-# if MAC_OS_X_VERSION_MAX_ALLOWED >= 101500
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101500
     if ([theEvent type] == NSAppKitDefined) {
 	static Bool aWindowIsMoving = NO;
 	switch([theEvent subtype]) {
@@ -294,8 +296,8 @@ Tk_MacOSXSetupTkNotifier(void)
 	    Tcl_CreateEventSource(TkMacOSXEventsSetupProc,
 		    TkMacOSXEventsCheckProc, NULL);
 	    TkCreateExitHandler(TkMacOSXNotifyExitHandler, NULL);
-	    TclMacOSXNotifierAddRunLoopMode(NSEventTrackingRunLoopMode);
-	    TclMacOSXNotifierAddRunLoopMode(NSModalPanelRunLoopMode);
+	    Tcl_MacOSXNotifierAddRunLoopMode(NSEventTrackingRunLoopMode);
+	    Tcl_MacOSXNotifierAddRunLoopMode(NSModalPanelRunLoopMode);
 	}
     }
 }
@@ -319,8 +321,9 @@ Tk_MacOSXSetupTkNotifier(void)
 
 static void
 TkMacOSXNotifyExitHandler(
-    ClientData clientData)	/* Not used. */
+    ClientData dummy)	/* Not used. */
 {
+    (void)dummy;
     TSD_INIT();
 
     Tcl_DeleteEventSource(TkMacOSXEventsSetupProc,
@@ -340,8 +343,9 @@ TkMacOSXNotifyExitHandler(
  *       for all views that need display before it returns.  We call it with
  *       deQueue=NO so that it will not change anything on the AppKit event
  *       queue, because we only want the side effect that it runs drawRect. The
- *       only time when any NSViews have the needsDisplay property set to YES
- *       is during execution of this function.
+ *       only times when any NSViews have the needsDisplay property set to YES
+ *       are during execution of this function or in the addDirtyRect method
+ *       of TKContentView.
  *
  *       The reason for running this function as an idle task is to try to
  *       arrange that all widgets will be fully configured before they are
@@ -377,7 +381,8 @@ TkMacOSXDrawAllViews(
 		if (dirtyCount) {
 		   continue;
 		}
-		[view setNeedsDisplayInRect:[view tkDirtyRect]];
+		[[view layer] setNeedsDisplayInRect:[view tkDirtyRect]];
+		[view setNeedsDisplay:YES];
 	    }
 	} else {
 	    [window displayIfNeeded];
@@ -436,7 +441,7 @@ static Tcl_TimerToken ticker = NULL;
 
 static void
 Heartbeat(
-    ClientData clientData)
+    TCL_UNUSED(ClientData))
 {
 
     if (ticker) {
@@ -448,10 +453,11 @@ static const Tcl_Time zeroBlockTime = { 0, 0 };
 
 static void
 TkMacOSXEventsSetupProc(
-    ClientData clientData,
+    ClientData dummy,
     int flags)
 {
     NSString *runloopMode = [[NSRunLoop currentRunLoop] currentMode];
+    (void)dummy;
 
     /*
      * runloopMode will be nil if we are in a Tcl event loop.
@@ -514,7 +520,7 @@ TkMacOSXEventsSetupProc(
  */
 static void
 TkMacOSXEventsCheckProc(
-    ClientData clientData,
+    TCL_UNUSED(ClientData),
     int flags)
 {
     NSString *runloopMode = [[NSRunLoop currentRunLoop] currentMode];

@@ -13,11 +13,15 @@ addons:
       - gcc-multilib
       - tcl8.6-dev
       - libx11-dev
+      - libnotify-dev
+      - libglib2.0-dev
       - libxss-dev
       - xvfb
   homebrew:
     packages:
       - tcl-tk
+      - libnotify
+      - glib
 #   casks:
 #     - xquartz
 jobs:
@@ -40,6 +44,16 @@ jobs:
         - make test-ttk >out-ttk.txt
         - cat out-ttk.txt
         - grep -q "Failed	0" out-ttk.txt
+    - name: "Linux/GCC/Shared: NO_DEPRECATED"
+      os: linux
+      dist: focal
+      services:
+        - xvfb
+      compiler: gcc
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="CFLAGS=-DTK_NO_DEPRECATED=1"
+      script: *x11gui
     - name: "Linux/GCC/Shared/no-xft"
       os: linux
       dist: focal
@@ -49,6 +63,16 @@ jobs:
       env:
         - BUILD_DIR=unix
         - CFGOPT="--disable-xft"
+      script: *x11gui
+    - name: "Linux/GCC/Shared/no-libnotify"
+      os: linux
+      dist: focal
+      services:
+        - xvfb
+      compiler: gcc
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="--disable-libnotify"
       script: *x11gui
     - name: "Linux/GCC/Shared/bionic"
       os: linux
@@ -82,6 +106,27 @@ jobs:
       env:
         - BUILD_DIR=unix
         - CFGOPT="--enable-symbols"
+    - name: "Linux/G++/Shared"
+      os: linux
+      dist: focal
+      compiler: g++
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="CC=g++ CFLAGS=-Dregister=dont+use+register"
+    - name: "Linux/G++/Shared UTF_MAX=4"
+      os: linux
+      dist: focal
+      compiler: g++
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="CC=g++ CFLAGS=-DTCL_UTF_MAX=4"
+    - name: "Linux/G++/Shared UTF_MAX=6"
+      os: linux
+      dist: focal
+      compiler: g++
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="CC=g++ CFLAGS=-DTCL_UTF_MAX=6"
 # Newer/Older versions of GCC
     - name: "Linux/GCC 10/Shared"
       os: linux
@@ -110,6 +155,13 @@ jobs:
       compiler: clang
       env:
         - BUILD_DIR=unix
+    - name: "Linux/Clang/Shared: NO_DEPRECATED"
+      os: linux
+      dist: focal
+      compiler: clang
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="CFLAGS=-DTK_NO_DEPRECATED=1"
     - name: "Linux/Clang/Shared/no-xft"
       os: linux
       dist: focal
@@ -138,6 +190,12 @@ jobs:
       env:
         - BUILD_DIR=unix
         - CFGOPT="--with-tcl=/usr/local/opt/tcl-tk/lib --enable-aqua CFLAGS=-I/usr/local/opt/tcl-tk/include"
+    - name: "macOS/Clang++/Xcode 12/Shared"
+      os: osx
+      osx_image: xcode12
+      env:
+        - BUILD_DIR=unix
+        - CFGOPT="--with-tcl=/usr/local/opt/tcl-tk/lib CC=clang++ --enable-aqua CFLAGS=-I/usr/local/opt/tcl-tk/include CPPFLAGS=-D__private_extern__=extern"
     - name: "macOS/Xcode 12/Static"
       os: osx
       osx_image: xcode12
@@ -206,7 +264,6 @@ jobs:
       env:
         - BUILD_DIR=unix
       script:
-        - touch ../doc/man.macros
         - make dist
 before_install:
   - |-
@@ -220,7 +277,7 @@ install:
   - mkdir "$HOME/install dir"
   - ./configure ${CFGOPT} "--prefix=$HOME/install dir" || (cat config.log && exit 1)
 script:
-  - make binaries libraries tktest
+  - make all tktest
   - make install
 before_cache:
   - |-

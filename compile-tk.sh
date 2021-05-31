@@ -77,14 +77,14 @@ echo -n "Copying extras ... "
 ## postprocess
 cd $INSTALLDIR/bin
 if [ -z "$WINDIR" ]; then
-    mv wish8.6 wish86
-    rsync -a wish86 wish
+    mv wish8.7 wish87
+    rsync -a wish87 wish
 else
     if [ -n "$SW_DEBUG" ]; then
-        mv wish86g.exe wish86.exe
-        rsync -a wish86.exe wish.exe
+        mv wish87g.exe wish87.exe
+        rsync -a wish87.exe wish.exe
     else
-        rsync -a wish86.exe wish.exe
+        rsync -a wish87.exe wish.exe
     fi
 fi
 

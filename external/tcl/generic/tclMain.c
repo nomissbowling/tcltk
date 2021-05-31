@@ -8,9 +8,9 @@
  *	application. Or, it can be used as a template for creating new main
  *	programs for Tcl applications.
  *
- * Copyright (c) 1988-1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
- * Copyright (c) 2000 Ajuba Solutions.
+ * Copyright © 1988-1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 2000 Ajuba Solutions.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -43,16 +43,17 @@
 #   define _tcscmp strcmp
 #endif
 
-static inline Tcl_Obj *
+static Tcl_Obj *
 NewNativeObj(
     TCHAR *string)
 {
     Tcl_DString ds;
 
 #ifdef UNICODE
-    Tcl_WinTCharToUtf(string, -1, &ds);
+    Tcl_DStringInit(&ds);
+    Tcl_WCharToUtfDString(string, -1, &ds);
 #else
-    Tcl_ExternalToUtfDString(NULL, (char *) string, -1, &ds);
+    Tcl_ExternalToUtfDString(NULL, (char *)string, -1, &ds);
 #endif
     return TclDStringToObj(&ds);
 }
@@ -62,11 +63,6 @@ NewNativeObj(
  * include tclPort.h here, because people might copy this file out of the Tcl
  * source directory to make their own modified versions).
  */
-
-#if defined _MSC_VER && _MSC_VER < 1900
-/* isatty is always defined on MSVC 14.0, but not necessarily as CRTIMPORT. */
-extern CRTIMPORT int	isatty(int fd);
-#endif
 
 /*
  * The thread-local variables for this file's functions.
@@ -95,7 +91,7 @@ typedef enum {
     PROMPT_CONTINUE		/* Print prompt for command continuation */
 } PromptType;
 
-typedef struct InteractiveState {
+typedef struct {
     Tcl_Channel input;		/* The standard input channel from which lines
 				 * are read. */
     int tty;			/* Non-zero means standard input is a
@@ -229,7 +225,7 @@ Tcl_SourceRCFile(
     const char *fileName;
     Tcl_Channel chan;
 
-    fileName = Tcl_GetVar(interp, "tcl_rcFileName", TCL_GLOBAL_ONLY);
+    fileName = Tcl_GetVar2(interp, "tcl_rcFileName", NULL, TCL_GLOBAL_ONLY);
     if (fileName != NULL) {
 	Tcl_Channel c;
 	const char *fullName;
@@ -266,7 +262,7 @@ Tcl_SourceRCFile(
 
 /*----------------------------------------------------------------------
  *
- * Tcl_Main, Tcl_MainEx --
+ * Tcl_MainEx --
  *
  *	Main program for tclsh and most other Tcl-based applications.
  *
@@ -347,7 +343,7 @@ Tcl_MainEx(
     argc--;
     argv++;
 
-    Tcl_SetVar2Ex(interp, "argc", NULL, Tcl_NewIntObj(argc), TCL_GLOBAL_ONLY);
+    Tcl_SetVar2Ex(interp, "argc", NULL, Tcl_NewWideIntObj(argc), TCL_GLOBAL_ONLY);
 
     argvPtr = Tcl_NewListObj(0, NULL);
     while (argc--) {
@@ -361,7 +357,7 @@ Tcl_MainEx(
 
     is.tty = isatty(0);
     Tcl_SetVar2Ex(interp, "tcl_interactive", NULL,
-	    Tcl_NewIntObj(!path && is.tty), TCL_GLOBAL_ONLY);
+	    Tcl_NewWideIntObj(!path && is.tty), TCL_GLOBAL_ONLY);
 
     /*
      * Invoke application-specific initialization.
@@ -445,7 +441,7 @@ Tcl_MainEx(
      * Get a new value for tty if anyone writes to ::tcl_interactive
      */
 
-    Tcl_LinkVar(interp, "tcl_interactive", (char *) &is.tty, TCL_LINK_BOOLEAN);
+    Tcl_LinkVar(interp, "tcl_interactive", &is.tty, TCL_LINK_BOOLEAN);
     is.input = Tcl_GetStdChannel(TCL_STDIN);
     while ((is.input != NULL) && !Tcl_InterpDeleted(interp)) {
 	mainLoopProc = TclGetMainLoop();
@@ -515,7 +511,7 @@ Tcl_MainEx(
 	     * error messages troubles deeper in, so lop it back off.
 	     */
 
-	    Tcl_GetStringFromObj(is.commandPtr, &length);
+	    TclGetStringFromObj(is.commandPtr, &length);
 	    Tcl_SetObjLength(is.commandPtr, --length);
 	    code = Tcl_RecordAndEvalObj(interp, is.commandPtr,
 		    TCL_EVAL_GLOBAL);
@@ -532,7 +528,7 @@ Tcl_MainEx(
 	    } else if (is.tty) {
 		resultPtr = Tcl_GetObjResult(interp);
 		Tcl_IncrRefCount(resultPtr);
-		Tcl_GetStringFromObj(resultPtr, &length);
+		TclGetStringFromObj(resultPtr, &length);
 		chan = Tcl_GetStdChannel(TCL_STDOUT);
 		if ((length > 0) && chan) {
 		    Tcl_WriteObj(chan, resultPtr);
@@ -617,21 +613,6 @@ Tcl_MainEx(
 
     Tcl_Exit(exitCode);
 }
-
-#if (TCL_MAJOR_VERSION == 8) && !defined(UNICODE)
-#undef Tcl_Main
-extern DLLEXPORT void
-Tcl_Main(
-    int argc,			/* Number of arguments. */
-    char **argv,		/* Array of argument strings. */
-    Tcl_AppInitProc *appInitProc)
-				/* Application-specific initialization
-				 * function to call after most initialization
-				 * but before starting to execute commands. */
-{
-    Tcl_MainEx(argc, argv, appInitProc, Tcl_CreateInterp());
-}
-#endif /* TCL_MAJOR_VERSION == 8 && !UNICODE */
 
 #if !defined(_WIN32) || defined(UNICODE)
 
@@ -745,14 +726,13 @@ TclFullFinalizationRequested(void)
  *----------------------------------------------------------------------
  */
 
-    /* ARGSUSED */
 static void
 StdinProc(
     ClientData clientData,	/* The state of interactive cmd line */
-    int mask)			/* Not used. */
+    TCL_UNUSED(int) /*mask*/)
 {
     int code, length;
-    InteractiveState *isPtr = clientData;
+    InteractiveState *isPtr = (InteractiveState *)clientData;
     Tcl_Channel chan = isPtr->input;
     Tcl_Obj *commandPtr = isPtr->commandPtr;
     Tcl_Interp *interp = isPtr->interp;
@@ -791,7 +771,7 @@ StdinProc(
 	goto prompt;
     }
     isPtr->prompt = PROMPT_START;
-    Tcl_GetStringFromObj(commandPtr, &length);
+    TclGetStringFromObj(commandPtr, &length);
     Tcl_SetObjLength(commandPtr, --length);
 
     /*
@@ -823,7 +803,7 @@ StdinProc(
 	chan = Tcl_GetStdChannel(TCL_STDOUT);
 
 	Tcl_IncrRefCount(resultPtr);
-	Tcl_GetStringFromObj(resultPtr, &length);
+	TclGetStringFromObj(resultPtr, &length);
 	if ((length > 0) && (chan != NULL)) {
 	    Tcl_WriteObj(chan, resultPtr);
 	    Tcl_WriteChars(chan, "\n", 1);
@@ -925,7 +905,7 @@ static void
 FreeMainInterp(
     ClientData clientData)
 {
-    Tcl_Interp *interp = clientData;
+    Tcl_Interp *interp = (Tcl_Interp *)clientData;
 
     /*if (TclInExit()) return;*/
 

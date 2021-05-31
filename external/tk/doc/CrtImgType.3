@@ -9,7 +9,7 @@
 .so man.macros
 .BS
 .SH NAME
-Tk_CreateImageType, Tk_GetImageMasterData, Tk_GetImageModelData, Tk_InitImageArgs \- define new kind of image
+Tk_CreateImageType, Tk_GetImageModelData, Tk_InitImageArgs \- define new kind of image
 .SH SYNOPSIS
 .nf
 \fB#include <tk.h>\fR
@@ -17,12 +17,7 @@ Tk_CreateImageType, Tk_GetImageMasterData, Tk_GetImageModelData, Tk_InitImageArg
 \fBTk_CreateImageType\fR(\fItypePtr\fR)
 .sp
 ClientData
-\fBTk_GetImageMasterData\fR(\fIinterp, name, typePtrPtr\fR)
-.sp
-.VS "TIP 581"
-ClientData
 \fBTk_GetImageModelData\fR(\fIinterp, name, typePtrPtr\fR)
-.VE "TIP 581"
 .sp
 \fBTk_InitImageArgs\fR(\fIinterp, argc, argvPtr\fR)
 .SH ARGUMENTS
@@ -118,7 +113,7 @@ typedef int \fBTk_ImageCreateProc\fR(
         int \fIobjc\fR,
         Tcl_Obj *const \fIobjv\fR[],
         const Tk_ImageType *\fItypePtr\fR,
-        Tk_ImageMaster \fImodel\fR,
+        Tk_ImageModel \fImodel\fR,
         ClientData *\fImodelDataPtr\fR);
 .CE
 The \fIinterp\fR argument is the interpreter in which the \fBimage\fR
@@ -235,7 +230,7 @@ image was created.
 the image.
 .SH TK_GETIMAGEMODELDATA
 .PP
-The procedure \fBTk_GetImageMasterData\fR may be invoked to retrieve
+The procedure \fBTk_GetImageModelData\fR may be invoked to retrieve
 information about an image.  For example, an image manager can use this
 procedure to locate its image model data for an image.
 If there exists an image named \fIname\fR
@@ -246,10 +241,6 @@ and the return value is the ClientData value returned by the
 \fIcreateProc\fR when the image was created (this is typically a
 pointer to the image model data structure).  If no such image exists
 then NULL is returned and NULL is stored at \fI*typePtrPtr\fR.
-.PP
-.VS "TIP 581"
-\fBTk_GetImageModelData\fR is synonym for \fBTk_GetImageMasterData\fR
-.VE "TIP 581"
 .SH "LEGACY INTERFACE SUPPORT"
 .PP
 In Tk 8.2 and earlier, the definition of \fBTk_ImageCreateProc\fR
@@ -261,7 +252,7 @@ typedef int \fBTk_ImageCreateProc\fR(
         int \fIargc\fR,
         char **\fIargv\fR,
         Tk_ImageType *\fItypePtr\fR,
-        Tk_ImageMaster \fImodel\fR,
+        Tk_ImageModel \fImodel\fR,
         ClientData *\fImodelDataPtr\fR);
 .CE
 Legacy programs and libraries dating from those days may still
@@ -269,10 +260,6 @@ contain code that defines extended Tk image types using the old
 interface.  The Tk header file will still support this legacy
 interface if the code is compiled with the macro \fBUSE_OLD_IMAGE\fR
 defined.
-.PP
-.VS "TIP 581"
-\fITk_ImageModel\fR is synonym for \fITk_ImageMaster\fR
-.VE "TIP 581"
 .PP
 When the \fBUSE_OLD_IMAGE\fR legacy support is enabled, you may
 see the routine \fBTk_InitImageArgs\fR in use.  This was a migration

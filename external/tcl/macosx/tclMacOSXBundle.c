@@ -4,14 +4,15 @@
  *	This file implements functions that inspect CFBundle structures on
  *	MacOS X.
  *
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2003-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2001-2009 Apple Inc.
+ * Copyright © 2003-2009 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
 #include "tclPort.h"
+#include "tclInt.h"
 
 #ifdef HAVE_COREFOUNDATION
 #include <CoreFoundation/CoreFoundation.h>
@@ -162,6 +163,7 @@ OpenResourceMap(
  *----------------------------------------------------------------------
  */
 
+#if !defined(TCL_NO_DEPRECATED) && (TCL_MAJOR_VERSION < 9)
 #undef Tcl_MacOSXOpenBundleResources
 int
 Tcl_MacOSXOpenBundleResources(
@@ -174,6 +176,7 @@ Tcl_MacOSXOpenBundleResources(
     return Tcl_MacOSXOpenVersionedBundleResources(interp, bundleName, NULL,
 	    hasResourceFile, maxPathLen, libraryPath);
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -198,7 +201,7 @@ Tcl_MacOSXOpenBundleResources(
 
 int
 Tcl_MacOSXOpenVersionedBundleResources(
-    Tcl_Interp *interp,
+    TCL_UNUSED(Tcl_Interp *),
     const char *bundleName,
     const char *bundleVersion,
     int hasResourceFile,

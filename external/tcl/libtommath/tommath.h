@@ -4,7 +4,8 @@
 #ifndef BN_H_
 #define BN_H_
 
-#ifndef MP_NO_STDINT
+#if !defined(MP_NO_STDINT) && !defined(_STDINT_H) && !defined(_STDINT_H_) \
+	&& !defined(__CLANG_STDINT_H) && !defined(_STDINT)
 #  include <stdint.h>
 #endif
 #include <stddef.h>
@@ -32,7 +33,7 @@ extern "C" {
 #endif
 
 /* MS Visual C++ doesn't have a 128bit type for words, so fall back to 32bit MPI's (where words are 64bit) */
-#if (defined(_WIN32) || defined(__LLP64__) || defined(__e2k__) || defined(__LCC__)) && !defined(MP_64BIT)
+#if (defined(_MSC_VER) || defined(__LLP64__) || defined(__e2k__) || defined(__LCC__)) && !defined(MP_32BIT) && !defined(MP_64BIT)
 #   define MP_32BIT
 #endif
 
@@ -68,23 +69,23 @@ extern "C" {
  */
 
 #ifdef MP_8BIT
-typedef unsigned char        mp_digit;
-typedef unsigned short       private_mp_word;
+typedef uint8_t              mp_digit;
+typedef uint16_t             private_mp_word;
 #   define MP_DIGIT_BIT 7
 #elif defined(MP_16BIT)
-typedef unsigned short       mp_digit;
-typedef unsigned int         private_mp_word;
+typedef uint16_t             mp_digit;
+typedef uint32_t             private_mp_word;
 #   define MP_DIGIT_BIT 15
 #elif defined(MP_64BIT)
 /* for GCC only on supported platforms */
-typedef Tcl_WideUInt   mp_digit;
+typedef uint64_t mp_digit;
 #if defined(__GNUC__)
 typedef unsigned long        private_mp_word __attribute__((mode(TI)));
 #endif
 #   define MP_DIGIT_BIT 60
 #else
-typedef unsigned int         mp_digit;
-typedef Tcl_WideUInt   private_mp_word;
+typedef uint32_t             mp_digit;
+typedef uint64_t             private_mp_word;
 #   ifdef MP_31BIT
 /*
  * This is an extension that uses 31-bit digits.
@@ -252,11 +253,15 @@ TOOM_SQR_CUTOFF;
 #define SIGN(m)     (MP_DEPRECATED_PRAGMA("SIGN macro is deprecated, use z->sign instead") (m)->sign)
 
 /* the infamous mp_int structure */
-typedef struct  {
+#ifndef MP_INT_DECLARED
+#define MP_INT_DECLARED
+typedef struct mp_int mp_int;
+#endif
+struct mp_int {
    int used, alloc;
    mp_sign sign;
    mp_digit *dp;
-} mp_int;
+};
 
 /* callback for mp_prime_random, should fill dst with random bytes and return how many read [upto len] */
 typedef int private_mp_prime_callback(unsigned char *dst, int len, void *dat);
@@ -304,7 +309,6 @@ double mp_get_double(const mp_int *a) MP_WUR;
 mp_err mp_set_double(mp_int *a, double b) MP_WUR;
 
 /* get integer, set integer and init with integer (int32_t) */
-#ifndef MP_NO_STDINT
 int32_t mp_get_i32(const mp_int *a) MP_WUR;
 void mp_set_i32(mp_int *a, int32_t b);
 mp_err mp_init_i32(mp_int *a, int32_t b) MP_WUR;
@@ -327,9 +331,8 @@ mp_err mp_init_u64(mp_int *a, uint64_t b) MP_WUR;
 /* get magnitude */
 uint32_t mp_get_mag_u32(const mp_int *a) MP_WUR;
 uint64_t mp_get_mag_u64(const mp_int *a) MP_WUR;
-#endif
 unsigned long mp_get_mag_ul(const mp_int *a) MP_WUR;
-Tcl_WideUInt mp_get_mag_ull(const mp_int *a) MP_WUR;
+#define mp_get_mag_ull(a) ((unsigned long long)mp_get_mag_u64(a))
 
 /* get integer, set integer (long) */
 long mp_get_l(const mp_int *a) MP_WUR;
@@ -341,15 +344,15 @@ mp_err mp_init_l(mp_int *a, long b) MP_WUR;
 void mp_set_ul(mp_int *a, unsigned long b);
 mp_err mp_init_ul(mp_int *a, unsigned long b) MP_WUR;
 
-/* get integer, set integer (Tcl_WideInt) */
-Tcl_WideInt mp_get_ll(const mp_int *a) MP_WUR;
-void mp_set_ll(mp_int *a, Tcl_WideInt b);
-mp_err mp_init_ll(mp_int *a, Tcl_WideInt b) MP_WUR;
+/* get integer, set integer (long long) */
+#define mp_get_ll(a) ((long long)mp_get_i64(a))
+#define mp_set_ll(a,b) mp_set_i64(a,b)
+#define mp_init_ll(a,b) mp_init_i64(a,b)
 
-/* get integer, set integer (Tcl_WideUInt) */
-#define mp_get_ull(a) ((Tcl_WideUInt)mp_get_ll(a))
-void mp_set_ull(mp_int *a, Tcl_WideUInt b);
-mp_err mp_init_ull(mp_int *a, Tcl_WideUInt b) MP_WUR;
+/* get integer, set integer (unsigned long long) */
+#define mp_get_ull(a) ((unsigned long long)mp_get_i64(a))
+#define mp_set_ull(a,b) mp_set_u64(a,b)
+#define mp_init_ull(a,b) mp_init_u64(a,b)
 
 /* set to single unsigned digit, up to MP_DIGIT_MAX */
 void mp_set(mp_int *a, mp_digit b);
@@ -358,10 +361,10 @@ mp_err mp_init_set(mp_int *a, mp_digit b) MP_WUR;
 /* get integer, set integer and init with integer (deprecated) */
 MP_DEPRECATED(mp_get_mag_u32/mp_get_u32) unsigned long mp_get_int(const mp_int *a) MP_WUR;
 MP_DEPRECATED(mp_get_mag_ul/mp_get_ul) unsigned long mp_get_long(const mp_int *a) MP_WUR;
-MP_DEPRECATED(mp_get_mag_ull/mp_get_ull) Tcl_WideUInt mp_get_long_long(const mp_int *a) MP_WUR;
+MP_DEPRECATED(mp_get_mag_ull/mp_get_ull) unsigned long long mp_get_long_long(const mp_int *a) MP_WUR;
 MP_DEPRECATED(mp_set_ul) mp_err mp_set_int(mp_int *a, unsigned long b);
 MP_DEPRECATED(mp_set_ul) mp_err mp_set_long(mp_int *a, unsigned long b);
-MP_DEPRECATED(mp_set_ull) mp_err mp_set_long_long(mp_int *a, Tcl_WideUInt b);
+MP_DEPRECATED(mp_set_ull) mp_err mp_set_long_long(mp_int *a, unsigned long long b);
 MP_DEPRECATED(mp_init_ul) mp_err mp_init_set_int(mp_int *a, unsigned long b) MP_WUR;
 
 /* copy, b = a */
@@ -558,7 +561,7 @@ mp_err mp_lcm(const mp_int *a, const mp_int *b, mp_int *c) MP_WUR;
  *
  * returns error if a < 0 and b is even
  */
-mp_err mp_root_u32(const mp_int *a, unsigned int b, mp_int *c) MP_WUR;
+mp_err mp_root_u32(const mp_int *a, uint32_t b, mp_int *c) MP_WUR;
 MP_DEPRECATED(mp_root_u32) mp_err mp_n_root(const mp_int *a, mp_digit b, mp_int *c) MP_WUR;
 MP_DEPRECATED(mp_root_u32) mp_err mp_n_root_ex(const mp_int *a, mp_digit b, mp_int *c, int fast) MP_WUR;
 
@@ -721,10 +724,10 @@ MP_DEPRECATED(mp_prime_rand) mp_err mp_prime_random_ex(mp_int *a, int t, int siz
 mp_err mp_prime_rand(mp_int *a, int t, int size, int flags) MP_WUR;
 
 /* Integer logarithm to integer base */
-mp_err mp_log_u32(const mp_int *a, unsigned int base, unsigned int *c) MP_WUR;
+mp_err mp_log_u32(const mp_int *a, uint32_t base, uint32_t *c) MP_WUR;
 
 /* c = a**b */
-mp_err mp_expt_u32(const mp_int *a, unsigned int b, mp_int *c) MP_WUR;
+mp_err mp_expt_u32(const mp_int *a, uint32_t b, mp_int *c) MP_WUR;
 MP_DEPRECATED(mp_expt_u32) mp_err mp_expt_d(const mp_int *a, mp_digit b, mp_int *c) MP_WUR;
 MP_DEPRECATED(mp_expt_u32) mp_err mp_expt_d_ex(const mp_int *a, mp_digit b, mp_int *c, int fast) MP_WUR;
 

@@ -5,10 +5,10 @@
  *	images are stored in full color (32 bits per pixel including alpha
  *	channel) and displayed using dithering if necessary.
  *
- * Copyright (c) 1994 The Australian National University.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
- * Copyright (c) 2002-2008 Donal K. Fellows
- * Copyright (c) 2003 ActiveState Corporation.
+ * Copyright © 1994 The Australian National University.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 2002-2008 Donal K. Fellows
+ * Copyright © 2003 ActiveState Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -24,20 +24,27 @@
 /*
  * Declaration for internal Xlib function used here:
  */
-
+#if !defined(_WIN32) && !defined(__CYGWIN__) && !defined(MAC_OSX_TK)
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern int		_XInitImageFuncPtrs(XImage *image);
+#ifdef __cplusplus
+}
+#endif
+#endif
 
 /*
  * Forward declarations
  */
 
-#ifndef TKPUTIMAGE_CAN_BLEND
+#ifndef TK_CAN_RENDER_RGBA
 static void		BlendComplexAlpha(XImage *bgImg, PhotoInstance *iPtr,
 			    int xOffset, int yOffset, int width, int height);
 #endif
 static int		IsValidPalette(PhotoInstance *instancePtr,
 			    const char *palette);
-static int		CountBits(pixel mask);
+static int		CountBits(unsigned mask);
 static void		GetColorTable(PhotoInstance *instancePtr);
 static void		FreeColorTable(ColorTable *colorPtr, int force);
 static void		AllocateColors(ColorTable *colorPtr);
@@ -77,7 +84,7 @@ void
 TkImgPhotoConfigureInstance(
     PhotoInstance *instancePtr)	/* Instance to reconfigure. */
 {
-    PhotoModel *modelPtr = instancePtr->masterPtr;
+    PhotoModel *modelPtr = instancePtr->modelPtr;
     XImage *imagePtr;
     int bitsPerPixel;
     ColorTable *colorTablePtr;
@@ -113,7 +120,7 @@ TkImgPhotoConfigureInstance(
 	 */
 
 	if (colorTablePtr != NULL) {
-	    colorTablePtr->liveRefCount -= 1;
+	    colorTablePtr->liveRefCount--;
 	    FreeColorTable(colorTablePtr, 0);
 	}
 	GetColorTable(instancePtr);
@@ -210,7 +217,7 @@ TkImgPhotoGet(
     ClientData modelData)	/* Pointer to our model structure for the
 				 * image. */
 {
-    PhotoModel *modelPtr = modelData;
+    PhotoModel *modelPtr = (PhotoModel *)modelData;
     PhotoInstance *instancePtr;
     Colormap colormap;
     int mono, nRed, nGreen, nBlue, numVisuals;
@@ -276,8 +283,8 @@ TkImgPhotoGet(
      * a new instance of the image.
      */
 
-    instancePtr = ckalloc(sizeof(PhotoInstance));
-    instancePtr->masterPtr = modelPtr;
+    instancePtr = (PhotoInstance *)ckalloc(sizeof(PhotoInstance));
+    instancePtr->modelPtr = modelPtr;
     instancePtr->display = Tk_Display(tkwin);
     instancePtr->colormap = Tk_Colormap(tkwin);
     Tk_PreserveColormap(instancePtr->display, instancePtr->colormap);
@@ -373,7 +380,7 @@ TkImgPhotoGet(
      */
 
     if (instancePtr->nextPtr == NULL) {
-	Tk_ImageChanged(modelPtr->tkMaster, 0, 0, 0, 0,
+	Tk_ImageChanged(modelPtr->tkModel, 0, 0, 0, 0,
 		modelPtr->width, modelPtr->height);
     }
 
@@ -409,7 +416,7 @@ TkImgPhotoGet(
  *
  *----------------------------------------------------------------------
  */
-#ifndef TKPUTIMAGE_CAN_BLEND
+#ifndef TK_CAN_RENDER_RGBA
 #ifndef _WIN32
 #define GetRValue(rgb)	(UCHAR(((rgb) & red_mask) >> red_shift))
 #define GetGValue(rgb)	(UCHAR(((rgb) & green_mask) >> green_shift))
@@ -435,7 +442,7 @@ BlendComplexAlpha(
     int x, y, line;
     unsigned long pixel;
     unsigned char r, g, b, alpha, unalpha, *modelPtr;
-    unsigned char *alphaAr = iPtr->masterPtr->pix32;
+    unsigned char *alphaAr = iPtr->modelPtr->pix32;
 
     /*
      * This blending is an integer version of the Source-Over compositing rule
@@ -492,7 +499,7 @@ BlendComplexAlpha(
 	green_mlen = 8 - CountBits(green_mask >> green_shift);
 	blue_mlen = 8 - CountBits(blue_mask >> blue_shift);
 	for (y = 0; y < height; y++) {
-	    line = (y + yOffset) * iPtr->masterPtr->width;
+	    line = (y + yOffset) * iPtr->modelPtr->width;
 	    for (x = 0; x < width; x++) {
 		modelPtr = alphaAr + ((line + x + xOffset) * 4);
 		alpha = modelPtr[3];
@@ -535,7 +542,7 @@ BlendComplexAlpha(
 #endif /* !_WIN32 */
 
     for (y = 0; y < height; y++) {
-	line = (y + yOffset) * iPtr->masterPtr->width;
+	line = (y + yOffset) * iPtr->modelPtr->width;
 	for (x = 0; x < width; x++) {
 	    modelPtr = alphaAr + ((line + x + xOffset) * 4);
 	    alpha = modelPtr[3];
@@ -575,7 +582,7 @@ BlendComplexAlpha(
     }
 #undef ALPHA_BLEND
 }
-#endif /* TKPUTIMAGE_CAN_BLEND */
+#endif /* TK_CAN_RENDER_RGBA */
 
 /*
  *----------------------------------------------------------------------
@@ -606,8 +613,8 @@ TkImgPhotoDisplay(
     int drawableX,int drawableY)/* Coordinates within drawable that correspond
 				 * to imageX and imageY. */
 {
-    PhotoInstance *instancePtr = clientData;
-#ifndef TKPUTIMAGE_CAN_BLEND
+    PhotoInstance *instancePtr = (PhotoInstance *)clientData;
+#ifndef TK_CAN_RENDER_RGBA
     XVisualInfo visInfo = instancePtr->visualInfo;
 #endif
 
@@ -620,25 +627,27 @@ TkImgPhotoDisplay(
 	return;
     }
 
-#ifdef TKPUTIMAGE_CAN_BLEND
+#ifdef TK_CAN_RENDER_RGBA
+
     /*
-     * If TkPutImage can handle RGBA Ximages directly there is
+     * We can use TkpPutRGBAImage to render RGBA Ximages directly so there is
      * no need to call XGetImage or to do the Porter-Duff compositing by hand.
      */
 
-    unsigned char *rgbaPixels = instancePtr->masterPtr->pix32;
+    unsigned char *rgbaPixels = instancePtr->modelPtr->pix32;
     XImage *photo = XCreateImage(display, NULL, 32, ZPixmap, 0, (char*)rgbaPixels,
 				 (unsigned int)instancePtr->width,
 				 (unsigned int)instancePtr->height,
 				 0, (unsigned int)(4 * instancePtr->width));
-    TkPutImage(NULL, 0, display, drawable, instancePtr->gc,
+    TkpPutRGBAImage(display, drawable, instancePtr->gc,
 	       photo, imageX, imageY, drawableX, drawableY,
 	       (unsigned int) width, (unsigned int) height);
     photo->data = NULL;
     XDestroyImage(photo);
+
 #else
 
-    if ((instancePtr->masterPtr->flags & COMPLEX_ALPHA)
+    if ((instancePtr->modelPtr->flags & COMPLEX_ALPHA)
 	    && visInfo.depth >= 15
 	    && (visInfo.c_class == DirectColor || visInfo.c_class == TrueColor)) {
 	Tk_ErrorHandler handler;
@@ -686,7 +695,7 @@ TkImgPhotoDisplay(
 
     fallBack:
 	TkSetRegion(display, instancePtr->gc,
-		instancePtr->masterPtr->validRegion);
+		instancePtr->modelPtr->validRegion);
 	XSetClipOrigin(display, instancePtr->gc, drawableX - imageX,
 		drawableY - imageY);
 	XCopyArea(display, instancePtr->pixels, drawable, instancePtr->gc,
@@ -724,8 +733,9 @@ TkImgPhotoFree(
     Display *display)		/* Display containing window that used
 				 * image. */
 {
-    PhotoInstance *instancePtr = clientData;
+    PhotoInstance *instancePtr = (PhotoInstance *)clientData;
     ColorTable *colorPtr;
+    (void)display;
 
     if (instancePtr->refCount-- > 1) {
 	return;
@@ -740,7 +750,7 @@ TkImgPhotoFree(
 
     colorPtr = instancePtr->colorTablePtr;
     if (colorPtr != NULL) {
-	colorPtr->liveRefCount -= 1;
+	colorPtr->liveRefCount--;
     }
 
     Tcl_DoWhenIdle(TkImgDisposeInstance, instancePtr);
@@ -774,7 +784,7 @@ TkImgPhotoInstanceSetSize(
     XRectangle validBox;
     Pixmap newPixmap;
 
-    modelPtr = instancePtr->masterPtr;
+    modelPtr = instancePtr->modelPtr;
     TkClipBox(modelPtr->validRegion, &validBox);
 
     if ((instancePtr->width != modelPtr->width)
@@ -824,7 +834,7 @@ TkImgPhotoInstanceSetSize(
 	     * such possibility.
 	     */
 
-	    newError = ckalloc(modelPtr->height * modelPtr->width
+	    newError = (schar *)ckalloc(modelPtr->height * modelPtr->width
 		    * 3 * sizeof(schar));
 
 	    /*
@@ -862,8 +872,8 @@ TkImgPhotoInstanceSetSize(
 	    if (modelPtr->width == instancePtr->width) {
 		offset = validBox.y * modelPtr->width * 3;
 		memcpy(newError + offset, instancePtr->error + offset,
-			(size_t) (validBox.height
-			* modelPtr->width * 3 * sizeof(schar)));
+			(size_t) validBox.height
+			* modelPtr->width * 3 * sizeof(schar));
 
 	    } else if (validBox.width > 0 && validBox.height > 0) {
 		errDestPtr = newError +
@@ -991,7 +1001,7 @@ IsValidPalette(
 
 static int
 CountBits(
-    pixel mask)			/* Value to count the 1 bits in. */
+    unsigned mask)			/* Value to count the 1 bits in. */
 {
     int n;
 
@@ -1053,13 +1063,13 @@ GetColorTable(
 	 * Re-use the existing entry.
 	 */
 
-	colorPtr = Tcl_GetHashValue(entry);
+	colorPtr = (ColorTable *)Tcl_GetHashValue(entry);
     } else {
 	/*
 	 * No color table currently available; need to make one.
 	 */
 
-	colorPtr = ckalloc(sizeof(ColorTable));
+	colorPtr = (ColorTable *)ckalloc(sizeof(ColorTable));
 
 	/*
 	 * The following line of code should not normally be needed due to the
@@ -1123,8 +1133,7 @@ FreeColorTable(
 				 * longer required by an instance. */
     int force)			/* Force free to happen immediately. */
 {
-    colorPtr->refCount--;
-    if (colorPtr->refCount > 0) {
+    if (colorPtr->refCount-- > 1) {
 	return;
     }
 
@@ -1221,7 +1230,7 @@ AllocateColors(
 	    } else {
 		numColors = MAX(MAX(nRed, nGreen), nBlue);
 	    }
-	    colors = ckalloc(numColors * sizeof(XColor));
+	    colors = (XColor *)ckalloc(numColors * sizeof(XColor));
 
 	    for (i = 0; i < numColors; ++i) {
 		if (igam == 1.0) {
@@ -1241,7 +1250,7 @@ AllocateColors(
 	     */
 
 	    numColors = (mono) ? nRed: (nRed * nGreen * nBlue);
-	    colors = ckalloc(numColors * sizeof(XColor));
+	    colors = (XColor *)ckalloc(numColors * sizeof(XColor));
 
 	    if (!mono) {
 		/*
@@ -1285,7 +1294,7 @@ AllocateColors(
 	 * Now try to allocate the colors we've calculated.
 	 */
 
-	pixels = ckalloc(numColors * sizeof(unsigned long));
+	pixels = (unsigned long *)ckalloc(numColors * sizeof(unsigned long));
 	for (i = 0; i < numColors; ++i) {
 	    if (!XAllocColor(colorPtr->id.display, colorPtr->id.colormap,
 		    &colors[i])) {
@@ -1445,7 +1454,7 @@ DisposeColorTable(
     ClientData clientData)	/* Pointer to the ColorTable whose
 				 * colors are to be released. */
 {
-    ColorTable *colorPtr = clientData;
+    ColorTable *colorPtr = (ColorTable *)clientData;
     Tcl_HashEntry *entry;
 
     if (colorPtr->pixelMap != NULL) {
@@ -1457,7 +1466,7 @@ DisposeColorTable(
 	ckfree(colorPtr->pixelMap);
     }
 
-    entry = Tcl_FindHashEntry(&imgPhotoColorHash, (char *) &colorPtr->id);
+    entry = Tcl_FindHashEntry(&imgPhotoColorHash, &colorPtr->id);
     if (entry == NULL) {
 	Tcl_Panic("DisposeColorTable couldn't find hash entry");
     }
@@ -1505,7 +1514,7 @@ ReclaimColors(
 
     entry = Tcl_FirstHashEntry(&imgPhotoColorHash, &srch);
     while (entry != NULL) {
-	colorPtr = Tcl_GetHashValue(entry);
+	colorPtr = (ColorTable *)Tcl_GetHashValue(entry);
 	if ((colorPtr->id.display == id->display)
 		&& (colorPtr->id.colormap == id->colormap)
 		&& (colorPtr->liveRefCount == 0 )&& (colorPtr->numColors != 0)
@@ -1534,7 +1543,7 @@ ReclaimColors(
 
     entry = Tcl_FirstHashEntry(&imgPhotoColorHash, &srch);
     while ((entry != NULL) && (numColors > 0)) {
-	colorPtr = Tcl_GetHashValue(entry);
+	colorPtr = (ColorTable *)Tcl_GetHashValue(entry);
 	if ((colorPtr->id.display == id->display)
 		&& (colorPtr->id.colormap == id->colormap)
 		&& (colorPtr->liveRefCount == 0) && (colorPtr->numColors != 0)
@@ -1579,7 +1588,7 @@ TkImgDisposeInstance(
     ClientData clientData)	/* Pointer to the instance whose resources are
 				 * to be released. */
 {
-    PhotoInstance *instancePtr = clientData;
+    PhotoInstance *instancePtr = (PhotoInstance *)clientData;
     PhotoInstance *prevPtr;
 
     if (instancePtr->pixels != None) {
@@ -1598,10 +1607,10 @@ TkImgDisposeInstance(
 	FreeColorTable(instancePtr->colorTablePtr, 1);
     }
 
-    if (instancePtr->masterPtr->instancePtr == instancePtr) {
-	instancePtr->masterPtr->instancePtr = instancePtr->nextPtr;
+    if (instancePtr->modelPtr->instancePtr == instancePtr) {
+	instancePtr->modelPtr->instancePtr = instancePtr->nextPtr;
     } else {
-	for (prevPtr = instancePtr->masterPtr->instancePtr;
+	for (prevPtr = instancePtr->modelPtr->instancePtr;
 		prevPtr->nextPtr != instancePtr; prevPtr = prevPtr->nextPtr) {
 	    /* Empty loop body. */
 	}
@@ -1635,14 +1644,14 @@ TkImgDitherInstance(
 				 * block to be dithered. */
     int width, int height)	/* Dimensions of the block to be dithered. */
 {
-    PhotoModel *modelPtr = instancePtr->masterPtr;
+    PhotoModel *modelPtr = instancePtr->modelPtr;
     ColorTable *colorPtr = instancePtr->colorTablePtr;
     XImage *imagePtr;
     int nLines, bigEndian, i, c, x, y, xEnd, doDithering = 1;
     int bitsPerPixel, bytesPerLine, lineLength;
     unsigned char *srcLinePtr;
     schar *errLinePtr;
-    pixel firstBit, word, mask;
+    unsigned firstBit, word, mask;
 
     /*
      * Turn dithering off in certain cases where it is not needed (TrueColor,
@@ -1689,7 +1698,7 @@ TkImgDitherInstance(
      * recovering from the failure.
      */
 
-    imagePtr->data = ckalloc(imagePtr->bytes_per_line * nLines);
+    imagePtr->data = (char *)ckalloc(imagePtr->bytes_per_line * nLines);
     bigEndian = imagePtr->bitmap_bit_order == MSBFirst;
     firstBit = bigEndian? (1 << (imagePtr->bitmap_unit - 1)): 1;
 
@@ -1715,7 +1724,7 @@ TkImgDitherInstance(
 	    unsigned char *srcPtr = srcLinePtr;
 	    schar *errPtr = errLinePtr;
 	    unsigned char *destBytePtr = dstLinePtr;
-	    pixel *destLongPtr = (pixel *) dstLinePtr;
+	    unsigned *destLongPtr = (unsigned *) dstLinePtr;
 
 	    if (colorPtr->flags & COLOR_WINDOW) {
 		/*
@@ -1806,7 +1815,7 @@ TkImgDitherInstance(
 			 * sizes.
 			 */
 
-		    case NBBY * sizeof(pixel):
+		    case NBBY * sizeof(unsigned):
 			*destLongPtr++ = i;
 			break;
 #endif
@@ -1868,7 +1877,7 @@ TkImgDitherInstance(
 			 * sizes.
 			 */
 
-		    case NBBY * sizeof(pixel):
+		    case NBBY * sizeof(unsigned):
 			*destLongPtr++ = i;
 			break;
 #endif
@@ -1978,8 +1987,8 @@ TkImgResetDither(
 {
     if (instancePtr->error) {
 	memset(instancePtr->error, 0,
-	       /*(size_t)*/ (instancePtr->masterPtr->width
-		* instancePtr->masterPtr->height * 3 * sizeof(schar)));
+		(size_t) instancePtr->modelPtr->width
+		* instancePtr->modelPtr->height * 3 * sizeof(schar));
     }
 }
 

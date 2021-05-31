@@ -6,8 +6,8 @@
  *	is primarily responsible for keeping the "env" arrays in sync with the
  *	system environment variables.
  *
- * Copyright (c) 1991-1994 The Regents of the University of California.
- * Copyright (c) 1994-1998 Sun Microsystems, Inc.
+ * Copyright © 1991-1994 The Regents of the University of California.
+ * Copyright © 1994-1998 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -19,10 +19,10 @@ TCL_DECLARE_MUTEX(envMutex)	/* To serialize access to environ. */
 
 #if defined(_WIN32)
 #  define tenviron _wenviron
-#  define tenviron2utfdstr(tenvstr, len, dstr) \
-		Tcl_WinTCharToUtf((TCHAR *)tenvstr, len, dstr)
-#  define utf2tenvirondstr(str, len, dstr) \
-		(const WCHAR *)Tcl_WinUtfToTChar(str, len, dstr)
+#  define tenviron2utfdstr(string, len, dsPtr) (Tcl_DStringInit(dsPtr), \
+		(char *)Tcl_Char16ToUtfDString((const unsigned short *)(string), ((((len) + 2) >> 1) - 1), (dsPtr)))
+#  define utf2tenvirondstr(string, len, dsPtr) (Tcl_DStringInit(dsPtr), \
+		(const WCHAR *)Tcl_UtfToChar16DString((string), (len), (dsPtr)))
 #  define techar WCHAR
 #  ifdef USE_PUTENV
 #    define putenv(env) _wputenv((const wchar_t *)env)
@@ -614,10 +614,9 @@ TclGetEnv(
  *----------------------------------------------------------------------
  */
 
-	/* ARGSUSED */
 static char *
 EnvTraceProc(
-    ClientData clientData,	/* Not used. */
+    TCL_UNUSED(ClientData),
     Tcl_Interp *interp,		/* Interpreter whose "env" variable is being
 				 * modified. */
     const char *name1,		/* Better be "env". */

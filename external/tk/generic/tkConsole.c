@@ -5,7 +5,7 @@
  *	have access to a console. It uses the Text widget and provides special
  *	access via a console command.
  *
- * Copyright (c) 1995-1996 Sun Microsystems, Inc.
+ * Copyright © 1995-1996 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -24,7 +24,7 @@
 typedef struct ConsoleInfo {
     Tcl_Interp *consoleInterp;	/* Interpreter displaying the console. */
     Tcl_Interp *interp;		/* Interpreter controlled by console. */
-    int refCount;
+    size_t refCount;
 } ConsoleInfo;
 
 /*
@@ -68,7 +68,7 @@ static int	InterpreterObjCmd(ClientData clientData, Tcl_Interp *interp,
 static const Tcl_ChannelType consoleChannelType = {
     "console",			/* Type name. */
     TCL_CHANNEL_VERSION_5,	/* v5 channel */
-    ConsoleClose,		/* Close proc. */
+    (Tcl_DriverCloseProc *)ConsoleClose,		/* Close proc. */
     ConsoleInput,		/* Input proc. */
     ConsoleOutput,		/* Output proc. */
     NULL,			/* Seek proc. */
@@ -224,7 +224,7 @@ Tk_InitConsoleChannels(
      * Ensure that we are getting a compatible version of Tcl.
      */
 
-    if (Tcl_InitStubs(interp, "8.6", 0) == NULL) {
+    if (Tcl_InitStubs(interp, "8.6-", 0) == NULL) {
         return;
     }
 

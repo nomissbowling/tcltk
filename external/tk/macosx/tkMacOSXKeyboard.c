@@ -3,17 +3,17 @@
  *
  *	Routines to support keyboard events on the Macintosh.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2020 Marc Culler
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009, Apple Inc.
+ * Copyright © 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2020 Marc Culler
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
 #include "tkMacOSXPrivate.h"
-#include "tkMacOSXEvent.h"
+#include "tkMacOSXInt.h"
 #include "tkMacOSXConstants.h"
 #include "tkMacOSXKeysyms.h"
 
@@ -154,8 +154,6 @@ static int	KeyDataToUnicode(UniChar *uniChars, int maxChars,
     (void)notification;
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
-#else
-    (void)notification;
 #endif
     keyboardChanged = YES;
     UpdateKeymaps();
@@ -466,7 +464,7 @@ XkbKeycodeToKeysym(
 KeySym
 XKeycodeToKeysym(
     TCL_UNUSED(Display *),
-    KeyCode keycode,
+    unsigned int keycode,
     int index)
 {
     return XkbKeycodeToKeysym(NULL, keycode, 0, index);

@@ -4,9 +4,9 @@
  *	Contains commands for platform specific tests for the Windows
  *	platform.
  *
- * Copyright (c) 1997 Sun Microsystems, Inc.
- * Copyright (c) 2000 by Scriptics Corporation.
- * Copyright (c) 2001 by ActiveState Corporation.
+ * Copyright © 1997 Sun Microsystems, Inc.
+ * Copyright © 2000 Scriptics Corporation.
+ * Copyright © 2001 ActiveState Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -290,6 +290,16 @@ TestwineventObjCmd(
     static const TkStateMap messageMap[] = {
 	{WM_LBUTTONDOWN,	"WM_LBUTTONDOWN"},
 	{WM_LBUTTONUP,		"WM_LBUTTONUP"},
+	{WM_LBUTTONDBLCLK,		"WM_LBUTTONDBLCLK"},
+	{WM_MBUTTONDOWN,	"WM_MBUTTONDOWN"},
+	{WM_MBUTTONUP,		"WM_MBUTTONUP"},
+	{WM_MBUTTONDBLCLK,		"WM_MBUTTONDBLCLK"},
+	{WM_RBUTTONDOWN,	"WM_RBUTTONDOWN"},
+	{WM_RBUTTONUP,		"WM_RBUTTONUP"},
+	{WM_RBUTTONDBLCLK,		"WM_RBUTTONDBLCLK"},
+	{WM_XBUTTONDOWN,	"WM_XBUTTONDOWN"},
+	{WM_XBUTTONUP,		"WM_XBUTTONUP"},
+	{WM_XBUTTONDBLCLK,		"WM_XBUTTONDBLCLK"},
 	{WM_CHAR,		"WM_CHAR"},
 	{WM_GETTEXT,		"WM_GETTEXT"},
 	{WM_SETTEXT,		"WM_SETTEXT"},
@@ -312,7 +322,7 @@ TestwineventObjCmd(
 	return TCL_ERROR;
     }
 
-    hwnd = INT2PTR(strtol(Tcl_GetString(objv[1]), &rest, 0));
+    hwnd = (HWND)INT2PTR(strtol(Tcl_GetString(objv[1]), &rest, 0));
     if (rest == Tcl_GetString(objv[1])) {
 	hwnd = FindWindowA(NULL, Tcl_GetString(objv[1]));
 	if (hwnd == NULL) {
@@ -385,6 +395,7 @@ TestwineventObjCmd(
 		    Tcl_ObjPrintf("Could not find control with id %d", id));
 	    return TCL_ERROR;
 	}
+	Tcl_DStringInit(&ds);
 	Tcl_UtfToExternalDString(NULL, Tcl_GetString(objv[4]), -1, &ds);
 	result = SendMessageA(control, WM_SETTEXT, 0,
 		(LPARAM) Tcl_DStringValue(&ds));
@@ -420,7 +431,7 @@ TestwineventObjCmd(
 
 /*
  *  testfindwindow title ?class?
- *	Find a Windows window using the FindWindowW API call. This takes the window
+ *	Find a Windows window using the FindWindow API call. This takes the window
  *	title and optionally the window class and if found returns the HWND and
  *	raises an error if the window is not found.
  *	eg: testfindwindow Console TkTopLevel
@@ -482,7 +493,7 @@ TestfindwindowObjCmd(
 	AppendSystemError(interp, GetLastError());
 	r = TCL_ERROR;
     } else {
-        Tcl_SetObjResult(interp, Tcl_NewWideIntObj((Tcl_WideInt)(((size_t)hwnd) + 1) - 1));
+        Tcl_SetObjResult(interp, Tcl_NewWideIntObj(PTR2INT(hwnd)));
     }
 
     Tcl_DStringFree(&titleString);
@@ -498,7 +509,7 @@ EnumChildrenProc(
 {
     Tcl_Obj *listObj = (Tcl_Obj *) lParam;
 
-    Tcl_ListObjAppendElement(NULL, listObj, Tcl_NewWideIntObj((Tcl_WideInt)(((size_t)hwnd) + 1) - 1));
+    Tcl_ListObjAppendElement(NULL, listObj, Tcl_NewWideIntObj(PTR2INT(hwnd)));
     return TRUE;
 }
 
@@ -525,7 +536,7 @@ TestgetwindowinfoObjCmd(
     if (Tcl_GetWideIntFromObj(interp, objv[1], &hwnd) != TCL_OK)
 	return TCL_ERROR;
 
-    cch = GetClassNameW(INT2PTR(hwnd), buf, cchBuf);
+    cch = GetClassNameW((HWND)INT2PTR(hwnd), buf, cchBuf);
     if (cch == 0) {
     	Tcl_SetObjResult(interp, Tcl_NewStringObj("failed to get class name: ", -1));
     	AppendSystemError(interp, GetLastError());
@@ -540,9 +551,9 @@ TestgetwindowinfoObjCmd(
     dictObj = Tcl_NewDictObj();
     Tcl_DictObjPut(interp, dictObj, Tcl_NewStringObj("class", 5), classObj);
     Tcl_DictObjPut(interp, dictObj, Tcl_NewStringObj("id", 2),
-	    Tcl_NewWideIntObj(GetWindowLongPtrW(INT2PTR(hwnd), GWL_ID)));
+	Tcl_NewWideIntObj(GetWindowLongPtr((HWND)(size_t)hwnd, GWL_ID)));
 
-    cch = GetWindowTextW(INT2PTR(hwnd), buf, cchBuf);
+    cch = GetWindowTextW((HWND)INT2PTR(hwnd), buf, cchBuf);
 	Tcl_DStringInit(&ds);
     Tcl_WCharToUtfDString(buf, cch, &ds);
     textObj = Tcl_NewStringObj(Tcl_DStringValue(&ds), Tcl_DStringLength(&ds));
@@ -550,10 +561,10 @@ TestgetwindowinfoObjCmd(
 
     Tcl_DictObjPut(interp, dictObj, Tcl_NewStringObj("text", 4), textObj);
     Tcl_DictObjPut(interp, dictObj, Tcl_NewStringObj("parent", 6),
-	    Tcl_NewWideIntObj((Tcl_WideInt)(((size_t)GetParent((INT2PTR(hwnd)))) + 1) - 1));
+	Tcl_NewWideIntObj(PTR2INT(GetParent((HWND)(size_t)hwnd))));
 
     childrenObj = Tcl_NewListObj(0, NULL);
-    EnumChildWindows(INT2PTR(hwnd), EnumChildrenProc, (LPARAM)childrenObj);
+    EnumChildWindows((HWND)(size_t)hwnd, EnumChildrenProc, (LPARAM)childrenObj);
     Tcl_DictObjPut(interp, dictObj, Tcl_NewStringObj("children", -1), childrenObj);
 
     Tcl_SetObjResult(interp, dictObj);
@@ -573,7 +584,7 @@ TestwinlocaleObjCmd(
 	Tcl_WrongNumArgs(interp, 1, objv, NULL);
 	return TCL_ERROR;
     }
-    Tcl_SetObjResult(interp, Tcl_NewIntObj((int)GetThreadLocale()));
+    Tcl_SetObjResult(interp, Tcl_NewWideIntObj(GetThreadLocale()));
     return TCL_OK;
 }
 

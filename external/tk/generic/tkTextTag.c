@@ -5,8 +5,8 @@
  *	text widgets, plus most of the other high-level functions related to
  *	tags.
  *
- * Copyright (c) 1992-1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1992-1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -40,66 +40,66 @@ static const char *const tabStyleStrings[] = {
 
 static const Tk_OptionSpec tagOptionSpecs[] = {
     {TK_OPTION_BORDER, "-background", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, border), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, border), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_BITMAP, "-bgstipple", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, bgStipple), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, bgStipple), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_PIXELS, "-borderwidth", NULL, NULL,
-	NULL, Tk_Offset(TkTextTag, borderWidthPtr), Tk_Offset(TkTextTag, borderWidth),
+	NULL, offsetof(TkTextTag, borderWidthPtr), offsetof(TkTextTag, borderWidth),
 	TK_OPTION_NULL_OK|TK_OPTION_DONT_SET_DEFAULT, 0, 0},
     {TK_OPTION_STRING, "-elide", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, elideString),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, elideString),
 	TK_OPTION_NULL_OK|TK_OPTION_DONT_SET_DEFAULT, 0, 0},
     {TK_OPTION_BITMAP, "-fgstipple", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, fgStipple), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, fgStipple), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_FONT, "-font", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, tkfont), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, tkfont), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_COLOR, "-foreground", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, fgColor), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, fgColor), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-justify", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, justifyString), TK_OPTION_NULL_OK, 0,0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, justifyString), TK_OPTION_NULL_OK, 0,0},
     {TK_OPTION_STRING, "-lmargin1", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, lMargin1String), TK_OPTION_NULL_OK,0,0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, lMargin1String), TK_OPTION_NULL_OK,0,0},
     {TK_OPTION_STRING, "-lmargin2", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, lMargin2String), TK_OPTION_NULL_OK,0,0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, lMargin2String), TK_OPTION_NULL_OK,0,0},
     {TK_OPTION_BORDER, "-lmargincolor", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, lMarginColor), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, lMarginColor), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-offset", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, offsetString), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, offsetString), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-overstrike", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, overstrikeString),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, overstrikeString),
 	TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_COLOR, "-overstrikefg", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, overstrikeColor),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, overstrikeColor),
         TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-relief", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, reliefString), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, reliefString), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-rmargin", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, rMarginString), TK_OPTION_NULL_OK, 0,0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, rMarginString), TK_OPTION_NULL_OK, 0,0},
     {TK_OPTION_BORDER, "-rmargincolor", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, rMarginColor), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, rMarginColor), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_BORDER, "-selectbackground", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, selBorder), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, selBorder), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_COLOR, "-selectforeground", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, selFgColor), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, selFgColor), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-spacing1", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, spacing1String), TK_OPTION_NULL_OK,0,0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, spacing1String), TK_OPTION_NULL_OK,0,0},
     {TK_OPTION_STRING, "-spacing2", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, spacing2String), TK_OPTION_NULL_OK,0,0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, spacing2String), TK_OPTION_NULL_OK,0,0},
     {TK_OPTION_STRING, "-spacing3", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, spacing3String), TK_OPTION_NULL_OK,0,0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, spacing3String), TK_OPTION_NULL_OK,0,0},
     {TK_OPTION_STRING, "-tabs", NULL, NULL,
-	NULL, Tk_Offset(TkTextTag, tabStringPtr), -1, TK_OPTION_NULL_OK, 0, 0},
+	NULL, offsetof(TkTextTag, tabStringPtr), TCL_INDEX_NONE, TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING_TABLE, "-tabstyle", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, tabStyle),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, tabStyle),
 	TK_OPTION_NULL_OK, tabStyleStrings, 0},
     {TK_OPTION_STRING, "-underline", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, underlineString),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, underlineString),
 	TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_COLOR, "-underlinefg", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, underlineColor),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, underlineColor),
         TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING_TABLE, "-wrap", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextTag, wrapMode),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextTag, wrapMode),
 	TK_OPTION_NULL_OK, wrapStrings, 0},
     {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0}
 };
@@ -343,7 +343,7 @@ TkTextTagCmd(
 	    if (tagPtr == NULL) {
 		return TCL_ERROR;
 	    }
-	    objPtr = Tk_GetOptionValue(interp, (char *)tagPtr,
+	    objPtr = Tk_GetOptionValue(interp, tagPtr,
 		    tagPtr->optionTable, objv[4], textPtr->tkwin);
 	    if (objPtr == NULL) {
 		return TCL_ERROR;
@@ -357,12 +357,12 @@ TkTextTagCmd(
 
 	if (objc < 4) {
 	    Tcl_WrongNumArgs(interp, 3, objv,
-		    "tagName ?-option? ?value? ?-option value ...?");
+		    "tagName ?-option value ...?");
 	    return TCL_ERROR;
 	}
 	tagPtr = TkTextCreateTag(textPtr, Tcl_GetString(objv[3]), &newTag);
 	if (objc <= 5) {
-	    Tcl_Obj *objPtr = Tk_GetOptionInfo(interp, (char *)tagPtr,
+	    Tcl_Obj *objPtr = Tk_GetOptionInfo(interp, tagPtr,
 		    tagPtr->optionTable,
 		    (objc == 5) ? objv[4] : NULL, textPtr->tkwin);
 
@@ -374,7 +374,7 @@ TkTextTagCmd(
 	} else {
 	    int result = TCL_OK;
 
-	    if (Tk_SetOptions(interp, (char *)tagPtr, tagPtr->optionTable,
+	    if (Tk_SetOptions(interp, tagPtr, tagPtr->optionTable,
 		    objc-4, objv+4, textPtr->tkwin, NULL, NULL) != TCL_OK) {
 		return TCL_ERROR;
 	    }
@@ -1108,7 +1108,7 @@ FindTag(
     Tcl_Obj *tagName)		/* Name of desired tag. */
 {
     Tcl_HashEntry *hPtr;
-    int len;
+    TkSizeT len;
     const char *str;
 
     str = Tcl_GetStringFromObj(tagName, &len);
@@ -1457,9 +1457,9 @@ TkTextBindProc(
     if (eventPtr->type == ButtonPress) {
 	textPtr->flags |= BUTTON_DOWN;
     } else if (eventPtr->type == ButtonRelease) {
-	unsigned int mask;
+	unsigned long mask;
 
-	mask = TkGetButtonMask(eventPtr->xbutton.button);
+	mask = Tk_GetButtonMask(eventPtr->xbutton.button);
 	if ((eventPtr->xbutton.state & ALL_BUTTONS) == mask) {
 	    textPtr->flags &= ~BUTTON_DOWN;
 	    repick = 1;
@@ -1540,7 +1540,8 @@ TkTextPickCurrent(
     TkTextTag **copyArrayPtr = NULL;
 				/* Initialization needed to prevent compiler
 				 * warning. */
-    int numOldTags, numNewTags, i, j, size, nearby;
+    int numOldTags, numNewTags, i, j, nearby;
+    size_t size;
     XEvent event;
 
     /*

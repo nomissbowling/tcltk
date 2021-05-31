@@ -1,9 +1,9 @@
 # This file is a Tcl script to test out the "listbox" command
 # of Tk.  It is organized in the standard fashion for Tcl tests.
 #
-# Copyright (c) 1993-1994 The Regents of the University of California.
-# Copyright (c) 1994-1997 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1993-1994 The Regents of the University of California.
+# Copyright © 1994-1997 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 # All rights reserved.
 
 package require tcltest 2.2
@@ -718,13 +718,13 @@ test listbox-3.60 {ListboxWidgetCmd procedure, "index" option} -body {
 } -result 2
 test listbox-3.61 {ListboxWidgetCmd procedure, "index" option} -body {
     .l index -1
-} -result {-1}
+} -result -1
 test listbox-3.62 {ListboxWidgetCmd procedure, "index" option} -body {
     .l index end
 } -result 18
 test listbox-3.63 {ListboxWidgetCmd procedure, "index" option} -body {
     .l index 34
-} -result 34
+} -result 18
 test listbox-3.64 {ListboxWidgetCmd procedure, "insert" option} -body {
     .l insert
 } -returnCodes error -result {wrong # args: should be ".l insert index ?element ...?"}
@@ -2112,7 +2112,7 @@ test listbox-10.17 {GetListboxIndex procedure} -setup {
     .l index 20
 } -cleanup {
     destroy .l
-} -result 20
+} -result 12
 test listbox-10.18 {GetListboxIndex procedure} -setup {
     destroy .l
 } -body {
@@ -2132,7 +2132,7 @@ test listbox-10.19 {GetListboxIndex procedure} -setup {
     .l index -1
 } -cleanup {
     destroy .l
-} -result  -1
+} -result -1
 test listbox-10.20 {GetListboxIndex procedure} -setup {
     destroy .l
 } -body {
@@ -2143,7 +2143,7 @@ test listbox-10.20 {GetListboxIndex procedure} -setup {
     .l index 1
 } -cleanup {
     destroy .l
-} -result 1
+} -result 0
 
 
 test listbox-11.1 {ChangeListboxView procedure, boundary conditions for index} -setup {
@@ -2854,7 +2854,7 @@ test listbox-23.4 {ConfigureListboxItem, wrong num args} -setup {
     set result
 } -cleanup {
     destroy .l
-} -result {wrong # args: should be ".l itemconfigure index ?-option? ?value? ?-option value ...?"}
+} -result {wrong # args: should be ".l itemconfigure index ?-option value ...?"}
 test listbox-23.5 {ConfigureListboxItem, multiple calls} -setup {
     destroy .l
 } -body {
@@ -3152,7 +3152,7 @@ test listbox-31.1 {<<ListboxSelect>> event} -setup {
     bind .l <<ListboxSelect>> {lappend res [%W curselection]}
     .l insert end a b c
     focus -force .l
-    event generate .l <1> -x 5 -y 5  ; # <<ListboxSelect>> fires
+    event generate .l <Button-1> -x 5 -y 5  ; # <<ListboxSelect>> fires
     .l configure -state disabled
     focus -force .l
     event generate .l <Control-Home> ; # <<ListboxSelect>> does NOT fire
@@ -3175,7 +3175,7 @@ test listbox-31.2 {<<ListboxSelect>> event on lost selection} -setup {
     bind .l <<ListboxSelect>> {lappend res [list [selection own] [%W curselection]]}
     .l insert end a b c
     focus -force .l
-    event generate .l <1> -x 5 -y 5  ; # <<ListboxSelect>> fires
+    event generate .l <Button-1> -x 5 -y 5  ; # <<ListboxSelect>> fires
     selection clear                  ; # <<ListboxSelect>> fires again
     update
     set res

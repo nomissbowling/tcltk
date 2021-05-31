@@ -3,8 +3,8 @@
  *
  *	A photo image file handler for PPM (Portable PixMap) files.
  *
- * Copyright (c) 1994 The Australian National University.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1994 The Australian National University.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -141,7 +141,8 @@ FileReadPPM(
 				 * image being read. */
 {
     int fileWidth, fileHeight, maxIntensity;
-    int nLines, nBytes, h, type, count, bytesPerChannel = 1;
+    int nLines, h, type, bytesPerChannel = 1;
+    size_t nBytes, count;
     unsigned char *pixelPtr;
     Tk_PhotoImageBlock block;
 
@@ -200,7 +201,7 @@ FileReadPPM(
     }
 
     if (srcY > 0) {
-	Tcl_Seek(chan, (Tcl_WideInt)(srcY * block.pitch), SEEK_CUR);
+	Tcl_Seek(chan, (long long)srcY * block.pitch, SEEK_CUR);
     }
 
     nLines = (MAX_MEMORY + block.pitch - 1) / block.pitch;
@@ -285,7 +286,8 @@ FileWritePPM(
     Tk_PhotoImageBlock *blockPtr)
 {
     Tcl_Channel chan;
-    int w, h, greenOffset, blueOffset, nBytes;
+    int w, h, greenOffset, blueOffset;
+    size_t nBytes;
     unsigned char *pixelPtr, *pixLinePtr;
     char header[16 + TCL_INTEGER_SPACE * 2];
 
@@ -315,16 +317,16 @@ FileWritePPM(
     if ((greenOffset == 1) && (blueOffset == 2) && (blockPtr->pixelSize == 3)
 	    && (blockPtr->pitch == (blockPtr->width * 3))) {
 	nBytes = blockPtr->height * blockPtr->pitch;
-	if (Tcl_Write(chan, (char *) pixLinePtr, nBytes) != nBytes) {
+	if ((size_t)Tcl_Write(chan, (char *) pixLinePtr, nBytes) != nBytes) {
 	    goto writeerror;
 	}
     } else {
 	for (h = blockPtr->height; h > 0; h--) {
 	    pixelPtr = pixLinePtr;
 	    for (w = blockPtr->width; w > 0; w--) {
-		if (    Tcl_Write(chan,(char *)&pixelPtr[0], 1) == -1 ||
-			Tcl_Write(chan,(char *)&pixelPtr[greenOffset],1) == -1 ||
-			Tcl_Write(chan,(char *)&pixelPtr[blueOffset],1) == -1) {
+		if (Tcl_Write(chan,(char *)&pixelPtr[0], 1) == TCL_IO_FAILURE ||
+			Tcl_Write(chan,(char *)&pixelPtr[greenOffset],1) == TCL_IO_FAILURE ||
+			Tcl_Write(chan,(char *)&pixelPtr[blueOffset],1) == TCL_IO_FAILURE) {
 		    goto writeerror;
 		}
 		pixelPtr += blockPtr->pixelSize;
@@ -761,7 +763,8 @@ ReadPPMStringHeader(
 {
 #define BUFFER_SIZE 1000
     char buffer[BUFFER_SIZE], c;
-    int i, numFields, dataSize, type = 0;
+    int i, numFields, type = 0;
+    TkSizeT dataSize;
     unsigned char *dataBuffer;
 
     dataBuffer = Tcl_GetByteArrayFromObj(dataPtr, &dataSize);

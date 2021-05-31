@@ -35,20 +35,17 @@
 #ifndef _TCL
 #   include <tcl.h>
 #endif
-#if TIME_WITH_SYS_TIME
-#   include <sys/time.h>
-#   include <time.h>
-#else
-#   if HAVE_SYS_TIME_H
+#if HAVE_SYS_TIME_H
 #	include <sys/time.h>
-#   else
-#	include <time.h>
-#   endif
 #endif
+#include <time.h>
 #if HAVE_INTTYPES_H
 #    include <inttypes.h>
 #endif
 #include <unistd.h>
+#if defined(__GNUC__) && !defined(__cplusplus)
+#   pragma GCC diagnostic ignored "-Wc++-compat"
+#endif
 #include <X11/Xlib.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
@@ -108,26 +105,6 @@
 #define REDO_KEYSYM_LOOKUP
 
 /*
- * Defines for X functions that are used by Tk but are treated as
- * no-op functions on the Macintosh.
- */
-
-#undef XFlush
-#define XFlush(display) (0)
-#undef XFree
-#define XFree(data) (((data) != NULL) ? (ckfree(data),0) : 0)
-#undef XGrabServer
-#define XGrabServer(display) (0)
-#undef XNoOp
-#define XNoOp(display) (display->request++,0)
-#undef XUngrabServer
-#define XUngrabServer(display) (0)
-#undef XSynchronize
-#define XSynchronize(display, onoff) (display->request++,NULL)
-#undef XVisualIDFromVisual
-#define XVisualIDFromVisual(visual) (visual->visualid)
-
-/*
  * The following functions are not used on the Mac, so we stub them out.
  */
 
@@ -135,17 +112,6 @@
 #define TkpFreeColor(tkColPtr)
 #define TkSetPixmapColormap(p,c) {}
 #define TkpSync(display)
-
-/*
- * TkMacOSXGetCapture is a legacy function used on the Mac. When fixing
- * [943d5ebe51], TkpGetCapture was added to the Windows port. Both
- * are actually the same feature and should bear the same name. However,
- * in order to avoid potential backwards incompatibilities, renaming
- * TkMacOSXGetCapture into TkpGetCapture in *PlatDecls.h shall not be
- * done in a patch release, therefore use a define here.
- */
-
-#define TkpGetCapture TkMacOSXGetCapture
 
 /*
  * This macro stores a representation of the window handle in a string.
@@ -163,11 +129,16 @@
 #define TK_DYNAMIC_COLORMAP 0x0fffffff
 
 /*
- * Inform tkImgPhInstance.c that our tkPutImage can render an image with an
- * alpha channel directly into a window.
+ * Inform tkImgPhInstance.c that we implement TkpPutRGBAImage to render RGBA
+ * images directly into a window.
  */
 
-#define TKPUTIMAGE_CAN_BLEND
+#define TK_CAN_RENDER_RGBA
+
+MODULE_SCOPE int TkpPutRGBAImage(
+		     Display* display, Drawable drawable, GC gc,XImage* image,
+		     int src_x, int src_y, int dest_x, int dest_y,
+		     unsigned int width, unsigned int height);
 
 /*
  * Used by xcolor.c

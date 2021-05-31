@@ -15,11 +15,8 @@
 #include "tkInt.h"
 #include <X11/Xlib.h>
 #if defined(MAC_OSX_TK)
-#   define Cursor XCursor
-#   define Region XRegion
 #endif
 
-#undef TkSetRegion
 
 #define MAX_DASH_LIST_SIZE 10
 typedef struct {
@@ -559,7 +556,6 @@ XDrawSegments(
 }
 #endif
 
-#if 0
 char *
 XFetchBuffer(
     Display *display,
@@ -761,7 +757,6 @@ XPolygonRegion(
 
     return 0;
 }
-#endif
 
 void
 XDestroyIC(
@@ -812,7 +807,6 @@ XCreateGlyphCursor(
     return (Cursor) NULL;
 }
 
-#if 0
 XFontSet
 XCreateFontSet(
     Display *display		/* display */,
@@ -933,7 +927,6 @@ XSetIMValues(
 
     return NULL;
 }
-#endif
 
 /*
  * Local Variables:

@@ -4,8 +4,8 @@
  *	This file contains the functions that implement marks for text
  *	widgets.
  *
- * Copyright (c) 1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -19,8 +19,8 @@
  * Macro that determines the size of a mark segment:
  */
 
-#define MSEG_SIZE ((unsigned)(Tk_Offset(TkTextSegment, body) \
-	+ sizeof(TkTextMark)))
+#define MSEG_SIZE (offsetof(TkTextSegment, body) \
+	+ sizeof(TkTextMark))
 
 /*
  * Forward references for functions defined in this file:
@@ -36,8 +36,8 @@ static TkTextSegment *	MarkCleanupProc(TkTextSegment *segPtr,
 static void		MarkCheckProc(TkTextSegment *segPtr,
 			    TkTextLine *linePtr);
 static int		MarkLayoutProc(TkText *textPtr, TkTextIndex *indexPtr,
-			    TkTextSegment *segPtr, int offset, int maxX,
-			    int maxChars, int noCharsYet, TkWrapMode wrapMode,
+			    TkTextSegment *segPtr, TkSizeT offset, int maxX,
+			    TkSizeT maxChars, int noCharsYet, TkWrapMode wrapMode,
 			    TkTextDispChunk *chunkPtr);
 static int		MarkFindNext(Tcl_Interp *interp,
 			    TkText *textPtr, Tcl_Obj *markName);
@@ -126,7 +126,7 @@ TkTextMarkCmd(
     switch ((enum markOptions) optionIndex) {
     case MARK_GRAVITY: {
 	char c;
-	int length;
+	TkSizeT length;
 	const char *str;
 
 	if (objc < 4 || objc > 5) {
@@ -547,11 +547,11 @@ MarkLayoutProc(
     TkText *textPtr,		/* Text widget being layed out. */
     TCL_UNUSED(TkTextIndex *),	/* Identifies first character in chunk. */
     TkTextSegment *segPtr,	/* Segment corresponding to indexPtr. */
-    TCL_UNUSED(int),			/* Offset within segPtr corresponding to
+    TCL_UNUSED(TkSizeT),		/* Offset within segPtr corresponding to
 				 * indexPtr (always 0). */
     TCL_UNUSED(int),			/* Chunk must not occupy pixels at this
 				 * position or higher. */
-    TCL_UNUSED(int),		/* Chunk must not include more than this many
+    TCL_UNUSED(TkSizeT),		/* Chunk must not include more than this many
 				 * characters. */
     TCL_UNUSED(int),		/* Non-zero means no characters have been
 				 * assigned to this line yet. */

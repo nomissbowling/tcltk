@@ -31,7 +31,7 @@ fi
 ## copy source to temp compile path
 if [ ! -d $COMPILEDIR/$MODULE ] || [ -n "$SW_FORCECOPY" ]; then
     echo -n "Copying new sources ... "
-    rsync -a --exclude "*/.git" --exclude "*.fossil" $EXTSRCDIR/$MODULE $COMPILEDIR/
+    rsync -a --exclude "*/.git" $EXTSRCDIR/$MODULE $COMPILEDIR/
     rsync -a $PATCHDIR/$MODULE/tclsh.ico $COMPILEDIR/$MODULE/win/
     mkdir -p $INSTALLDIR/img
     rsync -a $PATCHDIR/$MODULE/mainicon.png $INSTALLDIR/img/
@@ -59,15 +59,15 @@ echo -n "Copying extras ... "
 ## postprocess
 cd $INSTALLDIR/bin
 if [ -z "$WINDIR" ]; then
-    mv tclsh8.6 tclsh86
-    rsync -a tclsh86 tclsh
+    mv tclsh8.7 tclsh87
+    rsync -a tclsh87 tclsh
 else
     if [ -n "$SW_DEBUG" ]; then
-        mv tclsh86g.exe tclsh86.exe
-        rsync -a tclsh86.exe tclsh.exe
-        rsync -a tcl86g.dll tcl86.dll
+        mv tclsh87g.exe tclsh87.exe
+        rsync -a tclsh87.exe tclsh.exe
+        rsync -a tcl87g.dll tcl87.dll
     else
-        rsync -a tclsh86.exe tclsh.exe
+        rsync -a tclsh87.exe tclsh.exe
     fi
     rsync -a $PATCHDIR/mingw/x32/*.dll $iSHARELIB32DIR
     rsync -a $PATCHDIR/mingw/x64/*.dll $iSHARELIB64DIR

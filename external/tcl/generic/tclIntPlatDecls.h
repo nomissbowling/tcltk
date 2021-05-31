@@ -110,7 +110,7 @@ EXTERN TclFile		TclpCreateTempFile_(const char *contents);
 /* Slot 27 is reserved */
 /* Slot 28 is reserved */
 /* 29 */
-EXTERN int		TclWinCPUID(unsigned int index, unsigned int *regs);
+EXTERN int		TclWinCPUID(int index, int *regs);
 /* 30 */
 EXTERN int		TclUnixOpenTemporaryFile(Tcl_Obj *dirObj,
 				Tcl_Obj *basenameObj, Tcl_Obj *extensionObj,
@@ -185,7 +185,7 @@ EXTERN void		TclWinFlushDirtyChannels(void);
 /* 28 */
 EXTERN void		TclWinResetInterfaces(void);
 /* 29 */
-EXTERN int		TclWinCPUID(unsigned int index, unsigned int *regs);
+EXTERN int		TclWinCPUID(int index, int *regs);
 /* 30 */
 EXTERN int		TclUnixOpenTemporaryFile(Tcl_Obj *dirObj,
 				Tcl_Obj *basenameObj, Tcl_Obj *extensionObj,
@@ -261,7 +261,7 @@ EXTERN TclFile		TclpCreateTempFile_(const char *contents);
 /* Slot 27 is reserved */
 /* Slot 28 is reserved */
 /* 29 */
-EXTERN int		TclWinCPUID(unsigned int index, unsigned int *regs);
+EXTERN int		TclWinCPUID(int index, int *regs);
 /* 30 */
 EXTERN int		TclUnixOpenTemporaryFile(Tcl_Obj *dirObj,
 				Tcl_Obj *basenameObj, Tcl_Obj *extensionObj,
@@ -302,7 +302,7 @@ typedef struct TclIntPlatStubs {
     void (*reserved26)(void);
     void (*reserved27)(void);
     void (*reserved28)(void);
-    int (*tclWinCPUID) (unsigned int index, unsigned int *regs); /* 29 */
+    int (*tclWinCPUID) (int index, int *regs); /* 29 */
     int (*tclUnixOpenTemporaryFile) (Tcl_Obj *dirObj, Tcl_Obj *basenameObj, Tcl_Obj *extensionObj, Tcl_Obj *resultingNameObj); /* 30 */
 #endif /* UNIX */
 #if defined(_WIN32) || defined(__CYGWIN__) /* WIN */
@@ -335,7 +335,7 @@ typedef struct TclIntPlatStubs {
     void (*tclWinSetInterfaces) (int wide); /* 26 */
     void (*tclWinFlushDirtyChannels) (void); /* 27 */
     void (*tclWinResetInterfaces) (void); /* 28 */
-    int (*tclWinCPUID) (unsigned int index, unsigned int *regs); /* 29 */
+    int (*tclWinCPUID) (int index, int *regs); /* 29 */
     int (*tclUnixOpenTemporaryFile) (Tcl_Obj *dirObj, Tcl_Obj *basenameObj, Tcl_Obj *extensionObj, Tcl_Obj *resultingNameObj); /* 30 */
 #endif /* WIN */
 #ifdef MAC_OSX_TCL /* MACOSX */
@@ -368,7 +368,7 @@ typedef struct TclIntPlatStubs {
     void (*reserved26)(void);
     void (*reserved27)(void);
     void (*reserved28)(void);
-    int (*tclWinCPUID) (unsigned int index, unsigned int *regs); /* 29 */
+    int (*tclWinCPUID) (int index, int *regs); /* 29 */
     int (*tclUnixOpenTemporaryFile) (Tcl_Obj *dirObj, Tcl_Obj *basenameObj, Tcl_Obj *extensionObj, Tcl_Obj *resultingNameObj); /* 30 */
 #endif /* MACOSX */
 } TclIntPlatStubs;
@@ -570,6 +570,11 @@ extern const TclIntPlatStubs *tclIntPlatStubsPtr;
 #undef TclpGmtime_unix
 #undef TclWinConvertWSAError
 #define TclWinConvertWSAError TclWinConvertError
+#if !defined(TCL_USE_STUBS) && !defined(TCL_NO_DEPRECATED) && TCL_MAJOR_VERSION < 9
+#   undef TclWinConvertError
+#   define TclWinConvertError Tcl_WinConvertError
+#endif
+
 #undef TclpInetNtoa
 #define TclpInetNtoa inet_ntoa
 
@@ -588,13 +593,21 @@ extern const TclIntPlatStubs *tclIntPlatStubsPtr;
 #   undef TclWinGetServByName
 #   undef TclWinGetSockOpt
 #   undef TclWinSetSockOpt
-#   define TclWinNToHS ntohs
-#   define TclWinGetServByName getservbyname
-#   define TclWinGetSockOpt getsockopt
-#   define TclWinSetSockOpt setsockopt
+#   undef TclWinGetPlatformId
+#   undef TclWinResetInterfaces
+#   undef TclWinSetInterfaces
+#   if !defined(TCL_NO_DEPRECATED) && TCL_MAJOR_VERSION < 9
+#	define TclWinNToHS ntohs
+#	define TclWinGetServByName getservbyname
+#	define TclWinGetSockOpt getsockopt
+#	define TclWinSetSockOpt setsockopt
+#	define TclWinGetPlatformId() (2) /* VER_PLATFORM_WIN32_NT */
+#	define TclWinResetInterfaces() /* nop */
+#	define TclWinSetInterfaces(dummy) /* nop */
+#   endif /* TCL_NO_DEPRECATED */
 #else
 #   undef TclpGetPid
-#   define TclpGetPid(pid) ((unsigned long) (pid))
+#   define TclpGetPid(pid) ((int)(size_t)(pid))
 #endif
 
 #endif /* _TCLINTPLATDECLS */

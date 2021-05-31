@@ -3,9 +3,9 @@
  *
  *	Macros and declarations that are purely internal & private to TkAqua.
  *
- * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2008-2009 Apple Inc.
- * Copyright (c) 2020 Marc Culler
+ * Copyright © 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2008-2009 Apple Inc.
+ * Copyright © 2020 Marc Culler
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -25,8 +25,11 @@
 #endif
 
 #define TextStyle MacTextStyle
+#define Cursor QDCursor
 #import <ApplicationServices/ApplicationServices.h>
+#undef Cursor
 #import <Cocoa/Cocoa.h>
+#import <QuartzCore/QuartzCore.h>
 #ifndef NO_CARBON_H
 #import <Carbon/Carbon.h>
 #endif
@@ -120,9 +123,10 @@
  * Macro abstracting use of TkMacOSXGetNamedSymbol to init named symbols.
  */
 
+#define UNINITIALISED_SYMBOL	((void*)(-1L))
 #define TkMacOSXInitNamedSymbol(module, ret, symbol, ...) \
-    static ret (* symbol)(__VA_ARGS__) = (void*)(-1L); \
-    if (symbol == (void*)(-1L)) { \
+    static ret (* symbol)(__VA_ARGS__) = UNINITIALISED_SYMBOL; \
+    if (symbol == UNINITIALISED_SYMBOL) { \
 	symbol = TkMacOSXGetNamedSymbol(STRINGIFY(module), \
 		STRINGIFY(symbol)); \
     }
@@ -203,7 +207,6 @@ typedef struct TkMacOSXDrawingContext {
     CGContextRef context;
     NSView *view;
     HIShapeRef clipRgn;
-    CGRect portBounds;
 } TkMacOSXDrawingContext;
 
 /*
@@ -216,8 +219,8 @@ MODULE_SCOPE long tkMacOSXMacOSXVersion;
  * Prototypes for TkMacOSXRegion.c.
  */
 
-MODULE_SCOPE HIShapeRef	TkMacOSXGetNativeRegion(TkRegion r);
-MODULE_SCOPE void	TkMacOSXSetWithNativeRegion(TkRegion r,
+MODULE_SCOPE HIShapeRef	TkMacOSXGetNativeRegion(Region r);
+MODULE_SCOPE void	TkMacOSXSetWithNativeRegion(Region r,
 			    HIShapeRef rgn);
 MODULE_SCOPE HIShapeRef	TkMacOSXHIShapeCreateEmpty(void);
 MODULE_SCOPE HIMutableShapeRef TkMacOSXHIShapeCreateMutableWithRect(
@@ -259,13 +262,13 @@ MODULE_SCOPE void	TkMacOSXRestoreDrawingContext(
 MODULE_SCOPE void	TkMacOSXSetColorInContext(GC gc, unsigned long pixel,
 			    CGContextRef context);
 #define TkMacOSXGetTkWindow(window) (TkWindow *)Tk_MacOSXGetTkWindow(window)
-#define TkMacOSXGetNSWindowForDrawable(drawable) ((NSWindow*)TkMacOSXDrawable(drawable))
-#define TkMacOSXGetNSViewForDrawable(macWin) (NSView *)Tk_MacOSXGetNSViewForDrawable((Drawable)(macWin))
+#define TkMacOSXGetNSWindowForDrawable(drawable) ((NSWindow *)Tk_MacOSXGetNSWindowForDrawable(drawable))
+#define TkMacOSXGetNSViewForDrawable(macWin) ((NSView *)Tk_MacOSXGetNSViewForDrawable((Drawable)(macWin)))
+#define TkMacOSXGetCGContextForDrawable(drawable) ((CGContextRef)Tk_MacOSXGetCGContextForDrawable(drawable))
 MODULE_SCOPE void	TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE void	TkMacOSXInvalidateViewRegion(NSView *view,
 			    HIShapeRef rgn);
-MODULE_SCOPE CGContextRef TkMacOSXGetCGContextForDrawable(Drawable drawable);
 MODULE_SCOPE NSImage*	TkMacOSXGetNSImageFromTkImage(Display *display,
 			    Tk_Image image, int width, int height);
 MODULE_SCOPE NSImage*	TkMacOSXGetNSImageFromBitmap(Display *display,
@@ -294,6 +297,8 @@ MODULE_SCOPE void       TkMacOSXWinNSBounds(TkWindow *winPtr, NSView *view,
 MODULE_SCOPE Bool       TkMacOSXInDarkMode(Tk_Window tkwin);
 MODULE_SCOPE void	TkMacOSXDrawAllViews(ClientData clientData);
 MODULE_SCOPE unsigned long TkMacOSXClearPixel(void);
+MODULE_SCOPE int MacSystrayInit(Tcl_Interp *);
+
 
 #pragma mark Private Objective-C Classes
 
@@ -332,6 +337,7 @@ VISIBILITY_HIDDEN
     int _macOSVersion;  /* 10000 * major + 100*minor */
     Bool _isDrawing;
     Bool _needsToDraw;
+    Bool _isSigned;
 #endif
 
 }
@@ -339,6 +345,7 @@ VISIBILITY_HIDDEN
 @property int macOSVersion;
 @property Bool isDrawing;
 @property Bool needsToDraw;
+@property Bool isSigned;
 
 @end
 @interface TKApplication(TKInit)

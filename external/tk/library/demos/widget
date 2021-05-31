@@ -366,7 +366,6 @@ addFormattedText {
     @@subtitle	Scales and Progress Bars
     @@demo hscale	Horizontal scale
     @@demo vscale	Vertical scale
-    @@new
     @@demo ttkscale	Themed scale linked to a label with traces
     @@demo ttkprogress	Progress bar
 
@@ -387,6 +386,8 @@ addFormattedText {
     @@demo filebox	File selection dialog
     @@demo clrpick	Color picker
     @@demo fontchoose	Font selection dialog
+    @@new
+    @@demo systray      System tray icon and notification
 
     @@subtitle	Animation
     @@demo anilabel	Animated labels
@@ -723,10 +724,10 @@ proc PrintTextWin32 {filename} {
 proc tkAboutDialog {} {
     tk_messageBox -icon info -type ok -title [mc "About Widget Demo"] \
 	    -message [mc "Tk widget demonstration application"] -detail \
-"[mc "Copyright \xA9 %s" {1996-1997 Sun Microsystems, Inc.}]
-[mc "Copyright \xA9 %s" {1997-2000 Ajuba Solutions, Inc.}]
-[mc "Copyright \xA9 %s" {2001-2009 Donal K. Fellows}]
-[mc "Copyright \xA9 %s" {2002-2007 Daniel A. Steffen}]"
+"[mc "Copyright © %s" {1996-1997 Sun Microsystems, Inc.}]
+[mc "Copyright © %s" {1997-2000 Ajuba Solutions, Inc.}]
+[mc "Copyright © %s" {2001-2009 Donal K. Fellows}]
+[mc "Copyright © %s" {2002-2007 Daniel A. Steffen}]"
 }
 
 # Local Variables:

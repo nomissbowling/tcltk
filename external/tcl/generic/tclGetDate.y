@@ -959,7 +959,7 @@ TclDatelex(
 
 int
 TclClockOldscanObjCmd(
-    void *dummy,		/* Unused */
+    TCL_UNUSED(void *),
     Tcl_Interp *interp,		/* Tcl interpreter */
     int objc,			/* Count of paraneters */
     Tcl_Obj *const *objv)	/* Parameters */
@@ -969,7 +969,6 @@ TclClockOldscanObjCmd(
     DateInfo dateInfo;
     DateInfo* info = &dateInfo;
     int status;
-    (void)dummy;
 
     if (objc != 5) {
 	Tcl_WrongNumArgs(interp, 1, objv,

@@ -4,17 +4,22 @@
 # commands.  Sourcing this file into Tcl runs the tests and generates output
 # for errors.  No output means no errors were found.
 #
-# Copyright (c) 1997 by Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1997 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 #
 # See the file "license.terms" for information on usage and redistribution of
 # this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-package require tcltest 2.5
-namespace import ::tcltest::*
+if {"::tcltest" ni [namespace children]} {
+    package require tcltest 2.5
+    namespace import -force ::tcltest::*
+}
 unset -nocomplain path
 catch {set oldlang $env(LANG)}
 set env(LANG) C
+
+# Some tests require the testgetencpath command
+testConstraint testgetencpath [llength [info commands testgetencpath]]
 
 test unixInit-1.1 {TclpInitPlatform: ignore SIGPIPE} {unix stdio} {
     set x {}
@@ -87,13 +92,15 @@ test unixInit-1.2 {initialisation: standard channel type deduction} {unix stdio}
 
 skip [concat [skip] unixInit-2.*]
 
-test unixInit-2.0 {TclpInitLibraryPath: setting tclDefaultEncodingDir} {
-    set origDir [testgetdefenc]
-    testsetdefenc slappy
-    set path [testgetdefenc]
-    testsetdefenc $origDir
+test unixInit-2.0 {TclpInitLibraryPath: setting tclDefaultEncodingDir} -constraints {
+    testgetencpath
+} -body {
+    set origPath [testgetencpath]
+    testsetencpath slappy
+    set path [testgetencpath]
+    testsetencpath $origPath
     set path
-} {slappy}
+} -result {slappy}
 test unixInit-2.1 {TclpInitLibraryPath: value of installLib, developLib} -setup {
     unset -nocomplain oldlibrary
     if {[info exists env(TCL_LIBRARY)]} {
@@ -119,7 +126,7 @@ test unixInit-2.2 {TclpInitLibraryPath: TCL_LIBRARY} -setup {
 	set oldlibrary $env(TCL_LIBRARY)
     }
 } -body {
-    # ((str != NULL) && (str[0] != '\0'))
+    # ((str != NULL) && (str[0] != '\x00'))
     set env(TCL_LIBRARY) sparkly
     lindex [getlibpath] 0
 } -cleanup {
@@ -151,7 +158,7 @@ test unixInit-2.4 {TclpInitLibraryPath: TCL_LIBRARY: INTL} -setup {
     }
 } -body {
     # Child process translates env variable from native encoding.
-    set env(TCL_LIBRARY) "\xa7"
+    set env(TCL_LIBRARY) "§"
     lindex [getlibpath] 0
 } -cleanup {
     unset -nocomplain env(TCL_LIBRARY) env(LANG)
@@ -159,7 +166,7 @@ test unixInit-2.4 {TclpInitLibraryPath: TCL_LIBRARY: INTL} -setup {
 	set env(TCL_LIBRARY) $oldlibrary
 	unset oldlibrary
     }
-} -result "\xa7"
+} -result "§"
 test unixInit-2.5 {TclpInitLibraryPath: compiled-in library path} {
     # cannot test
 } {}

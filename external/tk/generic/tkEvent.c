@@ -4,16 +4,24 @@
  *	This file provides basic low-level facilities for managing X events in
  *	Tk.
  *
- * Copyright (c) 1990-1994 The Regents of the University of California.
- * Copyright (c) 1994-1995 Sun Microsystems, Inc.
- * Copyright (c) 1998-2000 Ajuba Solutions.
- * Copyright (c) 2004 George Peter Staplin
+ * Copyright © 1990-1994 The Regents of the University of California.
+ * Copyright © 1994-1995 Sun Microsystems, Inc.
+ * Copyright © 1998-2000 Ajuba Solutions.
+ * Copyright © 2004 George Peter Staplin
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
 #include "tkInt.h"
+
+#ifdef _WIN32
+#include "tkWinInt.h"
+#elif defined(MAC_OSX_TK)
+#include "tkMacOSXInt.h"
+#else
+#include "tkUnixInt.h"
+#endif
 
 /*
  * There's a potential problem if a handler is deleted while it's current
@@ -205,9 +213,7 @@ static int		RefreshKeyboardMappingIfNeeded(XEvent *eventPtr);
 static int		TkXErrorHandler(ClientData clientData,
 			    XErrorEvent *errEventPtr);
 static int		WindowEventProc(Tcl_Event *evPtr, int flags);
-#ifdef TK_USE_INPUT_METHODS
 static void		CreateXIC(TkWindow *winPtr);
-#endif /* TK_USE_INPUT_METHODS */
 
 /*
  *----------------------------------------------------------------------
@@ -315,7 +321,6 @@ InvokeMouseHandlers(
  *----------------------------------------------------------------------
  */
 
-#ifdef TK_USE_INPUT_METHODS
 static void
 CreateXIC(
     TkWindow *winPtr)
@@ -362,7 +367,6 @@ CreateXIC(
 	XSelectInput(winPtr->display, winPtr->window, winPtr->atts.event_mask);
     }
 }
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -509,9 +513,12 @@ RefreshKeyboardMappingIfNeeded(
 /*
  *----------------------------------------------------------------------
  *
- * TkGetButtonMask --
+ * Tk_GetButtonMask --
  *
- *	Return the proper Button${n}Mask for the button.
+ *	Return the proper Button${n}Mask for the button. Don't care about
+ *	Button4 - Button7, because those are not actually buttons: Those
+ *	are used for the horizontal or vertical mouse wheels. Button4Mask
+ *	and higher is actually used for Button 8 and higher.
  *
  * Results:
  *	A button mask.
@@ -523,14 +530,15 @@ RefreshKeyboardMappingIfNeeded(
  */
 
 static const unsigned buttonMasks[] = {
-    0, Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask
+    0, Button1Mask, Button2Mask, Button3Mask, 0, 0, 0, 0, Button4Mask, \
+	    Button5Mask, Button6Mask, Button7Mask, Button8Mask, Button9Mask
 };
 
 unsigned
-TkGetButtonMask(
+Tk_GetButtonMask(
     unsigned button)
 {
-    return (button > Button5) ? 0 : buttonMasks[button];
+    return (button > Button9) ? 0 : buttonMasks[button];
 }
 
 /*
@@ -1132,11 +1140,20 @@ Tk_HandleEvent(
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-#if !defined(MAC_OSX_TK) && !defined(_WIN32)
-    if (((eventPtr->type == ButtonPress) || (eventPtr->type == ButtonRelease))
-	    && ((eventPtr->xbutton.button - 6) < 2)) {
-	eventPtr->xbutton.button -= 2;
-	eventPtr->xbutton.state ^= ShiftMask;
+
+#if !defined(_WIN32) && !defined(MAC_OSX_TK)
+    if ((eventPtr->xbutton.button >= Button4) && (eventPtr->xbutton.button < Button8)) {
+	if (eventPtr->type == ButtonRelease) {
+	    return;
+	} else if (eventPtr->type == ButtonPress) {
+	    int but = eventPtr->xbutton.button;
+	    eventPtr->type = MouseWheelEvent;
+	    eventPtr->xany.send_event = -1;
+	    eventPtr->xkey.keycode = (but & 1) ? -120 : 120;
+	    if (but > Button5) {
+		eventPtr->xkey.state |= ShiftMask;
+	    }
+	}
     }
 #endif
 
@@ -1206,7 +1223,6 @@ Tk_HandleEvent(
      * ever active for X11.
      */
 
-#ifdef TK_USE_INPUT_METHODS
     /*
      * If the XIC has been invalidated, it must be recreated.
      */
@@ -1228,7 +1244,6 @@ Tk_HandleEvent(
 	    XSetICFocus(winPtr->inputContext);
 	}
     }
-#endif /*TK_USE_INPUT_METHODS*/
 
     /*
      * For events where it hasn't already been done, update the current time

@@ -4,8 +4,8 @@
 # commands. Sourcing this file into Tcl runs the tests and generates output
 # for errors. No output means no errors were found.
 #
-# Copyright (c) 1994-1996 Sun Microsystems, Inc.
-# Copyright (c) 1998-2000 Ajuba Solutions.
+# Copyright © 1994-1996 Sun Microsystems, Inc.
+# Copyright © 1998-2000 Ajuba Solutions.
 #
 # See the file "license.terms" for information on usage and redistribution of
 # this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -66,16 +66,22 @@ if {"::tcltest" ni [namespace children]} {
 }
 
 ::tcltest::loadTestedCommands
+catch [list package require -exact tcl::test [info patchlevel]]
+::tcltest::loadTestedCommands
 
 # A bad interaction between socket creation, macOS, and unattended CI
 # environments make this whole file impractical to run; too many weird hangs.
 if {[info exists ::env(MAC_CI)]} {
     return
 }
+testConstraint notWine [expr {![info exists ::env(CI_USING_WINE)]}]
 
 # Some tests require the Thread package or exec command
 testConstraint thread [expr {0 == [catch {package require Thread 2.7-}]}]
 testConstraint exec [llength [info commands exec]]
+testConstraint knownMsvcBug [expr {![info exists ::env(CI_BUILD_WITH_MSVC)]}]
+testConstraint notWinCI [expr {
+     $tcl_platform(platform) ne "windows" || ![info exists ::env(CI)]}]
 
 # Produce a random port number in the Dynamic/Private range
 # from 49152 through 65535.
@@ -95,6 +101,14 @@ proc randport {} {
     }
     return $port
 }
+
+# Check if testsocket testflags is available
+testConstraint testsocket_testflags [expr {![catch {
+        set h [socket -async localhost [randport]]
+        testsocket testflags $h 0
+        close $h
+    }]}]
+
 
 # Test the latency of tcp connections over the loopback interface. Some OSes
 # (e.g. NetBSD) seem to use the Nagle algorithm and delayed ACKs, so it takes
@@ -295,13 +309,13 @@ test socket_$af-1.1 {arg parsing for socket command} -constraints [list socket s
 } -returnCodes error -result {no argument given for -server option}
 test socket_$af-1.2 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -server foo
-} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-myaddr addr? port"}
+} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-reuseaddr boolean? ?-reuseport boolean? ?-myaddr addr? port"}
 test socket_$af-1.3 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -myaddr
 } -returnCodes error -result {no argument given for -myaddr option}
 test socket_$af-1.4 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -myaddr $localhost
-} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-myaddr addr? port"}
+} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-reuseaddr boolean? ?-reuseport boolean? ?-myaddr addr? port"}
 test socket_$af-1.5 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -myport
 } -returnCodes error -result {no argument given for -myport option}
@@ -310,19 +324,19 @@ test socket_$af-1.6 {arg parsing for socket command} -constraints [list socket s
 } -returnCodes error -result {expected integer but got "xxxx"}
 test socket_$af-1.7 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -myport 2522
-} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-myaddr addr? port"}
+} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-reuseaddr boolean? ?-reuseport boolean? ?-myaddr addr? port"}
 test socket_$af-1.8 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -froboz
-} -returnCodes error -result {bad option "-froboz": must be -async, -myaddr, -myport, or -server}
+} -returnCodes error -result {bad option "-froboz": must be -async, -myaddr, -myport, -reuseaddr, -reuseport, or -server}
 test socket_$af-1.9 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -server foo -myport 2521 3333
 } -returnCodes error -result {option -myport is not valid for servers}
 test socket_$af-1.10 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket host 2528 -junk
-} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-myaddr addr? port"}
+} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-reuseaddr boolean? ?-reuseport boolean? ?-myaddr addr? port"}
 test socket_$af-1.11 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -server callback 2520 --
-} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-myaddr addr? port"}
+} -returnCodes error -result {wrong # args: should be "socket ?-myaddr addr? ?-myport myport? ?-async? host port" or "socket -server command ?-reuseaddr boolean? ?-reuseport boolean? ?-myaddr addr? port"}
 test socket_$af-1.12 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket foo badport
 } -returnCodes error -result {expected integer but got "badport"}
@@ -332,6 +346,24 @@ test socket_$af-1.13 {arg parsing for socket command} -constraints [list socket 
 test socket_$af-1.14 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
     socket -server foo -async
 } -returnCodes error -result {cannot set -async option for server sockets}
+test socket_$af-1.15 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
+    socket -reuseaddr yes 4242
+} -returnCodes error -result {options -reuseaddr and -reuseport are only valid for servers}
+test socket_$af-1.16 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
+    socket -reuseaddr no 4242
+} -returnCodes error -result {options -reuseaddr and -reuseport are only valid for servers}
+test socket_$af-1.17 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
+    socket -reuseaddr
+} -returnCodes error -result {no argument given for -reuseaddr option}
+test socket_$af-1.18 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
+    socket -reuseport yes 4242
+} -returnCodes error -result {options -reuseaddr and -reuseport are only valid for servers}
+test socket_$af-1.19 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
+    socket -reuseport no 4242
+} -returnCodes error -result {options -reuseaddr and -reuseport are only valid for servers}
+test socket_$af-1.20 {arg parsing for socket command} -constraints [list socket supported_$af] -body {
+    socket -reuseport
+} -returnCodes error -result {no argument given for -reuseport option}
 
 set path(script) [makeFile {} script]
 
@@ -709,7 +741,7 @@ test socket_$af-2.12 {} [list socket stdio supported_$af] {
     close $f
     set ::done
 } 0
-test socket_$af-2.13 {Bug 1758a0b603} {socket stdio} {
+test socket_$af-2.13 {Bug 1758a0b603} {socket stdio notWine} {
     file delete $path(script)
     set f [open $path(script) w]
     puts $f {
@@ -1518,7 +1550,7 @@ test socket_$af-11.11 {testing spurious events} -setup {
     after cancel $timer
     sendCommand {close $server}
 } -result {0 2690 1}
-test socket_$af-11.12 {testing EOF stickyness} -constraints [list socket supported_$af doTestsWithRemoteServer] -setup {
+test socket_$af-11.12 {testing EOF stickyness} -constraints [list socket supported_$af doTestsWithRemoteServer notWine] -setup {
     set counter 0
     set done 0
     set port [sendCommand {
@@ -1937,522 +1969,575 @@ catch {close $commandSocket}
 catch {close $remoteProcChan}
 }
 unset ::tcl::unsupported::socketAF
-test socket-14.0.0 {[socket -async] when server only listens on IPv4} -setup {
-    proc accept {s a p} {
-	global x
-	puts $s bye
-	close $s
-	set x ok
-    }
-    set server [socket -server accept -myaddr 127.0.0.1 0]
-    set port [lindex [fconfigure $server -sockname] 2]
-} -constraints {socket supported_inet localhost_v4} -body {
-    set client [socket -async localhost $port]
-    set after [after $latency {set x [fconfigure $client -error]}]
-    vwait x
-    set x
-} -cleanup {
-    catch {after cancel $after}
-    catch {close $server}
-    catch {close $client}
-    unset -nocomplain x
-} -result ok
-test socket-14.0.1 {[socket -async] when server only listens on IPv6} -setup {
-    proc accept {s a p} {
-	global x
-	puts $s bye
-	close $s
-	set x ok
-    }
-    set server [socket -server accept -myaddr ::1 0]
-    set port [lindex [fconfigure $server -sockname] 2]
-} -constraints {socket supported_inet6 localhost_v6} -body {
-    set client [socket -async localhost $port]
-    set after [after $latency {set x [fconfigure $client -error]}]
-    vwait x
-    set x
-} -cleanup {
-    catch {after cancel $after}
-    catch {close $server}
-    catch {close $client}
-    unset -nocomplain x
-} -result ok
-test socket-14.1 {[socket -async] fileevent while still connecting} -setup {
-    proc accept {s a p} {
-	global x
-	puts $s bye
-	close $s
-	lappend x ok
-    }
-    set server [socket -server accept -myaddr localhost 0]
-    set port [lindex [fconfigure $server -sockname] 2]
-    set x ""
-} -constraints socket -body {
-    set client [socket -async localhost $port]
-    fileevent $client writable {
-	lappend x [fconfigure $client -error]
-	fileevent $client writable {}
-    }
-    set after [after $latency {lappend x timeout}]
-    while {[llength $x] < 2 && "timeout" ni $x} {
-	vwait x
-    }
-    lsort $x; # we only want to see both events, the order doesn't matter
-} -cleanup {
-    catch {after cancel $after}
-    catch {close $server}
-    catch {close $client}
-    unset -nocomplain x
-} -result {{} ok}
-test socket-14.2 {[socket -async] fileevent connection refused} -setup {
-    set after [after $latency set x timeout]
-} -body {
-    set client [socket -async localhost [randport]]
-    fileevent $client writable {set x ok}
-    vwait x
-    lappend x [fconfigure $client -error]
-} -constraints socket -cleanup {
-    catch {after cancel $after}
-    catch {close $client}
-    unset -nocomplain x after client
-} -result {ok {connection refused}}
-test socket-14.3 {[socket -async] when server only listens on IPv6} -setup {
-    proc accept {s a p} {
-	global x
-	puts $s bye
-	close $s
-	set x ok
-    }
-    set server [socket -server accept -myaddr ::1 0]
-    set port [lindex [fconfigure $server -sockname] 2]
-} -constraints {socket supported_inet6 localhost_v6} -body {
-    set client [socket -async localhost $port]
-    set after [after $latency {set x [fconfigure $client -error]}]
-    vwait x
-    set x
-} -cleanup {
-    catch {after cancel $after}
-    catch {close $server}
-    catch {close $client}
-    unset -nocomplain x
-} -result ok
-test socket-14.4 {[socket -async] and both, readdable and writable fileevents} -setup {
-    proc accept {s a p} {
-	puts $s bye
-	close $s
-    }
-    set server [socket -server accept -myaddr localhost 0]
-    set port [lindex [fconfigure $server -sockname] 2]
-    set x ""
-} -constraints socket -body {
-    set client [socket -async localhost $port]
-    fileevent $client writable {
-	lappend x [fconfigure $client -error]
-	fileevent $client writable {}
-    }
-    fileevent $client readable {lappend x [gets $client]}
-    set after [after $latency {lappend x timeout}]
-    while {[llength $x] < 2 && "timeout" ni $x} {
-	vwait x
-    }
-    lsort $x
-} -cleanup {
-    catch {after cancel $after}
-    catch {close $client}
-    catch {close $server}
-    unset -nocomplain x
-} -result {{} bye}
+test socket-14.0.0 {[socket -async] when server only listens on IPv4} \
+    -constraints {socket supported_inet localhost_v4} \
+    -setup {
+        proc accept {s a p} {
+            global x
+            puts $s bye
+            close $s
+            set x ok
+        }
+        set server [socket -server accept -myaddr 127.0.0.1 0]
+        set port [lindex [fconfigure $server -sockname] 2]
+    } -body {
+        set client [socket -async localhost $port]
+        set after [after $latency {set x [fconfigure $client -error]}]
+        vwait x
+        set x
+    } -cleanup {
+        after cancel $after
+        close $server
+        close $client
+        unset x
+    } -result ok
+test socket-14.0.1 {[socket -async] when server only listens on IPv6} \
+    -constraints {socket supported_inet6 localhost_v6} \
+    -setup {
+        proc accept {s a p} {
+            global x
+            puts $s bye
+            close $s
+            set x ok
+        }
+        set server [socket -server accept -myaddr ::1 0]
+        set port [lindex [fconfigure $server -sockname] 2]
+    } -body {
+        set client [socket -async localhost $port]
+        set after [after $latency {set x [fconfigure $client -error]}]
+        vwait x
+        set x
+    } -cleanup {
+        after cancel $after
+        close $server
+        close $client
+        unset x
+    } -result ok
+test socket-14.1 {[socket -async] fileevent while still connecting} \
+    -constraints {socket} \
+    -setup {
+        proc accept {s a p} {
+            global x
+            puts $s bye
+            close $s
+	    lappend x ok
+        }
+        set server [socket -server accept -myaddr localhost 0]
+        set port [lindex [fconfigure $server -sockname] 2]
+        set x ""
+    } -body {
+        set client [socket -async localhost $port]
+        fileevent $client writable {
+            lappend x [fconfigure $client -error]
+	    fileevent $client writable {}
+        }
+        set after [after $latency {lappend x timeout}]
+        while {[llength $x] < 2 && "timeout" ni $x} {
+            vwait x
+        }
+        lsort $x; # we only want to see both events, the order doesn't matter
+    } -cleanup {
+        after cancel $after
+        close $server
+        close $client
+        unset x
+    } -result {{} ok}
+test socket-14.2 {[socket -async] fileevent connection refused} \
+    -constraints {socket} \
+    -body {
+        set client [socket -async localhost [randport]]
+        fileevent $client writable {set x ok}
+        set after [after $latency {set x timeout}]
+        vwait x
+        after cancel $after
+        lappend x [fconfigure $client -error]
+    } -cleanup {
+        after cancel $after
+        close $client
+        unset x after client
+    } -result {ok {connection refused}}
+test socket-14.3 {[socket -async] when server only listens on IPv6} \
+    -constraints {socket supported_inet6 localhost_v6} \
+    -setup {
+        proc accept {s a p} {
+            global x
+            puts $s bye
+            close $s
+            set x ok
+        }
+        set server [socket -server accept -myaddr ::1 0]
+        set port [lindex [fconfigure $server -sockname] 2]
+    } -body {
+        set client [socket -async localhost $port]
+        set after [after $latency {set x [fconfigure $client -error]}]
+        vwait x
+        set x
+    } -cleanup {
+        after cancel $after
+        close $server
+        close $client
+        unset x
+    } -result ok
+test socket-14.4 {[socket -async] and both, readdable and writable fileevents} \
+    -constraints {socket} \
+    -setup {
+        proc accept {s a p} {
+            puts $s bye
+            close $s
+        }
+        set server [socket -server accept -myaddr localhost 0]
+        set port [lindex [fconfigure $server -sockname] 2]
+        set x ""
+    } -body {
+        set client [socket -async localhost $port]
+        fileevent $client writable {
+            lappend x [fconfigure $client -error]
+            fileevent $client writable {}
+        }
+        fileevent $client readable {lappend x [gets $client]}
+        set after [after $latency {lappend x timeout}]
+        while {[llength $x] < 2 && "timeout" ni $x} {
+            vwait x
+        }
+        lsort $x
+    } -cleanup {
+        after cancel $after
+        close $client
+        close $server
+        unset x
+    } -result {{} bye}
 # FIXME: we should also have an IPv6 counterpart of this
-test socket-14.5 {[socket -async] which fails before any connect() can be made} -body {
-    # address from rfc5737
-    socket -async -myaddr 192.0.2.42 127.0.0.1 [randport]
-} -constraints {socket supported_inet notOSX} -returnCodes 1 \
+test socket-14.5 {[socket -async] which fails before any connect() can be made} \
+    -constraints {socket supported_inet notWine} \
+    -body {
+        # address from rfc5737
+        socket -async -myaddr 192.0.2.42 127.0.0.1 [randport]
+    } \
+    -returnCodes 1 \
     -result {couldn't open socket: cannot assign requested address}
-test socket-14.6.0 {[socket -async] with no event loop and server listening on IPv4} -setup {
-    proc accept {s a p} {
-	global x
-	puts $s bye
-	close $s
-	set x ok
-    }
-    set server [socket -server accept -myaddr 127.0.0.1 0]
-    set port [lindex [fconfigure $server -sockname] 2]
-    set x ""
-} -constraints {socket supported_inet localhost_v4} -body {
-    set client [socket -async localhost $port]
-    for {set i 0} {$i < 50} {incr i } {
-	update
-	if {$x ne ""} {
-	    lappend x [gets $client]
-	    break
-	}
-	after 100
-    }
-    set x
-} -cleanup {
-    catch {close $server}
-    catch {close $client}
-    unset -nocomplain x
-} -result {ok bye}
-test socket-14.6.1 {[socket -async] with no event loop and server listening on IPv6} -setup {
-    proc accept {s a p} {
-	global x
-	puts $s bye
-	close $s
-	set x ok
-    }
-    set server [socket -server accept -myaddr ::1 0]
-    set port [lindex [fconfigure $server -sockname] 2]
-    set x ""
-} -constraints {socket supported_inet6 localhost_v6} -body {
-    set client [socket -async localhost $port]
-    for {set i 0} {$i < 50} {incr i } {
-	update
-	if {$x ne ""} {
-	    lappend x [gets $client]
-	    break
-	}
-	after 100
-    }
-    set x
-} -cleanup {
-    catch {close $server}
-    catch {close $client}
-    unset -nocomplain x
-} -result {ok bye}
-test socket-14.7.0 {pending [socket -async] and blocking [gets], server is IPv4} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	set server [socket -server accept -myaddr 127.0.0.1 0]
-	proc accept {s h p} {puts $s ok; close $s; set ::x 1}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-} -constraints {socket supported_inet localhost_v4 notOSX} -body {
-    set sock [socket -async localhost $port]
-    list [fconfigure $sock -error] [gets $sock] [fconfigure $sock -error]
-} -cleanup {
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {{} ok {}}
-test socket-14.7.1 {pending [socket -async] and blocking [gets], server is IPv6} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	set server [socket -server accept -myaddr ::1 0]
-	proc accept {s h p} {puts $s ok; close $s; set ::x 1}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-} -constraints {socket supported_inet6 localhost_v6 notOSX} -body {
-    set sock [socket -async localhost $port]
-    list [fconfigure $sock -error] [gets $sock] [fconfigure $sock -error]
-} -cleanup {
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {{} ok {}}
-test socket-14.7.2 {pending [socket -async] and blocking [gets], no listener} -setup {
-    set sock [socket -server error 0]
-    set unusedPort [lindex [fconfigure $sock -sockname] 2]
-    close $sock
-} -body {
-    set sock [socket -async localhost $unusedPort]
-    catch {gets $sock} x
-    list $x [fconfigure $sock -error] [fconfigure $sock -error]
-} -constraints {socket notOSX} -cleanup {
-    catch {close $sock}
-} -match glob -result {{error reading "sock*": socket is not connected} {connection refused} {}}
-test socket-14.8.0 {pending [socket -async] and nonblocking [gets], server is IPv4} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	set server [socket -server accept -myaddr 127.0.0.1 0]
-	proc accept {s h p} {puts $s ok; close $s; set ::x 1}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-} -constraints {socket supported_inet localhost_v4} -body {
-    set sock [socket -async localhost $port]
-    fconfigure $sock -blocking 0
-    for {set i 0} {$i < 50} {incr i } {
-	if {[catch {gets $sock} x] || $x ne "" || ![fblocked $sock]} break
-	after 200
-    }
-    set x
-} -cleanup {
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {ok}
-test socket-14.8.1 {pending [socket -async] and nonblocking [gets], server is IPv6} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	set server [socket -server accept -myaddr ::1 0]
-	proc accept {s h p} {puts $s ok; close $s; set ::x 1}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-} -constraints {socket supported_inet6 localhost_v6} -body {
-    set sock [socket -async localhost $port]
-    fconfigure $sock -blocking 0
-    for {set i 0} {$i < 50} {incr i } {
-	if {[catch {gets $sock} x] || $x ne "" || ![fblocked $sock]} break
-	after 200
-    }
-    set x
-} -cleanup {
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {ok}
-test socket-14.8.2 {pending [socket -async] and nonblocking [gets], no listener} -body {
-    set sock [socket -async localhost [randport]]
-    fconfigure $sock -blocking 0
-    for {set i 0} {$i < 50} {incr i } {
-	if {[catch {gets $sock} x] || $x ne "" || ![fblocked $sock]} break
-	after 200
-    }
-    list $x [fconfigure $sock -error] [fconfigure $sock -error]
-} -constraints socket -cleanup {
-    catch {close $sock}
-} -match glob -result {{error reading "sock*": socket is not connected} {connection refused} {}}
-test socket-14.9.0 {pending [socket -async] and blocking [puts], server is IPv4} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	after 10000 exit
-	set server [socket -server accept -myaddr 127.0.0.1 0]
-	proc accept {s h p} {set ::x $s}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-	puts [gets $x]
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-} -constraints {socket supported_inet localhost_v4 notOSX} -body {
-    set sock [socket -async localhost $port]
-    puts $sock ok
-    flush $sock
-    list [fconfigure $sock -error] [gets $fd]
-} -cleanup {
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {{} ok}
-test socket-14.9.1 {pending [socket -async] and blocking [puts], server is IPv6} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	after 10000 exit
-	set server [socket -server accept -myaddr ::1 0]
-	proc accept {s h p} {set ::x $s}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-	puts [gets $x]
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-} -constraints {socket supported_inet6 localhost_v6 notOSX} -body {
-    set sock [socket -async localhost $port]
-    puts $sock ok
-    flush $sock
-    list [fconfigure $sock -error] [gets $fd]
-} -cleanup {
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {{} ok}
-test socket-14.10.0 {pending [socket -async] and nonblocking [puts], server is IPv4} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	set server [socket -server accept -myaddr 127.0.0.1 0]
-	proc accept {s h p} {set ::x $s}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-	puts [gets $x]
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-    set after [after $latency set x timeout]
-} -constraints {socket supported_inet localhost_v4} -body {
-    set sock [socket -async localhost $port]
-    fconfigure $sock -blocking 0
-    puts $sock ok
-    flush $sock
-    fileevent $fd readable {set x 1}
-    vwait x
-    list [fconfigure $sock -error] [gets $fd]
-} -cleanup {
-    after cancel $after
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {{} ok}
-test socket-14.10.1 {pending [socket -async] and nonblocking [puts], server is IPv6} -setup {
-    makeFile {
-	fileevent stdin readable exit
-	set server [socket -server accept -myaddr ::1 0]
-	proc accept {s h p} {set ::x $s}
-	puts [lindex [fconfigure $server -sockname] 2]
-	flush stdout
-	vwait x
-	puts [gets $x]
-    } script
-    set fd [open |[list [interpreter] script] RDWR]
-    set port [gets $fd]
-    set after [after $latency set x timeout]
-} -constraints {socket supported_inet6 localhost_v6} -body {
-    set sock [socket -async localhost $port]
-    fconfigure $sock -blocking 0
-    puts $sock ok
-    flush $sock
-    fileevent $fd readable {set x 1}
-    vwait x
-    list [fconfigure $sock -error] [gets $fd]
-} -cleanup {
-    after cancel $after
-    catch {close $fd}
-    catch {close $sock}
-    removeFile script
-} -result {{} ok}
-test socket-14.11.0 {pending [socket -async] and nonblocking [puts], no listener, no flush} -setup {
-    set after [after $latency set x timeout]
-} -body {
-    set sock [socket -async localhost [randport]]
-    fconfigure $sock -blocking 0
-    puts $sock ok
-    fileevent $sock writable {set x 1}
-    vwait x
-    close $sock
-} -constraints socket -cleanup {
-    after cancel $after
-    catch {close $sock}
-    unset -nocomplain x
-} -result {socket is not connected} -returnCodes 1
-test socket-14.11.1 {pending [socket -async] and nonblocking [puts], no listener, flush} -setup {
-    set after [after $latency set x timeout]
-} -body {
-    set sock [socket -async localhost [randport]]
-    fconfigure $sock -blocking 0
-    puts $sock ok
-    flush $sock
-    fileevent $sock writable {set x 1}
-    vwait x
-    close $sock
-} -constraints {socket nonPortable} -cleanup {
-    after cancel $timeout
-    catch {close $sock}
-    unset -nocomplain x
-} -result {socket is not connected} -returnCodes 1
-test socket-14.12 {[socket -async] background progress triggered by [fconfigure -error]} -body {
-    set s [socket -async localhost [randport]]
-    for {set i 0} {$i < 50} {incr i} {
-	set x [fconfigure $s -error]
-	if {$x != ""} break
-	after 200
-    }
-    set x
-} -constraints socket -cleanup {
-    catch {close $s}
-    unset -nocomplain x s
-} -result {connection refused}
-test socket-14.13 {testing writable event when quick failure} -body {
+test socket-14.6.0 {[socket -async] with no event loop and server listening on IPv4} \
+    -constraints {socket supported_inet localhost_v4} \
+    -setup {
+        proc accept {s a p} {
+            global x
+            puts $s bye
+            close $s
+            set x ok
+        }
+        set server [socket -server accept -myaddr 127.0.0.1 0]
+        set port [lindex [fconfigure $server -sockname] 2]
+        set x ""
+    } \
+    -body {
+        set client [socket -async localhost $port]
+        for {set i 0} {$i < 50} {incr i } {
+            update
+            if {$x ne ""} {
+                lappend x [gets $client]
+                break
+            }
+            after 100
+        }
+        set x
+    } \
+    -cleanup {
+        close $server
+        close $client
+        unset x
+    } \
+    -result {ok bye}
+test socket-14.6.1 {[socket -async] with no event loop and server listening on IPv6} \
+    -constraints {socket supported_inet6 localhost_v6} \
+    -setup {
+        proc accept {s a p} {
+            global x
+            puts $s bye
+            close $s
+            set x ok
+        }
+        set server [socket -server accept -myaddr ::1 0]
+        set port [lindex [fconfigure $server -sockname] 2]
+        set x ""
+    } \
+    -body {
+        set client [socket -async localhost $port]
+        for {set i 0} {$i < 50} {incr i } {
+            update
+            if {$x ne ""} {
+                lappend x [gets $client]
+                break
+            }
+            after 100
+        }
+        set x
+    } \
+    -cleanup {
+        close $server
+        close $client
+        unset x
+    } \
+    -result {ok bye}
+test socket-14.7.0 {pending [socket -async] and blocking [gets], server is IPv4} \
+    -constraints {socket supported_inet localhost_v4} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr 127.0.0.1 0]
+            proc accept {s h p} {puts $s ok; close $s; set ::x 1}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        list [fconfigure $sock -error] [gets $sock] [fconfigure $sock -error]
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {{} ok {}}
+test socket-14.7.1 {pending [socket -async] and blocking [gets], server is IPv6} \
+    -constraints {socket supported_inet6 localhost_v6} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr ::1 0]
+            proc accept {s h p} {puts $s ok; close $s; set ::x 1}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        list [fconfigure $sock -error] [gets $sock] [fconfigure $sock -error]
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {{} ok {}}
+test socket-14.7.2 {pending [socket -async] and blocking [gets], no listener} \
+    -constraints {socket} \
+    -body {
+        set sock [socket -async localhost [randport]]
+        catch {gets $sock} x
+        list $x [fconfigure $sock -error] [fconfigure $sock -error]
+    } -cleanup {
+        close $sock
+    } -match glob -result {{error reading "sock*": socket is not connected} {connection refused} {}}
+test socket-14.8.0 {pending [socket -async] and nonblocking [gets], server is IPv4} \
+    -constraints {socket supported_inet localhost_v4} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr 127.0.0.1 0]
+            proc accept {s h p} {puts $s ok; close $s; set ::x 1}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        fconfigure $sock -blocking 0
+        for {set i 0} {$i < 50} {incr i } {
+            if {[catch {gets $sock} x] || $x ne "" || ![fblocked $sock]} break
+            after 200
+        }
+        set x
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {ok}
+test socket-14.8.1 {pending [socket -async] and nonblocking [gets], server is IPv6} \
+    -constraints {socket supported_inet6 localhost_v6} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr ::1 0]
+            proc accept {s h p} {puts $s ok; close $s; set ::x 1}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        fconfigure $sock -blocking 0
+        for {set i 0} {$i < 50} {incr i } {
+            if {[catch {gets $sock} x] || $x ne "" || ![fblocked $sock]} break
+            after 200
+        }
+        set x
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {ok}
+test socket-14.8.2 {pending [socket -async] and nonblocking [gets], no listener} \
+    -constraints {socket} \
+    -body {
+        set sock [socket -async localhost [randport]]
+        fconfigure $sock -blocking 0
+        for {set i 0} {$i < 50} {incr i } {
+            if {[catch {gets $sock} x] || $x ne "" || ![fblocked $sock]} break
+            after 200
+        }
+        list $x [fconfigure $sock -error] [fconfigure $sock -error]
+    } -cleanup {
+        close $sock
+    } -match glob -result {{error reading "sock*": socket is not connected} {connection refused} {}}
+test socket-14.9.0 {pending [socket -async] and blocking [puts], server is IPv4} \
+    -constraints {socket supported_inet localhost_v4} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr 127.0.0.1 0]
+            proc accept {s h p} {set ::x $s}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+            puts [gets $x]
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        puts $sock ok
+        flush $sock
+        list [fconfigure $sock -error] [gets $fd]
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {{} ok}
+test socket-14.9.1 {pending [socket -async] and blocking [puts], server is IPv6} \
+    -constraints {socket supported_inet6 localhost_v6} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr ::1 0]
+            proc accept {s h p} {set ::x $s}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+            puts [gets $x]
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        puts $sock ok
+        flush $sock
+        list [fconfigure $sock -error] [gets $fd]
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {{} ok}
+test socket-14.10.0 {pending [socket -async] and nonblocking [puts], server is IPv4} \
+    -constraints {socket supported_inet localhost_v4} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr 127.0.0.1 0]
+            proc accept {s h p} {set ::x $s}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+            puts [gets $x]
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        fconfigure $sock -blocking 0
+        puts $sock ok
+        flush $sock
+        fileevent $fd readable {set x 1}
+        vwait x
+        list [fconfigure $sock -error] [gets $fd]
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {{} ok}
+test socket-14.10.1 {pending [socket -async] and nonblocking [puts], server is IPv6} \
+    -constraints {socket supported_inet6 localhost_v6} \
+    -setup {
+        makeFile {
+            fileevent stdin readable exit
+            set server [socket -server accept -myaddr ::1 0]
+            proc accept {s h p} {set ::x $s}
+            puts [lindex [fconfigure $server -sockname] 2]
+            flush stdout
+            vwait x
+            puts [gets $x]
+        } script
+        set fd [open |[list [interpreter] script] RDWR]
+        set port [gets $fd]
+    } -body {
+        set sock [socket -async localhost $port]
+        fconfigure $sock -blocking 0
+        puts $sock ok
+        flush $sock
+        fileevent $fd readable {set x 1}
+        vwait x
+        list [fconfigure $sock -error] [gets $fd]
+    } -cleanup {
+        close $fd
+        close $sock
+	removeFile script
+    } -result {{} ok}
+test socket-14.11.0 {pending [socket -async] and nonblocking [puts], no listener, no flush} \
+    -constraints {socket notWinCI} \
+    -body {
+        set sock [socket -async localhost [randport]]
+        fconfigure $sock -blocking 0
+        puts $sock ok
+        fileevent $sock writable {set x 1}
+        vwait x
+        close $sock
+    } -cleanup {
+        catch {close $sock}
+        unset x
+    } -result {socket is not connected} -returnCodes 1
+test socket-14.11.1 {pending [socket -async] and nonblocking [puts], no listener, flush} \
+    -constraints {socket testsocket_testflags} \
+    -body {
+        set sock [socket -async localhost [randport]]
+        # Set the socket in async test mode.
+        # The async connect will not be continued on the following fconfigure
+        # and puts/flush. Thus, the connect will fail after them.
+        testsocket testflags $sock 1
+        fconfigure $sock -blocking 0
+        puts $sock ok
+        flush $sock
+        testsocket testflags $sock 0
+        fileevent $sock writable {set x 1}
+        vwait x
+        close $sock
+    } -cleanup {
+        catch {close $sock}
+        catch {unset x}
+    } -result {socket is not connected} -returnCodes 1
+test socket-14.12 {[socket -async] background progress triggered by [fconfigure -error]} \
+    -constraints {socket} \
+    -body {
+        set s [socket -async localhost [randport]]
+        for {set i 0} {$i < 50} {incr i} {
+            set x [fconfigure $s -error]
+            if {$x != ""} break
+            after 200
+        }
+        set x
+    } -cleanup {
+        close $s
+        unset x s
+    } -result {connection refused}
+
+test socket-14.13 {testing writable event when quick failure} \
+    -constraints {socket win supported_inet notWine} \
+    -body {
     # Test for bug 336441ed59 where a quick background fail was ignored
-    #
+
     # Test only for windows as socket -async 255.255.255.255 fails
     # directly on unix
-    #
+
     # The following connect should fail very quickly
-    set a1 [after $latency {set x timeout}]
+    set a1 [after 2000 {set x timeout}]
     set s [socket -async 255.255.255.255 43434]
     fileevent $s writable {set x writable}
     vwait x
     set x
-} -constraints {socket win supported_inet} -cleanup {
+} -cleanup {
     catch {close $s}
     after cancel $a1
 } -result writable
-test socket-14.14 {testing fileevent readable on failed async socket connect} -body {
+
+test socket-14.14 {testing fileevent readable on failed async socket connect} \
+    -constraints {socket} -body {
     # Test for bug 581937ab1e
-    set a1 [after $latency {set x timeout}]
+
+    set a1 [after 5000 {set x timeout}]
     # This connect should fail
     set s [socket -async localhost [randport]]
     fileevent $s readable {set x readable}
     vwait x
     set x
-} -constraints socket -cleanup {
+} -cleanup {
     catch {close $s}
     after cancel $a1
 } -result readable
-test socket-14.15 {blocking read on async socket should not trigger event handlers} -setup {
-    set subprocess [open "|[list [interpreter]]" r+]
-    fconfigure $subprocess -blocking 0 -buffering none
-} -constraints socket -body {
-    puts $subprocess {
-	set s [socket -async localhost [randport]]
-	set x ok
-	fileevent $s writable {set x fail}
-	catch {read $s}
+
+test socket-14.15 {blocking read on async socket should not trigger event handlers} \
+    -constraints socket -body {
+        set s [socket -async localhost [randport]]
+        set x ok
+        fileevent $s writable {set x fail}
+        catch {read $s}
 	close $s
-	puts $x
-	exit
-    }
-    set after [after $latency set x timeout]
-    fileevent $subprocess readable [list gets $subprocess x]
-    vwait x
-    return $x
-} -cleanup {
-    catch {after cancel $after}
-    if {![testConstraint win]} {
-	catch {exec kill [pid $subprocess]}
-    }
-    catch {close $subprocess}
-    unset -nocomplain x
-} -result ok
+        set x
+    } -result ok
+
 # v4 and v6 is required to prevent that the async connect does not terminate
 # before the fconfigure command. There is always an additional ip to try.
-test socket-14.16 {empty -peername while [socket -async] connecting} -body {
-    set client [socket -async localhost [randport]]
-    fconfigure $client -peername
-} -constraints {socket localhost_v4 localhost_v6 notOSX} -cleanup {
-    catch {close $client}
-} -result {}
+test socket-14.16 {empty -peername while [socket -async] connecting} \
+    -constraints {socket localhost_v4 localhost_v6} \
+    -body {
+        set client [socket -async localhost [randport]]
+        fconfigure $client -peername
+    } -cleanup {
+        catch {close $client}
+    } -result {}
+
 # v4 and v6 is required to prevent that the async connect does not terminate
 # before the fconfigure command. There is always an additional ip to try.
-test socket-14.17 {empty -sockname while [socket -async] connecting} -body {
-    set client [socket -async localhost [randport]]
-    fconfigure $client -sockname
-} -constraints {socket localhost_v4 localhost_v6 notOSX} -cleanup {
-    catch {close $client}
-} -result {}
+test socket-14.17 {empty -sockname while [socket -async] connecting} \
+    -constraints {socket localhost_v4 localhost_v6} \
+    -body {
+        set client [socket -async localhost [randport]]
+        fconfigure $client -sockname
+    } -cleanup {
+        catch {close $client}
+    } -result {}
+
 # test for bug c6ed4acfd8: running async socket connect with other connect
 # established will block tcl as it goes in an infinite loop in vwait
-test socket-14.18 {bug c6ed4acfd8: running async socket connect made other connect block} -body {
-    proc accept {channel address port} {}
-    set port [randport]
-    set ssock [socket -server accept $port]
-    set csock1 [socket -async localhost [randport]]
-    set csock2 [socket localhost $port]
-    after 1000 {set done ok}
-    vwait done
-} -constraints {socket notOSX} -cleanup {
-    catch {close $ssock}
-    catch {close $csock1}
-    catch {close $csock2}
-} -result {}
+test socket-14.18 {bug c6ed4acfd8: running async socket connect made other connect block} \
+    -constraints {socket} \
+    -body {
+        proc accept {channel address port} {}
+        set port [randport]
+        set ssock [socket -server accept $port]
+        set csock1 [socket -async localhost [randport]]
+        set csock2 [socket localhost $port]
+        after 1000 {set done ok}
+        vwait done
+} -cleanup {
+        catch {close $ssock}
+        catch {close $csock1}
+        catch {close $csock2}
+    } -result {}
+
+test socket-14.19 {tip 456 -- introduce the -reuseport option} \
+    -constraints {socket notWine} \
+    -body {
+        proc accept {channel address port} {}
+        set port [randport]
+        set ssock1 [socket -server accept -reuseport yes $port]
+        set ssock2 [socket -server accept -reuseport yes $port]
+        return ok
+} -cleanup {
+    catch {close $ssock1}
+    catch {close $ssock2}
+    } -result ok
 
 set num 0
 
@@ -2464,7 +2549,8 @@ set resulterr {
 }
 foreach {servip sc} $x {
     foreach {cliip cc} $x {
-        set constraints [list socket $sc $cc]
+        set constraints socket
+        lappend constraints $sc $cc
         set result $resulterr
         switch -- [lsort -unique [list $servip $cliip]] {
             localhost - 127.0.0.1 - ::1 {
@@ -2481,16 +2567,17 @@ foreach {servip sc} $x {
                 }
             }
         }
-        test socket-15.1.$num "Connect to $servip from $cliip" -setup {
-	    set server [socket -server accept -myaddr $servip 0]
-	    proc accept {s h p} { close $s }
-	    set port [lindex [fconfigure $server -sockname] 2]
-	} -constraints $constraints -body {
-	    set s [socket $cliip $port]
-	} -cleanup {
-	    close $server
-	    catch {close $s}
-	} {*}$result
+        test socket-15.1.$num "Connect to $servip from $cliip" \
+            -constraints $constraints -setup {
+                set server [socket -server accept -myaddr $servip 0]
+                proc accept {s h p} { close $s }
+                set port [lindex [fconfigure $server -sockname] 2]
+            } -body {
+                set s [socket $cliip $port]
+            } -cleanup {
+                close $server
+                catch {close $s}
+            } {*}$result
         incr num
     }
 }

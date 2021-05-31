@@ -119,7 +119,7 @@ retrieve the stack trace when script evaluation returns
 \fBTCL_ERROR\fR, like so:
 .PP
 .CS
-int code = Tcl_Eval(interp, script);
+int code = Tcl_EvalEx(interp, script, -1, 0);
 if (code == TCL_ERROR) {
     Tcl_Obj *options = \fBTcl_GetReturnOptions\fR(interp, code);
     Tcl_Obj *key = Tcl_NewStringObj("-errorinfo", -1);
@@ -247,6 +247,9 @@ record instead of a value. Otherwise, it is similar to
 .PP
 \fBTcl_SetErrorCodeVA\fR is the same as \fBTcl_SetErrorCode\fR except that
 instead of taking a variable number of arguments it takes an argument list.
+Interfaces using argument lists have been found to be nonportable in practice.
+This function is deprecated and will be removed in Tcl 9.0.
+
 .PP
 The procedure \fBTcl_GetErrorLine\fR is used to read the integer value
 of the \fB\-errorline\fR return option without the overhead of a full
@@ -305,6 +308,22 @@ The global variables \fBerrorInfo\fR and
 \fBerrorCode\fR are not modified by \fBTcl_ResetResult\fR
 so they continue to hold a record of information about the
 most recent error seen in an interpreter.
+.SH "REFERENCE COUNT MANAGEMENT"
+.PP
+The result of \fBTcl_GetReturnOptions\fR will have at least one
+reference to it from the Tcl interpreter. If not using it immediately,
+you should use \fBTcl_IncrRefCount\fR to add your own reference.
+.PP
+The \fIoptions\fR argument to \fBTcl_SetReturnOptions\fR will have a
+reference added by the Tcl interpreter; it may safely be called with a
+zero-reference value.
+.PP
+\fBTcl_AppendObjToErrorInfo\fR only reads its \fIobjPtr\fR argument;
+it does not modify its reference count at all.
+.PP
+The \fIerrorObjPtr\fR argument to \fBTcl_SetObjErrorCode\fR will have a
+reference added by the Tcl interpreter; it may safely be called with a
+zero-reference value.
 .SH "SEE ALSO"
 Tcl_DecrRefCount(3), Tcl_IncrRefCount(3), Tcl_Interp(3), Tcl_ResetResult(3),
 Tcl_SetErrno(3), errorCode(n), errorInfo(n)

@@ -3,7 +3,7 @@
 # what it currently does)
 #
 
-package require Tk
+package require tk
 package require tcltest 2.2
 namespace import -force tcltest::*
 loadTestedCommands
@@ -467,7 +467,7 @@ test treeview-8.6 "Selection - <<TreeviewSelect>> on selection add" -body {
     .tv selection add newnode.n1
     update
     set res
-} -result {1}
+} -result 1
 
 test treeview-8.7 "<<TreeviewSelect>> on selected item deletion" -body {
     .tv selection set {}
@@ -561,7 +561,7 @@ test treeview-9.3 {scrolling on see command, requested item is closed} -setup {
     expr $after < $before
 } -cleanup {
     destroy .top
-} -result {1}
+} -result 1
 
 ### identify tests:
 #
@@ -700,9 +700,9 @@ test treeview-10.1 "Root node properly initialized (#1541739)" -setup {
 test treeview-3006842 "Null bindings" -setup {
     ttk::treeview .tv -show tree
 } -body {
-    .tv tag bind empty <ButtonPress-1> {}
+    .tv tag bind empty <Button-1> {}
     .tv insert {} end -text "Click me" -tags empty
-    event generate .tv <ButtonPress-1> -x 10 -y 10
+    event generate .tv <Button-1> -x 10 -y 10
     .tv tag bind empty
 } -result {} -cleanup {
     destroy .tv
@@ -737,7 +737,7 @@ test treeview-368fa4561e "indicators cannot be clicked on leafs" -setup {
     set res [.tv item foo -open]
     # using $h even for x computation is intentional here in order to simulate
     # a mouse click on the (invisible since we're on a leaf) indicator
-    event generate .tv <ButtonPress-1> \
+    event generate .tv <Button-1> \
             -x [expr {$x + $h / 2}] \
             -y [expr {$y + $h / 2}]
     lappend res [.tv item foo -open]
@@ -834,5 +834,19 @@ test treeview-ce470f20fd-4 "changing -stretch resizes columns" -setup {
 } -cleanup {
     destroy .tv
 } -result {60 50 60 50 60 50 1}
+
+test treeview-11.1 "style command" -body {
+    ttk::treeview .w
+    list [.w cget -style] [.w style] [winfo class .w]
+} -cleanup {
+    destroy .w
+} -result {{} Treeview Treeview}
+test treeview-11.2 "style command" -body {
+    ttk::style configure customStyle.Treeview
+    ttk::treeview .w -style customStyle.Treeview
+    list [.w cget -style] [.w style] [winfo class .w]
+} -cleanup {
+    destroy .w
+} -result {customStyle.Treeview customStyle.Treeview Treeview}
 
 tcltest::cleanupTests

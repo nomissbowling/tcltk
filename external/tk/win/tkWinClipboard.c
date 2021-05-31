@@ -3,8 +3,8 @@
  *
  *	This file contains functions for managing the clipboard.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright (c) 1998-2000 by Scriptics Corporation.
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 1998-2000 Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -332,21 +332,21 @@ TkWinClipboardRender(
     }
     *buffer = '\0';
 
-    Tcl_DStringInit(&ds);
-    Tcl_UtfToWCharDString(rawText, -1, &ds);
-    ckfree(rawText);
-    handle = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
-	    Tcl_DStringLength(&ds) + 2);
-    if (!handle) {
+	Tcl_DStringInit(&ds);
+	Tcl_UtfToWCharDString(rawText, -1, &ds);
+	ckfree(rawText);
+	handle = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
+		(unsigned) Tcl_DStringLength(&ds) + 2);
+	if (!handle) {
+	    Tcl_DStringFree(&ds);
+	    return;
+	}
+	buffer = (char *)GlobalLock(handle);
+	memcpy(buffer, Tcl_DStringValue(&ds),
+		(unsigned) Tcl_DStringLength(&ds) + 2);
+	GlobalUnlock(handle);
 	Tcl_DStringFree(&ds);
-	return;
-    }
-    buffer = (char *)GlobalLock(handle);
-    memcpy(buffer, Tcl_DStringValue(&ds),
-	    Tcl_DStringLength(&ds) + 2);
-    GlobalUnlock(handle);
-    Tcl_DStringFree(&ds);
-    SetClipboardData(CF_UNICODETEXT, handle);
+	SetClipboardData(CF_UNICODETEXT, handle);
 }
 
 /*

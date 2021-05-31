@@ -29,7 +29,7 @@ function printHelp {
 ## helper functions
 
 ## module
-TCL_EXECREL=86
+TCL_EXECREL=87
 WISH=wish$TCL_EXECREL
 TCLSH=tclsh$TCL_EXECREL
 

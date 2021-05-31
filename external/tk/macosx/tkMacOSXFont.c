@@ -4,9 +4,9 @@
  *	Contains the Macintosh implementation of the platform-independent font
  *	package interface.
  *
- * Copyright 2002-2004 Benjamin Riefenstahl, Benjamin.Riefenstahl@epost.de
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright 2008-2009, Apple Inc.
+ * Copyright © 2002-2004 Benjamin Riefenstahl, Benjamin.Riefenstahl@epost.de
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2008-2009 Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -112,7 +112,7 @@ static int		CreateNamedSystemFont(Tcl_Interp *interp,
     self = [self init];
     if (self) {
 	Tcl_DStringInit(&_ds);
-	Tcl_UtfToUniCharDString((const char *)bytes, len, &_ds);
+	Tcl_UtfToChar16DString((const char *)bytes, len, &_ds);
 	_string = [[NSString alloc]
 	     initWithCharactersNoCopy:(unichar *)Tcl_DStringValue(&_ds)
 			       length:Tcl_DStringLength(&_ds)>>1
@@ -1032,7 +1032,7 @@ TkpMeasureCharsInContext(
     [attributedString release];
     [string release];
     length = ceil(width - offset);
-    fit = (TkUtfAtIndex(source, index) - source) - rangeStart;
+    fit = (Tcl_UtfAtIndex(source, index) - source) - rangeStart;
 done:
 #ifdef TK_MAC_DEBUG_FONTS
     TkMacOSXDbgMsg("measure: source=\"%s\" range=\"%.*s\" maxLength=%d "
@@ -1153,6 +1153,7 @@ TkpDrawCharsInContext(
 				 * whole (not just the range) string when
 				 * drawing. */
 {
+    (void)display;
     TkpDrawAngledCharsInContext(display, drawable, gc, tkfont, source, numBytes,
 	    rangeStart, rangeLength, x, y, 0.0);
 }
@@ -1208,16 +1209,18 @@ TkpDrawAngledCharsInContext(
     TkSetMacColor(gc->foreground, &fg);
     attributes = [fontPtr->nsAttributes mutableCopy];
     [attributes setObject:(id)fg forKey:(id)kCTForegroundColorAttributeName];
+    CFRelease(fg);
     nsFont = [attributes objectForKey:NSFontAttributeName];
     [nsFont setInContext:GET_NSCONTEXT(context, NO)];
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     attributedString = [[NSAttributedString alloc] initWithString:string
 	    attributes:attributes];
+    [string release];
     typesetter = CTTypesetterCreateWithAttributedString(
 	    (CFAttributedStringRef)attributedString);
     textX += (CGFloat) macWin->xOff;
     textY += (CGFloat) macWin->yOff;
-    height = drawingContext.portBounds.size.height;
+    height = [drawingContext.view bounds].size.height;
     textY = height - textY;
     t = CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0, height);
     if (angle != 0.0) {
@@ -1249,7 +1252,6 @@ TkpDrawAngledCharsInContext(
     CFRelease(line);
     CFRelease(typesetter);
     [attributedString release];
-    [string release];
     [attributes release];
     TkMacOSXRestoreDrawingContext(&drawingContext);
 }

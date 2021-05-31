@@ -2,9 +2,9 @@
 # the procedures in the file tkImgBmap.c).  It is organized in the
 # standard fashion for Tcl tests.
 #
-# Copyright (c) 1994 The Regents of the University of California.
-# Copyright (c) 1994-1995 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1994 The Regents of the University of California.
+# Copyright © 1994-1995 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 # All rights reserved.
 
 package require tcltest 2.2
@@ -366,7 +366,7 @@ test imageBmap-7.5 {ImgBmapCmd procedure, "cget" option} -body {
 } -returnCodes error -result {unknown option "-stupid"}
 test imageBmap-7.6 {ImgBmapCmd procedure} -body {
     llength [i1 configure]
-} -result {6}
+} -result 6
 test imageBmap-7.7 {ImgBmapCmd procedure} -body {
     i1 co -foreground #001122
     i1 configure -foreground

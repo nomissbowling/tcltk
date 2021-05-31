@@ -4,8 +4,8 @@
  *	This file contains code to implement the "packer" geometry manager for
  *	Tk.
  *
- * Copyright (c) 1990-1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1990-1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -20,7 +20,7 @@ static const char *const sideNames[] = {
 
 /*
  * For each window that the packer cares about (either because the window is
- * managed by the packer or because the window has content managed by
+ * managed by the packer or because the window has content that are managed by
  * the packer), there is a structure of the following type:
  */
 
@@ -122,8 +122,10 @@ static int		ConfigureContent(Tcl_Interp *interp, Tk_Window tkwin,
 			    int objc, Tcl_Obj *const objv[]);
 static void		DestroyPacker(void *memPtr);
 static Packer *		GetPacker(Tk_Window tkwin);
+#ifndef TK_NO_DEPRECATED
 static int		PackAfter(Tcl_Interp *interp, Packer *prevPtr,
 			    Packer *containerPtr, int objc,Tcl_Obj *const objv[]);
+#endif /* !TK_NO_DEPRECATED */
 static void		PackStructureProc(ClientData clientData,
 			    XEvent *eventPtr);
 static void		Unlink(Packer *packPtr);
@@ -161,10 +163,10 @@ TkAppendPadAmount(
 
     if (halfSpace*2 == allSpace) {
 	Tcl_DictObjPut(NULL, bufferObj, Tcl_NewStringObj(switchName, -1),
-		Tcl_NewIntObj(halfSpace));
+		Tcl_NewWideIntObj(halfSpace));
     } else {
-	padding[0] = Tcl_NewIntObj(halfSpace);
-	padding[1] = Tcl_NewIntObj(allSpace - halfSpace);
+	padding[0] = Tcl_NewWideIntObj(halfSpace);
+	padding[1] = Tcl_NewWideIntObj(allSpace - halfSpace);
 	Tcl_DictObjPut(NULL, bufferObj, Tcl_NewStringObj(switchName, -1),
 		Tcl_NewListObj(2, padding));
     }
@@ -197,12 +199,17 @@ Tk_PackObjCmd(
     Tk_Window tkwin = (Tk_Window)clientData;
     const char *argv2;
     static const char *const optionStrings[] = {
-	/* after, append, before and unpack are deprecated */
-	"after", "append", "before", "unpack", "configure",
-	"content", "forget", "info", "propagate", "slaves", NULL };
+#ifndef TK_NO_DEPRECATED
+	"after", "append", "before", "unpack",
+#endif /* !TK_NO_DEPRECATED */
+	"configure", "content", "forget", "info", "propagate", "slaves", NULL };
+    static const char *const optionStringsNoDep[] = {
+	"configure", "content", "forget", "info", "propagate", NULL };
     enum options {
-	PACK_AFTER, PACK_APPEND, PACK_BEFORE, PACK_UNPACK, PACK_CONFIGURE,
-	PACK_CONTENT, PACK_FORGET, PACK_INFO, PACK_PROPAGATE, PACK_SLAVES };
+#ifndef TK_NO_DEPRECATED
+	PACK_AFTER, PACK_APPEND, PACK_BEFORE, PACK_UNPACK,
+#endif /* !TK_NO_DEPRECATED */
+	PACK_CONFIGURE, PACK_CONTENT, PACK_FORGET, PACK_INFO, PACK_PROPAGATE, PACK_SLAVES };
     int index;
 
     if (objc >= 2) {
@@ -217,7 +224,7 @@ Tk_PackObjCmd(
 	return TCL_ERROR;
     }
 
-    if (Tcl_GetIndexFromObjStruct(interp, objv[1], optionStrings,
+    if (Tcl_GetIndexFromObjStruct(NULL, objv[1], optionStrings,
 	    sizeof(char *), "option", 0, &index) != TCL_OK) {
 	/*
 	 * Call it again without the deprecated ones to get a proper error
@@ -225,14 +232,14 @@ Tk_PackObjCmd(
 	 * deprecated and new options.
 	 */
 
-	Tcl_ResetResult(interp);
-	Tcl_GetIndexFromObjStruct(interp, objv[1], &optionStrings[4],
+	Tcl_GetIndexFromObjStruct(interp, objv[1], optionStringsNoDep,
 		sizeof(char *), "option", 0, &index);
 	return TCL_ERROR;
     }
 
     argv2 = Tcl_GetString(objv[2]);
     switch ((enum options) index) {
+#ifndef TK_NO_DEPRECATED
     case PACK_AFTER: {
 	Packer *prevPtr;
 	Tk_Window tkwin2;
@@ -297,6 +304,7 @@ Tk_PackObjCmd(
 	}
 	return PackAfter(interp, prevPtr, containerPtr, objc-3, objv+3);
     }
+#endif /* !TK_NO_DEPRECATED */
     case PACK_CONFIGURE:
 	if (argv2[0] != '.') {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
@@ -349,7 +357,7 @@ Tk_PackObjCmd(
 
 	infoObj = Tcl_NewObj();
 	Tcl_DictObjPut(NULL, infoObj, Tcl_NewStringObj("-in", -1),
-		TkNewWindowObj(contentPtr->containerPtr->tkwin));
+		Tk_NewWindowObj(contentPtr->containerPtr->tkwin));
 	Tcl_DictObjPut(NULL, infoObj, Tcl_NewStringObj("-anchor", -1),
 		Tcl_NewStringObj(Tk_NameOfAnchor(contentPtr->anchor), -1));
 	Tcl_DictObjPut(NULL, infoObj, Tcl_NewStringObj("-expand", -1),
@@ -436,8 +444,8 @@ Tk_PackObjCmd(
 	}
 	break;
     }
-    case PACK_CONTENT:
-    case PACK_SLAVES: {
+    case PACK_SLAVES:
+    case PACK_CONTENT: {
 	Tk_Window container;
 	Packer *containerPtr, *contentPtr;
 	Tcl_Obj *resultObj;
@@ -454,11 +462,12 @@ Tk_PackObjCmd(
 	for (contentPtr = containerPtr->contentPtr; contentPtr != NULL;
 		contentPtr = contentPtr->nextPtr) {
 	    Tcl_ListObjAppendElement(NULL, resultObj,
-		    TkNewWindowObj(contentPtr->tkwin));
+		    Tk_NewWindowObj(contentPtr->tkwin));
 	}
 	Tcl_SetObjResult(interp, resultObj);
 	break;
     }
+#ifndef TK_NO_DEPRECATED
     case PACK_UNPACK: {
 	Tk_Window tkwin2;
 	Packer *packPtr;
@@ -482,6 +491,7 @@ Tk_PackObjCmd(
 	}
 	break;
     }
+#endif /* !TK_NO_DEPRECATED */
     }
 
     return TCL_OK;
@@ -598,7 +608,7 @@ ArrangePacking(
     containerPtr->flags &= ~REQUESTED_REPACK;
 
     /*
-     * If the container has no content anymore, then leave the container size as-is.
+     * If the container has no content anymore, then leave the container's size as-is.
      * Otherwise there is no way to "relinquish" control over the container
      * so another geometry manager can take over.
      */
@@ -1087,6 +1097,7 @@ GetPacker(
  *------------------------------------------------------------------------
  */
 
+#ifndef TK_NO_DEPRECATED
 static int
 PackAfter(
     Tcl_Interp *interp,		/* Interpreter for error reporting. */
@@ -1138,7 +1149,7 @@ PackAfter(
 	    if (((Tk_FakeWin *) (ancestor))->flags & TK_TOP_HIERARCHY) {
 	    badWindow:
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-			"can't pack %s inside %s", Tcl_GetString(objv[0]),
+			"can't pack \"%s\" inside \"%s\"", Tcl_GetString(objv[0]),
 			Tk_PathName(containerPtr->tkwin)));
 		Tcl_SetErrorCode(interp, "TK", "GEOMETRY", "HIERARCHY", NULL);
 		return TCL_ERROR;
@@ -1169,7 +1180,7 @@ PackAfter(
 	packPtr->flags |= OLD_STYLE;
 	for (index = 0 ; index < optionCount; index++) {
 	    Tcl_Obj *curOptPtr = options[index];
-	    int length;
+	    TkSizeT length;
 	    const char *curOpt = Tcl_GetStringFromObj(curOptPtr, &length);
 
 	    c = curOpt[0];
@@ -1307,6 +1318,7 @@ PackAfter(
     }
     return TCL_OK;
 }
+#endif /* !TK_NO_DEPRECATED */
 
 /*
  *----------------------------------------------------------------------
@@ -1360,11 +1372,15 @@ Unlink(
     /*
      * If we have emptied this container from content it means we are no longer
      * handling it and should mark it as free.
+     *
+     * Send the event "NoManagedChild" to the container to inform it about there
+     * being no managed children inside it.
      */
 
     if ((containerPtr->contentPtr == NULL) && (containerPtr->flags & ALLOCED_CONTAINER)) {
 	TkFreeGeometryContainer(containerPtr->tkwin, "pack");
 	containerPtr->flags &= ~ALLOCED_CONTAINER;
+	Tk_SendVirtualEvent(containerPtr->tkwin, "NoManagedChild", NULL);
     }
 
 }
@@ -1456,7 +1472,7 @@ PackStructureProc(
 	if (packPtr->tkwin != NULL) {
 	    TkDisplay *dispPtr = ((TkWindow *) packPtr->tkwin)->dispPtr;
             Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->packerHashTable,
-		    (void *)packPtr->tkwin));
+		    packPtr->tkwin));
 	}
 
 	if (packPtr->flags & REQUESTED_REPACK) {
@@ -1786,7 +1802,7 @@ ConfigureContent(
 	    }
 	    if (Tk_TopWinHierarchy(ancestor)) {
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-			"can't pack %s inside %s", Tcl_GetString(objv[j]),
+			"can't pack \"%s\" inside \"%s\"", Tcl_GetString(objv[j]),
 			Tk_PathName(containerPtr->tkwin)));
 		Tcl_SetErrorCode(interp, "TK", "GEOMETRY", "HIERARCHY", NULL);
 		return TCL_ERROR;
@@ -1794,7 +1810,7 @@ ConfigureContent(
 	}
 	if (content == containerPtr->tkwin) {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "can't pack %s inside itself", Tcl_GetString(objv[j])));
+		    "can't pack \"%s\" inside itself", Tcl_GetString(objv[j])));
 	    Tcl_SetErrorCode(interp, "TK", "GEOMETRY", "SELF", NULL);
 	    return TCL_ERROR;
 	}
@@ -1807,7 +1823,7 @@ ConfigureContent(
 	     container = (TkWindow *)TkGetContainer(container)) {
 	    if (container == (TkWindow *)content) {
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-		    "can't put %s inside %s, would cause management loop",
+		    "can't put \"%s\" inside \"%s\": would cause management loop",
 	            Tcl_GetString(objv[j]), Tk_PathName(containerPtr->tkwin)));
 		Tcl_SetErrorCode(interp, "TK", "GEOMETRY", "LOOP", NULL);
 		return TCL_ERROR;

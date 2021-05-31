@@ -3,13 +3,12 @@
  *
  *	This module implements the UNIX platform-specific features of menus.
  *
- * Copyright (c) 1996-1998 by Sun Microsystems, Inc.
+ * Copyright © 1996-1998 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
-#include "default.h"
 #include "tkUnixInt.h"
 #include "tkMenu.h"
 
@@ -443,7 +442,7 @@ DrawMenuEntryBackground(
 		|| (menuPtr->postedCascade != mePtr))) {
 	    relief = TK_RELIEF_FLAT;
 	} else {
-	    relief = TK_RELIEF_RAISED;
+	    Tk_GetReliefFromObj(NULL, menuPtr->activeReliefPtr, &relief);
 	}
 	Tk_GetPixelsFromObj(NULL, menuPtr->tkwin,
 		menuPtr->activeBorderWidthPtr, &activeBorderWidth);
@@ -632,7 +631,6 @@ DrawMenuSeparator(
 {
     XPoint points[2];
     Tk_3DBorder border;
-
     if (menuPtr->menuType == MENUBAR) {
 	return;
     }
@@ -862,7 +860,7 @@ DrawMenuUnderline(
 	    const char *label, *start, *end;
 
 	    label = Tcl_GetString(mePtr->labelPtr);
-	    start = TkUtfAtIndex(label, mePtr->underline);
+	    start = Tcl_UtfAtIndex(label, mePtr->underline);
 	    end = start + TkUtfToUniChar(start, &ch);
 
 	    Tk_GetPixelsFromObj(NULL, menuPtr->tkwin,
@@ -938,7 +936,7 @@ TkpPostTearoffMenu(
     int vRootX, vRootY, vRootWidth, vRootHeight;
     int result;
 
-    if (index >= menuPtr->numEntries) {
+    if (index >= (int)menuPtr->numEntries) {
 	index = menuPtr->numEntries - 1;
     }
     if (index >= 0) {
@@ -1128,7 +1126,7 @@ TkpComputeMenubarGeometry(
 	menuFont = Tk_GetFontFromObj(menuPtr->tkwin, menuPtr->fontPtr);
 	Tk_GetFontMetrics(menuFont, &menuMetrics);
 
-	for (i = 0; i < menuPtr->numEntries; i++) {
+	for (i = 0; i < (int)menuPtr->numEntries; i++) {
 	    mePtr = menuPtr->entries[i];
 	    mePtr->entryFlags &= ~ENTRY_LAST_COLUMN;
 	    if (mePtr->fontPtr != NULL) {
@@ -1205,7 +1203,7 @@ TkpComputeMenubarGeometry(
 	    maxWidth = x + menuPtr->entries[lastEntry]->width + borderWidth;
 	}
 	x = borderWidth;
-	for (j = lastRowBreak; j < menuPtr->numEntries; j++) {
+	for (j = lastRowBreak; j < (int)menuPtr->numEntries; j++) {
 	    if (j == helpMenuIndex) {
 		continue;
 	    }
@@ -1370,16 +1368,16 @@ SetHelpMenu(
 	    cascadeEntryPtr != NULL;
 	    cascadeEntryPtr = cascadeEntryPtr->nextCascadePtr) {
 	if ((cascadeEntryPtr->menuPtr->menuType == MENUBAR)
-		&& (cascadeEntryPtr->menuPtr->masterMenuPtr->tkwin != NULL)
-		&& (menuPtr->masterMenuPtr->tkwin != NULL)) {
-	    TkMenu *masterMenuPtr = cascadeEntryPtr->menuPtr->masterMenuPtr;
+		&& (cascadeEntryPtr->menuPtr->mainMenuPtr->tkwin != NULL)
+		&& (menuPtr->mainMenuPtr->tkwin != NULL)) {
+	    TkMenu *mainMenuPtr = cascadeEntryPtr->menuPtr->mainMenuPtr;
 	    char *helpMenuName = (char *)ckalloc(strlen(Tk_PathName(
-		    masterMenuPtr->tkwin)) + strlen(".help") + 1);
+		    mainMenuPtr->tkwin)) + strlen(".help") + 1);
 
-	    strcpy(helpMenuName, Tk_PathName(masterMenuPtr->tkwin));
+	    strcpy(helpMenuName, Tk_PathName(mainMenuPtr->tkwin));
 	    strcat(helpMenuName, ".help");
 	    if (strcmp(helpMenuName,
-		    Tk_PathName(menuPtr->masterMenuPtr->tkwin)) == 0) {
+		    Tk_PathName(menuPtr->mainMenuPtr->tkwin)) == 0) {
 		cascadeEntryPtr->entryFlags |= ENTRY_HELP_MENU;
 	    } else {
 		cascadeEntryPtr->entryFlags &= ~ENTRY_HELP_MENU;
@@ -1707,7 +1705,7 @@ TkpComputeStandardMenuGeometry(
     Tk_GetFontMetrics(menuFont, &menuMetrics);
     accelSpace = Tk_TextWidth(menuFont, "M", 1);
 
-    for (i = 0; i < menuPtr->numEntries; i++) {
+    for (i = 0; i < (int)menuPtr->numEntries; i++) {
 	mePtr = menuPtr->entries[i];
 	if (mePtr->fontPtr == NULL) {
 	    tkfont = menuFont;
@@ -1802,7 +1800,7 @@ TkpComputeStandardMenuGeometry(
     if (accelWidth != 0) {
 	labelWidth += accelSpace;
     }
-    for (j = lastColumnBreak; j < menuPtr->numEntries; j++) {
+    for (j = lastColumnBreak; j < (int)menuPtr->numEntries; j++) {
 	menuPtr->entries[j]->indicatorSpace = indicatorSpace;
 	menuPtr->entries[j]->labelWidth = labelWidth;
 	menuPtr->entries[j]->width = indicatorSpace + labelWidth
@@ -1849,7 +1847,7 @@ TkpComputeStandardMenuGeometry(
 
 void
 TkpMenuNotifyToplevelCreate(
-    TCL_UNUSED(Tcl_Interp *),		/* The interp the menu lives in. */
+    TCL_UNUSED(Tcl_Interp *),	/* The interp the menu lives in. */
     TCL_UNUSED(const char *))	/* The name of the menu to reconfigure. */
 {
     /*

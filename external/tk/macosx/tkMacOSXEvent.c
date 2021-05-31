@@ -3,16 +3,16 @@
  *
  *	This file contains the basic Mac OS X Event handling routines.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009, Apple Inc.
+ * Copyright © 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
 #include "tkMacOSXPrivate.h"
-#include "tkMacOSXEvent.h"
+#include "tkMacOSXInt.h"
 #include "tkMacOSXDebug.h"
 #include "tkMacOSXConstants.h"
 
@@ -105,7 +105,27 @@ enum {
 }
 @end
 #pragma mark -
+int
+XSync(
+    Display *display,
+    TCL_UNUSED(Bool))
+{
+    /*
+     *  The main use of XSync is by the update command, which alternates
+     *  between running an event loop to process all events without waiting and
+     *  calling XSync on all displays until no events are left.  There is
+     *  nothing for the mac to do with respect to syncing its one display but
+     *  it can (and, during regression testing, frequently does) happen that
+     *  timer events fire during the event loop. Processing those here seems
+     *  to make the update command work in a way that is more consistent with
+     *  its behavior on other platforms.
+     */
 
+    while (Tcl_DoOneEvent(TCL_TIMER_EVENTS|TCL_DONT_WAIT)){}
+    display->request++;
+    return 0;
+}
+
 /*
  * Local Variables:
  * mode: objc

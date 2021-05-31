@@ -4,7 +4,7 @@ SOURCES.c = xcursor.c
 SOURCES.h = xcursor.h
 OBJECTS   = $(SOURCES.c:%.c=%.o)
 INCLUDES  = -I"$(INSTALLDIR)/include"
-LDLIBS  = -lXcursor -ltk8.6
+LDLIBS  = -lXcursor -ltk8.7
 LDFLAGS = -L"$(INSTALLDIR)/lib"
 
 ## Compiler flags

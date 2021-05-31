@@ -4,10 +4,10 @@
  *	This file implements functions that decode & handle keyboard events on
  *	MacOS X.
  *
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright (c) 2012 Adrian Robert.
- * Copyright 2015-2020 Marc Culler.
+ * Copyright © 2001-2009, Apple Inc.
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 2012 Adrian Robert.
+ * Copyright © 2015-2020 Marc Culler.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -72,6 +72,18 @@ static NSUInteger textInputModifiers;
     }
 
     /*
+     * Discard repeating KeyDown events if the repeat speed has been set to
+     * "off" in System Preferences.  It is unclear why we get these, but we do.
+     * See ticket [2ecb09d118].
+     */
+
+    if ([theEvent type] ==  NSKeyDown &&
+	[theEvent isARepeat] &&
+	[NSEvent keyRepeatDelay] < 0) {
+            return theEvent;
+	}
+
+    /*
      * If a local grab is in effect, key events for windows in the
      * grabber's application are redirected to the grabber.  Key events
      * for other applications are delivered normally.  If a global
@@ -82,7 +94,10 @@ static NSUInteger textInputModifiers;
     if (grabWinPtr) {
 	if (winPtr->dispPtr->grabFlags ||  /* global grab */
 	    grabWinPtr->mainPtr == winPtr->mainPtr){ /* same application */
-	    winPtr =winPtr->dispPtr->focusPtr;
+	    winPtr = winPtr->dispPtr->focusPtr;
+	    if (!winPtr) {
+		return theEvent;
+	    }
 	    tkwin = (Tk_Window)winPtr;
 	}
     }
@@ -262,7 +277,6 @@ static NSUInteger textInputModifiers;
      */
 
     if (type == NSKeyDown && [theEvent isARepeat]) {
-
 	xEvent.xany.type = KeyRelease;
 	Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
 	xEvent.xany.type = KeyPress;
@@ -330,7 +344,7 @@ static NSUInteger textInputModifiers;
 
     if (repRange.location == 0) {
 	Tk_Window focusWin = (Tk_Window)winPtr->dispPtr->focusPtr;
-	TkSendVirtualEvent(focusWin, "TkAccentBackspace", NULL);
+	Tk_SendVirtualEvent(focusWin, "TkAccentBackspace", NULL);
     }
 
     /*
@@ -386,6 +400,9 @@ static NSUInteger textInputModifiers;
 - (NSAttributedString *)attributedSubstringForProposedRange:(NSRange)theRange
       actualRange:(NSRangePointer)thePointer
 {
+    (void)theRange;
+    (void)thePointer;
+
     return nil;
 }
 
@@ -403,6 +420,7 @@ static NSUInteger textInputModifiers;
     Tk_Window focusWin = (Tk_Window)winPtr->dispPtr->focusPtr;
     NSString *temp;
     NSString *str;
+    (void)selRange;
 
     str = ([aString isKindOfClass: [NSAttributedString class]]) ?
         [aString string] : aString;
@@ -435,12 +453,12 @@ static NSUInteger textInputModifiers;
      * Use our insertText method to display the marked text.
      */
 
-    TkSendVirtualEvent(focusWin, "TkStartIMEMarkedText", NULL);
+    Tk_SendVirtualEvent(focusWin, "TkStartIMEMarkedText", NULL);
     processingCompose = YES;
     temp = [str copy];
     [self insertText: temp replacementRange:repRange];
     privateWorkingText = temp;
-    TkSendVirtualEvent(focusWin, "TkEndIMEMarkedText", NULL);
+    Tk_SendVirtualEvent(focusWin, "TkEndIMEMarkedText", NULL);
 }
 
 - (BOOL)hasMarkedText
@@ -479,6 +497,9 @@ static NSUInteger textInputModifiers;
 {
     NSRect rect;
     NSPoint pt;
+    (void)theRange;
+    (void)thePointer;
+
     pt.x = caret_x;
     pt.y = caret_y;
 
@@ -506,7 +527,7 @@ static NSUInteger textInputModifiers;
     if (aSelector == @selector (deleteBackward:)) {
 	TkWindow *winPtr = TkMacOSXGetTkWindow([self window]);
 	Tk_Window focusWin = (Tk_Window)winPtr->dispPtr->focusPtr;
-	TkSendVirtualEvent(focusWin, "TkAccentBackspace", NULL);
+	Tk_SendVirtualEvent(focusWin, "TkAccentBackspace", NULL);
     }
 }
 
@@ -533,6 +554,7 @@ static NSUInteger textInputModifiers;
 
 - (NSUInteger)characterIndexForPoint: (NSPoint)thePoint
 {
+    (void)thePoint;
     if (NS_KEYLOG) {
 	TKLog(@"characterIndexForPoint request");
     }
@@ -542,6 +564,8 @@ static NSUInteger textInputModifiers;
 - (NSAttributedString *)attributedSubstringFromRange: (NSRange)theRange
 {
     static NSAttributedString *str = nil;
+    (void)theRange;
+
     if (str == nil) {
 	str = [NSAttributedString new];
     }
@@ -577,7 +601,7 @@ static NSUInteger textInputModifiers;
 	privateWorkingText = nil;
 	processingCompose = NO;
 	if (composeWin) {
-	    TkSendVirtualEvent(composeWin, "TkClearIMEMarkedText", NULL);
+	    Tk_SendVirtualEvent(composeWin, "TkClearIMEMarkedText", NULL);
 	}
     }
 }
@@ -693,6 +717,10 @@ XGrabKeyboard(
 {
     keyboardGrabWinPtr = Tk_IdToWindow(display, grab_window);
     TkWindow *captureWinPtr = (TkWindow *) TkpGetCapture();
+    (void)owner_events;
+    (void)pointer_mode;
+    (void)keyboard_mode;
+    (void)time;
 
     if (keyboardGrabWinPtr && captureWinPtr) {
 	NSWindow *w = TkMacOSXGetNSWindowForDrawable(grab_window);
@@ -731,6 +759,9 @@ XUngrabKeyboard(
     Display* display,
     Time time)
 {
+    (void)display;
+    (void)time;
+
     if (modalSession) {
 	[NSApp endModalSession:modalSession];
 	modalSession = nil;

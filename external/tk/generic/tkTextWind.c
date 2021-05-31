@@ -5,8 +5,8 @@
  *	inside text widgets. It also implements the "window" widget command
  *	for texts.
  *
- * Copyright (c) 1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -28,15 +28,15 @@ static void		EmbWinLostContentProc(ClientData clientData,
 static const Tk_GeomMgr textGeomType = {
     "text",			/* name */
     EmbWinRequestProc,		/* requestProc */
-    EmbWinLostContentProc,	/* lostSlaveProc */
+    EmbWinLostContentProc,	/* lostContentProc */
 };
 
 /*
  * Macro that determines the size of an embedded window segment:
  */
 
-#define EW_SEG_SIZE ((unsigned)(Tk_Offset(TkTextSegment, body) \
-	+ sizeof(TkTextEmbWindow)))
+#define EW_SEG_SIZE (offsetof(TkTextSegment, body) \
+	+ sizeof(TkTextEmbWindow))
 
 /*
  * Prototypes for functions defined in this file:
@@ -57,7 +57,7 @@ static int		EmbWinDeleteProc(TkTextSegment *segPtr,
 			    TkTextLine *linePtr, int treeGone);
 static int		EmbWinLayoutProc(TkText *textPtr,
 			    TkTextIndex *indexPtr, TkTextSegment *segPtr,
-			    int offset, int maxX, int maxChars,int noCharsYet,
+			    TkSizeT offset, int maxX, TkSizeT maxChars,int noCharsYet,
 			    TkWrapMode wrapMode, TkTextDispChunk *chunkPtr);
 static void		EmbWinStructureProc(ClientData clientData,
 			    XEvent *eventPtr);
@@ -99,18 +99,18 @@ typedef enum {
 
 static const Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_STRING_TABLE, "-align", NULL, NULL,
-	"center", -1, Tk_Offset(TkTextEmbWindow, align),
+	"center", TCL_INDEX_NONE, offsetof(TkTextEmbWindow, align),
 	0, alignStrings, 0},
     {TK_OPTION_STRING, "-create", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextEmbWindow, create), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextEmbWindow, create), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_PIXELS, "-padx", NULL, NULL,
-	"0", -1, Tk_Offset(TkTextEmbWindow, padX), 0, 0, 0},
+	"0", TCL_INDEX_NONE, offsetof(TkTextEmbWindow, padX), 0, 0, 0},
     {TK_OPTION_PIXELS, "-pady", NULL, NULL,
-	"0", -1, Tk_Offset(TkTextEmbWindow, padY), 0, 0, 0},
+	"0", TCL_INDEX_NONE, offsetof(TkTextEmbWindow, padY), 0, 0, 0},
     {TK_OPTION_BOOLEAN, "-stretch", NULL, NULL,
-	"0", -1, Tk_Offset(TkTextEmbWindow, stretch), 0, 0, 0},
+	"0", TCL_INDEX_NONE, offsetof(TkTextEmbWindow, stretch), 0, 0, 0},
     {TK_OPTION_WINDOW, "-window", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextEmbWindow, tkwin), TK_OPTION_NULL_OK, 0, 0},
+	NULL, TCL_INDEX_NONE, offsetof(TkTextEmbWindow, tkwin), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0}
 };
 
@@ -190,7 +190,7 @@ TkTextWindowCmd(
 	    ewPtr->body.ew.tkwin = NULL;
 	}
 
-	objPtr = Tk_GetOptionValue(interp, (char *)&ewPtr->body.ew,
+	objPtr = Tk_GetOptionValue(interp, &ewPtr->body.ew,
 		ewPtr->body.ew.optionTable, objv[4], textPtr->tkwin);
 	if (objPtr == NULL) {
 	    return TCL_ERROR;
@@ -231,7 +231,7 @@ TkTextWindowCmd(
 		ewPtr->body.ew.tkwin = NULL;
 	    }
 
-	    objPtr = Tk_GetOptionInfo(interp, (char *)&ewPtr->body.ew,
+	    objPtr = Tk_GetOptionInfo(interp, &ewPtr->body.ew,
 		    ewPtr->body.ew.optionTable, (objc == 5) ? objv[4] : NULL,
 		    textPtr->tkwin);
 	    if (objPtr == NULL) {
@@ -401,7 +401,7 @@ EmbWinConfigure(
     }
 
     oldWindow = ewPtr->body.ew.tkwin;
-    if (Tk_SetOptions(textPtr->interp, (char *)&ewPtr->body.ew,
+    if (Tk_SetOptions(textPtr->interp, &ewPtr->body.ew,
 	    ewPtr->body.ew.optionTable, objc, objv, textPtr->tkwin, NULL,
 	    NULL) != TCL_OK) {
 	return TCL_ERROR;
@@ -817,11 +817,11 @@ EmbWinLayoutProc(
     TkText *textPtr,		/* Text widget being layed out. */
     TCL_UNUSED(TkTextIndex *),	/* Identifies first character in chunk. */
     TkTextSegment *ewPtr,	/* Segment corresponding to indexPtr. */
-    int offset,			/* Offset within segPtr corresponding to
+    TkSizeT offset,			/* Offset within segPtr corresponding to
 				 * indexPtr (always 0). */
     int maxX,			/* Chunk must not occupy pixels at this
 				 * position or higher. */
-    TCL_UNUSED(int),	/* Chunk must not include more than this many
+    TCL_UNUSED(TkSizeT),	/* Chunk must not include more than this many
 				 * characters. */
     int noCharsYet,		/* Non-zero means no characters have been
 				 * assigned to this line yet. */
@@ -1053,7 +1053,7 @@ EmbWinCheckProc(
 	Tcl_Panic("EmbWinCheckProc: embedded window is last segment in line");
     }
     if (ewPtr->size != 1) {
-	Tcl_Panic("EmbWinCheckProc: embedded window has size %d", ewPtr->size);
+	Tcl_Panic("EmbWinCheckProc: embedded window has size %d", (int)ewPtr->size);
     }
 }
 
@@ -1352,7 +1352,7 @@ TkTextWindowIndex(
     indexPtr->tree = textPtr->sharedTextPtr->tree;
     indexPtr->linePtr = ewPtr->body.ew.linePtr;
     indexPtr->byteIndex = TkTextSegToOffset(ewPtr, indexPtr->linePtr);
- 
+
     /*
      * If indexPtr refers to somewhere outside the -startline/-endline
      * range limits of the widget, error out since the window indeed is not

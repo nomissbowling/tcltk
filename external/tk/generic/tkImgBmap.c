@@ -3,9 +3,9 @@
  *
  *	This procedure implements images of type "bitmap" for Tk.
  *
- * Copyright (c) 1994 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
- * Copyright (c) 1999 by Scriptics Corporation.
+ * Copyright © 1994 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1999 Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -18,7 +18,7 @@
  * image:
  */
 
-typedef struct BitmapModel {
+typedef struct {
     Tk_ImageModel tkModel;	/* Tk's token for image model. NULL means the
 				 * image is being deleted. */
     Tcl_Interp *interp;		/* Interpreter for application that is using
@@ -49,7 +49,7 @@ typedef struct BitmapModel {
  */
 
 typedef struct BitmapInstance {
-    int refCount;		/* Number of instances that share this data
+    size_t refCount;		/* Number of instances that share this data
 				 * structure. */
     BitmapModel *modelPtr;	/* Pointer to model for image. */
     Tk_Window tkwin;		/* Window in which the instances will be
@@ -108,17 +108,17 @@ Tk_ImageType tkBitmapImageType = {
 
 static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_UID, "-background", NULL, NULL,
-	"", Tk_Offset(BitmapModel, bgUid), 0, NULL},
+	"", offsetof(BitmapModel, bgUid), 0, NULL},
     {TK_CONFIG_STRING, "-data", NULL, NULL,
-	NULL, Tk_Offset(BitmapModel, dataString), TK_CONFIG_NULL_OK, NULL},
+	NULL, offsetof(BitmapModel, dataString), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_STRING, "-file", NULL, NULL,
-	NULL, Tk_Offset(BitmapModel, fileString), TK_CONFIG_NULL_OK, NULL},
+	NULL, offsetof(BitmapModel, fileString), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_UID, "-foreground", NULL, NULL,
-	"#000000", Tk_Offset(BitmapModel, fgUid), 0, NULL},
+	"#000000", offsetof(BitmapModel, fgUid), 0, NULL},
     {TK_CONFIG_STRING, "-maskdata", NULL, NULL,
-	NULL, Tk_Offset(BitmapModel, maskDataString), TK_CONFIG_NULL_OK, NULL},
+	NULL, offsetof(BitmapModel, maskDataString), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_STRING, "-maskfile", NULL, NULL,
-	NULL, Tk_Offset(BitmapModel, maskFileString), TK_CONFIG_NULL_OK, NULL},
+	NULL, offsetof(BitmapModel, maskFileString), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, NULL}
 };
 
@@ -169,7 +169,6 @@ static int		NextBitmapWord(ParseInfo *parseInfoPtr);
  *----------------------------------------------------------------------
  */
 
-	/* ARGSUSED */
 static int
 ImgBmapCreate(
     Tcl_Interp *interp,		/* Interpreter for application containing
@@ -179,12 +178,13 @@ ImgBmapCreate(
     Tcl_Obj *const argv[],	/* Argument objects for options (doesn't
 				 * include image name or type). */
     const Tk_ImageType *typePtr,/* Pointer to our type record (not used). */
-	Tk_ImageModel model,	/* Token for image, to be used by us in later
+    Tk_ImageModel model,	/* Token for image, to be used by us in later
 				 * callbacks. */
     ClientData *clientDataPtr)	/* Store manager's token for image here; it
 				 * will be returned in later callbacks. */
 {
-    BitmapModel *modelPtr = ckalloc(sizeof(BitmapModel));
+    BitmapModel *modelPtr = (BitmapModel *)ckalloc(sizeof(BitmapModel));
+    (void)typePtr;
 
     modelPtr->tkModel = model;
     modelPtr->interp = interp;
@@ -239,7 +239,7 @@ ImgBmapConfigureModel(
 {
     BitmapInstance *instancePtr;
     int maskWidth, maskHeight, dummy1, dummy2;
-    const char **argv = ckalloc((objc+1) * sizeof(char *));
+    const char **argv = (const char **)ckalloc((objc+1) * sizeof(char *));
 
     for (dummy1 = 0; dummy1 < objc; dummy1++) {
 	argv[dummy1] = Tcl_GetString(objv[dummy1]);
@@ -620,7 +620,7 @@ TkGetBitmapData(
 	goto error;
     }
     numBytes = ((width+7)/8) * height;
-    data = ckalloc(numBytes);
+    data = (char *)ckalloc(numBytes);
     for (p = data; numBytes > 0; p++, numBytes--) {
 	if (NextBitmapWord(&pi) != TCL_OK) {
 	    goto error;
@@ -757,7 +757,7 @@ ImgBmapCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     static const char *const bmapOptions[] = {"cget", "configure", NULL};
-    BitmapModel *modelPtr = clientData;
+    BitmapModel *modelPtr = (BitmapModel *)clientData;
     int index;
 
     if (objc < 2) {
@@ -819,7 +819,7 @@ ImgBmapGet(
     ClientData modelData)	/* Pointer to our model structure for the
 				 * image. */
 {
-    BitmapModel *modelPtr = modelData;
+    BitmapModel *modelPtr = (BitmapModel *)modelData;
     BitmapInstance *instancePtr;
 
     /*
@@ -840,7 +840,7 @@ ImgBmapGet(
      * the image.
      */
 
-    instancePtr = ckalloc(sizeof(BitmapInstance));
+    instancePtr = (BitmapInstance *)ckalloc(sizeof(BitmapInstance));
     instancePtr->refCount = 1;
     instancePtr->modelPtr = modelPtr;
     instancePtr->tkwin = tkwin;
@@ -894,7 +894,7 @@ ImgBmapDisplay(
 				/* Coordinates within drawable that correspond
 				 * to imageX and imageY. */
 {
-    BitmapInstance *instancePtr = clientData;
+    BitmapInstance *instancePtr = (BitmapInstance *)clientData;
     int masking;
 
     /*
@@ -948,11 +948,10 @@ ImgBmapFree(
 				 * instance to be displayed. */
     Display *display)		/* Display containing window that used image. */
 {
-    BitmapInstance *instancePtr = clientData;
+    BitmapInstance *instancePtr = (BitmapInstance *)clientData;
     BitmapInstance *prevPtr;
 
-    instancePtr->refCount--;
-    if (instancePtr->refCount > 0) {
+    if (instancePtr->refCount-- > 1) {
 	return;
     }
 
@@ -1010,7 +1009,7 @@ ImgBmapDelete(
     ClientData modelData)	/* Pointer to BitmapModel structure for
 				 * image. Must not have any more instances. */
 {
-    BitmapModel *modelPtr = modelData;
+    BitmapModel *modelPtr = (BitmapModel *)modelData;
 
     if (modelPtr->instancePtr != NULL) {
 	Tcl_Panic("tried to delete bitmap image when instances still exist");
@@ -1051,7 +1050,7 @@ ImgBmapCmdDeletedProc(
     ClientData clientData)	/* Pointer to BitmapModel structure for
 				 * image. */
 {
-    BitmapModel *modelPtr = clientData;
+    BitmapModel *modelPtr = (BitmapModel *)clientData;
 
     modelPtr->imageCmd = NULL;
     if (modelPtr->tkModel != NULL) {
@@ -1080,7 +1079,7 @@ GetByte(
     Tcl_Channel chan)	/* The channel we read from. */
 {
     char buffer;
-    int size;
+    size_t size;
 
     size = Tcl_Read(chan, &buffer, 1);
     if (size != 1) {
@@ -1198,7 +1197,7 @@ ImgBmapPostscript(
     int x, int y, int width, int height,
     int prepass)
 {
-    BitmapModel *modelPtr = clientData;
+    BitmapModel *modelPtr = (BitmapModel *)clientData;
     Tcl_InterpState interpState;
     Tcl_Obj *psObj;
 

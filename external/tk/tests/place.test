@@ -1,8 +1,8 @@
 # This file is a Tcl script to test out the "place" command.  It is
 # organized in the standard fashion for Tcl tests.
 #
-# Copyright (c) 1995 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1995 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 # All rights reserved.
 
 package require tcltest 2.2
@@ -65,7 +65,7 @@ test place-2.2 {ConfigureContent procedure, -height option} -setup {
     place .t.f2 -in .t.f -height 40
     update
     winfo height .t.f2
-} -result {40}
+} -result 40
 test place-2.3 {ConfigureContent procedure, -height option} -setup {
     place forget .t.f2
 } -body {
@@ -74,7 +74,7 @@ test place-2.3 {ConfigureContent procedure, -height option} -setup {
     place .t.f2 -height {}
     update
     winfo height .t.f2
-} -result {60}
+} -result 60
 
 
 test place-3.1 {ConfigureContent procedure, -relheight option} -body {
@@ -86,7 +86,7 @@ test place-3.2 {ConfigureContent procedure, -relheight option} -setup {
     place .t.f2 -in .t.f -relheight .5
     update
     winfo height .t.f2
-} -result {40}
+} -result 40
 test place-3.3 {ConfigureContent procedure, -relheight option} -setup {
     place forget .t.f2
 } -body {
@@ -95,14 +95,14 @@ test place-3.3 {ConfigureContent procedure, -relheight option} -setup {
     place .t.f2 -relheight {}
     update
     winfo height .t.f2
-} -result {60}
+} -result 60
 
 
 test place-4.1 {ConfigureContent procedure, bad -in options} -setup {
     place forget .t.f2
 } -body {
     place .t.f2 -in .t.f2
-} -returnCodes error -result {can't place .t.f2 relative to itself}
+} -returnCodes error -result {can't place ".t.f2" relative to itself}
 test place-4.2 {ConfigureContent procedure, bad -in option} -setup {
     place forget .t.f2
 } -body {
@@ -115,23 +115,23 @@ test place-4.3 {ConfigureContent procedure, bad -in option} -setup {
 } -body {
     winfo manager .t.f2
     place .t.f2 -in .t.f2
-} -returnCodes error -result {can't place .t.f2 relative to itself}
+} -returnCodes error -result {can't place ".t.f2" relative to itself}
 test place-4.4 {ConfigureContent procedure, bad -in option} -setup {
     place forget .t.f2
 } -body {
     place .t.f2 -in .
-} -returnCodes error -result {can't place .t.f2 relative to .}
+} -returnCodes error -result {can't place ".t.f2" relative to "."}
 test place-4.5 {ConfigureContent procedure, bad -in option} -setup {
 } -body {
     frame .t.f1
     place .t.f1 -in .t.f1
-} -returnCodes error -result {can't place .t.f1 relative to itself}
+} -returnCodes error -result {can't place ".t.f1" relative to itself}
 test place-4.6 {prevent management loops} -setup {
     place forget .t.f1
 } -body {
     place .t.f1 -in .t.f2
     place .t.f2 -in .t.f1
-} -returnCodes error -result {can't put .t.f2 inside .t.f1, would cause management loop}
+} -returnCodes error -result {can't put ".t.f2" inside ".t.f1": would cause management loop}
 test place-4.7 {prevent management loops} -setup {
     place forget .t.f1
     place forget .t.f2
@@ -140,7 +140,7 @@ test place-4.7 {prevent management loops} -setup {
     place .t.f1 -in .t.f2
     place .t.f2 -in .t.f3
     place .t.f3 -in .t.f1
-} -returnCodes error -result {can't put .t.f3 inside .t.f1, would cause management loop}
+} -returnCodes error -result {can't put ".t.f3" inside ".t.f1": would cause management loop}
 
 test place-5.1 {ConfigureContent procedure, -relwidth option} -body {
     place .t.f2 -relwidth abcd
@@ -151,7 +151,7 @@ test place-5.2 {ConfigureContent procedure, -relwidth option} -setup {
     place .t.f2 -in .t.f -relwidth .5
     update
     winfo width .t.f2
-} -result {75}
+} -result 75
 test place-5.3 {ConfigureContent procedure, -relwidth option} -setup {
     place forget .t.f2
 } -body {
@@ -160,7 +160,7 @@ test place-5.3 {ConfigureContent procedure, -relwidth option} -setup {
     place .t.f2 -relwidth {}
     update
     winfo width .t.f2
-} -result {30}
+} -result 30
 
 test place-6.1 {ConfigureContent procedure, -width option} -body {
     place .t.f2 -width abcd
@@ -171,7 +171,7 @@ test place-6.2 {ConfigureContent procedure, -width option} -setup {
     place .t.f2 -in .t.f -width 100
     update
     winfo width .t.f2
-} -result {100}
+} -result 100
 test place-6.3 {ConfigureContent procedure, -width option} -setup {
     place forget .t.f2
 } -body {
@@ -180,7 +180,7 @@ test place-6.3 {ConfigureContent procedure, -width option} -setup {
     place .t.f2 -width {}
     update
     winfo width .t.f2
-} -result {30}
+} -result 30
 
 
 test place-7.1 {ReconfigurePlacement procedure, computing position} -setup {
@@ -332,7 +332,7 @@ test place-9.5 {PlaceObjCmd} -setup {
     place badopt .foo
 } -cleanup {
     destroy .foo
-} -returnCodes error -result {bad option "badopt": must be configure, content, forget, info, or slaves}
+} -returnCodes error -result {bad option "badopt": must be configure, content, forget, or info}
 test place-9.6 {PlaceObjCmd, configure errors} -setup {
     destroy .foo
 } -body {
@@ -507,16 +507,17 @@ test place-14.1 {memory leak testing} -constraints memory -setup {
     frame .f
     frame .f.f
     stress {
-        place .f.f -x [expr {1 + 1}] -y [expr {2 + 2}]
-        place forget .f.f
+	place .f.f -x [expr {1 + 1}] -y [expr {2 + 2}]
+	place forget .f.f
     } {
-        place .f.f -x [expr {1 + 1}] -y [expr {2 + 2}]
-        pack .f.f
+	place .f.f -x [expr {1 + 1}] -y [expr {2 + 2}]
+	pack .f.f
+	update; # Needed because of TIP #518, handle <<NoManagedChild>> event.
     } {
-        place .f.f -x [expr {1 + 1}] -y [expr {2 + 2}]
-        destroy .f
-        frame .f
-        frame .f.f
+	place .f.f -x [expr {1 + 1}] -y [expr {2 + 2}]
+	destroy .f
+	frame .f
+	frame .f.f
     }
 } -cleanup {
     destroy .f

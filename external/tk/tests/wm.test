@@ -2,9 +2,9 @@
 # manager, including the "wm" command. It is organized in the standard fashion
 # for Tcl tests.
 #
-# Copyright (c) 1992-1994 The Regents of the University of California.
-# Copyright (c) 1994-1997 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1992-1994 The Regents of the University of California.
+# Copyright © 1994-1997 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 # All rights reserved.
 
 # This file tests window manager interactions that work across platforms.
@@ -788,7 +788,7 @@ test wm-iconify-2.3 {Misc errors} -body {
     wm iconify .t2
 } -returnCodes error -cleanup {
     destroy .t2
-} -result {can't iconify .t2: it is an icon for .t}
+} -result {can't iconify ".t2": it is an icon for ".t"}
 # test embedded window for Windows
 test wm-iconify-2.4.1 {Misc errors} -constraints win -setup {
     destroy .t2
@@ -798,7 +798,7 @@ test wm-iconify-2.4.1 {Misc errors} -constraints win -setup {
     wm iconify .t2
 } -returnCodes error -cleanup {
     destroy .t2 .r.f
-} -result {can't iconify .t2: the container does not support the request}
+} -result {can't iconify ".t2": the container does not support the request}
 # test embedded window for other platforms
 test wm-iconify-2.4.2 {Misc errors} -constraints !win -setup {
     destroy .t2
@@ -808,7 +808,7 @@ test wm-iconify-2.4.2 {Misc errors} -constraints !win -setup {
     wm iconify .t2
 } -returnCodes error -cleanup {
     destroy .t2 .r.f
-} -result {can't iconify .t2: it is an embedded window}
+} -result {can't iconify ".t2": it is an embedded window}
 
 test wm-iconify-3.1 {iconify behavior} -constraints {failsOnUbuntu failsOnXQuarz} -body {
     toplevel .t2
@@ -1489,14 +1489,14 @@ test wm-stackorder-4.1 {wm stackorder isabove|isbelow} -body {
     wm stackorder . isabove .t
 } -cleanup {
     destroy .t
-} -result {0}
+} -result 0
 test wm-stackorder-4.2 {wm stackorder isabove|isbelow} -body {
     toplevel .t ; update
     raise .t
     wm stackorder . isbelow .t
 } -cleanup {
     destroy .t
-} -result {1}
+} -result 1
 test wm-stackorder-4.3 {wm stackorder isabove|isbelow} -body {
     toplevel .t ; update
     raise .
@@ -1504,7 +1504,7 @@ test wm-stackorder-4.3 {wm stackorder isabove|isbelow} -body {
     wm stackorder .t isa .
 } -cleanup {
     destroy .t
-} -result {0}
+} -result 0
 test wm-stackorder-4.4 {wm stackorder isabove|isbelow} -body {
     toplevel .t ; update
     raise .
@@ -1512,7 +1512,7 @@ test wm-stackorder-4.4 {wm stackorder isabove|isbelow} -body {
     wm stackorder .t isb .
 } -cleanup {
     destroy .t
-} -result {1}
+} -result 1
 deleteWindows
 
 test wm-stackorder-5.1 {a menu is not a toplevel} -body {
@@ -1600,7 +1600,7 @@ test wm-title-2.1 {setting and reading values} -setup {
 test wm-transient-1.1 {usage} -returnCodes error -body {
     catch {destroy .t} ; toplevel .t
     wm transient .t 1 2
-} -result {wrong # args: should be "wm transient window ?master?"}
+} -result {wrong # args: should be "wm transient window ?window?"}
 test wm-transient-1.2 {usage} -returnCodes error -body {
     catch {destroy .t} ; toplevel .t
     wm transient .t foo
@@ -1635,13 +1635,13 @@ test wm-transient-1.6 {usage} -returnCodes error -body {
     wm transient .dummy .icon
 } -cleanup {
     deleteWindows
-} -result {can't make ".icon" a master: it is an icon for .top}
+} -result {can't make ".icon" a container: it is an icon for .top}
 test wm-transient-1.7 {usage} -returnCodes error -body {
     toplevel .top
     wm transient .top .top
 } -cleanup {
     deleteWindows
-} -result {setting ".top" as master creates a transient/master cycle}
+} -result {can't set ".top" as container: would cause management loop}
 test wm-transient-1.8 {usage} -returnCodes error -body {
     toplevel .t1
     toplevel .t2
@@ -1651,14 +1651,14 @@ test wm-transient-1.8 {usage} -returnCodes error -body {
     wm transient .t1 .t3
 } -cleanup {
     deleteWindows
-} -result {setting ".t3" as master creates a transient/master cycle}
+} -result {can't set ".t3" as container: would cause management loop}
 test wm-transient-1.9 {usage} -returnCodes error -body {
     toplevel .top
     frame .top.f
     wm transient .top .top.f
 } -cleanup {
     deleteWindows
-} -result {setting ".top" as master creates a transient/master cycle}
+} -result {can't set ".top" as container: would cause management loop}
 
 test wm-transient-2.1 {basic get/set of toplevel} -setup {
     set results [list]
@@ -2282,7 +2282,7 @@ test wm-forget-1.1 "bug #2009788: forget toplevel can cause crash" -body {
     winfo exists .parent.child
 } -cleanup {
     deleteWindows
-}  -result {1}
+}  -result 1
 test wm-forget-1.2 "bug #2009788: forget toplevel can cause crash" -body {
     toplevel .parent
     update
@@ -2291,7 +2291,7 @@ test wm-forget-1.2 "bug #2009788: forget toplevel can cause crash" -body {
     winfo exists .parent.child
 } -cleanup {
     deleteWindows
-}  -result {1}
+}  -result 1
 test wm-forget-1.3 "bug #2009788: forget toplevel can cause crash" -body {
     toplevel .parent
     toplevel .parent.child
@@ -2300,7 +2300,7 @@ test wm-forget-1.3 "bug #2009788: forget toplevel can cause crash" -body {
     winfo exists .parent.child
 } -cleanup {
     deleteWindows
-}  -result {1}
+}  -result 1
 test wm-forget-1.4 "pack into unmapped toplevel causes crash" -body {
     toplevel .parent
     toplevel .parent.child

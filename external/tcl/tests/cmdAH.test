@@ -4,19 +4,19 @@
 # commands. Sourcing this file into Tcl runs the tests and generates output
 # for errors. No output means no errors were found.
 #
-# Copyright (c) 1996-1998 by Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1996-1998 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 #
 # See the file "license.terms" for information on usage and redistribution of
 # this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
 if {"::tcltest" ni [namespace children]} {
-    package require tcltest 2.1
+    package require tcltest 2.5
     namespace import -force ::tcltest::*
 }
 
 ::tcltest::loadTestedCommands
-catch [list package require -exact Tcltest [info patchlevel]]
+catch [list package require -exact tcl::test [info patchlevel]]
 
 testConstraint testchmod       [llength [info commands testchmod]]
 testConstraint testsetplatform [llength [info commands testsetplatform]]
@@ -30,6 +30,7 @@ testConstraint linkDirectory [expr {
     ($::tcl_platform(osVersion) >= 5.0
      && [lindex [file system [temporaryDirectory]] 1] eq "NTFS")
 }]
+testConstraint notWine [expr {![info exists ::env(CI_USING_WINE)]}]
 
 global env
 set cmdAHwd [pwd]
@@ -148,10 +149,10 @@ test cmdAH-2.6.2 {cd} -constraints {unix nonPortable} -setup {
 test cmdAH-2.6.3 {Tcl_CdObjCmd, bug #3118489} -setup {
     set dir [pwd]
 } -returnCodes error -body {
-    cd .\0
+    cd .\x00
 } -cleanup {
     cd $dir
-} -match glob -result "couldn't change working directory to \".\0\": *"
+} -match glob -result "couldn't change working directory to \".\x00\": *"
 test cmdAH-2.7 {Tcl_ConcatObjCmd} {
     concat
 } {}
@@ -185,7 +186,7 @@ test cmdAH-4.5 {Tcl_EncodingObjCmd} -setup {
     set system [encoding system]
 } -body {
     encoding system jis0208
-    encoding convertto \u4e4e
+    encoding convertto 乎
 } -cleanup {
     encoding system $system
 } -result 8C
@@ -193,7 +194,7 @@ test cmdAH-4.6 {Tcl_EncodingObjCmd} -setup {
     set system [encoding system]
 } -body {
     encoding system iso8859-1
-    encoding convertto jis0208 \u4e4e
+    encoding convertto jis0208 乎
 } -cleanup {
     encoding system $system
 } -result 8C
@@ -210,7 +211,7 @@ test cmdAH-4.9 {Tcl_EncodingObjCmd} -setup {
     encoding convertfrom 8C
 } -cleanup {
     encoding system $system
-} -result \u4e4e
+} -result 乎
 test cmdAH-4.10 {Tcl_EncodingObjCmd} -setup {
     set system [encoding system]
 } -body {
@@ -218,7 +219,7 @@ test cmdAH-4.10 {Tcl_EncodingObjCmd} -setup {
     encoding convertfrom jis0208 8C
 } -cleanup {
     encoding system $system
-} -result \u4e4e
+} -result 乎
 test cmdAH-4.11 {Tcl_EncodingObjCmd} -returnCodes error -body {
     encoding names foo
 } -result {wrong # args: should be "encoding names"}
@@ -239,7 +240,7 @@ test cmdAH-5.1 {Tcl_FileObjCmd} -returnCodes error -body {
 } -result {wrong # args: should be "file subcommand ?arg ...?"}
 test cmdAH-5.2 {Tcl_FileObjCmd} -returnCodes error -body {
     file x
-} -result {unknown or ambiguous subcommand "x": must be atime, attributes, channels, copy, delete, dirname, executable, exists, extension, isdirectory, isfile, join, link, lstat, mkdir, mtime, nativename, normalize, owned, pathtype, readable, readlink, rename, rootname, separator, size, split, stat, system, tail, tempfile, type, volumes, or writable}
+} -result {unknown or ambiguous subcommand "x": must be atime, attributes, channels, copy, delete, dirname, executable, exists, extension, isdirectory, isfile, join, link, lstat, mkdir, mtime, nativename, normalize, owned, pathtype, readable, readlink, rename, rootname, separator, size, split, stat, system, tail, tempdir, tempfile, type, volumes, or writable}
 test cmdAH-5.3 {Tcl_FileObjCmd} -returnCodes error -body {
     file exists
 } -result {wrong # args: should be "file exists name"}
@@ -261,7 +262,7 @@ test cmdAH-6.3 {Tcl_FileObjCmd: volumes} -constraints unix -body {
 test cmdAH-6.4 {Tcl_FileObjCmd: volumes} -constraints win -body {
     set volumeList [string tolower [file volumes]]
     set element [lsearch -exact $volumeList "c:/"]
-    list [expr {$element>-1}] [glob -nocomplain [lindex $volumeList $element]*]
+    list [expr {$element>=0}] [glob -nocomplain [lindex $volumeList $element]*]
 } -match glob -result {1 *}
 
 # attributes
@@ -965,7 +966,7 @@ test cmdAH-19.11 {Tcl_FileObjCmd: exists} -constraints {unix notRoot} -setup {
 } -body {
     makeDirectory /tmp/tcl.foo.dir
     makeFile 12345 /tmp/tcl.foo.dir/file
-    file attributes /tmp/tcl.foo.dir -permissions 0o000
+    file attributes /tmp/tcl.foo.dir -permissions 0
     file exists /tmp/tcl.foo.dir/file
 } -cleanup {
     file attributes /tmp/tcl.foo.dir -permissions 0o775
@@ -1220,7 +1221,7 @@ test cmdAH-24.9 {Tcl_FileObjCmd: mtime touch with non-ascii chars} -setup {
     set oldfile $file
 } -constraints unix -body {
     # introduce some non-ascii characters.
-    append file \u2022
+    append file •
     file delete -force $file
     file rename $oldfile $file
     set mtime [file mtime $file]
@@ -1245,7 +1246,7 @@ test cmdAH-24.11 {Tcl_FileObjCmd: mtime touch with non-ascii chars} -setup {
     set oldfile $file
 } -constraints win -body {
     # introduce some non-ascii characters.
-    append file \u2022
+    append file •
     file delete -force $file
     file rename $oldfile $file
     set mtime [file mtime $file]
@@ -1348,7 +1349,7 @@ test cmdAH-25.2.1 {Tcl_FileObjCmd: owned} -constraints unix -setup {
 test cmdAH-25.3 {Tcl_FileObjCmd: owned} {unix notRoot} {
     file owned /
 } 0
-test cmdAH-25.3.1 {Tcl_FileObjCmd: owned} -constraints win -body {
+test cmdAH-25.3.1 {Tcl_FileObjCmd: owned} -constraints {win notWine} -body {
     if {[info exists env(SystemRoot)]} {
 	file owned $env(SystemRoot)
     } else {
@@ -1538,7 +1539,7 @@ test cmdAH-29.4 {Tcl_FileObjCmd: type} -constraints {unix} -setup {
 } -cleanup {
     file delete $linkfile
 } -result link
-test cmdAH-29.4.1 {Tcl_FileObjCmd: type} -constraints {linkDirectory} -setup {
+test cmdAH-29.4.1 {Tcl_FileObjCmd: type} -constraints {linkDirectory notWine} -setup {
     set tempdir [makeDirectory temp]
 } -body {
     set linkdir [file join [temporaryDirectory] link.dir]
@@ -1570,7 +1571,7 @@ test cmdAH-29.6.1 {
 # Error conditions
 test cmdAH-30.1 {Tcl_FileObjCmd: error conditions} -returnCodes error -body {
     file gorp x
-} -result {unknown or ambiguous subcommand "gorp": must be atime, attributes, channels, copy, delete, dirname, executable, exists, extension, isdirectory, isfile, join, link, lstat, mkdir, mtime, nativename, normalize, owned, pathtype, readable, readlink, rename, rootname, separator, size, split, stat, system, tail, tempfile, type, volumes, or writable}
+} -result {unknown or ambiguous subcommand "gorp": must be atime, attributes, channels, copy, delete, dirname, executable, exists, extension, isdirectory, isfile, join, link, lstat, mkdir, mtime, nativename, normalize, owned, pathtype, readable, readlink, rename, rootname, separator, size, split, stat, system, tail, tempdir, tempfile, type, volumes, or writable}
 test cmdAH-30.2 {Tcl_FileObjCmd: error conditions} -returnCodes error -body {
     file ex x
 } -match glob -result {unknown or ambiguous subcommand "ex": must be *}
@@ -1702,6 +1703,62 @@ test cmdAH-32.6 {file tempfile - templates} -body {
 } -constraints {unix nonPortable} -cleanup {
     catch {file delete $name}
 } -result ok
+
+test cmdAH-33.1 {file tempdir} -body {
+    file tempdir a b
+} -returnCodes error -result {wrong # args: should be "file tempdir ?template?"}
+test cmdAH-33.2 {file tempdir} -body {
+    set d [file tempdir]
+    list [file tail $d] [file exists $d] [file type $d] \
+	[glob -nocomplain -directory $d *]
+} -match glob -result {tcl_* 1 directory {}} -cleanup {
+    catch {file delete $d}
+}
+test cmdAH-33.3 {file tempdir} -body {
+    set d [file tempdir gorp]
+    list [file tail $d] [file exists $d] [file type $d] \
+	[glob -nocomplain -directory $d *]
+} -match glob -result {gorp_* 1 directory {}} -cleanup {
+    catch {file delete $d}
+}
+test cmdAH-33.4 {file tempdir} -setup {
+    set base [file join [temporaryDirectory] gorp]
+    file mkdir $base
+} -body {
+    set pre [glob -nocomplain -directory $base *]
+    set d [file normalize [file tempdir $base/]]
+    list [string map [list $base GORP:] $d] [file exists $d] [file type $d] \
+	$pre [glob -nocomplain -directory $d *]
+} -match glob -result {GORP:/tcl_* 1 directory {} {}} -cleanup {
+    catch {file delete -force $base}
+}
+test cmdAH-33.5 {file tempdir} -setup {
+    set base [file join [temporaryDirectory] gorp]
+    file mkdir $base
+} -body {
+    set pre [glob -nocomplain -directory $base *]
+    set d [file normalize [file tempdir $base/gorp]]
+    list [string map [list $base GORP:] $d] [file exists $d] [file type $d] \
+	$pre [glob -nocomplain -directory $d *]
+} -match glob -result {GORP:/gorp_* 1 directory {} {}} -cleanup {
+    catch {file delete -force $base}
+}
+test cmdAH-33.6 {file tempdir: missing parent dir} -setup {
+    set base [file join [temporaryDirectory] gorp]
+    file mkdir $base
+} -returnCodes error -body {
+    file tempdir $base/quux/
+} -cleanup {
+    catch {file delete -force $base}
+} -result {can't create temporary directory: no such file or directory}
+test cmdAH-33.7 {file tempdir: missing parent dir} -setup {
+    set base [file join [temporaryDirectory] gorp]
+    file mkdir $base
+} -returnCodes error -body {
+    file tempdir $base/quux/foobar
+} -cleanup {
+    catch {file delete -force $base}
+} -result {can't create temporary directory: no such file or directory}
 
 # This shouldn't work, but just in case a test above failed...
 catch {close $newFileId}

@@ -38,7 +38,7 @@ extern "C" {
 /*  Little hack to eliminate the need for "tclInt.h" here:
     Just copy a small portion of TclIntPlatStubs, just
     enough to make it work. See [600b72bfbc] */
-typedef struct {
+typedef struct TclIntPlatStubs {
     int magic;
     void *hooks;
     void (*dummy[16]) (void); /* dummy entries 0-15, not used */
@@ -68,7 +68,7 @@ NewNativeObj(
     Tcl_Obj *obj;
     Tcl_DString ds;
 
-#if defined(_WIN32) && defined(UNICODE)
+#ifdef UNICODE
     Tcl_DStringInit(&ds);
     Tcl_WCharToUtfDString(string, wcslen(string), &ds);
 #else
@@ -100,7 +100,7 @@ static int WinIsTty(int fd) {
      */
 
 #if !defined(STATIC_BUILD)
-	if (tclStubsPtr->reserved9 && tclIntPlatStubsPtr->tclpIsAtty) {
+	if (tclStubsPtr->tcl_CreateFileHandler && tclIntPlatStubsPtr->tclpIsAtty) {
 	    /* We are running on Cygwin */
 	    return tclIntPlatStubsPtr->tclpIsAtty(fd);
 	}
@@ -179,7 +179,7 @@ Tk_MainEx(
      * Ensure that we are getting a compatible version of Tcl.
      */
 
-    if (Tcl_InitStubs(interp, "8.6", 0) == NULL) {
+    if (Tcl_InitStubs(interp, "8.6-", 0) == NULL) {
 	if (Tcl_InitStubs(interp, "8.1", 0) == NULL) {
 	    abort();
 	} else {
@@ -189,7 +189,7 @@ Tk_MainEx(
 
 #if defined(_WIN32) && !defined(UNICODE) && !defined(STATIC_BUILD)
 
-    if (tclStubsPtr->reserved9) {
+    if (tclStubsPtr->tcl_CreateFileHandler) {
 	/* We are running win32 Tk under Cygwin, so let's check
 	 * whether the env("DISPLAY") variable or the -display
 	 * argument is set. If so, we really want to run the
@@ -221,7 +221,7 @@ Tk_MainEx(
 #if defined(_WIN32)
 #if !defined(STATIC_BUILD)
     /* If compiled for Win32 but running on Cygwin, don't use console */
-    if (!tclStubsPtr->reserved9)
+    if (!tclStubsPtr->tcl_CreateFileHandler)
 #endif
     Tk_InitConsoleChannels(interp);
 #endif
@@ -280,7 +280,7 @@ Tk_MainEx(
     argc--;
     argv++;
 
-    Tcl_SetVar2Ex(interp, "argc", NULL, Tcl_NewIntObj(argc), TCL_GLOBAL_ONLY);
+    Tcl_SetVar2Ex(interp, "argc", NULL, Tcl_NewWideIntObj(argc), TCL_GLOBAL_ONLY);
 
     argvPtr = Tcl_NewListObj(0, NULL);
     while (argc--) {
@@ -307,7 +307,7 @@ Tk_MainEx(
     }
 #endif
     Tcl_SetVar2Ex(interp, "tcl_interactive", NULL,
-	    Tcl_NewIntObj(!path && (is.tty || nullStdin)), TCL_GLOBAL_ONLY);
+	    Tcl_NewWideIntObj(!path && (is.tty || nullStdin)), TCL_GLOBAL_ONLY);
 
     /*
      * Invoke application-specific initialization.
@@ -403,19 +403,24 @@ Tk_MainEx(
 static void
 StdinProc(
     ClientData clientData,	/* The state of interactive cmd line */
-    int mask)			/* Not used. */
+    TCL_UNUSED(int))
 {
     char *cmd;
     int code;
-    int count;
+    TkSizeT count;
     InteractiveState *isPtr = (InteractiveState *)clientData;
     Tcl_Channel chan = isPtr->input;
     Tcl_Interp *interp = isPtr->interp;
-    (void)mask;
+    Tcl_DString savedEncoding;
 
+    Tcl_DStringInit(&savedEncoding);
+    Tcl_GetChannelOption(NULL, chan, "-encoding", &savedEncoding);
+    Tcl_SetChannelOption(NULL, chan, "-encoding", "utf-8");
     count = Tcl_Gets(chan, &isPtr->line);
+    Tcl_SetChannelOption(NULL, chan, "-encoding", Tcl_DStringValue(&savedEncoding));
+    Tcl_DStringFree(&savedEncoding);
 
-    if ((count == -1) && !isPtr->gotPartial) {
+    if ((count == TCL_IO_FAILURE) && !isPtr->gotPartial) {
 	if (isPtr->tty) {
 	    Tcl_Exit(0);
 	} else {

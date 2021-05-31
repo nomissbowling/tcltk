@@ -186,7 +186,7 @@ echo done
 
 ## update the changelog file
 if [ -n "$CHANGELOG" ]; then
-    $SCRIPTDIR/../gse4-service/git-changelog -indir $SCRIPTDIR
+    $SCRIPTDIR/../gse4-service/scripts/git-changelog.sh -indir $SCRIPTDIR
     ## make a local copy
     mkdir -p $SCRIPTDIR/share/changelog
     cp $SCRIPTDIR/debian.template/changelog $SCRIPTDIR/share/changelog/${DEBNAME}.changelog
@@ -199,10 +199,10 @@ mkdir -p $RELDIR
 mkdir -p $RELDIR$INSTDIR
 rsync -a $SCRIPTDIR/$BINDIR/* $RELDIR$INSTDIR
 mkdir -p $RELDIR/usr/share; mkdir -p $RELDIR/usr/share/pixmaps; mkdir -p $RELDIR/usr/share/applications
-cp -f $RELDIR$INSTDIR/img/mainicon.png $RELDIR/usr/share/pixmaps/tkcon86.png
-cp -f $RELDIR$INSTDIR/img/mainicon.png $RELDIR/usr/share/pixmaps/wish86.png
-cp -f $RELDIR$INSTDIR/share/config/tkcon86.desktop.template $RELDIR/usr/share/applications/tkcon86.desktop
-sed -i "s|%installdir%|$INSTDIR|g" $RELDIR/usr/share/applications/tkcon86.desktop
+cp -f $RELDIR$INSTDIR/img/mainicon.png $RELDIR/usr/share/pixmaps/tkcon87.png
+cp -f $RELDIR$INSTDIR/img/mainicon.png $RELDIR/usr/share/pixmaps/wish87.png
+cp -f $RELDIR$INSTDIR/share/config/tkcon87.desktop.template $RELDIR/usr/share/applications/tkcon87.desktop
+sed -i "s|%installdir%|$INSTDIR|g" $RELDIR/usr/share/applications/tkcon87.desktop
 echo -n "debian folder ... "
 mkdir -p $RELDIR/DEBIAN
 rsync -a $SCRIPTDIR/debian.template/* $RELDIR/DEBIAN/

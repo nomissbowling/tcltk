@@ -3,14 +3,12 @@
  *
  *	Contains the Unix-specific interpreter initialization functions.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright (c) 1999 by Scriptics Corporation.
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 1999 Scriptics Corporation.
  * All rights reserved.
  */
 
 #include "tclInt.h"
-#include <stddef.h>
-#include <locale.h>
 #ifdef HAVE_LANGINFO
 #   include <langinfo.h>
 #   ifdef __APPLE__
@@ -325,7 +323,7 @@ static int		MacOSXGetLibraryPath(Tcl_Interp *interp,
 #endif /* HAVE_COREFOUNDATION */
 #if defined(__APPLE__) && (defined(TCL_LOAD_FROM_MEMORY) || ( \
 	defined(MAC_OS_X_VERSION_MIN_REQUIRED) && ( \
-	(defined(TCL_THREADS) && MAC_OS_X_VERSION_MIN_REQUIRED < 1030) || \
+	(TCL_THREADS && MAC_OS_X_VERSION_MIN_REQUIRED < 1030) || \
 	(defined(__LP64__) && MAC_OS_X_VERSION_MIN_REQUIRED < 1050) || \
 	(defined(HAVE_COREFOUNDATION) && MAC_OS_X_VERSION_MIN_REQUIRED < 1050)\
 	)))
@@ -395,14 +393,6 @@ TclpInitPlatform(void)
 #endif /* SIGPIPE */
 
 #if defined(__FreeBSD__) && defined(__GNUC__)
-    /*
-     * Adjust the rounding mode to be more conventional. Note that FreeBSD
-     * only provides the __fpsetreg() used by the following two for the GNU
-     * Compiler. When using, say, Intel's icc they break. (Partially based on
-     * patch in BSD ports system from root@celsius.bychok.com)
-     */
-
-    fpsetround(FP_RN);
     (void) fpsetmask(0L);
 #endif
 
@@ -428,7 +418,7 @@ TclpInitPlatform(void)
     /*
      * In case the initial locale is not "C", ensure that the numeric
      * processing is done in "C" locale regardless. This is needed because Tcl
-     * relies on routines like strtod, but should not have locale dependent
+     * relies on routines like strtol/strtoul, but should not have locale dependent
      * behavior.
      */
 
@@ -465,7 +455,7 @@ TclpInitPlatform(void)
 void
 TclpInitLibraryPath(
     char **valuePtr,
-    int *lengthPtr,
+    unsigned int *lengthPtr,
     Tcl_Encoding *encodingPtr)
 {
 #define LIBRARY_SIZE	    32
@@ -554,7 +544,8 @@ TclpInitLibraryPath(
     Tcl_DStringFree(&buffer);
 
     *encodingPtr = Tcl_GetEncoding(NULL, NULL);
-    str = Tcl_GetStringFromObj(pathPtr, lengthPtr);
+    str = TclGetString(pathPtr);
+    *lengthPtr = pathPtr->length;
     *valuePtr = (char *)ckalloc(*lengthPtr + 1);
     memcpy(*valuePtr, str, *lengthPtr + 1);
     Tcl_DecrRefCount(pathPtr);
@@ -1062,22 +1053,27 @@ TclpFindVariable(
  */
 
 #ifdef HAVE_COREFOUNDATION
+#ifdef TCL_FRAMEWORK
 static int
 MacOSXGetLibraryPath(
     Tcl_Interp *interp,
     int maxPathLen,
     char *tclLibPath)
 {
-    int foundInFramework = TCL_ERROR;
-
-#ifdef TCL_FRAMEWORK
-    foundInFramework = Tcl_MacOSXOpenVersionedBundleResources(interp,
+    return Tcl_MacOSXOpenVersionedBundleResources(interp,
 	    "com.tcltk.tcllibrary", TCL_FRAMEWORK_VERSION, 0, maxPathLen,
 	    tclLibPath);
-#endif
-
-    return foundInFramework;
 }
+#else
+static int
+MacOSXGetLibraryPath(
+    TCL_UNUSED(Tcl_Interp *),
+    TCL_UNUSED(int),
+    TCL_UNUSED(char *))
+{
+    return TCL_ERROR;
+}
+#endif
 #endif /* HAVE_COREFOUNDATION */
 
 /*

@@ -86,17 +86,26 @@ typedef off_t		Tcl_SeekOffset;
 #endif
 
 #ifdef __CYGWIN__
+#ifdef __cplusplus
+extern "C" {
+#endif
     /* Make some symbols available without including <windows.h> */
 #   define DWORD unsigned int
 #   define CP_UTF8 65001
 #   define GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS 0x00000004
 #   define HANDLE void *
 #   define HINSTANCE void *
+#   define HMODULE void *
+#   define MAX_PATH 260
 #   define SOCKET unsigned int
 #   define WSAEWOULDBLOCK 10035
     typedef unsigned short WCHAR;
-    __declspec(dllimport) extern __stdcall int GetModuleHandleExW(unsigned int, const char *, void *);
-    __declspec(dllimport) extern __stdcall int GetModuleFileNameW(void *, const char *, int);
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif
+    __declspec(dllimport) extern __stdcall int GetModuleHandleExW(unsigned int, const void *, void *);
+    __declspec(dllimport) extern __stdcall int GetModuleFileNameW(void *, const void *, int);
     __declspec(dllimport) extern __stdcall int WideCharToMultiByte(int, int, const void *, int,
 	    char *, int, const char *, void *);
     __declspec(dllimport) extern __stdcall int MultiByteToWideChar(int, int, const char *, int,
@@ -107,9 +116,15 @@ typedef off_t		Tcl_SeekOffset;
     __declspec(dllimport) extern __stdcall int GetFileAttributesW(const WCHAR *);
     __declspec(dllimport) extern __stdcall int SetFileAttributesW(const WCHAR *, int);
     __declspec(dllimport) extern int cygwin_conv_path(int, const void *, void *, int);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 #   define timezone _timezone
     extern int TclOSstat(const char *name, void *statBuf);
     extern int TclOSlstat(const char *name, void *statBuf);
+#ifdef __cplusplus
+}
+#endif
 #elif defined(HAVE_STRUCT_STAT64) && !defined(__APPLE__)
 #   define TclOSstat(name, buf) stat64(name, (struct stat64 *)buf)
 #   define TclOSlstat(name,buf) lstat64(name, (struct stat64 *)buf)
@@ -129,16 +144,10 @@ typedef off_t		Tcl_SeekOffset;
 #   include <sys/select.h>
 #endif
 #include <sys/stat.h>
-#ifdef TIME_WITH_SYS_TIME
-#   include <sys/time.h>
-#   include <time.h>
-#else
 #ifdef HAVE_SYS_TIME_H
 #   include <sys/time.h>
-#else
-#   include <time.h>
 #endif
-#endif
+#include <time.h>
 #ifndef NO_SYS_WAIT_H
 #   include <sys/wait.h>
 #endif
@@ -148,14 +157,12 @@ typedef off_t		Tcl_SeekOffset;
 #include <limits.h>
 #ifdef HAVE_STDINT_H
 #   include <stdint.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#   include <unistd.h>
 #else
-#   include "../compat/unistd.h"
+#   include "../compat/stdint.h"
 #endif
+#include <unistd.h>
 
-extern int TclUnixSetBlockingMode(int fd, int mode);
+MODULE_SCOPE int TclUnixSetBlockingMode(int fd, int mode);
 
 #include <utime.h>
 
@@ -185,13 +192,7 @@ extern int TclUnixSetBlockingMode(int fd, int mode);
  *---------------------------------------------------------------------------
  */
 
-#ifndef NO_FLOAT_H
-#   include <float.h>
-#else
-#ifndef NO_VALUES_H
-#   include <values.h>
-#endif
-#endif
+#include <float.h>
 
 #ifndef FLT_MAX
 #   ifdef MAXFLOAT
@@ -612,10 +613,8 @@ extern char **		environ;
 #	    undef HAVE_COPYFILE
 #	endif
 #	if MAC_OS_X_VERSION_MAX_ALLOWED < 1030
-#	    ifdef TCL_THREADS
-		/* prior to 10.3, realpath is not threadsafe, c.f. bug 711232 */
-#		define NO_REALPATH 1
-#	    endif
+	    /* prior to 10.3, realpath is not threadsafe, c.f. bug 711232 */
+#	    define NO_REALPATH 1
 #	    undef HAVE_LANGINFO
 #	endif
 #   endif /* MAC_OS_X_VERSION_MAX_ALLOWED */
@@ -688,7 +687,7 @@ typedef int socklen_t;
 
 #define TclpExit	exit
 
-#ifdef TCL_THREADS
+#if !defined(TCL_THREADS) || TCL_THREADS
 #   include <pthread.h>
 #endif /* TCL_THREADS */
 
@@ -708,14 +707,14 @@ typedef int socklen_t;
 #include <pwd.h>
 #include <grp.h>
 
-extern struct passwd *	TclpGetPwNam(const char *name);
-extern struct group *	TclpGetGrNam(const char *name);
-extern struct passwd *	TclpGetPwUid(uid_t uid);
-extern struct group *	TclpGetGrGid(gid_t gid);
-extern struct hostent *	TclpGetHostByName(const char *name);
-extern struct hostent *	TclpGetHostByAddr(const char *addr,
+MODULE_SCOPE struct passwd *	TclpGetPwNam(const char *name);
+MODULE_SCOPE struct group *	TclpGetGrNam(const char *name);
+MODULE_SCOPE struct passwd *	TclpGetPwUid(uid_t uid);
+MODULE_SCOPE struct group *	TclpGetGrGid(gid_t gid);
+MODULE_SCOPE struct hostent *	TclpGetHostByName(const char *name);
+MODULE_SCOPE struct hostent *	TclpGetHostByAddr(const char *addr,
 				    int length, int type);
-extern void *TclpMakeTcpClientChannelMode(
+MODULE_SCOPE void *TclpMakeTcpClientChannelMode(
 				    void *tcpSocket, int mode);
 
 #endif /* _TCLUNIXPORT */

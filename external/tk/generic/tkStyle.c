@@ -3,8 +3,8 @@
  *
  *	This file implements the widget styles and themes support.
  *
- * Copyright (c) 1990-1993 The Regents of the University of California.
- * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright © 1990-1993 The Regents of the University of California.
+ * Copyright © 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -155,7 +155,7 @@ static const Tcl_ObjType styleObjType = {
     FreeStyleObjProc,		/* freeIntRepProc */
     DupStyleObjProc,		/* dupIntRepProc */
     NULL,			/* updateStringProc */
-    SetStyleFromAny		/* setFromAnyProc */
+    NULL			/* setFromAnyProc */
 };
 
 /*
@@ -1076,7 +1076,7 @@ Tk_GetElementSize(
     Tk_Style style,		/* The widget style. */
     Tk_StyledElement element,	/* The styled element, previously returned by
 				 * Tk_GetStyledElement. */
-    char *recordPtr,		/* The widget record. */
+    void *recordPtr,		/* The widget record. */
     Tk_Window tkwin,		/* The widget window. */
     int width, int height,	/* Requested size. */
     int inner,			/* If TRUE, compute the outer size according
@@ -1090,7 +1090,7 @@ Tk_GetElementSize(
     StyledWidgetSpec *widgetSpecPtr = (StyledWidgetSpec *) element;
 
     widgetSpecPtr->elementPtr->specPtr->getSize(stylePtr->clientData,
-	    recordPtr, widgetSpecPtr->optionsPtr, tkwin, width, height, inner,
+	    (char *)recordPtr, widgetSpecPtr->optionsPtr, tkwin, width, height, inner,
 	    widthPtr, heightPtr);
 }
 
@@ -1117,7 +1117,7 @@ Tk_GetElementBox(
     Tk_Style style,		/* The widget style. */
     Tk_StyledElement element,	/* The styled element, previously returned by
 				 * Tk_GetStyledElement. */
-    char *recordPtr,		/* The widget record. */
+    void *recordPtr,		/* The widget record. */
     Tk_Window tkwin,		/* The widget window. */
     int x, int y,		/* Top left corner of available area. */
     int width, int height,	/* Size of available area. */
@@ -1133,7 +1133,7 @@ Tk_GetElementBox(
     StyledWidgetSpec *widgetSpecPtr = (StyledWidgetSpec *) element;
 
     widgetSpecPtr->elementPtr->specPtr->getBox(stylePtr->clientData,
-	    recordPtr, widgetSpecPtr->optionsPtr, tkwin, x, y, width, height,
+	    (char *)recordPtr, widgetSpecPtr->optionsPtr, tkwin, x, y, width, height,
 	    inner, xPtr, yPtr, widthPtr, heightPtr);
 }
 
@@ -1159,14 +1159,14 @@ Tk_GetElementBorderWidth(
     Tk_Style style,		/* The widget style. */
     Tk_StyledElement element,	/* The styled element, previously returned by
 				 * Tk_GetStyledElement. */
-    char *recordPtr,		/* The widget record. */
+    void *recordPtr,		/* The widget record. */
     Tk_Window tkwin)		/* The widget window. */
 {
     Style *stylePtr = (Style *) style;
     StyledWidgetSpec *widgetSpecPtr = (StyledWidgetSpec *) element;
 
     return widgetSpecPtr->elementPtr->specPtr->getBorderWidth(
-	    stylePtr->clientData, recordPtr, widgetSpecPtr->optionsPtr, tkwin);
+	    stylePtr->clientData, (char *)recordPtr, widgetSpecPtr->optionsPtr, tkwin);
 }
 
 /*
@@ -1190,7 +1190,7 @@ Tk_DrawElement(
     Tk_Style style,		/* The widget style. */
     Tk_StyledElement element,	/* The styled element, previously returned by
 				 * Tk_GetStyledElement. */
-    char *recordPtr,		/* The widget record. */
+    void *recordPtr,		/* The widget record. */
     Tk_Window tkwin,		/* The widget window. */
     Drawable d,			/* Where to draw element. */
     int x, int y,		/* Top left corner of element. */
@@ -1201,7 +1201,7 @@ Tk_DrawElement(
     StyledWidgetSpec *widgetSpecPtr = (StyledWidgetSpec *) element;
 
     widgetSpecPtr->elementPtr->specPtr->draw(stylePtr->clientData,
-	    recordPtr, widgetSpecPtr->optionsPtr, tkwin, d, x, y, width,
+	    (char *)recordPtr, widgetSpecPtr->optionsPtr, tkwin, d, x, y, width,
 	    height, state);
 }
 
@@ -1402,59 +1402,12 @@ Tk_AllocStyleFromObj(
     Tcl_Obj *objPtr)		/* Object containing name of the style to
 				 * retrieve. */
 {
-    Style *stylePtr;
-
     if (objPtr->typePtr != &styleObjType) {
-	SetStyleFromAny(interp, objPtr);
+	if (SetStyleFromAny(interp, objPtr) != TCL_OK) {
+	    return NULL;
+	}
     }
-    stylePtr = objPtr->internalRep.twoPtrValue.ptr1;
-
-    return (Tk_Style) stylePtr;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * Tk_GetStyleFromObj --
- *
- *	Find the style that corresponds to a given object. The style must have
- *	already been created by Tk_CreateStyle.
- *
- * Results:
- *	The return value is a token for the style that matches objPtr, or NULL
- *	if none found.
- *
- * Side effects:
- *	If the object is not already a style ref, the conversion will free any
- *	old internal representation.
- *
- *----------------------------------------------------------------------
- */
-
-Tk_Style
-Tk_GetStyleFromObj(
-    Tcl_Obj *objPtr)		/* The object from which to get the style. */
-{
-    if (objPtr->typePtr != &styleObjType) {
-	SetStyleFromAny(NULL, objPtr);
-    }
-
-    return objPtr->internalRep.twoPtrValue.ptr1;
-}
-
-/*
- *---------------------------------------------------------------------------
- *
- * Tk_FreeStyleFromObj --
- *
- *	No-op. Present only for stubs compatibility.
- *
- *---------------------------------------------------------------------------
- */
-void
-Tk_FreeStyleFromObj(
-    TCL_UNUSED(Tcl_Obj *))
-{
+    return (Tk_Style)objPtr->internalRep.twoPtrValue.ptr1;
 }
 
 /*
@@ -1466,8 +1419,8 @@ Tk_FreeStyleFromObj(
  *	internal form.
  *
  * Results:
- *	Always returns TCL_OK. If an error occurs is returned (e.g. the style
- *	doesn't exist), an error message will be left in interp's result.
+ *	If an error occurs is returned (e.g. the style doesn't exist), an
+ *	error message will be left in interp's result and TCL_ERROR is returned.
  *
  * Side effects:
  *	The object is left with its typePtr pointing to styleObjType.
@@ -1482,6 +1435,7 @@ SetStyleFromAny(
 {
     const Tcl_ObjType *typePtr;
     const char *name;
+    Tk_Style style;
 
     /*
      * Free the old internalRep before setting the new one.
@@ -1493,8 +1447,12 @@ SetStyleFromAny(
 	typePtr->freeIntRepProc(objPtr);
     }
 
+    style = Tk_GetStyle(interp, name);
+    if (style == NULL) {
+    	return TCL_ERROR;
+    }
     objPtr->typePtr = &styleObjType;
-    objPtr->internalRep.twoPtrValue.ptr1 = Tk_GetStyle(interp, name);
+    objPtr->internalRep.twoPtrValue.ptr1 = style;
 
     return TCL_OK;
 }

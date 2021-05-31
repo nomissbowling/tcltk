@@ -4,7 +4,7 @@
  *	This file implements the Windows-specific serial port functions, and
  *	the "serial" channel driver.
  *
- * Copyright (c) 1999 by Scriptics Corp.
+ * Copyright © 1999 Scriptics Corp.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -42,6 +42,15 @@ TCL_DECLARE_MUTEX(serialMutex)
 
 #define SERIAL_EOF	(1<<2)	/* Serial has reached EOF. */
 #define SERIAL_ERROR	(1<<4)
+
+/*
+ * Bit masks used for noting whether to drain or discard output on close. They
+ * are disjoint from each other; at most one may be set at a time.
+ */
+
+#define SERIAL_CLOSE_DRAIN   (1<<6)	/* Drain all output on close. */
+#define SERIAL_CLOSE_DISCARD (1<<7)	/* Discard all output on close. */
+#define SERIAL_CLOSE_MASK    (3<<6)	/* Both two bits above. */
 
 /*
  * Default time to block between checking status on the serial port.
@@ -115,7 +124,7 @@ typedef struct SerialInfo {
 				 * [fconfigure -queue] */
 } SerialInfo;
 
-typedef struct ThreadSpecificData {
+typedef struct {
     /*
      * The following pointer refers to the head of the list of serials that
      * are being watched for file events.
@@ -131,7 +140,7 @@ static Tcl_ThreadDataKey dataKey;
  * events are generated.
  */
 
-typedef struct SerialEvent {
+typedef struct {
     Tcl_Event header;		/* Information that is standard for all
 				 * events. */
     SerialInfo *infoPtr;	/* Pointer to serial info structure. Note that
@@ -159,8 +168,6 @@ static COMMTIMEOUTS no_timeout = {
 static int		SerialBlockProc(ClientData instanceData, int mode);
 static void		SerialCheckProc(ClientData clientData, int flags);
 static int		SerialCloseProc(ClientData instanceData,
-			    Tcl_Interp *interp);
-static int		SerialClose2Proc(ClientData instanceData,
 			    Tcl_Interp *interp, int flags);
 static int		SerialEventProc(Tcl_Event *evPtr, int flags);
 static void		SerialExitHandler(ClientData clientData);
@@ -197,7 +204,7 @@ static int		SerialBlockingWrite(SerialInfo *infoPtr, LPVOID buf,
 static const Tcl_ChannelType serialChannelType = {
     "serial",			/* Type name. */
     TCL_CHANNEL_VERSION_5,	/* v5 channel */
-    SerialCloseProc,		/* Close proc. */
+    TCL_CLOSE2PROC,		/* Close proc. */
     SerialInputProc,		/* Input proc. */
     SerialOutputProc,		/* Output proc. */
     NULL,			/* Seek proc. */
@@ -205,7 +212,7 @@ static const Tcl_ChannelType serialChannelType = {
     SerialGetOptionProc,	/* Get option proc. */
     SerialWatchProc,		/* Set up notifier to watch the channel. */
     SerialGetHandleProc,	/* Get an OS handle from channel. */
-    SerialClose2Proc,			/* close2proc. */
+    SerialCloseProc,		/* close2proc. */
     SerialBlockProc,		/* Set blocking or non-blocking mode.*/
     NULL,			/* flush proc. */
     NULL,			/* handler proc. */
@@ -278,7 +285,7 @@ SerialInit(void)
 
 static void
 SerialExitHandler(
-    ClientData clientData)	/* Old window proc */
+    TCL_UNUSED(ClientData))
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
     SerialInfo *infoPtr;
@@ -316,7 +323,7 @@ SerialExitHandler(
 
 static void
 ProcExitHandler(
-    ClientData clientData)	/* Old window proc */
+    TCL_UNUSED(ClientData))
 {
     Tcl_MutexLock(&serialMutex);
     initialized = 0;
@@ -393,9 +400,13 @@ SerialGetMilliseconds(void)
  *----------------------------------------------------------------------
  */
 
+#ifdef __cplusplus
+#define min(a, b)  (((a) < (b)) ? (a) : (b))
+#endif
+
 void
 SerialSetupProc(
-    ClientData data,		/* Not used. */
+    TCL_UNUSED(ClientData),
     int flags)			/* Event flags as passed to Tcl_DoOneEvent. */
 {
     SerialInfo *infoPtr;
@@ -450,7 +461,7 @@ SerialSetupProc(
 
 static void
 SerialCheckProc(
-    ClientData data,		/* Not used. */
+    TCL_UNUSED(ClientData),
     int flags)			/* Event flags as passed to Tcl_DoOneEvent. */
 {
     SerialInfo *infoPtr;
@@ -524,7 +535,7 @@ SerialCheckProc(
 
 	if (needEvent) {
 	    infoPtr->flags |= SERIAL_PENDING;
-	    evPtr = ckalloc(sizeof(SerialEvent));
+	    evPtr = (SerialEvent *)ckalloc(sizeof(SerialEvent));
 	    evPtr->header.proc = SerialEventProc;
 	    evPtr->infoPtr = infoPtr;
 	    Tcl_QueueEvent((Tcl_Event *) evPtr, TCL_QUEUE_TAIL);
@@ -574,7 +585,7 @@ SerialBlockProc(
 /*
  *----------------------------------------------------------------------
  *
- * SerialCloseProc/SerialClose2Proc --
+ * SerialCloseProc --
  *
  *	Closes a serial based IO channel.
  *
@@ -590,14 +601,18 @@ SerialBlockProc(
 static int
 SerialCloseProc(
     ClientData instanceData,    /* Pointer to SerialInfo structure. */
-    Tcl_Interp *interp)		/* For error reporting. */
+    TCL_UNUSED(Tcl_Interp *),
+    int flags)
 {
     SerialInfo *serialPtr = (SerialInfo *) instanceData;
-    int errorCode, result = 0;
+    int errorCode = 0, result = 0;
     SerialInfo *infoPtr, **nextPtrPtr;
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
-    errorCode = 0;
+    if ((flags & (TCL_CLOSE_READ | TCL_CLOSE_WRITE)) != 0) {
+	return EINVAL;
+    }
+
 
     if (serialPtr->validMask & TCL_READABLE) {
 	PurgeComm(serialPtr->handle, PURGE_RXABORT | PURGE_RXCLEAR);
@@ -606,7 +621,6 @@ SerialCloseProc(
     serialPtr->validMask &= ~TCL_READABLE;
 
     if (serialPtr->writeThread) {
-
     	TclPipeThreadStop(&serialPtr->writeTI, serialPtr->writeThread);
 
 	CloseHandle(serialPtr->osWrite.hEvent);
@@ -631,7 +645,7 @@ SerialCloseProc(
 	    && (GetStdHandle(STD_OUTPUT_HANDLE) != serialPtr->handle)
 	    && (GetStdHandle(STD_ERROR_HANDLE) != serialPtr->handle))) {
 	if (CloseHandle(serialPtr->handle) == FALSE) {
-	    TclWinConvertError(GetLastError());
+	    Tcl_WinConvertError(GetLastError());
 	    errorCode = errno;
 	}
     }
@@ -665,18 +679,6 @@ SerialCloseProc(
 	return result;
     }
     return errorCode;
-}
-
-static int
-SerialClose2Proc(
-    ClientData instanceData,    /* Pointer to SerialInfo structure. */
-    Tcl_Interp *interp,		/* For error reporting. */
-	int flags)
-{
-    if ((flags & (TCL_CLOSE_READ | TCL_CLOSE_WRITE)) == 0) {
-	return SerialCloseProc(instanceData, interp);
-    }
-    return EINVAL;
 }
 
 /*
@@ -926,7 +928,7 @@ SerialInputProc(
 
     if (SerialBlockingRead(infoPtr, (LPVOID) buf, (DWORD) bufSize, &bytesRead,
 	    &infoPtr->osRead) == FALSE) {
-	TclWinConvertError(GetLastError());
+	Tcl_WinConvertError(GetLastError());
 	*errorCode = errno;
 	return -1;
     }
@@ -1008,7 +1010,7 @@ SerialOutputProc(
      */
 
     if (infoPtr->writeError) {
-	TclWinConvertError(infoPtr->writeError);
+	Tcl_WinConvertError(infoPtr->writeError);
 	infoPtr->writeError = 0;
 	goto error1;
     }
@@ -1036,7 +1038,7 @@ SerialOutputProc(
 		ckfree(infoPtr->writeBuf);
 	    }
 	    infoPtr->writeBufLen = toWrite;
-	    infoPtr->writeBuf = ckalloc(toWrite);
+	    infoPtr->writeBuf = (char *)ckalloc(toWrite);
 	}
 	memcpy(infoPtr->writeBuf, buf, toWrite);
 	infoPtr->toWrite = toWrite;
@@ -1067,7 +1069,7 @@ SerialOutputProc(
     return (int) bytesWritten;
 
   writeError:
-    TclWinConvertError(GetLastError());
+    Tcl_WinConvertError(GetLastError());
 
   error:
     /*
@@ -1248,7 +1250,7 @@ SerialWatchProc(
 static int
 SerialGetHandleProc(
     ClientData instanceData,	/* The serial state. */
-    int direction,		/* TCL_READABLE or TCL_WRITABLE */
+    TCL_UNUSED(int) /*direction*/,
     ClientData *handlePtr)	/* Where to store the handle. */
 {
     SerialInfo *infoPtr = (SerialInfo *) instanceData;
@@ -1292,7 +1294,7 @@ SerialWriterThread(
 	    /* exit */
 	    break;
 	}
-	infoPtr = (SerialInfo *)pipeTI->clientData;
+	infoPtr = (SerialInfo *) pipeTI->clientData;
 
 	buf = infoPtr->writeBuf;
 	toWrite = infoPtr->toWrite;
@@ -1356,7 +1358,25 @@ SerialWriterThread(
 	Tcl_MutexUnlock(&serialMutex);
     }
 
-    /* Worker exit, so inform the main thread or free TI-structure (if owned) */
+    /*
+     * We're about to close, so do any drain or discard required.
+     */
+
+    if (infoPtr) {
+	switch (infoPtr->flags & SERIAL_CLOSE_MASK) {
+	case SERIAL_CLOSE_DRAIN:
+	    FlushFileBuffers(infoPtr->handle);
+	    break;
+	case SERIAL_CLOSE_DISCARD:
+	    PurgeComm(infoPtr->handle, PURGE_TXABORT | PURGE_TXCLEAR);
+	    break;
+	}
+    }
+
+    /*
+     * Worker exit, so inform the main thread or free TI-structure (if owned).
+     */
+
     TclPipeThreadExit(&pipeTI);
 
     return 0;
@@ -1391,7 +1411,7 @@ TclWinSerialOpen(
      * If an open channel is specified, close it
      */
 
-    if ( handle != INVALID_HANDLE_VALUE && CloseHandle(handle) == FALSE) {
+    if (handle != INVALID_HANDLE_VALUE && CloseHandle(handle) == FALSE) {
 	return INVALID_HANDLE_VALUE;
     }
 
@@ -1435,7 +1455,7 @@ TclWinOpenSerialChannel(
 
     SerialInit();
 
-    infoPtr = ckalloc(sizeof(SerialInfo));
+    infoPtr = (SerialInfo *)ckalloc(sizeof(SerialInfo));
     memset(infoPtr, 0, sizeof(SerialInfo));
 
     infoPtr->validMask = permissions;
@@ -1624,6 +1644,32 @@ SerialSetOptionProc(
     vlen = strlen(value);
 
     /*
+     * Option -closemode drain|discard|default
+     */
+
+    if ((len > 2) && (strncmp(optionName, "-closemode", len) == 0)) {
+	if (Tcl_UtfNcasecmp(value, "DEFAULT", vlen) == 0) {
+	    infoPtr->flags &= ~SERIAL_CLOSE_MASK;
+	} else if (Tcl_UtfNcasecmp(value, "DRAIN", vlen) == 0) {
+	    infoPtr->flags &= ~SERIAL_CLOSE_MASK;
+	    infoPtr->flags |= SERIAL_CLOSE_DRAIN;
+	} else if (Tcl_UtfNcasecmp(value, "DISCARD", vlen) == 0) {
+	    infoPtr->flags &= ~SERIAL_CLOSE_MASK;
+	    infoPtr->flags |= SERIAL_CLOSE_DISCARD;
+	} else {
+	    if (interp) {
+		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
+			"bad mode \"%s\" for -closemode: must be"
+			" default, discard, or drain", value));
+		Tcl_SetErrorCode(interp, "TCL", "OPERATION", "FCONFIGURE",
+			"VALUE", NULL);
+	    }
+	    return TCL_ERROR;
+	}
+	return TCL_OK;
+    }
+
+    /*
      * Option -mode baud,parity,databits,stopbits
      */
 
@@ -1631,7 +1677,8 @@ SerialSetOptionProc(
 	if (!GetCommState(infoPtr->handle, &dcb)) {
 	    goto getStateFailed;
 	}
-	native = (const WCHAR *)Tcl_WinUtfToTChar(value, -1, &ds);
+	Tcl_DStringInit(&ds);
+	native = Tcl_UtfToWCharDString(value, -1, &ds);
 	result = BuildCommDCBW(native, &dcb);
 	Tcl_DStringFree(&ds);
 
@@ -1732,7 +1779,7 @@ SerialSetOptionProc(
 	    if (interp != NULL) {
 		Tcl_SetObjResult(interp, Tcl_NewStringObj(
 			"bad value for -xchar: should be a list of"
-			" two elements with each a single character", -1));
+			" two elements with each a single 8-bit character", -1));
 		Tcl_SetErrorCode(interp, "TCL", "VALUE", "XCHAR", NULL);
 	    }
 	    ckfree(argv);
@@ -1752,16 +1799,16 @@ SerialSetOptionProc(
 	dcb.XonChar = argv[0][0];
 	dcb.XoffChar = argv[1][0];
 	if (argv[0][0] & 0x80 || argv[1][0] & 0x80) {
-	    int character;
+	    Tcl_UniChar character = 0;
 	    int charLen;
 
-	    charLen = TclUtfToUCS4(argv[0], &character);
-	    if ((character & ~0xFF) || argv[0][charLen]) {
+	    charLen = Tcl_UtfToUniChar(argv[0], &character);
+	    if ((character > 0xFF) || argv[0][charLen]) {
 		goto badXchar;
 	    }
 	    dcb.XonChar = (char) character;
-	    charLen = TclUtfToUCS4(argv[1], &character);
-	    if ((character & ~0xFF) || argv[1][charLen]) {
+	    charLen = Tcl_UtfToUniChar(argv[1], &character);
+	    if ((character > 0xFF) || argv[1][charLen]) {
 		goto badXchar;
 	    }
 	    dcb.XoffChar = (char) character;
@@ -1863,7 +1910,7 @@ SerialSetOptionProc(
 	 * -sysbuffer 4096 or -sysbuffer {64536 4096}
 	 */
 
-	size_t inSize = (size_t) -1, outSize = (size_t) -1;
+	int inSize = -1, outSize = -1;
 
 	if (Tcl_SplitList(interp, value, &argc, &argv) == TCL_ERROR) {
 	    return TCL_ERROR;
@@ -1889,7 +1936,7 @@ SerialSetOptionProc(
 
 	if (!SetupComm(infoPtr->handle, inSize, outSize)) {
 	    if (interp != NULL) {
-		TclWinConvertError(GetLastError());
+		Tcl_WinConvertError(GetLastError());
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 			"can't setup comm buffers: %s",
 			Tcl_PosixError(interp)));
@@ -1940,7 +1987,7 @@ SerialSetOptionProc(
 	tout.ReadTotalTimeoutConstant = msec;
 	if (!SetCommTimeouts(infoPtr->handle, &tout)) {
 	    if (interp != NULL) {
-		TclWinConvertError(GetLastError());
+		Tcl_WinConvertError(GetLastError());
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 			"can't set comm timeouts: %s",
 			Tcl_PosixError(interp)));
@@ -1952,11 +1999,12 @@ SerialSetOptionProc(
     }
 
     return Tcl_BadChannelOption(interp, optionName,
-	    "mode handshake pollinterval sysbuffer timeout ttycontrol xchar");
+	    "closemode mode handshake pollinterval sysbuffer timeout "
+	    "ttycontrol xchar");
 
   getStateFailed:
     if (interp != NULL) {
-	TclWinConvertError(GetLastError());
+	Tcl_WinConvertError(GetLastError());
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"can't get comm state: %s", Tcl_PosixError(interp)));
     }
@@ -1964,7 +2012,7 @@ SerialSetOptionProc(
 
   setStateFailed:
     if (interp != NULL) {
-	TclWinConvertError(GetLastError());
+	Tcl_WinConvertError(GetLastError());
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"can't set comm state: %s", Tcl_PosixError(interp)));
     }
@@ -2013,6 +2061,27 @@ SerialGetOptionProc(
     }
 
     /*
+     * Get option -closemode
+     */
+
+    if (len == 0) {
+	Tcl_DStringAppendElement(dsPtr, "-closemode");
+    }
+    if (len==0 || (len>1 && strncmp(optionName, "-closemode", len)==0)) {
+	switch (infoPtr->flags & SERIAL_CLOSE_MASK) {
+	case SERIAL_CLOSE_DRAIN:
+	    Tcl_DStringAppendElement(dsPtr, "drain");
+	    break;
+	case SERIAL_CLOSE_DISCARD:
+	    Tcl_DStringAppendElement(dsPtr, "discard");
+	    break;
+	default:
+	    Tcl_DStringAppendElement(dsPtr, "default");
+	    break;
+	}
+    }
+
+    /*
      * Get option -mode
      */
 
@@ -2026,7 +2095,7 @@ SerialGetOptionProc(
 
 	if (!GetCommState(infoPtr->handle, &dcb)) {
 	    if (interp != NULL) {
-		TclWinConvertError(GetLastError());
+		Tcl_WinConvertError(GetLastError());
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 			"can't get comm state: %s", Tcl_PosixError(interp)));
 	    }
@@ -2096,15 +2165,15 @@ SerialGetOptionProc(
 
 	if (!GetCommState(infoPtr->handle, &dcb)) {
 	    if (interp != NULL) {
-		TclWinConvertError(GetLastError());
+		Tcl_WinConvertError(GetLastError());
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 			"can't get comm state: %s", Tcl_PosixError(interp)));
 	    }
 	    return TCL_ERROR;
 	}
-	sprintf(buf, "%c", dcb.XonChar);
+	buf[Tcl_UniCharToUtf(UCHAR(dcb.XonChar), buf)] = '\0';
 	Tcl_DStringAppendElement(dsPtr, buf);
-	sprintf(buf, "%c", dcb.XoffChar);
+	buf[Tcl_UniCharToUtf(UCHAR(dcb.XoffChar), buf)] = '\0';
 	Tcl_DStringAppendElement(dsPtr, buf);
     }
     if (len == 0) {
@@ -2174,7 +2243,7 @@ SerialGetOptionProc(
 
 	if (!GetCommModemStatus(infoPtr->handle, &status)) {
 	    if (interp != NULL) {
-		TclWinConvertError(GetLastError());
+		Tcl_WinConvertError(GetLastError());
 		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 			"can't get tty status: %s", Tcl_PosixError(interp)));
 	    }
@@ -2188,7 +2257,8 @@ SerialGetOptionProc(
 	return TCL_OK;
     }
     return Tcl_BadChannelOption(interp, optionName,
-	    "mode pollinterval lasterror queue sysbuffer ttystatus xchar");
+	    "closemode mode pollinterval lasterror queue sysbuffer ttystatus "
+	    "xchar");
 }
 
 /*

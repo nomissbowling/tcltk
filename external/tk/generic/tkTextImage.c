@@ -4,7 +4,7 @@
  *	This file contains code that allows images to be nested inside text
  *	widgets. It also implements the "image" widget command for texts.
  *
- * Copyright (c) 1997 Sun Microsystems, Inc.
+ * Copyright © 1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -18,7 +18,7 @@
  */
 
 #define EI_SEG_SIZE \
-	((unsigned)(Tk_Offset(TkTextSegment, body) + sizeof(TkTextEmbImage)))
+	(offsetof(TkTextSegment, body) + sizeof(TkTextEmbImage))
 
 /*
  * Prototypes for functions defined in this file:
@@ -43,7 +43,7 @@ static void		EmbImageDisplayProc(TkText *textPtr,
 			    Drawable dst, int screenY);
 static int		EmbImageLayoutProc(TkText *textPtr,
 			    TkTextIndex *indexPtr, TkTextSegment *segPtr,
-			    int offset, int maxX, int maxChars,
+			    TkSizeT offset, int maxX, TkSizeT maxChars,
 			    int noCharsYet, TkWrapMode wrapMode,
 			    TkTextDispChunk *chunkPtr);
 static void		EmbImageProc(ClientData clientData, int x, int y,
@@ -83,17 +83,17 @@ typedef enum {
 
 static const Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_STRING_TABLE, "-align", NULL, NULL,
-	"center", -1, Tk_Offset(TkTextEmbImage, align),
+	"center", TCL_INDEX_NONE, offsetof(TkTextEmbImage, align),
 	0, alignStrings, 0},
     {TK_OPTION_PIXELS, "-padx", NULL, NULL,
-	"0", -1, Tk_Offset(TkTextEmbImage, padX), 0, 0, 0},
+	"0", TCL_INDEX_NONE, offsetof(TkTextEmbImage, padX), 0, 0, 0},
     {TK_OPTION_PIXELS, "-pady", NULL, NULL,
-	"0", -1, Tk_Offset(TkTextEmbImage, padY), 0, 0, 0},
+	"0", TCL_INDEX_NONE, offsetof(TkTextEmbImage, padY), 0, 0, 0},
     {TK_OPTION_STRING, "-image", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextEmbImage, imageString),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextEmbImage, imageString),
 	TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-name", NULL, NULL,
-	NULL, -1, Tk_Offset(TkTextEmbImage, imageName),
+	NULL, TCL_INDEX_NONE, offsetof(TkTextEmbImage, imageName),
 	TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0}
 };
@@ -161,7 +161,7 @@ TkTextImageCmd(
 	    Tcl_SetErrorCode(interp, "TK", "TEXT", "NO_IMAGE", NULL);
 	    return TCL_ERROR;
 	}
-	objPtr = Tk_GetOptionValue(interp, (char *)&eiPtr->body.ei,
+	objPtr = Tk_GetOptionValue(interp, &eiPtr->body.ei,
 		eiPtr->body.ei.optionTable, objv[4], textPtr->tkwin);
 	if (objPtr == NULL) {
 	    return TCL_ERROR;
@@ -188,7 +188,7 @@ TkTextImageCmd(
 	}
 	if (objc <= 5) {
 	    Tcl_Obj *objPtr = Tk_GetOptionInfo(interp,
-		    (char *)&eiPtr->body.ei, eiPtr->body.ei.optionTable,
+		    &eiPtr->body.ei, eiPtr->body.ei.optionTable,
 		    (objc == 5) ? objv[4] : NULL, textPtr->tkwin);
 
 	    if (objPtr == NULL) {
@@ -279,18 +279,23 @@ TkTextImageCmd(
 	Tcl_HashEntry *hPtr;
 	Tcl_Obj *resultObj;
 
-	if (objc == 3) {
-	    resultObj = Tcl_NewObj();
-	    for (hPtr = Tcl_FirstHashEntry(&textPtr->sharedTextPtr->imageTable,
-		    &search); hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
-		Tcl_ListObjAppendElement(NULL, resultObj, Tcl_NewStringObj(
-			Tcl_GetHashKey(&textPtr->sharedTextPtr->markTable, hPtr), -1));
-	    }
+	if (objc != 3) {
+	    Tcl_WrongNumArgs(interp, 3, objv, NULL);
+	    return TCL_ERROR;
+	}
+	resultObj = Tcl_NewObj();
+	for (hPtr = Tcl_FirstHashEntry(&textPtr->sharedTextPtr->imageTable,
+		&search); hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
+	    Tcl_ListObjAppendElement(NULL, resultObj, Tcl_NewStringObj(
+		    (const char *)Tcl_GetHashKey(&textPtr->sharedTextPtr->markTable, hPtr),
+		    -1));
+	}
+	if (resultObj == NULL) {
+	    return TCL_ERROR;
+	} else {
 	    Tcl_SetObjResult(interp, resultObj);
 	    return TCL_OK;
 	}
-	Tcl_WrongNumArgs(interp, 3, objv, NULL);
-	break;
     }
     default:
 	Tcl_Panic("unexpected switch fallthrough");
@@ -336,7 +341,7 @@ EmbImageConfigure(
     int conflict = 0;		/* True if we have a name conflict */
     size_t len;			/* length of image name */
 
-    if (Tk_SetOptions(textPtr->interp, (char *)&eiPtr->body.ei,
+    if (Tk_SetOptions(textPtr->interp, &eiPtr->body.ei,
 	    eiPtr->body.ei.optionTable,
 	    objc, objv, textPtr->tkwin, NULL, NULL) != TCL_OK) {
 	return TCL_ERROR;
@@ -530,11 +535,11 @@ EmbImageLayoutProc(
     TkText *textPtr,		/* Text widget being layed out. */
     TCL_UNUSED(TkTextIndex *),	/* Identifies first character in chunk. */
     TkTextSegment *eiPtr,	/* Segment corresponding to indexPtr. */
-    int offset,			/* Offset within segPtr corresponding to
+    TkSizeT offset,			/* Offset within segPtr corresponding to
 				 * indexPtr (always 0). */
     int maxX,			/* Chunk must not occupy pixels at this
 				 * position or higher. */
-    TCL_UNUSED(int),		/* Chunk must not include more than this many
+    TCL_UNUSED(TkSizeT),	/* Chunk must not include more than this many
 				 * characters. */
     int noCharsYet,		/* Non-zero means no characters have been
 				 * assigned to this line yet. */
@@ -623,7 +628,7 @@ EmbImageCheckProc(
     }
     if (eiPtr->size != 1) {
 	Tcl_Panic("EmbImageCheckProc: embedded image has size %d",
-		eiPtr->size);
+		(int)eiPtr->size);
     }
 }
 
@@ -796,7 +801,7 @@ TkTextImageIndex(
     indexPtr->linePtr = eiPtr->body.ei.linePtr;
     indexPtr->byteIndex = TkTextSegToOffset(eiPtr, indexPtr->linePtr);
 
-    /* 
+    /*
      * If indexPtr refers to somewhere outside the -startline/-endline
      * range limits of the widget, error out since the image indeed is not
      * reachable from this text widget (it may be reachable from a peer).

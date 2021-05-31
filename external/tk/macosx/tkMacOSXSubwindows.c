@@ -3,9 +3,9 @@
  *
  *	Implements subwindows for the macintosh version of Tk.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
- * Copyright 2001-2009, Apple Inc.
- * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright © 1995-1997 Sun Microsystems, Inc.
+ * Copyright © 2001-2009 Apple Inc.
+ * Copyright © 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -845,15 +845,6 @@ TkMacOSXUpdateClipRgn(
 		    TkMacOSXUpdateClipRgn(win2Ptr);
 		    ChkErr(HIShapeIntersect,
 			    win2Ptr->privatePtr->aboveVisRgn, rgn, rgn);
-		} else if (tkMacOSXEmbedHandler != NULL) {
-		    TkRegion r = TkCreateRegion();
-		    HIShapeRef visRgn;
-
-		    tkMacOSXEmbedHandler->getClipProc((Tk_Window)winPtr, r);
-		    visRgn = TkMacOSXGetNativeRegion(r);
-		    ChkErr(HIShapeIntersect, visRgn, rgn, rgn);
-		    CFRelease(visRgn);
-		    TkDestroyRegion(r);
 		}
 
 		/*
@@ -937,7 +928,7 @@ TkMacOSXUpdateClipRgn(
  *
  *	This function returns the Macintosh clipping region for the given
  *	window. The caller is responsible for disposing of the returned region
- *	via TkDestroyRegion().
+ *	via XDestroyRegion().
  *
  * Results:
  *	The region.
@@ -948,14 +939,14 @@ TkMacOSXUpdateClipRgn(
  *----------------------------------------------------------------------
  */
 
-TkRegion
+Region
 TkMacOSXVisableClipRgn(
     TkWindow *winPtr)
 {
     if (winPtr->privatePtr->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(winPtr);
     }
-    return (TkRegion) HIShapeCreateMutableCopy(winPtr->privatePtr->visRgn);
+    return (Region) HIShapeCreateMutableCopy(winPtr->privatePtr->visRgn);
 }
 
 /*
@@ -1050,7 +1041,8 @@ TkMacOSXInvalidateWindow(
  *
  * TkMacOSXGetNSWindowForDrawable --
  *
- *	This function returns the NSWindow for a given X drawable.
+ *	This function returns the NSWindow for a given X drawable, if the
+ *      drawable is a window.  If the drawable is a pixmap it returns nil.
  *
  * Results:
  *	A NSWindow, or nil for off screen pixmaps.
@@ -1062,7 +1054,7 @@ TkMacOSXInvalidateWindow(
  */
 
 void *
-TkMacOSXDrawable(
+Tk_MacOSXGetNSWindowForDrawable(
     Drawable drawable)
 {
     MacDrawable *macWin = (MacDrawable *)drawable;
@@ -1085,30 +1077,6 @@ TkMacOSXDrawable(
 	}
     }
     return result;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXGetDrawablePort --
- *
- *	This function only exists because it is listed in the stubs table.
- *      It is useless.
- *
- * Results:
- *	NULL.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-void *
-TkMacOSXGetDrawablePort(
-    TCL_UNUSED(Drawable))
-{
-    return NULL;
 }
 
 /*
@@ -1472,7 +1440,11 @@ Tk_FreePixmap(
 	if (data) {
 	    ckfree(data);
 	}
-	CFRelease(macPix->context);
+	/*
+	 * Releasing the context here causes a crash in the 8.7 regression
+	 * tests, but not in 8.6.
+	 *	CFRelease(macPix->context);
+	 */
     }
     ckfree(macPix);
 }
