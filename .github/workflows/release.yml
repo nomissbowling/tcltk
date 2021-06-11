@@ -26,10 +26,11 @@ jobs:
           
       - name: Build Bionic Debian
         run: |
-          ./tcltk/compile-base
-          ./tcltk/compile-extras
+          cd tcltk
+          ./compile-base
+          ./compile-extras
           debdir=$(mktemp -d)
-          ./tcltk/build-deb -nobranchname -outdir $debdir -allowdirty
+          ./build-deb -nobranchname -outdir $debdir -allowdirty
           echo -n "Uploading to GSE server ... "
           scp $debdir/* www-data@gse.auk.cvclab.lan:/cmdata/www/builds/TCLTK/
           echo done
@@ -53,10 +54,11 @@ jobs:
           
       - name: Build Focal Debian
         run: |
-          ./tcltk/compile-base
-          ./tcltk/compile-extras
+          cd tcltk
+          ./compile-base
+          ./compile-extras
           debdir=$(mktemp -d)
-          ./tcltk/build-deb -nobranchname -outdir $debdir -allowdirty
+          ./build-deb -nobranchname -outdir $debdir -allowdirty
           echo -n "Uploading to GSE server ... "
           scp $debdir/* www-data@gse.auk.cvclab.lan:/cmdata/www/builds/TCLTK/
           echo done
