@@ -1,9 +1,10 @@
-# Index file to load the TDBC package.
-
+# -*- tcl -*-
+# Tcl package index file, version 1.1
+#
 # Make sure that TDBC is running in a compatible version of Tcl, and
 # that TclOO is available.
 
-if {[catch {package present Tcl @TCL_VERSION_REQ@}]} {
+if {[catch {package present Tcl 8.6-}]} {
     return
 }
 apply {{dir} {
@@ -11,8 +12,15 @@ apply {{dir} {
     if {![file exists $libraryfile] && [info exists ::env(TDBC_LIBRARY)]} {
 	set libraryfile [file join $::env(TDBC_LIBRARY) @PACKAGE_NAME@.tcl]
     }
-    package ifneeded @PACKAGE_NAME@ @PACKAGE_VERSION@ \
-	"package require TclOO @TCLOO_VERSION_REQ@-;\
-	[list load [file join $dir @PKG_LIB_FILE@] @PACKAGE_NAME@]\;\
-	[list source $libraryfile]"
+    if {[package vsatisfies [package provide Tcl] 9.0-]} {
+	package ifneeded @PACKAGE_NAME@ @PACKAGE_VERSION@ \
+		"package require TclOO;\
+		[list load [file join $dir @PKG_LIB_FILE9@] [string totitle @PACKAGE_NAME@]]\;\
+		[list source $libraryfile]"
+    } else {
+	package ifneeded @PACKAGE_NAME@ @PACKAGE_VERSION@ \
+		"package require TclOO;\
+		[list load [file join $dir @PKG_LIB_FILE8@] [string totitle @PACKAGE_NAME@]]\;\
+		[list source $libraryfile]"
+    }
 }} $dir

@@ -431,7 +431,7 @@ struct Fts5SegIter {
   int iLeafPgno;                  /* Current leaf page number */
   Fts5Data *pLeaf;                /* Current leaf data */
   Fts5Data *pNextLeaf;            /* Leaf page (iLeafPgno+1) */
-  int iLeafOffset;                /* Byte offset within current leaf */
+  i64 iLeafOffset;                /* Byte offset within current leaf */
 
   /* Next method */
   void (*xNext)(Fts5Index*, Fts5SegIter*, int*);
@@ -1611,7 +1611,7 @@ static void fts5SegIterLoadNPos(Fts5Index *p, Fts5SegIter *pIter){
 
 static void fts5SegIterLoadRowid(Fts5Index *p, Fts5SegIter *pIter){
   u8 *a = pIter->pLeaf->p;        /* Buffer to read data from */
-  int iOff = pIter->iLeafOffset;
+  i64 iOff = pIter->iLeafOffset;
 
   ASSERT_SZLEAF_OK(pIter->pLeaf);
   if( iOff>=pIter->pLeaf->szLeaf ){
@@ -1644,7 +1644,7 @@ static void fts5SegIterLoadRowid(Fts5Index *p, Fts5SegIter *pIter){
 */
 static void fts5SegIterLoadTerm(Fts5Index *p, Fts5SegIter *pIter, int nKeep){
   u8 *a = pIter->pLeaf->p;        /* Buffer to read data from */
-  int iOff = pIter->iLeafOffset;  /* Offset to read at */
+  i64 iOff = pIter->iLeafOffset;  /* Offset to read at */
   int nNew;                       /* Bytes of new data */
 
   iOff += fts5GetVarint32(&a[iOff], nNew);
@@ -2072,7 +2072,6 @@ static void fts5SegIterNext(
       ** this block is particularly performance critical, so equivalent
       ** code is inlined.  */
       int nSz;
-      assert( p->rc==SQLITE_OK );
       assert_nc( pIter->iLeafOffset<=pIter->pLeaf->nn );
       fts5FastGetVarint32(pIter->pLeaf->p, pIter->iLeafOffset, nSz);
       pIter->bDel = (nSz & 0x0001);
@@ -3184,7 +3183,7 @@ static void fts5IndexExtractColset(
         }
         fts5BufferSafeAppendBlob(&pIter->poslist, aCopy, p-aCopy);
       }
-      if( p==pEnd ){
+      if( p>=pEnd ){
         pIter->base.pData = pIter->poslist.p;
         pIter->base.nData = pIter->poslist.n;
         return;
@@ -4980,7 +4979,7 @@ static void fts5MergePrefixLists(
   Fts5Buffer *aBuf                /* Other lists to merge in */ 
 ){
 #define fts5PrefixMergerNextPosition(p) \
-  sqlite3Fts5PoslistNext64((p)->aPos,(p)->iter.nPoslist,&(p)->iOff,&(p)->iPos);
+  sqlite3Fts5PoslistNext64((p)->aPos,(p)->iter.nPoslist,&(p)->iOff,&(p)->iPos)
 #define FTS5_MERGE_NLIST 16
   PrefixMerger aMerger[FTS5_MERGE_NLIST];
   PrefixMerger *pHead = 0;
@@ -5079,7 +5078,8 @@ static void fts5MergePrefixLists(
       nTail = pHead->iter.nPoslist - pHead->iOff;
 
       /* WRITEPOSLISTSIZE */
-      assert( tmp.n+nTail<=nTmp );
+      assert_nc( tmp.n+nTail<=nTmp );
+      assert( tmp.n+nTail<=nTmp+nMerge*10 );
       if( tmp.n+nTail>nTmp-FTS5_DATA_ZERO_PADDING ){
         if( p->rc==SQLITE_OK ) p->rc = FTS5_CORRUPT;
         break;
@@ -6720,6 +6720,7 @@ int sqlite3Fts5IndexInit(sqlite3 *db){
   return rc;
 #else
   return SQLITE_OK;
+  UNUSED_PARAM(db);
 #endif
 }
 

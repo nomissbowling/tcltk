@@ -81,7 +81,10 @@ static void resolveAlias(
   assert( pOrig!=0 );
   db = pParse->db;
   pDup = sqlite3ExprDup(db, pOrig, 0);
-  if( pDup!=0 ){
+  if( db->mallocFailed ){
+    sqlite3ExprDelete(db, pDup);
+    pDup = 0;
+  }else{
     incrAggFunctionDepth(pDup, nSubquery);
     if( pExpr->op==TK_COLLATE ){
       pDup = sqlite3ExprAddCollateString(pParse, pDup, pExpr->u.zToken);
@@ -103,10 +106,8 @@ static void resolveAlias(
       pExpr->flags |= EP_MemToken;
     }
     if( ExprHasProperty(pExpr, EP_WinFunc) ){
-      if( pExpr->y.pWin!=0 ){
+      if( ALWAYS(pExpr->y.pWin!=0) ){
         pExpr->y.pWin->pOwner = pExpr;
-      }else{
-        assert( db->mallocFailed );
       }
     }
     sqlite3DbFree(db, pDup);
@@ -1261,7 +1262,7 @@ static int resolveOrderByTermToExprList(
   nc.nNcErr = 0;
   db = pParse->db;
   savedSuppErr = db->suppressErr;
-  if( IN_RENAME_OBJECT==0 ) db->suppressErr = 1;
+  db->suppressErr = 1;
   rc = sqlite3ResolveExprNames(&nc, pE);
   db->suppressErr = savedSuppErr;
   if( rc ) return 0;
@@ -1360,29 +1361,24 @@ static int resolveCompoundOrderBy(
           ** Once the comparisons are finished, the duplicate expression
           ** is deleted.
           **
-          ** Or, if this is running as part of an ALTER TABLE operation,
-          ** resolve the symbols in the actual expression, not a duplicate.
-          ** And, if one of the comparisons is successful, leave the expression
-          ** as is instead of transforming it to an integer as in the usual
-          ** case. This allows the code in alter.c to modify column
-          ** refererences within the ORDER BY expression as required.  */
-          if( IN_RENAME_OBJECT ){
-            pDup = pE;
-          }else{
-            pDup = sqlite3ExprDup(db, pE, 0);
-          }
+          ** If this is running as part of an ALTER TABLE operation and
+          ** the symbols resolve successfully, also resolve the symbols in the
+          ** actual expression. This allows the code in alter.c to modify
+          ** column references within the ORDER BY expression as required.  */
+          pDup = sqlite3ExprDup(db, pE, 0);
           if( !db->mallocFailed ){
             assert(pDup);
             iCol = resolveOrderByTermToExprList(pParse, pSelect, pDup);
+            if( IN_RENAME_OBJECT && iCol>0 ){
+              resolveOrderByTermToExprList(pParse, pSelect, pE);
+            }
           }
-          if( !IN_RENAME_OBJECT ){
-            sqlite3ExprDelete(db, pDup);
-          }
+          sqlite3ExprDelete(db, pDup);
         }
       }
       if( iCol>0 ){
         /* Convert the ORDER BY term into an integer column number iCol,
-        ** taking care to preserve the COLLATE clause if it exists */
+        ** taking care to preserve the COLLATE clause if it exists. */
         if( !IN_RENAME_OBJECT ){
           Expr *pNew = sqlite3Expr(db, TK_INTEGER, 0);
           if( pNew==0 ) return 1;
@@ -1714,6 +1710,19 @@ static int resolveSelectStep(Walker *pWalker, Select *p){
       }
     }
 
+#ifndef SQLITE_OMIT_WINDOWFUNC
+    if( IN_RENAME_OBJECT ){
+      Window *pWin;
+      for(pWin=p->pWinDefn; pWin; pWin=pWin->pNextWin){
+        if( sqlite3ResolveExprListNames(&sNC, pWin->pOrderBy)
+         || sqlite3ResolveExprListNames(&sNC, pWin->pPartition)
+        ){
+          return WRC_Abort;
+        }
+      }
+    }
+#endif
+
     /* The ORDER BY and GROUP BY clauses may not refer to terms in
     ** outer queries 
     */
@@ -1769,19 +1778,6 @@ static int resolveSelectStep(Walker *pWalker, Select *p){
         }
       }
     }
-
-#ifndef SQLITE_OMIT_WINDOWFUNC
-    if( IN_RENAME_OBJECT ){
-      Window *pWin;
-      for(pWin=p->pWinDefn; pWin; pWin=pWin->pNextWin){
-        if( sqlite3ResolveExprListNames(&sNC, pWin->pOrderBy)
-         || sqlite3ResolveExprListNames(&sNC, pWin->pPartition)
-        ){
-          return WRC_Abort;
-        }
-      }
-    }
-#endif
 
     /* If this is part of a compound SELECT, check that it has the right
     ** number of expressions in the select list. */

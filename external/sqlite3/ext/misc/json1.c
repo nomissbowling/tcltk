@@ -299,7 +299,7 @@ static void jsonAppendSeparator(JsonString *p){
 */
 static void jsonAppendString(JsonString *p, const char *zIn, u32 N){
   u32 i;
-  if( (N+p->nUsed+2 >= p->nAlloc) && jsonGrow(p,N+2)!=0 ) return;
+  if( zIn==0 || ((N+p->nUsed+2 >= p->nAlloc) && jsonGrow(p,N+2)!=0) ) return;
   p->zBuf[p->nUsed++] = '"';
   for(i=0; i<N; i++){
     unsigned char c = ((unsigned const char*)zIn)[i];
@@ -2003,8 +2003,8 @@ static void jsonObjectStep(
       jsonAppendChar(pStr, '{');
     }else if( pStr->nUsed>1 ){
       jsonAppendChar(pStr, ',');
-      pStr->pCtx = ctx;
     }
+    pStr->pCtx = ctx;
     z = (const char*)sqlite3_value_text(argv[0]);
     n = (u32)sqlite3_value_bytes(argv[0]);
     jsonAppendString(pStr, z, n);
