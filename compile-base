@@ -8,7 +8,6 @@ MODULES="tcl tk tcllib tklib thread tcltls tkimg tbcload tkcon gse bwidget tdbc 
 
 ## platform linux
 if [ -z "$WINDIR" ]; then
-    echo hellotom
     ## install mandatory packages
     for PKG in autoconf dpkg-dev libxt-dev libxft-dev libxcursor-dev libssl-dev; do
         dpkg-query -s $PKG &> /dev/null || sudo apt-get install --yes $PKG
