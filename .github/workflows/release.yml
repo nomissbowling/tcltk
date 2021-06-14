@@ -1,15 +1,19 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
     tags:
-      - 'version-*'
+      - version-*
   workflow_dispatch:
 
 jobs:
-  debian-bionic:
-    runs-on: ubuntu-18
+  debian:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ubuntu-18, ubuntu-20]
+    
     steps:
       - name: Checkout Main Archive
         uses: actions/checkout@v2
@@ -24,34 +28,7 @@ jobs:
           path: gse4-service
           token: ${{ secrets.ATVIEEGSEAUTO }}
           
-      - name: Build Bionic Debian
-        run: |
-          ./tcltk/compile-base
-          ./tcltk/compile-extras
-          debdir=$(mktemp -d)
-          ./tcltk/build-deb -nobranchname -outdir $debdir -allowdirty
-          echo -n "Uploading to GSE server ... "
-          scp $debdir/* www-data@gse.auk.cvclab.lan:/cmdata/www/builds/TCLTK/
-          echo done
-          rm -rf $debdir
-
-  debian-focal:
-    runs-on: ubuntu-20
-    steps:
-      - name: Checkout Main Archive
-        uses: actions/checkout@v2
-        with:
-          path: tcltk
-      
-      - name: Checkout GSE4 Service
-        uses: actions/checkout@v2
-        with:
-          repository: AT-VIE-EGSE/gse-gse4-service
-          ref: master
-          path: gse4-service
-          token: ${{ secrets.ATVIEEGSEAUTO }}
-          
-      - name: Build Focal Debian
+      - name: Build Debian on ${{ matrix.os }}
         run: |
           ./tcltk/compile-base
           ./tcltk/compile-extras
