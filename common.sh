@@ -135,6 +135,7 @@ if [ -n "$(type fromdos)" ]; then DOS2NIX=fromdos; fi > /dev/null 2>&1
 function createDirs {
     mkdir -p $INSTALLDIR
     mkdir -p $COMPILEDIR
+    mkdir -p $iCHANGELOGDIR
     if [ -n "$WINDIR" ]; then
         mkdir -p $iSHARELIB64DIR
     fi
