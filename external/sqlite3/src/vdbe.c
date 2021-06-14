@@ -275,18 +275,36 @@ static VdbeCursor *allocateCursor(
     sqlite3VdbeFreeCursor(p, p->apCsr[iCur]);
     p->apCsr[iCur] = 0;
   }
-  if( SQLITE_OK==sqlite3VdbeMemClearAndResize(pMem, nByte) ){
-    p->apCsr[iCur] = pCx = (VdbeCursor*)pMem->z;
-    memset(pCx, 0, offsetof(VdbeCursor,pAltCursor));
-    pCx->eCurType = eCurType;
-    pCx->iDb = iDb;
-    pCx->nField = nField;
-    pCx->aOffset = &pCx->aType[nField];
-    if( eCurType==CURTYPE_BTREE ){
-      pCx->uc.pCursor = (BtCursor*)
-          &pMem->z[ROUND8(sizeof(VdbeCursor))+2*sizeof(u32)*nField];
-      sqlite3BtreeCursorZero(pCx->uc.pCursor);
+
+  /* There used to be a call to sqlite3VdbeMemClearAndResize() to make sure
+  ** the pMem used to hold space for the cursor has enough storage available
+  ** in pMem->zMalloc.  But for the special case of the aMem[] entries used
+  ** to hold cursors, it is faster to in-line the logic. */
+  assert( pMem->flags==MEM_Undefined );
+  assert( (pMem->flags & MEM_Dyn)==0 );
+  assert( pMem->szMalloc==0 || pMem->z==pMem->zMalloc );
+  if( pMem->szMalloc<nByte ){
+    if( pMem->szMalloc>0 ){
+      sqlite3DbFreeNN(pMem->db, pMem->zMalloc);
     }
+    pMem->z = pMem->zMalloc = sqlite3DbMallocRaw(pMem->db, nByte);
+    if( pMem->zMalloc==0 ){
+      pMem->szMalloc = 0;
+      return 0;
+    }
+    pMem->szMalloc = nByte;
+  }
+
+  p->apCsr[iCur] = pCx = (VdbeCursor*)pMem->zMalloc;
+  memset(pCx, 0, offsetof(VdbeCursor,pAltCursor));
+  pCx->eCurType = eCurType;
+  pCx->iDb = iDb;
+  pCx->nField = nField;
+  pCx->aOffset = &pCx->aType[nField];
+  if( eCurType==CURTYPE_BTREE ){
+    pCx->uc.pCursor = (BtCursor*)
+        &pMem->z[ROUND8(sizeof(VdbeCursor))+2*sizeof(u32)*nField];
+    sqlite3BtreeCursorZero(pCx->uc.pCursor);
   }
   return pCx;
 }
@@ -573,6 +591,11 @@ static void registerTrace(int iReg, Mem *p){
   }
   printf("\n");
   sqlite3VdbeCheckMemInvariants(p);
+}
+/**/ void sqlite3PrintMem(Mem *pMem){
+  memTracePrint(pMem);
+  printf("\n");
+  fflush(stdout);
 }
 #endif
 
@@ -2021,6 +2044,31 @@ case OP_Ge: {             /* same as TK_GE, jump, in1, in3 */
   pIn3 = &aMem[pOp->p3];
   flags1 = pIn1->flags;
   flags3 = pIn3->flags;
+  if( (flags1 & flags3 & MEM_Int)!=0 ){
+    assert( (pOp->p5 & SQLITE_AFF_MASK)!=SQLITE_AFF_TEXT || CORRUPT_DB );
+    /* Common case of comparison of two integers */
+    if( pIn3->u.i > pIn1->u.i ){
+      iCompare = +1;
+      if( sqlite3aGTb[pOp->opcode] ){
+        VdbeBranchTaken(1, (pOp->p5 & SQLITE_NULLEQ)?2:3);
+        goto jump_to_p2;
+      }
+    }else if( pIn3->u.i < pIn1->u.i ){
+      iCompare = -1;
+      if( sqlite3aLTb[pOp->opcode] ){
+        VdbeBranchTaken(1, (pOp->p5 & SQLITE_NULLEQ)?2:3);
+        goto jump_to_p2;
+      }
+    }else{
+      iCompare = 0;
+      if( sqlite3aEQb[pOp->opcode] ){
+        VdbeBranchTaken(1, (pOp->p5 & SQLITE_NULLEQ)?2:3);
+        goto jump_to_p2;
+      }
+    }
+    VdbeBranchTaken(0, (pOp->p5 & SQLITE_NULLEQ)?2:3);
+    break;
+  }
   if( (flags1 | flags3)&MEM_Null ){
     /* One or both operands are NULL */
     if( pOp->p5 & SQLITE_NULLEQ ){
@@ -2051,7 +2099,8 @@ case OP_Ge: {             /* same as TK_GE, jump, in1, in3 */
       break;
     }
   }else{
-    /* Neither operand is NULL.  Do a comparison. */
+    /* Neither operand is NULL and we couldn't do the special high-speed
+    ** integer comparison case.  So do a general-case comparison. */
     affinity = pOp->p5 & SQLITE_AFF_MASK;
     if( affinity>=SQLITE_AFF_NUMERIC ){
       if( (flags1 | flags3)&MEM_Str ){
@@ -2063,14 +2112,6 @@ case OP_Ge: {             /* same as TK_GE, jump, in1, in3 */
         if( (flags3 & (MEM_Int|MEM_IntReal|MEM_Real|MEM_Str))==MEM_Str ){
           applyNumericAffinity(pIn3,0);
         }
-      }
-      /* Handle the common case of integer comparison here, as an
-      ** optimization, to avoid a call to sqlite3MemCompare() */
-      if( (pIn1->flags & pIn3->flags & MEM_Int)!=0 ){
-        if( pIn3->u.i > pIn1->u.i ){ res = +1; goto compare_op; }
-        if( pIn3->u.i < pIn1->u.i ){ res = -1; goto compare_op; }
-        res = 0;
-        goto compare_op;
       }
     }else if( affinity==SQLITE_AFF_TEXT ){
       if( (flags1 & MEM_Str)==0 && (flags1&(MEM_Int|MEM_Real|MEM_IntReal))!=0 ){
@@ -2094,7 +2135,7 @@ case OP_Ge: {             /* same as TK_GE, jump, in1, in3 */
     assert( pOp->p4type==P4_COLLSEQ || pOp->p4.pColl==0 );
     res = sqlite3MemCompare(pIn3, pIn1, pOp->p4.pColl);
   }
-compare_op:
+
   /* At this point, res is negative, zero, or positive if reg[P1] is
   ** less than, equal to, or greater than reg[P3], respectively.  Compute
   ** the answer to this operator in res2, depending on what the comparison
@@ -4430,8 +4471,7 @@ case OP_SeekScan: {
   /* pOp->p2 points to the first instruction past the OP_IdxGT that
   ** follows the OP_SeekGE.  */
   assert( pOp->p2>=(int)(pOp-aOp)+2 );
-  assert( aOp[pOp->p2-1].opcode==OP_IdxGT || aOp[pOp->p2-1].opcode==OP_IdxGE );
-  testcase( aOp[pOp->p2-1].opcode==OP_IdxGE );
+  assert( aOp[pOp->p2-1].opcode==OP_IdxGT );
   assert( pOp[1].p1==aOp[pOp->p2-1].p1 );
   assert( pOp[1].p2==aOp[pOp->p2-1].p2 );
   assert( pOp[1].p3==aOp[pOp->p2-1].p3 );
@@ -4535,8 +4575,18 @@ case OP_SeekHit: {
   assert( pC!=0 );
   assert( pOp->p3>=pOp->p2 );
   if( pC->seekHit<pOp->p2 ){
+#ifdef SQLITE_DEBUG
+    if( db->flags&SQLITE_VdbeTrace ){
+      printf("seekHit changes from %d to %d\n", pC->seekHit, pOp->p2);
+    }        
+#endif
     pC->seekHit = pOp->p2;
   }else if( pC->seekHit>pOp->p3 ){
+#ifdef SQLITE_DEBUG
+    if( db->flags&SQLITE_VdbeTrace ){
+      printf("seekHit changes from %d to %d\n", pC->seekHit, pOp->p3);
+    }        
+#endif
     pC->seekHit = pOp->p3;
   }
   break;
@@ -4651,6 +4701,11 @@ case OP_IfNoHope: {     /* jump, in3 */
   assert( pOp->p1>=0 && pOp->p1<p->nCursor );
   pC = p->apCsr[pOp->p1];
   assert( pC!=0 );
+#ifdef SQLITE_DEBUG
+  if( db->flags&SQLITE_VdbeTrace ){
+    printf("seekHit is %d\n", pC->seekHit);
+  }        
+#endif
   if( pC->seekHit>=pOp->p4.i ) break;
   /* Fall through into OP_NotFound */
   /* no break */ deliberate_fall_through
@@ -5080,7 +5135,7 @@ case OP_Insert: {
   /* Invoke the pre-update hook, if any */
   if( pTab ){
     if( db->xPreUpdateCallback && !(pOp->p5 & OPFLAG_ISUPDATE) ){
-      sqlite3VdbePreUpdateHook(p, pC, SQLITE_INSERT, zDb, pTab, x.nKey,pOp->p2);
+      sqlite3VdbePreUpdateHook(p,pC,SQLITE_INSERT,zDb,pTab,x.nKey,pOp->p2,-1);
     }
     if( db->xUpdateCallback==0 || pTab->aCol==0 ){
       /* Prevent post-update hook from running in cases when it should not */
@@ -5240,7 +5295,7 @@ case OP_Delete: {
     sqlite3VdbePreUpdateHook(p, pC,
         (opflags & OPFLAG_ISUPDATE) ? SQLITE_UPDATE : SQLITE_DELETE, 
         zDb, pTab, pC->movetoTarget,
-        pOp->p3
+        pOp->p3, -1
     );
   }
   if( opflags & OPFLAG_ISNOOP ) break;
@@ -6186,11 +6241,10 @@ case OP_Destroy: {     /* out2 */
 ** P2==1 then the table to be clear is in the auxiliary database file
 ** that is used to store tables create using CREATE TEMPORARY TABLE.
 **
-** If the P3 value is non-zero, then the table referred to must be an
-** intkey table (an SQL table, not an index). In this case the row change 
-** count is incremented by the number of rows in the table being cleared. 
-** If P3 is greater than zero, then the value stored in register P3 is
-** also incremented by the number of rows in the table being cleared.
+** If the P3 value is non-zero, then the row change count is incremented
+** by the number of rows in the table being cleared. If P3 is greater
+** than zero, then the value stored in register P3 is also incremented
+** by the number of rows in the table being cleared.
 **
 ** See also: Destroy
 */
@@ -6201,9 +6255,7 @@ case OP_Clear: {
   nChange = 0;
   assert( p->readOnly==0 );
   assert( DbMaskTest(p->btreeMask, pOp->p2) );
-  rc = sqlite3BtreeClearTable(
-      db->aDb[pOp->p2].pBt, (u32)pOp->p1, (pOp->p3 ? &nChange : 0)
-  );
+  rc = sqlite3BtreeClearTable(db->aDb[pOp->p2].pBt, (u32)pOp->p1, &nChange);
   if( pOp->p3 ){
     p->nChange += nChange;
     if( pOp->p3>0 ){
@@ -6309,7 +6361,9 @@ case OP_ParseSchema: {
 
   iDb = pOp->p1;
   assert( iDb>=0 && iDb<db->nDb );
-  assert( DbHasProperty(db, iDb, DB_SchemaLoaded) || db->mallocFailed );
+  assert( DbHasProperty(db, iDb, DB_SchemaLoaded)
+           || db->mallocFailed
+           || (CORRUPT_DB && (db->flags & SQLITE_NoSchemaError)!=0) );
 
 #ifndef SQLITE_OMIT_ALTERTABLE
   if( pOp->p4.z==0 ){
@@ -7191,6 +7245,7 @@ case OP_JournalMode: {    /* out2 */
   pPager = sqlite3BtreePager(pBt);
   eOld = sqlite3PagerGetJournalMode(pPager);
   if( eNew==PAGER_JOURNALMODE_QUERY ) eNew = eOld;
+  assert( sqlite3BtreeHoldsMutex(pBt) );
   if( !sqlite3PagerOkToChangeJournalMode(pPager) ) eNew = eOld;
 
 #ifndef SQLITE_OMIT_WAL
