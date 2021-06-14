@@ -85,7 +85,6 @@ CHANGELOGDIR=$SHAREDIR/changelog
 iSHAREDIR=$INSTALLDIR/share
 iLICENCEDIR=$iSHAREDIR/licence
 iCHANGELOGDIR=$iSHAREDIR/changelog
-iSHARELIB32DIR=$iSHAREDIR/lib32
 iSHARELIB64DIR=$iSHAREDIR/lib64
 
 ## plattform specific
@@ -137,7 +136,6 @@ function createDirs {
     mkdir -p $INSTALLDIR
     mkdir -p $COMPILEDIR
     if [ -n "$WINDIR" ]; then
-        mkdir -p $iSHARELIB32DIR
         mkdir -p $iSHARELIB64DIR
     fi
 }
