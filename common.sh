@@ -24,7 +24,7 @@ function printHelp {
     echo " -symbols: Include debug symbols."
     echo " -clean: Delete old module compile directory before copying."
     echo " -forcecopy: Copy module sources to compile directory even if the directory already exists."
-    echo " -h(elp): Print this help text."
+    echo " -help: Print this help text."
 }
 ##
 ## helper functions
@@ -57,7 +57,7 @@ while [ $INDEX -le $# ]; do
             let INDEX+=1
             SW_DUMMY=${!INDEX}
             ;;
-        "-h"*)
+        "-help")
             printHelp
             exit 1
             ;;
@@ -90,7 +90,6 @@ CHANGELOGDIR=$SHAREDIR/changelog
 iSHAREDIR=$INSTALLDIR/share
 iLICENCEDIR=$iSHAREDIR/licence
 iCHANGELOGDIR=$iSHAREDIR/changelog
-iSHARELIB32DIR=$iSHAREDIR/lib32
 iSHARELIB64DIR=$iSHAREDIR/lib64
 
 ## plattform specific
@@ -141,8 +140,8 @@ if [ -n "$(type fromdos)" ]; then DOS2NIX=fromdos; fi > /dev/null 2>&1
 function createDirs {
     mkdir -p $INSTALLDIR
     mkdir -p $COMPILEDIR
+    mkdir -p $iCHANGELOGDIR
     if [ -n "$WINDIR" ]; then
-        mkdir -p $iSHARELIB32DIR
         mkdir -p $iSHARELIB64DIR
     fi
 }
