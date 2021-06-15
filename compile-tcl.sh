@@ -69,7 +69,6 @@ else
     else
         rsync -a tclsh87.exe tclsh.exe
     fi
-    rsync -a $PATCHDIR/mingw/x32/*.dll $iSHARELIB32DIR
     rsync -a $PATCHDIR/mingw/x64/*.dll $iSHARELIB64DIR
 fi
 
