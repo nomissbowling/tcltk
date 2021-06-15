@@ -888,7 +888,7 @@ int sqlite3TwoPartName(
       return -1;
     }
   }else{
-    assert( db->init.iDb==0 || db->init.busy || IN_RENAME_OBJECT
+    assert( db->init.iDb==0 || db->init.busy || IN_SPECIAL_PARSE
              || (db->mDbFlags & DBFLAG_Vacuum)!=0);
     iDb = db->init.iDb;
     *pUnqual = pName1;
@@ -4336,7 +4336,7 @@ void sqlite3DropIndex(Parse *pParse, SrcList *pName, int ifExists){
     if( sqlite3AuthCheck(pParse, SQLITE_DELETE, zTab, 0, zDb) ){
       goto exit_drop_index;
     }
-    if( !OMIT_TEMPDB && iDb ) code = SQLITE_DROP_TEMP_INDEX;
+    if( !OMIT_TEMPDB && iDb==1 ) code = SQLITE_DROP_TEMP_INDEX;
     if( sqlite3AuthCheck(pParse, code, pIndex->zName, pTab->zName, zDb) ){
       goto exit_drop_index;
     }
