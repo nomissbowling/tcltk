@@ -811,7 +811,7 @@ static void renameWalkWith(Walker *pWalker, Select *pSelect){
       ** fails if the Select objects on it have already been expanded and
       ** resolved.  */
       pCopy = sqlite3WithDup(pParse->db, pWith);
-      sqlite3WithPush(pParse, pCopy, 1);
+      pCopy = sqlite3WithPush(pParse, pCopy, 1);
     }
     for(i=0; i<pWith->nCte; i++){
       Select *p = pWith->a[i].pSelect;
@@ -850,7 +850,11 @@ static int renameUnmapSelectCb(Walker *pWalker, Select *p){
   Parse *pParse = pWalker->pParse;
   int i;
   if( pParse->nErr ) return WRC_Abort;
-  if( p->selFlags & SF_View ) return WRC_Prune;
+  if( p->selFlags & (SF_View|SF_CopyCte) ){
+    testcase( p->selFlags & SF_View );
+    testcase( p->selFlags & SF_CopyCte );
+    return WRC_Prune;
+  }
   if( ALWAYS(p->pEList) ){
     ExprList *pList = p->pEList;
     for(i=0; i<pList->nExpr; i++){
@@ -958,7 +962,11 @@ static RenameToken *renameTokenFind(
 ** descend into sub-select statements.
 */
 static int renameColumnSelectCb(Walker *pWalker, Select *p){
-  if( p->selFlags & SF_View ) return WRC_Prune;
+  if( p->selFlags & (SF_View|SF_CopyCte) ){
+    testcase( p->selFlags & SF_View );
+    testcase( p->selFlags & SF_CopyCte );
+    return WRC_Prune;
+  }
   renameWalkWith(pWalker, p);
   return WRC_Continue;
 }
@@ -1594,7 +1602,11 @@ static int renameTableSelectCb(Walker *pWalker, Select *pSelect){
   int i;
   RenameCtx *p = pWalker->u.pRename;
   SrcList *pSrc = pSelect->pSrc;
-  if( pSelect->selFlags & SF_View ) return WRC_Prune;
+  if( pSelect->selFlags & (SF_View|SF_CopyCte) ){
+    testcase( pSelect->selFlags & SF_View );
+    testcase( pSelect->selFlags & SF_CopyCte );
+    return WRC_Prune;
+  }
   if( NEVER(pSrc==0) ){
     assert( pWalker->pParse->db->mallocFailed );
     return WRC_Abort;

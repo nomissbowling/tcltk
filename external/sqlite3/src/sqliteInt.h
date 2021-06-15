@@ -3213,6 +3213,7 @@ struct Select {
 #define SF_UpdateFrom    0x0800000 /* Statement is an UPDATE...FROM */
 #define SF_PushDown      0x1000000 /* SELECT has be modified by push-down opt */
 #define SF_MultiPart     0x2000000 /* Has multiple incompatible PARTITIONs */
+#define SF_CopyCte       0x4000000 /* SELECT statement is a copy of a CTE */
 
 /*
 ** The results of a SELECT can be distributed in several ways, as defined
@@ -4987,7 +4988,7 @@ const char *sqlite3JournalModename(int);
   void sqlite3CteDelete(sqlite3*,Cte*);
   With *sqlite3WithAdd(Parse*,With*,Cte*);
   void sqlite3WithDelete(sqlite3*,With*);
-  void sqlite3WithPush(Parse*, With*, u8);
+  With *sqlite3WithPush(Parse*, With*, u8);
 #else
 # define sqlite3CteNew(P,T,E,S)   ((void*)0)
 # define sqlite3CteDelete(D,C)

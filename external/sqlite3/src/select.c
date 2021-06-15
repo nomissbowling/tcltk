@@ -5093,21 +5093,29 @@ static struct Cte *searchWith(
 ** be freed along with the Parse object. In other cases, when
 ** bFree==0, the With object will be freed along with the SELECT 
 ** statement with which it is associated.
+**
+** This routine returns a copy of pWith.  Or, if bFree is true and
+** the pWith object is destroyed immediately due to an OOM condition,
+** then this routine return NULL.
+**
+** If bFree is true, do not continue to use the pWith pointer after
+** calling this routine,  Instead, use only the return value.
 */
-void sqlite3WithPush(Parse *pParse, With *pWith, u8 bFree){
+With *sqlite3WithPush(Parse *pParse, With *pWith, u8 bFree){
   if( pWith ){
+    if( bFree ){
+      pWith = (With*)sqlite3ParserAddCleanup(pParse, 
+                      (void(*)(sqlite3*,void*))sqlite3WithDelete,
+                      pWith);
+      if( pWith==0 ) return 0;
+    }
     if( pParse->nErr==0 ){
       assert( pParse->pWith!=pWith );
       pWith->pOuter = pParse->pWith;
       pParse->pWith = pWith;
     }
-    if( bFree ){
-      sqlite3ParserAddCleanup(pParse, 
-         (void(*)(sqlite3*,void*))sqlite3WithDelete,
-         pWith);
-      testcase( pParse->earlyCleanup );
-    }
   }
+  return pWith;
 }
 
 /*
@@ -5200,6 +5208,7 @@ static int resolveFromTermToCte(
     pTab->tabFlags |= TF_Ephemeral | TF_NoVisibleRowid;
     pFrom->pSelect = sqlite3SelectDup(db, pCte->pSelect, 0);
     if( db->mallocFailed ) return 2;
+    pFrom->pSelect->selFlags |= SF_CopyCte;
     assert( pFrom->pSelect );
     pFrom->fg.isCte = 1;
     pFrom->u2.pCteUse = pCteUse;
