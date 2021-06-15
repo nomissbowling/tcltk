@@ -1,4 +1,4 @@
-name: Release 8.5
+name: Release
 
 on:
   push:
