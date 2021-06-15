@@ -55,7 +55,7 @@ fi
 echo -n "Loading $MODULE package ... "
 cd $COMPILEDIR/$MODULE
 echo "load [file join [pwd] tclfftw$LIBEXT]" > ./info.tcl
-echo "puts [package re tclFFTW]" >> ./info.tcl
+echo "puts [package re fftw]" >> ./info.tcl
 echo "exit" >> ./info.tcl
 VERSION=$($INSTALLDIR/bin/$TCLSH ./info.tcl)
 rm ./info.tcl
@@ -63,9 +63,9 @@ echo done
 
 ## install module
 echo -n "Installing ... "
-mkdir -p $INSTALLDIR/lib/tclfftw$VERSION
-cd $INSTALLDIR/lib/tclfftw$VERSION
-echo "package ifneeded tclFFTW $VERSION [list load [file join \$dir tclfftw$LIBEXT] tclfftw]" > pkgIndex.tcl
+mkdir -p $INSTALLDIR/lib/fftw$VERSION
+cd $INSTALLDIR/lib/fftw$VERSION
+echo "package ifneeded fftw $VERSION [list load [file join \$dir tclfftw$LIBEXT] fftw]" > pkgIndex.tcl
 rsync -a $COMPILEDIR/$MODULE/tclfftw$LIBEXT ./
 echo done
 

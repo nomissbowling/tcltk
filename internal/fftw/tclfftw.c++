@@ -2063,7 +2063,7 @@ calcMcWaveform(ClientData     clientData,
  * @return always TCL_OK
  */
 extern "C" int
-Tclfftw_Init(Tcl_Interp *interp)
+Fftw_Init(Tcl_Interp *interp)
 {
     ENTER();
 
@@ -2087,7 +2087,7 @@ Tclfftw_Init(Tcl_Interp *interp)
     Tcl_CreateObjCommand(interp, NS_PREFIX "calcMcWaveform", calcMcWaveform, NULL, NULL);
 
     /* provide package */
-    if (Tcl_PkgProvide(interp, "tclFFTW", "3.3.1") == TCL_ERROR)
+    if (Tcl_PkgProvide(interp, "fftw", "3.3.2") == TCL_ERROR)
         return TCL_ERROR;
 
     LEAVE("TCL_OK");
