@@ -26,7 +26,7 @@ set testCase ""
 catch {
     #-------------------------------------------------------------------------------
     set testCase "load tclfftw"
-    package require tclFFTW
+    package require fftw
     puts "OK $testCase"
 
     #-------------------------------------------------------------------------------
