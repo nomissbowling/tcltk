@@ -54,7 +54,7 @@ fi
 ## get version number of module
 echo -n "Loading $MODULE package ... "
 cd $COMPILEDIR/$MODULE
-echo "load [file join [pwd] tclfftw$LIBEXT]" > ./info.tcl
+echo "load [file join [pwd] tclfftw$LIBEXT] fftw" > ./info.tcl
 echo "puts [package re fftw]" >> ./info.tcl
 echo "exit" >> ./info.tcl
 VERSION=$($INSTALLDIR/bin/$TCLSH ./info.tcl)
