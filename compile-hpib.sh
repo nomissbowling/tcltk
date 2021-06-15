@@ -29,10 +29,10 @@ make
 
 ## get version number of module
 echo -n "Loading $MODULE package ... "
-echo "load [file join [pwd] libhpib$LIBEXT]" > version.tcl
+echo "load [file join [pwd] libhpib$LIBEXT]" >> version.tcl
 echo "puts [package re Hpib]" >> version.tcl
 echo "exit" >> version.tcl
-VERSION=$($INSTALLDIR/bin/$WISH version.tcl)
+VERSION=$($INSTALLDIR/bin/$TCLSH version.tcl)
 rm ./version.tcl
 echo done
 

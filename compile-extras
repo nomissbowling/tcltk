@@ -6,7 +6,7 @@
 ## collect modules list
 ## boost dsp
 MODULES="fftw except tktable"
-#"critcl zeromq tclzmq"
+## critcl zeromq tclzmq
 
 ## architecture i686/x86_64
 if [ "$BARCH" == "i686" ]; then
@@ -15,7 +15,8 @@ fi
 
 ## platform linux
 if [ -z "$WINDIR" ]; then
-    MODULES+=" vxi hpib"
+    MODULES+=""
+    ## vxi hpib
 fi
 
 ## start to compile
