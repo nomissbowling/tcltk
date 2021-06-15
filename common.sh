@@ -112,7 +112,7 @@ else
     if [ ${PIPESTATUS[1]} -eq 0 ]; then
         BARCH="x86_64"
     else
-BARCH=$(uname -m)
+        BARCH=$(uname -m)
     fi
 fi
 
