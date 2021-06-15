@@ -36,7 +36,6 @@ fi
 ## in Windows copy the dll
 if [ -n "$WINDIR" ]; then
     rsync -a $PATCHDIR/postgresql/x64/*.dll $iSHARELIB64DIR
-    rsync -a $PATCHDIR/postgresql/x32/*.dll $iSHARELIB32DIR
     rsync -a $PATCHDIR/postgresql/postgresql.licence $iLICENCEDIR/
 fi
 
