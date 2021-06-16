@@ -26,7 +26,11 @@ set testCase ""
 catch {
     #-------------------------------------------------------------------------------
     set testCase "load tclfftw"
-    package require tclFFTW
+    if {$::tcl_platform(platform) == "windows"} {
+        set libPath [file join [file dirname [file dirname [info nameofexecutable]]] share lib64]
+        append ::env(PATH) ";[file nativename $libPath]"
+    }
+    package require fftw
     puts "OK $testCase"
 
     #-------------------------------------------------------------------------------

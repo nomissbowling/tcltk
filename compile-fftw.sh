@@ -39,30 +39,20 @@ if [ -z "$WINDIR" ]; then
     fi
 else
     ## windows
-    if [ "$BARCH" == "x86_64" ]; then
-        unzip -o $SCRIPTDIR/backup/fftw-3.3.3-dll64.zip -d $COMPILEDIR/$MODULE/libfftw
+    mkdir -p $COMPILEDIR/$MODULE/libfftw
+    cp $PATCHDIR/fftw/fftw3.h $COMPILEDIR/$MODULE/libfftw/
+    cp $PATCHDIR/fftw/x64/libfftw3-3.dll $COMPILEDIR/$MODULE/libfftw/
+    rsync -a $PATCHDIR/fftw/x64/*.dll $iSHARELIB64DIR
         make -f Makefile.win32
-    else
-        unzip -o $SCRIPTDIR/backup/fftw-3.3.3-dll32.zip -d $COMPILEDIR/$MODULE/libfftw
-        make -f Makefile.win32
-    fi
-
-    #if [ "$BARCH" == "x86_64" ]; then
-    #    rsync -a $COMPILEDIR/$MODULE/libfftw/libfftw3-3.dll $iSHARELIB64DIR
-    #else
-    #    rsync -a $COMPILEDIR/$MODULE/libfftw/libfftw3-3.dll $iSHARELIB32DIR
-    #fi
-
-    rsync -a $COMPILEDIR/$MODULE/libfftw/libfftw3-3.dll $INSTALLDIR/bin/
-    ## copy licence file
-    rsync -a $COMPILEDIR/$MODULE/libfftw/COPYRIGHT $iLICENCEDIR/libfftw.licence
 fi
 
 ## get version number of module
 echo -n "Loading $MODULE package ... "
 cd $COMPILEDIR/$MODULE
-echo "load [file join [pwd] tclfftw$LIBEXT]" > ./info.tcl
-echo "puts [package re tclFFTW]" >> ./info.tcl
+echo "set libPath [file join [file dirname [file dirname [info nameofexecutable]]] share lib64]" > ./info.tcl
+echo "append env(PATH) \";[file nativename \$libPath]\"" >> ./info.tcl
+echo "load [file join [pwd] tclfftw$LIBEXT] fftw" >> ./info.tcl
+echo "puts [package re fftw]" >> ./info.tcl
 echo "exit" >> ./info.tcl
 VERSION=$($INSTALLDIR/bin/$TCLSH ./info.tcl)
 rm ./info.tcl
@@ -70,9 +60,9 @@ echo done
 
 ## install module
 echo -n "Installing ... "
-mkdir -p $INSTALLDIR/lib/tclfftw$VERSION
-cd $INSTALLDIR/lib/tclfftw$VERSION
-echo "package ifneeded tclFFTW $VERSION [list load [file join \$dir tclfftw$LIBEXT] tclfftw]" > pkgIndex.tcl
+mkdir -p $INSTALLDIR/lib/fftw$VERSION
+cd $INSTALLDIR/lib/fftw$VERSION
+echo "package ifneeded fftw $VERSION [list load [file join \$dir tclfftw$LIBEXT] fftw]" > pkgIndex.tcl
 rsync -a $COMPILEDIR/$MODULE/tclfftw$LIBEXT ./
 echo done
 
@@ -83,6 +73,7 @@ $INSTALLDIR/bin/$TCLSH fftw-test.tcl
 ## copy licence file
 echo -n "Copying extras ... "
 rsync -a $COMPILEDIR/$MODULE/COPYRIGHT $iLICENCEDIR/$MODULE.licence
+rsync -a $PATCHDIR/fftw/*.licence $iLICENCEDIR
 
 ## GNU GPL copy source files
 mkdir -p $iSHAREDIR/source

@@ -45,34 +45,29 @@ if [ -z "$WINDIR" ]; then
     make install
 else
     ## windows version
-    if [ "$BARCH" == "x86_64" ]; then
-        cd $COMPILEDIR/$MODULE/src
-        if [ -n "$SW_DEBUG" ]; then
-            rsync -a $PATCHDIR/${MODULE}/x64/mingw.debug.mak .
-            sed -i "s|%installdir%|$INSTALLDIR|g" mingw.debug.mak
-            sed -i "s|%tcllib%|tclstub85g|g" mingw.debug.mak
-            sed -i "s|%pgdir%|$PGDIR|g" mingw.debug.mak
-            make -f mingw.debug.mak
-        else
-            rsync -a $PATCHDIR/${MODULE}/x64/mingw.release.mak .
-            sed -i "s|%installdir%|$INSTALLDIR|g" mingw.release.mak
-            sed -i "s|%tcllib%|tclstub85|g" mingw.release.mak
-            sed -i "s|%pgdir%|$PGDIR|g" mingw.release.mak
-            make -f mingw.release.mak
-        fi
+    cd $COMPILEDIR/$MODULE/src
+    if [ -n "$SW_DEBUG" ]; then
+        rsync -a $PATCHDIR/${MODULE}/x64/mingw.debug.mak .
+        sed -i "s|%installdir%|$INSTALLDIR|g" mingw.debug.mak
+        sed -i "s|%tcllib%|tclstub85g|g" mingw.debug.mak
+        sed -i "s|%pgdir%|$PGDIR|g" mingw.debug.mak
+        make -f mingw.debug.mak
     else
-        ## copy pgtclng dll
-        cd $PATCHDIR/${MODULE}/x32
-        rsync -a libpgtcl.dll $COMPILEDIR/$MODULE/src
+        rsync -a $PATCHDIR/${MODULE}/x64/mingw.release.mak .
+        sed -i "s|%installdir%|$INSTALLDIR|g" mingw.release.mak
+        sed -i "s|%tcllib%|tclstub85|g" mingw.release.mak
+        sed -i "s|%pgdir%|$PGDIR|g" mingw.release.mak
+        make -f mingw.release.mak
     fi
     ## copy important postgres libraries
-    rsync -a $PATCHDIR/${MODULE}/x32/*.dll $iSHARELIB32DIR
-    rsync -a $PATCHDIR/${MODULE}/x64/*.dll $iSHARELIB64DIR
+    rsync -a $PATCHDIR/postgresql/x64/*.dll $iSHARELIB64DIR/
         
     ## check version number
     echo -n "Loading $MODULE package ... "
     cd $COMPILEDIR/$MODULE/src
-    echo "load [file join [pwd] libpgtcl.dll]" > ./info.tcl
+    echo "set libPath [file join [file dirname [file dirname [info nameofexecutable]]] share lib64]" > ./info.tcl
+    echo "append env(PATH) \";[file nativename \$libPath]\"" >> ./info.tcl
+    echo "load [file join [pwd] libpgtcl.dll]" >> ./info.tcl
     echo "puts [package re Pgtcl]" >> ./info.tcl
     if [ "$BARCH" == "x86_64" ]; then
         VERSION=$(env "PATH=$iSHARELIB64DIR:$PATH" $INSTALLDIR/bin/$TCLSH ./info.tcl)
