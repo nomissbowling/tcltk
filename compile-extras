@@ -3,11 +3,6 @@
 ## load defaults
 . ./common.sh
 
-## install mandatory packages
-for PKG in libfftw3-dev texlive-latex-base texlive-latex-recommended texlive-latex-extra; do
-    dpkg-query -s $PKG &> /dev/null || sudo apt-get install --yes $PKG
-done
-
 ## collect modules list
 MODULES="fftw"
 
