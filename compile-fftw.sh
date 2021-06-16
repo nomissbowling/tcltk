@@ -49,7 +49,8 @@ fi
 ## get version number of module
 echo -n "Loading $MODULE package ... "
 cd $COMPILEDIR/$MODULE
-echo "append env(PATH) \";./libfftw\"" > ./info.tcl
+echo "set libPath [file join [file dirname [file dirname [info nameofexecutable]]] share lib64]" > ./info.tcl
+echo "append env(PATH) \";[file nativename \$libPath]\"" >> ./info.tcl
 echo "load [file join [pwd] tclfftw$LIBEXT] fftw" >> ./info.tcl
 echo "puts [package re fftw]" >> ./info.tcl
 echo "exit" >> ./info.tcl
