@@ -18,7 +18,7 @@ _FOSSIL_
 .github/
 .svn/
 CVS/
-/release*/
+/release/
 /debug*/
 /rcompile*/
 /dcompile*/
