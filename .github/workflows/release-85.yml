@@ -1,0 +1,41 @@
+name: Release-85
+
+on:
+  push:
+    tags:
+      - version-*
+  workflow_dispatch:
+
+jobs:
+  debian:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ubuntu-18, ubuntu-20]
+    
+    steps:
+      - name: Checkout Main Archive
+        uses: actions/checkout@v2
+        with:
+          path: tcltk
+      
+      - name: Checkout GSE4 Service
+        uses: actions/checkout@v2
+        with:
+          repository: AT-VIE-EGSE/gse-gse4-service
+          ref: master
+          path: gse4-service
+          token: ${{ secrets.ATVIEEGSEAUTO }}
+          
+      - name: Build Debian on ${{ matrix.os }}
+        run: |
+          cd tcltk
+          ./compile-base
+          ./compile-extras
+          debdir=$(mktemp -d)
+          ./build-deb -nobranchname -outdir $debdir -allowdirty
+          echo -n "Uploading to GSE server ... "
+          scp $debdir/* www-data@gse.auk.cvclab.lan:/cmdata/www/builds/TCLTK/
+          echo done
+          rm -rf $debdir
