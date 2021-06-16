@@ -3,8 +3,8 @@
 set -e
 
 ## info
-VERSION=1.10
-MANUFACT="(c) 2021 ATOS"
+VERSION=1.9
+MANUFACT="(c) 2019 ATOS"
 AUTHORS="Thomas Perschak"
 
 ## defaults
@@ -179,7 +179,7 @@ if [ -z "$NOBRANCHNAME" ]; then DEBFILE=$DEBFILE.$GITBRANCH; fi
 DEBFILE=$DEBFILE.$BUILDOSFILE.$BUILDMACHINE
 if [ -n "$TITLE" ]; then DEBFILE=$DEBFILE.$TITLE; fi
 INSTDIR=/opt/$DEBNAME
-RELDIR=$(mktemp -d)
+RELDIR=$OUTDIR/release
 
 ## done collecting build infos
 echo done
@@ -246,8 +246,4 @@ else
 fi
 
 ## delete old debspec
-if [ -z "$KEEPTEMP" ]; then
-    rm -fr $RELDIR
-else
-    echo "Kept temporary release folder $RELDIR"
-fi
+if [ -z "$KEEPTEMP" ]; then rm -fr $RELDIR; fi
