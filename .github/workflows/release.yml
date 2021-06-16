@@ -1,4 +1,4 @@
-name: Release-85
+name: Release
 
 on:
   push:
